@@ -204,11 +204,11 @@ const SubBidang = () => {
   }, [filterText, resetPaginationToggle]);
 
   const goToTambah = () => {
-    history.push("/epekerja/master-data/sub-bidang-tambah");
+    history.push("/epekerja/admin/master-data/sub-bidang-tambah");
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/master-data/sub-bidang-edit/${id}`);
+    history.push(`/epekerja/admin/master-data/sub-bidang-edit/${id}`);
   };
 
   return (

@@ -85,11 +85,11 @@ const PangkatGolongan = () => {
   };
 
   const goToTambah = () => {
-    history.push("/epekerja/master-data/pangkat-golongan-tambah");
+    history.push("/epekerja/admin/master-data/pangkat-golongan-tambah");
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/master-data/pangkat-golongan-edit/${id}`);
+    history.push(`/epekerja/admin/master-data/pangkat-golongan-edit/${id}`);
   };
 
   return (

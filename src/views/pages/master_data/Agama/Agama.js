@@ -29,7 +29,7 @@ const Agama = () => {
       name: "No",
       selector: "no",
       sortable: true,
-      maxWidth: '50px',
+      maxWidth: "50px",
     },
     {
       name: "Agama",
@@ -73,11 +73,11 @@ const Agama = () => {
   };
 
   const goToTambah = () => {
-    history.push("/epekerja/master-data/agama-tambah");
+    history.push(`/epekerja/admin/master-data/agama-tambah`);
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/master-data/agama-edit/${id}`);
+    history.push(`/epekerja/admin/master-data/agama-edit/${id}`);
   };
 
   return (

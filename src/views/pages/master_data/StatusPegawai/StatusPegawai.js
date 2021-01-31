@@ -3,27 +3,27 @@ import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 
-const PangkatEselon = () => {
+const StatusPegawai = () => {
   const history = useHistory();
 
   const data = [
     {
       no: 1,
       id: 1,
-      eselon: "II. b",
-      keterangan: "Kepala Dinas",
+      status_pegawai: "PNS",
+      keterangan: "Pegawai Negeri Sipil",
     },
     {
       no: 2,
       id: 2,
-      eselon: "III. a",
-      keterangan: "Sekretaris",
+      status_pegawai: "PTTH",
+      keterangan: "Pegawai Tidak Tetap Harian",
     },
     {
       no: 3,
       id: 3,
-      eselon: "III. b",
-      keterangan: "Kepala Bidang",
+      status_pegawai: "PTTB",
+      keterangan: "Pegawai Tidak Tetap Bulanan",
     },
   ];
 
@@ -32,13 +32,13 @@ const PangkatEselon = () => {
       name: "No",
       selector: "no",
       sortable: true,
-      minWidth: "50px",
-      maxWidth: "100px",
+      maxWidth: "50px",
     },
     {
-      name: "Tingkat Eselon",
-      selector: "eselon",
+      name: "Status",
+      selector: "status_pegawai",
       sortable: true,
+      maxWidth: '150px'
     },
     {
       name: "Keterangan",
@@ -47,6 +47,7 @@ const PangkatEselon = () => {
       wrap: true
     },
     {
+      maxWidth: '200px',
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -83,18 +84,18 @@ const PangkatEselon = () => {
   };
 
   const goToTambah = () => {
-    history.push("/epekerja/admin/master-data/pangkat-eselon-tambah");
+    history.push(`/epekerja/admin/master-data/status-pegawai-tambah`);
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/admin/master-data/pangkat-eselon-edit/${id}`);
+    history.push(`/epekerja/admin/master-data/status-pegawai-edit/${id}`);
   };
 
   return (
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data Eselon</h3>
+          <h3>Status Pegawai</h3>
         </CCardHeader>
         <CCardBody>
           <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
@@ -114,4 +115,4 @@ const PangkatEselon = () => {
   );
 };
 
-export default PangkatEselon;
+export default StatusPegawai;

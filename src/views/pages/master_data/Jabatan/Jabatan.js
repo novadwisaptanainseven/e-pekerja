@@ -74,11 +74,11 @@ const Jabatan = () => {
   };
 
   const goToTambah = () => {
-    history.push("/epekerja/master-data/jabatan-tambah");
+    history.push("/epekerja/admin/master-data/jabatan-tambah");
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/master-data/jabatan-edit/${id}`);
+    history.push(`/epekerja/admin/master-data/jabatan-edit/${id}`);
   };
 
   return (

@@ -1,6 +1,12 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import "./scss/style.scss";
+// import TheLayoutAdmin from "./containers/TheLayoutAdmin";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -9,7 +15,8 @@ const loading = (
 );
 
 // Containers
-const TheLayout = React.lazy(() => import("./containers/TheLayout"));
+// const TheLayout = React.lazy(() => import("./containers/TheLayout"));
+const TheLayoutAdmin = React.lazy(() => import("./containers/TheLayoutAdmin"));
 
 // Pages
 const Login = React.lazy(() => import("./views/pages/login/Login"));
@@ -48,11 +55,11 @@ class App extends Component {
               render={(props) => <Page500 {...props} />}
             />
             <Route
-              path="/epekerja/"
+              path="/epekerja/admin"
               name="Home"
-              render={(props) => <TheLayout {...props} />}
+              render={(props) => <TheLayoutAdmin {...props} />}
             />
-            <Redirect from="/" to="/epekerja" />
+            <Redirect from="/" to="/epekerja/admin/dashboard" />
           </Switch>
         </React.Suspense>
       </Router>

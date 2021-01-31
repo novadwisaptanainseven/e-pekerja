@@ -89,11 +89,11 @@ const Bidang = () => {
   };
 
   const goToTambah = () => {
-    history.push("/epekerja/master-data/bidang-tambah");
+    history.push("/epekerja/admin/master-data/bidang-tambah");
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/master-data/bidang-edit/${id}`);
+    history.push(`/epekerja/admin/master-data/bidang-edit/${id}`);
   };
 
   return (

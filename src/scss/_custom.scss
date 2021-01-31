@@ -1,1 +1,24 @@
 // Here you can add other styles
+.button-control {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-upload {
+  width: 100%;
+}
+
+@media screen and (max-width: "768px") {
+  // .form-upload button.form-upload-button {
+  //   margin-top: 10px;
+  //   margin-left: 9px;
+  // }
+
+  .button-control {
+    width: 100%;
+  }
+
+  // .button-control {
+  //   align-items: flex-end;
+  // }
+}
