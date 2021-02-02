@@ -27,7 +27,7 @@ const EditStatusPegawai = ({ match }) => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Edit Status Pegawai : {params.id}</h3>
+          <h3>Ubah Status Pegawai : {params.id}</h3>
         </CCardHeader>
         <CForm>
           <CCardBody>

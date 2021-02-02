@@ -46,7 +46,7 @@ const Agama = () => {
             className="btn btn-sm mr-1"
             onClick={() => goToEdit(row.id)}
           >
-            Edit
+            Ubah
           </CButton>
           <CButton
             color="danger"

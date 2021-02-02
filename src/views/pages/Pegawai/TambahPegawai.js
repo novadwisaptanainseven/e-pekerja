@@ -257,8 +257,6 @@ const TambahPegawai = () => {
                     />
                   </CCol>
                 </CFormGroup>
-              </CCol>
-              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel>NPWP</CLabel>
@@ -341,11 +339,13 @@ const TambahPegawai = () => {
                       Pilih Foto
                     </CLabel>
                     <CFormText className="help-block">
-                      Foto harus bertipe jpg, jpeg, atau png dan sizenya kurang
-                      dari 2 MB
+                      Foto harus bertipe jpg, jpeg, atau png dengan ukuran
+                      kurang dari 2 MB
                     </CFormText>
                   </CCol>
                 </CFormGroup>
+              </CCol>
+              <CCol md="6">
                 <h4 style={{ fontWeight: "normal" }}>Masa Kerja Pegawai</h4>
                 <hr />
                 <CFormGroup row>
@@ -404,7 +404,9 @@ const TambahPegawai = () => {
                     />
                   </CCol>
                 </CFormGroup>
-                <h4 style={{ fontWeight: "normal" }}>Data Pendidikan</h4>
+                <h4 style={{ fontWeight: "normal" }}>
+                  Data Pendidikan Terakhir
+                </h4>
                 <hr />
                 <CFormGroup row>
                   <CCol>
@@ -453,7 +455,7 @@ const TambahPegawai = () => {
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
-                  <CLabel col>Foto Ijazah</CLabel>
+                  <CLabel col>Foto/Scan Ijazah</CLabel>
                   <CCol xs="12" md="9">
                     <CInputFile name="foto_ijazah" id="foto_ijazah" custom />
                     <CLabel
@@ -464,8 +466,8 @@ const TambahPegawai = () => {
                       Pilih Foto
                     </CLabel>
                     <CFormText className="help-block">
-                      Foto harus bertipe jpg, jpeg, atau png dan sizenya kurang
-                      dari 2 MB
+                      File harus bertipe pdf, jpg, jpeg, atau png dengan ukuran
+                      kurang dari 2 MB
                     </CFormText>
                   </CCol>
                 </CFormGroup>
@@ -473,7 +475,7 @@ const TambahPegawai = () => {
             </CRow>
           </CCardBody>
           <CCardFooter>
-            <CButton color="primary" type="submit" className="mr-1">
+            <CButton color="primary" type="submit" className="mr-3">
               Simpan
             </CButton>
             <CButton color="danger" type="reset" className="mr-1">

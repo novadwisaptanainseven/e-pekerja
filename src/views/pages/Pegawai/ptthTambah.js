@@ -204,8 +204,6 @@ const TambahPTTH = () => {
                     />
                   </CCol>
                 </CFormGroup>
-              </CCol>
-              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel htmlFor="alamat">Alamat</CLabel>
@@ -307,12 +305,13 @@ const TambahPTTH = () => {
                       Pilih Foto
                     </CLabel>
                     <CFormText className="help-block">
-                      Foto harus bertipe jpg, jpeg, atau png dan sizenya kurang
-                      dari 2 MB
+                      Foto harus bertipe jpg, jpeg, atau png dengan ukuran
+                      kurang dari 2 MB
                     </CFormText>
                   </CCol>
                 </CFormGroup>
-
+              </CCol>
+              <CCol md="6">
                 <h4 style={{ fontWeight: "normal" }}>Data Pendidikan</h4>
                 <hr />
                 <CFormGroup row>
@@ -373,8 +372,8 @@ const TambahPTTH = () => {
                       Pilih Foto
                     </CLabel>
                     <CFormText className="help-block">
-                      Foto harus bertipe jpg, jpeg, atau png dan sizenya kurang
-                      dari 2 MB
+                      Foto harus bertipe jpg, jpeg, atau png dengan ukuran
+                      kurang dari 2 MB
                     </CFormText>
                   </CCol>
                 </CFormGroup>

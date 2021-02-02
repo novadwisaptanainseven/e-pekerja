@@ -139,7 +139,7 @@ const SubBidang = () => {
       selector: "nm_sub_bidang",
       sortable: true,
       // maxWidth: "200px",
-      minWidth: '200px',
+      minWidth: "200px",
       wrap: true,
     },
     {
@@ -160,7 +160,7 @@ const SubBidang = () => {
             className="btn btn-sm mr-1"
             onClick={() => goToEdit(row.id)}
           >
-            Edit
+            Ubah
           </CButton>
           <CButton
             color="danger"

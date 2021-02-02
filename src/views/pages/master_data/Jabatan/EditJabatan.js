@@ -27,7 +27,7 @@ const EditJabatan = ({ match }) => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Edit Jabatan : {params.id}</h3>
+          <h3>Ubah Jabatan : {params.id}</h3>
         </CCardHeader>
         <CForm>
           <CCardBody>

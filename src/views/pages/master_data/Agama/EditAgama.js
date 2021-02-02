@@ -27,7 +27,7 @@ const EditAgama = ({ match }) => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Edit Agama : {params.id}</h3>
+          <h3>Ubah Data Agama : {params.id}</h3>
         </CCardHeader>
         <CForm>
           <CCardBody>
