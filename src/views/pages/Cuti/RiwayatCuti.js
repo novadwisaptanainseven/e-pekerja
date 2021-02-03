@@ -12,16 +12,17 @@ import {
   CModalFooter,
   CRow,
   CCol,
+  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 // import styled from "styled-components";
-import EditKGB from "./EditKGB";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
 import { useHistory } from "react-router-dom";
-import TambahKGB from "./TambahKGB";
+import TambahCuti from "./TambahCuti";
+import EditCuti from "./EditCuti";
 
-const DaftarKGB = () => {
+const RiwayatCuti = () => {
   const [modalTambah, setModalTambah] = useState(false);
 
   const history = useHistory();
@@ -39,52 +40,34 @@ const DaftarKGB = () => {
     {
       no: 1,
       id: 1,
-      gaji_pokok_lama: "Rp. 3.831.900",
-      gaji_pokok_baru: "Rp. 3.952.600",
-      tmt_kenaikan_gaji: "1 Februari 2021",
-      peraturan: "PP No.30 Tahun 2015",
-      kenaikan_gaji_yad: "1 Februari 2023",
-      status_kgb: 1,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
-      created_at: "03-02-2021",
+      lama_cuti: "14 Hari",
+      tgl_mulai: "10-02-2021",
+      tgl_selesai: "24-02-2021",
+      keterangan: "Isolasi Mandiri selama 14 hari",
+      created_at: "09-02-2021",
+      status_cuti: 0,
     },
     {
       no: 2,
       id: 2,
-      gaji_pokok_lama: "Rp. 3.952.600",
-      gaji_pokok_baru: "Rp. 4.500.000",
-      tmt_kenaikan_gaji: "1 Februari 2023",
-      peraturan: "PP No.30 Tahun 2015",
-      kenaikan_gaji_yad: "1 Februari 2025",
-      status_kgb: 1,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
-      created_at: "05-02-2021",
+      lama_cuti: "1 Bulan",
+      tgl_mulai: "15-02-2021",
+      tgl_selesai: "15-03-2021",
+      keterangan: "Liburan ke Amerika Serikat",
+      created_at: "10-02-2021",
+      status_cuti: 1,
     },
     {
       no: 3,
       id: 3,
-      gaji_pokok_lama: "Rp. 4.500.000",
-      gaji_pokok_baru: "Rp. 5.000.000",
-      tmt_kenaikan_gaji: "1 Februari 2025",
-      peraturan: "PP No.30 Tahun 2015",
-      kenaikan_gaji_yad: "3 April 2028",
-      status_kgb: 1,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
-      created_at: "05-02-2021",
+      lama_cuti: "1 Minggu",
+      tgl_mulai: "20-02-2021",
+      tgl_selesai: "27-02-2021",
+      keterangan: "Daftar CPNS",
+      created_at: "11-02-2021",
+      status_cuti: 2,
     },
   ];
-
-  // const filteredData = data.filter((item) =>
-
-  //   {
-  //     if (item.nama) {
-  //       if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
-  //         return true;
-  //       }
-  //     }
-  //     return false;
-  //   }
-  // );
 
   const columns = [
     {
@@ -95,34 +78,61 @@ const DaftarKGB = () => {
       width: "50px",
     },
     {
-      name: "TMT. Kenaikan Gaji",
-      selector: "tmt_kenaikan_gaji",
+      name: "Lama Cuti",
+      selector: "lama_cuti",
       sortable: true,
-      // maxWidth: "200px",
-      wrap: true,
-    },
-    {
-      name: "Gaji P. Lama",
-      selector: "gaji_pokok_lama",
-      sortable: true,
-      wrap: true,
       maxWidth: "150px",
-    },
-    {
-      name: "Gaji P. Baru",
-      selector: "gaji_pokok_baru",
-      sortable: true,
-      wrap: true,
-      maxWidth: "150px",
-    },
-    {
-      name: "Kenaikan Gaji YAD",
-      selector: "kenaikan_gaji_yad",
-      sortable: true,
       wrap: true,
     },
     {
+      name: "Tgl. Mulai Cuti",
+      selector: "tgl_mulai",
+      sortable: true,
+      wrap: true,
       // maxWidth: "150px",
+    },
+    {
+      name: "Tgl. Selesai Cuti",
+      selector: "tgl_selesai",
+      sortable: true,
+      wrap: true,
+      // maxWidth: "150px",
+    },
+    {
+      name: "Status Cuti",
+      selector: "status_cuti",
+      sortable: true,
+      wrap: true,
+      cell: (row) => {
+        if (row.status_cuti === 0) {
+          return (
+            <>
+              <CBadge color="info" shape="pill" className="px-2 py-2">
+                Akan Cuti
+              </CBadge>
+            </>
+          );
+        } else if (row.status_cuti === 1) {
+          return (
+            <>
+              <CBadge color="primary" shape="pill" className="px-2 py-2">
+                Sedang Cuti
+              </CBadge>
+            </>
+          );
+        } else if (row.status_cuti === 2) {
+          return (
+            <>
+              <CBadge color="dark" shape="pill" className="px-2 py-2">
+                Masa Cuti Selesai
+              </CBadge>
+            </>
+          );
+        }
+      },
+    },
+    {
+      maxWidth: "180px",
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -176,7 +186,7 @@ const DaftarKGB = () => {
             className="btn btn-md"
             onClick={() => setModalTambah(!modalTambah)}
           >
-            Tambah KGB
+            Tambah Cuti Baru
           </CButton>
           <div className="d-flex">
             <CButton type="button" color="info" className="ml-2">
@@ -201,15 +211,15 @@ const DaftarKGB = () => {
     <div style={{ padding: "10px 63px" }}>
       <CRow className="mb-1">
         <CCol md="3">
-          <strong>Tgl. Pembuatan KGB</strong>
+          <strong>Tgl. Pembuatan Cuti</strong>
         </CCol>
         <CCol>{data.created_at}</CCol>
       </CRow>
       <CRow className="mb-1">
         <CCol md="3">
-          <strong>Peraturan</strong>
+          <strong>Keterangan</strong>
         </CCol>
-        <CCol>{data.peraturan}</CCol>
+        <CCol>{data.keterangan}</CCol>
       </CRow>
     </div>
   );
@@ -218,7 +228,7 @@ const DaftarKGB = () => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between my-card-header">
-          <h3>Daftar Kenaikan Gaji Berkala</h3>
+          <h3>Riwayat Cuti Pegawai</h3>
           <span className="font-weight-normal">
             Nova Dwi Sapta Nain Seven S.Tr.Kom
           </span>
@@ -249,11 +259,11 @@ const DaftarKGB = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Tambah Kenaikan Gaji Berkala</CModalTitle>
+          <CModalTitle>Buat Cuti Pegawai</CModalTitle>
         </CModalHeader>
         <CForm>
           <CModalBody>
-            <TambahKGB />
+            <TambahCuti />
           </CModalBody>
           <CModalFooter>
             <CButton type="submit" color="primary">
@@ -270,7 +280,7 @@ const DaftarKGB = () => {
         </CForm>
       </CModal>
 
-      {/* Modal Edit KGB */}
+      {/* Modal Edit Cuti */}
       <CModal
         show={modalEdit.modal}
         onClose={() => {
@@ -283,11 +293,11 @@ const DaftarKGB = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Perbarui Gaji</CModalTitle>
+          <CModalTitle>Edit Cuti</CModalTitle>
         </CModalHeader>
         <CForm>
           <CModalBody>
-            <EditKGB id={modalEdit.id} />
+            <EditCuti id={modalEdit.id} />
           </CModalBody>
           <CModalFooter>
             <CButton type="submit" color="primary">
@@ -307,4 +317,4 @@ const DaftarKGB = () => {
   );
 };
 
-export default DaftarKGB;
+export default RiwayatCuti;

@@ -1,11 +1,7 @@
 import React from "react";
 import { CFormGroup, CCol, CLabel, CInput } from "@coreui/react";
 
-const EditKGB = ({ id }) => {
-  if (id) {
-    console.log(id);
-  }
-
+const TambahKGB = () => {
   return (
     <>
       <CFormGroup row>
@@ -77,4 +73,4 @@ const EditKGB = ({ id }) => {
   );
 };
 
-export default EditKGB;
+export default TambahKGB;

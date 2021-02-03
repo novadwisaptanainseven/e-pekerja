@@ -96,6 +96,7 @@ const KGB = () => {
       kenaikan_gaji_yad: "1 Februari 2023",
       status_kgb: 1,
       pangkat_golongan: "IV/c (Pembina Utama Muda)",
+      tgl_buat_kgb: "03-02-2021",
     },
     {
       no: 2,
@@ -110,6 +111,7 @@ const KGB = () => {
       kenaikan_gaji_yad: "-",
       status_kgb: 0,
       pangkat_golongan: "IV/c (Pembina Utama Muda)",
+      tgl_buat_kgb: "05-02-2021",
     },
     {
       no: 3,
@@ -124,6 +126,7 @@ const KGB = () => {
       kenaikan_gaji_yad: "1 Februari 2023",
       status_kgb: 0,
       pangkat_golongan: "IV/c (Pembina Utama Muda)",
+      tgl_buat_kgb: "10-02-2021",
       expired: 1,
       status_kenaikan_gaji_yad: 1,
     },

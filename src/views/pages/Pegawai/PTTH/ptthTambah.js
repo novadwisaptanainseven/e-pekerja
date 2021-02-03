@@ -204,6 +204,8 @@ const TambahPTTH = () => {
                     />
                   </CCol>
                 </CFormGroup>
+              </CCol>
+              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel htmlFor="alamat">Alamat</CLabel>
@@ -310,8 +312,9 @@ const TambahPTTH = () => {
                     </CFormText>
                   </CCol>
                 </CFormGroup>
-
-                <h4 style={{ fontWeight: "normal" }}>Data Pendidikan Terakhir</h4>
+                <h4 style={{ fontWeight: "normal" }}>
+                  Data Pendidikan Terakhir
+                </h4>
                 <hr />
                 <CFormGroup row>
                   <CCol>
@@ -360,7 +363,7 @@ const TambahPTTH = () => {
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
-                  <CLabel col>Foto Ijazah</CLabel>
+                  <CLabel col>Foto / Scan Ijazah</CLabel>
                   <CCol xs="12" md="9">
                     <CInputFile name="foto_ijazah" id="foto_ijazah" custom />
                     <CLabel

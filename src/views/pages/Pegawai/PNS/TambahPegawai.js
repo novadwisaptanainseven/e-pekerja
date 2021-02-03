@@ -346,8 +346,6 @@ const TambahPegawai = () => {
                     </CFormText>
                   </CCol>
                 </CFormGroup>
-              </CCol>
-              <CCol md="6">
                 <h4 style={{ fontWeight: "normal" }}>Masa Kerja Pegawai</h4>
                 <hr />
                 <CFormGroup row>

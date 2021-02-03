@@ -219,6 +219,8 @@ const TambahPTTB = () => {
                     />
                   </CCol>
                 </CFormGroup>
+              </CCol>
+              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel htmlFor="alamat">Alamat</CLabel>
@@ -324,8 +326,9 @@ const TambahPTTB = () => {
                     </CFormText>
                   </CCol>
                 </CFormGroup>
-
-                <h4 style={{ fontWeight: "normal" }}>Data Pendidikan Terakhir</h4>
+                <h4 style={{ fontWeight: "normal" }}>
+                  Data Pendidikan Terakhir
+                </h4>
                 <hr />
                 <CFormGroup row>
                   <CCol>

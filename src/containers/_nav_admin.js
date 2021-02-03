@@ -1,6 +1,14 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
-import { cilBriefcase, cilGroup, cilBadge, cilAvTimer, cilMoney, cilEnvelopeClosed, cilShortText } from "@coreui/icons";
+import {
+  cilBriefcase,
+  cilGroup,
+  cilBadge,
+  cilAvTimer,
+  cilMoney,
+  cilEnvelopeClosed,
+  cilShortText,
+} from "@coreui/icons";
 
 const _nav_admin = [
   {
@@ -102,7 +110,9 @@ const _nav_admin = [
     _tag: "CSidebarNavItem",
     name: "Cuti Pegawai",
     to: "/epekerja/admin/cuti",
-    icon: <CIcon content={cilEnvelopeClosed} customClasses="c-sidebar-nav-icon" />,
+    icon: (
+      <CIcon content={cilEnvelopeClosed} customClasses="c-sidebar-nav-icon" />
+    ),
   },
   {
     _tag: "CSidebarNavDropdown",
@@ -112,15 +122,24 @@ const _nav_admin = [
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "Absensi",
-        to: "/epekerja/admin/absensi",
+        name: "Absensi PNS",
+        to: "/epekerja/admin/absensi-pns",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Absensi PTTH",
+        to: "/epekerja/admin/absensi-ptth",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Absensi PTTB",
+        to: "/epekerja/admin/absensi-pttb",
       },
       {
         _tag: "CSidebarNavItem",
         name: "Rekap Absensi",
         to: "/epekerja/admin/rekap-absensi",
       },
-      
     ],
   },
 ];

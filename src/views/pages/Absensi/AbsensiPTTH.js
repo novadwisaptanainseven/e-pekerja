@@ -4,19 +4,16 @@ import {
   CCardHeader,
   CCardBody,
   CButton,
-  CPopover,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CModalFooter,
+  CButtonGroup,
+  CRow,
+  CCol,
+  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilGroup } from "@coreui/icons";
-import DaftarPegawaiCuti from "./DaftarPegawaiCuti";
+import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -73,8 +70,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
-const Cuti = () => {
-  const [modalCuti, setModalCuti] = useState(false);
+const AbsensiPTTH = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -85,39 +81,44 @@ const Cuti = () => {
       id: 1,
       nip: "19651127 199301 1 001",
       nama: "Ir. H. Dadang Airlangga N, MMT",
-      jabatan: "Kepala Dinas",
-      jenis_cuti: "Cuti Isolasi Mandiri",
-      tgl_mulai: "10-09-2021",
-      tgl_selesai: "24-09-2021",
-      lama_cuti: "14 Hari",
-      status_cuti: 1,
-      keterangan: "Sedang Isolasi Mandiri selam 14 hari",
+      senin: 1,
+      selasa: 1,
+      rabu: 1,
+      kamis: 1,
+      jumat: 1,
     },
     {
       no: 2,
       id: 2,
       nip: "19651127 199301 1 001",
       nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
-      jenis_cuti: "Cuti Liburan",
-      tgl_mulai: "10-09-2021",
-      tgl_selesai: "10-10-2021",
-      lama_cuti: "1 Bulan",
-      status_cuti: 2,
-      keterangan: "Liburan ke luar negeri",
+      senin: 1,
+      selasa: 0,
+      rabu: 1,
+      kamis: 2,
+      jumat: 1,
     },
     {
       no: 3,
       id: 3,
       nip: "19651127 199301 1 001",
       nama: "Ikwal Ramadhani",
-      jabatan: "IT Support",
-      jenis_cuti: "Cuti Liburan",
-      tgl_mulai: "10-09-2021",
-      tgl_selesai: "10-10-2021",
-      lama_cuti: "1 Bulan",
-      status_cuti: 0,
-      keterangan: "Liburan ke luar negeri",
+      senin: 2,
+      selasa: 2,
+      rabu: 3,
+      kamis: 3,
+      jumat: 1,
+    },
+    {
+      no: 3,
+      id: 3,
+      nip: "19651127 199301 1 001",
+      nama: "Iqbal Wahyudi",
+      senin: 5,
+      selasa: 5,
+      rabu: 5,
+      kamis: 1,
+      jumat: 1,
     },
   ];
 
@@ -139,19 +140,6 @@ const Cuti = () => {
 
   const columns = [
     {
-      name: "No",
-      selector: "no",
-      sortable: true,
-      wrap: true,
-      width: "50px",
-    },
-    {
-      name: "NIP",
-      selector: "nip",
-      sortable: true,
-      wrap: true,
-    },
-    {
       name: "Nama",
       selector: "nama",
       sortable: true,
@@ -159,20 +147,62 @@ const Cuti = () => {
       wrap: true,
     },
     {
-      name: "Jabatan",
-      selector: "jabatan",
+      name: "Senin",
+      selector: "senin",
       sortable: true,
       wrap: true,
     },
+    {
+      name: "Selasa",
+      selector: "selasa",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Rabu",
+      selector: "rabu",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Kamis",
+      selector: "kamis",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Jumat",
+      selector: "jumat",
+      sortable: true,
+      wrap: true,
+    },
+
     {
       maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton color="info" onClick={() => goToRiwayatCuti(row.id)}>
-            Buat Cuti
-          </CButton>
+          <CButtonGroup>
+            <CButton
+              color="success"
+              className="btn btn-sm"
+              onClick={() => goToEdit(row.id)}
+            >
+              <CIcon content={cilPen} color="white" />
+            </CButton>
+            <CButton
+              color="danger"
+              className="btn btn-sm"
+              onClick={() =>
+                window.confirm(
+                  `Anda yakin ingin hapus data dengan id : ${row.id}`
+                )
+              }
+            >
+              <CIcon content={cilTrash} color="white" />
+            </CButton>
+          </CButtonGroup>
         </div>
       ),
     },
@@ -202,39 +232,44 @@ const Cuti = () => {
           filterText={filterText}
         />
 
-        <CPopover content="Untuk melihat daftar pegawai yang sedang cuti">
-          <CButton
-            type="button"
-            color="warning"
-            className="ml-2"
-            onClick={() => setModalCuti(!modalCuti)}
-          >
-            <span className="my-text-button">Daftar Pegawai Cuti</span>{" "}
-            <CIcon content={cilGroup} /> (3)
-          </CButton>
-        </CPopover>
-
-        {/* <CButton type="button" color="info" className="ml-2">
-          <span class="my-text-button">Cetak</span> <CIcon content={cilPrint} />
-        </CButton> */}
+        <CButton type="button" color="info" className="ml-2">
+          Cetak <CIcon content={cilPrint} />
+        </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle, modalCuti]);
+  }, [filterText, resetPaginationToggle]);
 
-  const goToRiwayatCuti = (id) => {
-    history.push(`/epekerja/admin/cuti-pegawai/${id}`);
+  const goToTambah = () => {
+    history.push("/epekerja/admin/cuti-tambah");
   };
+
+  const goToEdit = (id) => {
+    history.push(`/epekerja/admin/cuti-edit/${id}`);
+  };
+
+  const ExpandableComponent = ({ data }) => (
+    <>
+      <div style={{ padding: "10px 63px" }}>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>NIP</strong>
+          </CCol>
+          <CCol>{data.nip}</CCol>
+        </CRow>
+      </div>
+    </>
+  );
 
   return (
     <>
       <CCard>
         <CCardHeader>
-          <h3>Cuti Pegawai</h3>
+          <h3>Absensi Pegawai Tidak Tetap Harian (PTTH)</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
+          <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
             Tambah Data
-          </CButton> */}
+          </CButton>
 
           <DataTable
             columns={columns}
@@ -248,39 +283,15 @@ const Cuti = () => {
             paginationResetDefaultPage={resetPaginationToggle}
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
+            expandOnRowClicked
+            expandableRows
+            expandableRowsComponent={<ExpandableComponent />}
             highlightOnHover
           />
         </CCardBody>
       </CCard>
-
-      {/* Modal Cuti */}
-      <CModal
-        show={modalCuti}
-        onClose={() => setModalCuti(!modalCuti)}
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Daftar Pegawai Cuti</CModalTitle>
-        </CModalHeader>
-
-        <CModalBody>
-          <DaftarPegawaiCuti />
-        </CModalBody>
-        <CModalFooter>
-          <CButton type="submit" color="primary">
-            Simpan
-          </CButton>{" "}
-          <CButton
-            type="button"
-            color="secondary"
-            onClick={() => setModalCuti(!modalCuti)}
-          >
-            Batal
-          </CButton>
-        </CModalFooter>
-      </CModal>
     </>
   );
 };
 
-export default Cuti;
+export default AbsensiPTTH;

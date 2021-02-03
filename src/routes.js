@@ -133,9 +133,19 @@ const DaftarKGB = React.lazy(() => import("./views/pages/KGB/DaftarKGB"));
 const Cuti = React.lazy(() => import("./views/pages/Cuti/Cuti"));
 const TambahCuti = React.lazy(() => import("./views/pages/Cuti/TambahCuti"));
 const EditCuti = React.lazy(() => import("./views/pages/Cuti/EditCuti"));
+const RiwayatCuti = React.lazy(() => import("./views/pages/Cuti/RiwayatCuti"));
 
 // Absensi Pegawai
-const Absensi = React.lazy(() => import("./views/pages/Absensi/Absensi"));
+const AbsensiPNS = React.lazy(() => import("./views/pages/Absensi/AbsensiPNS"));
+const AbsensiPTTH = React.lazy(() =>
+  import("./views/pages/Absensi/AbsensiPTTH")
+);
+const AbsensiPTTB = React.lazy(() =>
+  import("./views/pages/Absensi/AbsensiPTTB")
+);
+const RiwayatAbsensi = React.lazy(() =>
+  import("./views/pages/Absensi/RiwayatAbsensi")
+);
 
 const routes = [
   { path: "/epekerja/admin", exact: true, name: "Home" },
@@ -390,13 +400,33 @@ const routes = [
     name: "Edit Cuti Pegawai",
     component: EditCuti,
   },
+  {
+    path: "/epekerja/admin/cuti-pegawai/:id",
+    name: "Riwayat Cuti Pegawai",
+    component: RiwayatCuti,
+  },
 
   // Absensi Pegawai
   {
-    path: "/epekerja/admin/absensi",
-    name: "Absensi Pegawai",
-    component: Absensi,
+    path: "/epekerja/admin/absensi-pns",
+    name: "Absensi PNS",
+    component: AbsensiPNS,
     exact: true,
+  },
+  {
+    path: "/epekerja/admin/absensi-ptth",
+    name: "Absensi PTTH",
+    component: AbsensiPTTH,
+  },
+  {
+    path: "/epekerja/admin/absensi-pttb",
+    name: "Absensi PTTB",
+    component: AbsensiPTTB,
+  },
+  {
+    path: "/epekerja/admin/riwayat-absensi/:id",
+    name: "Riwayat Absensi Pegawai",
+    component: RiwayatAbsensi,
   },
 ];
 
