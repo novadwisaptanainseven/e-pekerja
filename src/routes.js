@@ -79,22 +79,33 @@ const EditStatusPegawai = React.lazy(() =>
 );
 
 // Import Pegawai
-const Pegawai = React.lazy(() => import("./views/pages/Pegawai/Pegawai"));
+const Pegawai = React.lazy(() => import("./views/pages/Pegawai/PNS/Pegawai"));
 const TambahPegawai = React.lazy(() =>
-  import("./views/pages/Pegawai/TambahPegawai")
+  import("./views/pages/Pegawai/PNS/TambahPegawai")
 );
 const EditPegawai = React.lazy(() =>
-  import("./views/pages/Pegawai/EditPegawai")
+  import("./views/pages/Pegawai/PNS/EditPegawai")
 );
 const DetailPegawai = React.lazy(() =>
   import("./views/pages/Pegawai/DetailPegawai/DetailPegawai")
 );
-const DataPTTH = React.lazy(() => import("./views/pages/Pegawai/ptth"));
-const DataPTTB = React.lazy(() => import("./views/pages/Pegawai/pttb"));
-const TambahPTTH = React.lazy(() => import("./views/pages/Pegawai/ptthTambah"));
-const TambahPTTB = React.lazy(() => import("./views/pages/Pegawai/pttbTambah"));
-const EditPTTH = React.lazy(() => import("./views/pages/Pegawai/ptthEdit"));
-const EditPTTB = React.lazy(() => import("./views/pages/Pegawai/pttbEdit"));
+const DataPTTH = React.lazy(() => import("./views/pages/Pegawai/PTTH/ptth"));
+const DataPTTB = React.lazy(() => import("./views/pages/Pegawai/PTTB/pttb"));
+const TambahPTTH = React.lazy(() =>
+  import("./views/pages/Pegawai/PTTH/ptthTambah")
+);
+const TambahPTTB = React.lazy(() =>
+  import("./views/pages/Pegawai/PTTB/pttbTambah")
+);
+const EditPTTH = React.lazy(() =>
+  import("./views/pages/Pegawai/PTTH/ptthEdit")
+);
+const EditPTTB = React.lazy(() =>
+  import("./views/pages/Pegawai/PTTB/pttbEdit")
+);
+const SemuaPegawai = React.lazy(() =>
+  import("./views/pages/Pegawai/SemuaPegawai")
+);
 
 // DUK PNS
 const DataDukPNS = React.lazy(() => import("./views/pages/DukPNS/DukPNS"));
@@ -116,10 +127,15 @@ const EditMasaKerja = React.lazy(() =>
 
 // Kenaikan Gaji Berkala
 const KGB = React.lazy(() => import("./views/pages/KGB/KGB"));
+const DaftarKGB = React.lazy(() => import("./views/pages/KGB/DaftarKGB"));
 
 // Cuti Pegawai
 const Cuti = React.lazy(() => import("./views/pages/Cuti/Cuti"));
 const TambahCuti = React.lazy(() => import("./views/pages/Cuti/TambahCuti"));
+const EditCuti = React.lazy(() => import("./views/pages/Cuti/EditCuti"));
+
+// Absensi Pegawai
+const Absensi = React.lazy(() => import("./views/pages/Absensi/Absensi"));
 
 const routes = [
   { path: "/epekerja/admin", exact: true, name: "Home" },
@@ -306,6 +322,11 @@ const routes = [
     name: "Edit PTTB",
     component: EditPTTB,
   },
+  {
+    path: "/epekerja/admin/pegawai/semua-pegawai",
+    name: "Semua Pegawai",
+    component: SemuaPegawai,
+  },
 
   // DUK PNS
   {
@@ -347,6 +368,11 @@ const routes = [
     name: "Kenaikan Gaji Berkala",
     component: KGB,
   },
+  {
+    path: "/epekerja/admin/kgb-daftar/:id",
+    name: "Daftar Kenaikan Gaji Berkala",
+    component: DaftarKGB,
+  },
 
   // Cuti Pegawai
   {
@@ -358,6 +384,19 @@ const routes = [
     path: "/epekerja/admin/cuti-tambah",
     name: "Tambah Cuti Pegawai",
     component: TambahCuti,
+  },
+  {
+    path: "/epekerja/admin/cuti-edit/:id",
+    name: "Edit Cuti Pegawai",
+    component: EditCuti,
+  },
+
+  // Absensi Pegawai
+  {
+    path: "/epekerja/admin/absensi",
+    name: "Absensi Pegawai",
+    component: Absensi,
+    exact: true,
   },
 ];
 

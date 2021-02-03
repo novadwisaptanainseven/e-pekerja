@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import DataTable from "react-data-table-component";
-import { CButton, CForm, CFormGroup, CCol, CInput } from "@coreui/react";
+import {
+  CButton,
+  CForm,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
+} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilTrash } from "@coreui/icons";
+import TambahBerkas from "./TambahBerkas";
 
 const DataBerkas = () => {
+  const [modalTambah, setModalTambah] = useState(false);
+
   const data = [
     {
       id: 1,
@@ -80,7 +91,7 @@ const DataBerkas = () => {
   return (
     <>
       <div className="my-3">
-        <div className="button-control">
+        {/* <div className="button-control">
           <div className="form-upload">
             <CForm>
               <CFormGroup row>
@@ -95,7 +106,14 @@ const DataBerkas = () => {
               </CFormGroup>
             </CForm>
           </div>
-        </div>
+        </div> */}
+        <CButton
+          type="button"
+          color="primary"
+          onClick={() => setModalTambah(!modalTambah)}
+        >
+          Tambah Berkas
+        </CButton>
         <DataTable
           columns={columns}
           data={data}
@@ -104,6 +122,34 @@ const DataBerkas = () => {
           customStyles={customStyles}
         />
       </div>
+
+      {/* Modal Tambah */}
+      <CModal
+        show={modalTambah}
+        onClose={() => setModalTambah(!modalTambah)}
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Tambah Data</CModalTitle>
+        </CModalHeader>
+        <CForm>
+          <CModalBody>
+            <TambahBerkas />
+          </CModalBody>
+          <CModalFooter>
+            <CButton type="submit" color="primary">
+              Simpan
+            </CButton>{" "}
+            <CButton
+              type="button"
+              color="secondary"
+              onClick={() => setModalTambah(!modalTambah)}
+            >
+              Batal
+            </CButton>
+          </CModalFooter>
+        </CForm>
+      </CModal>
     </>
   );
 };

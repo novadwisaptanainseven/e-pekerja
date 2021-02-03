@@ -5,12 +5,15 @@ import {
   CCardBody,
   CButton,
   CButtonGroup,
+  CRow,
+  CCol,
+  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -56,7 +59,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
     <TextField
       id="search"
       type="text"
-      placeholder="Cari pegawai"
+      placeholder="Cari pegawai PTTH"
       aria-label="Search Input"
       value={filterText}
       onChange={onFilter}
@@ -67,7 +70,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
-const Pegawai = () => {
+const DataPTTH = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -76,29 +79,46 @@ const Pegawai = () => {
     {
       no: 1,
       id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      sub_bidang: "Pembinaan Permukiman",
-      pangkat_golongan: "IIa / Pengatur Muda",
-      no_hp: "0812323121",
+      nik: "19651127 199301 1 001",
+      nama: "Nova Dwi Sapta Nain Seven",
+      penetap_sk: "Ir. H. Dadang",
+      tgl_penetapan_sk: "27 November 2021",
+      no_sk: "102321312",
+      tgl_mulai_tugas: "10-11-2021",
+      tugas: "Programmer",
     },
     {
       no: 2,
       id: 2,
-      nip: "19640315 199203 1 014",
-      nama: "H. Akhmad Husein, ST, MT",
-      sub_bidang: "Sub. Bagian Perencanaan Program dan Keuangan",
-      pangkat_golongan: "IIa / Pengatur Muda",
-      no_hp: "0812323121",
+      nik: "19651127 199301 1 001",
+      nama: "Ikwal Ramadhani",
+      penetap_sk: "Ir. H. Dadang",
+      tgl_penetapan_sk: "27 November 2021",
+      no_sk: "102321312",
+      tgl_mulai_tugas: "10-11-2021",
+      tugas: "IT Support",
     },
     {
       no: 3,
       id: 3,
-      nip: "19650726 198903 2 005",
-      nama: "Erminawati, S.Pd, M.Pd",
-      sub_bidang: "Pembinaan Permukiman",
-      pangkat_golongan: "IIa / Pengatur Muda",
-      no_hp: "0812323121",
+      nik: "19651127 199301 1 001",
+      nama: "Iqbal Wahyudi",
+      penetap_sk: "Ir. H. Dadang",
+      tgl_penetapan_sk: "27 November 2021",
+      no_sk: "102321312",
+      tgl_mulai_tugas: "10-11-2021",
+      tugas: "Programmer",
+    },
+    {
+      no: 4,
+      id: 4,
+      nik: "19651127 199301 1 001",
+      nama: "Deny Wiranto",
+      penetap_sk: "-",
+      tgl_penetapan_sk: "-",
+      no_sk: "-",
+      tgl_mulai_tugas: "-",
+      tugas: "-",
     },
   ];
 
@@ -109,10 +129,10 @@ const Pegawai = () => {
 
     // )
     {
-      if (item.nama && item.sub_bidang) {
+      if (item.nama && item.tugas) {
         if (
           item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.sub_bidang.toLowerCase().includes(filterText.toLowerCase())
+          item.tugas.toLowerCase().includes(filterText.toLowerCase())
         ) {
           return true;
         }
@@ -128,13 +148,13 @@ const Pegawai = () => {
       sortable: true,
       width: "50px",
     },
-    {
-      name: "NIP",
-      selector: "nip",
-      sortable: true,
-      wrap: true,
-      // maxWidth: "200px",
-    },
+    // {
+    //   name: "NIK",
+    //   selector: "nik",
+    //   sortable: true,
+    //   wrap: true,
+    //   // maxWidth: "200px",
+    // },
     {
       name: "Nama",
       selector: "nama",
@@ -143,25 +163,46 @@ const Pegawai = () => {
       wrap: true,
     },
     {
-      name: "Sub Bidang",
-      selector: "sub_bidang",
+      name: "Penetap SK",
+      selector: "penetap_sk",
       sortable: true,
       wrap: true,
+      cell: (row) => {
+        if (row.penetap_sk !== "-") {
+          return <>{row.penetap_sk}</>;
+        } else {
+          return (
+            <>
+              <CBadge className="py-2 px-3" color="warning" shape="pill">
+                Belum Diisi
+              </CBadge>
+            </>
+          );
+        }
+      },
     },
     {
-      name: "Pangkat / Golongan",
-      selector: "pangkat_golongan",
+      name: "Tugas",
+      selector: "tugas",
       sortable: true,
       wrap: true,
+      cell: (row) => {
+        if (row.tugas !== "-") {
+          return <>{row.tugas}</>;
+        } else {
+          return (
+            <>
+              <CBadge className="py-2 px-3" color="warning" shape="pill">
+                Belum Diisi
+              </CBadge>
+            </>
+          );
+        }
+      },
     },
+
     {
-      name: "No. HP",
-      selector: "no_hp",
-      sortable: true,
-      wrap: true,
-    },
-    {
-      maxWidth: "150px",
+      // maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -172,7 +213,7 @@ const Pegawai = () => {
               className="btn btn-sm"
               onClick={() => goToDetail(row.id)}
             >
-              <CIcon content={cilInfo} color="white" />
+              Kelengkapan
             </CButton>
             <CButton
               color="success"
@@ -230,22 +271,107 @@ const Pegawai = () => {
   }, [filterText, resetPaginationToggle]);
 
   const goToTambah = () => {
-    history.push("/epekerja/admin/pegawai-tambah");
+    history.push("/epekerja/admin/pegawai/ptth-tambah");
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/admin/pegawai-edit/${id}`);
+    history.push(`/epekerja/admin/pegawai/ptth-edit/${id}`);
   };
 
   const goToDetail = (id) => {
     history.push(`/epekerja/admin/pegawai-detail/${id}`);
   };
 
+  const ExpandableComponent = ({ data }) => (
+    <>
+      <div style={{ padding: "10px 63px" }}>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>NIK</strong>
+          </CCol>
+          <CCol>{data.nik}</CCol>
+        </CRow>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>Tgl. Penetapan SK</strong>
+          </CCol>
+          <CCol>
+            {data.tgl_penetapan_sk === "-" ? (
+              <CBadge className="py-2 px-3" color="warning" shape="pill">
+                Belum Diisi,{" "}
+                <a
+                  href="."
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goToEdit(data.id);
+                  }}
+                >
+                  Klik Disini
+                </a>{" "}
+                untuk mengubah
+              </CBadge>
+            ) : (
+              data.tgl_penetapan_sk
+            )}
+          </CCol>
+        </CRow>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>No. SK</strong>
+          </CCol>
+          <CCol>
+            {data.no_sk === "-" ? (
+              <CBadge className="py-2 px-3" color="warning" shape="pill">
+                Belum Diisi,{" "}
+                <a
+                  href="."
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goToEdit(data.id);
+                  }}
+                >
+                  Klik Disini
+                </a>{" "}
+                untuk mengubah
+              </CBadge>
+            ) : (
+              data.no_sk
+            )}
+          </CCol>
+        </CRow>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>Tgl. Mulai Tugas</strong>
+          </CCol>
+          <CCol>
+            {data.tgl_mulai_tugas === "-" ? (
+              <CBadge className="py-2 px-3" color="warning" shape="pill">
+                Belum Diisi,{" "}
+                <a
+                  href="."
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goToEdit(data.id);
+                  }}
+                >
+                  Klik Disini
+                </a>{" "}
+                untuk mengubah
+              </CBadge>
+            ) : (
+              data.tgl_mulai_tugas
+            )}
+          </CCol>
+        </CRow>
+      </div>
+    </>
+  );
+
   return (
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data Pegawai</h3>
+          <h3>Data PTTH</h3>
         </CCardHeader>
         <CCardBody>
           <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
@@ -264,6 +390,10 @@ const Pegawai = () => {
             paginationResetDefaultPage={resetPaginationToggle}
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
+            expandableRows
+            highlightOnHover
+            expandOnRowClicked
+            expandableRowsComponent={<ExpandableComponent />}
           />
         </CCardBody>
       </CCard>
@@ -271,4 +401,4 @@ const Pegawai = () => {
   );
 };
 
-export default Pegawai;
+export default DataPTTH;

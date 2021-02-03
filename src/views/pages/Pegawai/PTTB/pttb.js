@@ -13,7 +13,7 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -156,13 +156,13 @@ const DataPTTB = () => {
       sortable: true,
       width: "50px",
     },
-    {
-      name: "NIK",
-      selector: "nik",
-      sortable: true,
-      wrap: true,
-      // maxWidth: "200px",
-    },
+    // {
+    //   name: "NIK",
+    //   selector: "nik",
+    //   sortable: true,
+    //   wrap: true,
+    //   // maxWidth: "200px",
+    // },
     {
       name: "Nama",
       selector: "nama",
@@ -209,7 +209,7 @@ const DataPTTB = () => {
       },
     },
     {
-      maxWidth: "150px",
+      // maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -220,7 +220,7 @@ const DataPTTB = () => {
               className="btn btn-sm"
               onClick={() => goToDetail(row.id)}
             >
-              <CIcon content={cilInfo} color="white" />
+              Kelengkapan
             </CButton>
             <CButton
               color="success"
@@ -292,6 +292,12 @@ const DataPTTB = () => {
   const ExpandableComponent = ({ data }) => (
     <>
       <div style={{ padding: "10px 63px" }}>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>NIK</strong>
+          </CCol>
+          <CCol>{data.nik}</CCol>
+        </CRow>
         <CRow className="mb-1">
           <CCol md="2">
             <strong>Tgl. Penetapan SK</strong>
@@ -440,6 +446,8 @@ const DataPTTB = () => {
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
             expandableRows
+            expandOnRowClicked
+            highlightOnHover
             expandableRowsComponent={<ExpandableComponent />}
           />
         </CCardBody>

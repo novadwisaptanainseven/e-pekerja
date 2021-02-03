@@ -7,13 +7,12 @@ import {
   CButtonGroup,
   CRow,
   CCol,
-  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -59,7 +58,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
     <TextField
       id="search"
       type="text"
-      placeholder="Cari pegawai PTTH"
+      placeholder="Cari pegawai"
       aria-label="Search Input"
       value={filterText}
       onChange={onFilter}
@@ -70,7 +69,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
-const DataPTTH = () => {
+const SemuaPegawai = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -79,46 +78,32 @@ const DataPTTH = () => {
     {
       no: 1,
       id: 1,
-      nik: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta Nain Seven",
-      penetap_sk: "Ir. H. Dadang",
-      tgl_penetapan_sk: "27 November 2021",
-      no_sk: "102321312",
-      tgl_mulai_tugas: "10-11-2021",
-      tugas: "Programmer",
+      nip_nik: "19651127 199301 1 001",
+      nama: "Ir. H. Dadang Airlangga N, MMT",
+      jabatan: "Kepala Dinas",
+      sub_bidang: "Pembinaan Permukiman",
+      status_pegawai: 1,
+      no_hp: "0812323121",
     },
     {
       no: 2,
       id: 2,
-      nik: "19651127 199301 1 001",
-      nama: "Ikwal Ramadhani",
-      penetap_sk: "Ir. H. Dadang",
-      tgl_penetapan_sk: "27 November 2021",
-      no_sk: "102321312",
-      tgl_mulai_tugas: "10-11-2021",
-      tugas: "IT Support",
+      nip_nik: "123445677",
+      nama: "Nova Dwi Sapta Nain Seven, S.Tr.Kom",
+      jabatan: "Programmer",
+      sub_bidang: "Program dan Keuangan",
+      status_pegawai: 2,
+      no_hp: "0812323121",
     },
     {
       no: 3,
       id: 3,
-      nik: "19651127 199301 1 001",
-      nama: "Iqbal Wahyudi",
-      penetap_sk: "Ir. H. Dadang",
-      tgl_penetapan_sk: "27 November 2021",
-      no_sk: "102321312",
-      tgl_mulai_tugas: "10-11-2021",
-      tugas: "Programmer",
-    },
-    {
-      no: 4,
-      id: 4,
-      nik: "19651127 199301 1 001",
-      nama: "Deny Wiranto",
-      penetap_sk: "-",
-      tgl_penetapan_sk: "-",
-      no_sk: "-",
-      tgl_mulai_tugas: "-",
-      tugas: "-",
+      nip_nik: "4343123123",
+      nama: "Ikwal Ramadhani, S.Tr.Kom",
+      jabatan: "IT Support",
+      sub_bidang: "Program dan Keuangan",
+      status_pegawai: 3,
+      no_hp: "0812323121",
     },
   ];
 
@@ -129,10 +114,11 @@ const DataPTTH = () => {
 
     // )
     {
-      if (item.nama && item.tugas) {
+      if (item.nama && item.sub_bidang && item.jabatan) {
         if (
           item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.tugas.toLowerCase().includes(filterText.toLowerCase())
+          item.sub_bidang.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.jabatan.toLowerCase().includes(filterText.toLowerCase())
         ) {
           return true;
         }
@@ -148,13 +134,13 @@ const DataPTTH = () => {
       sortable: true,
       width: "50px",
     },
-    {
-      name: "NIK",
-      selector: "nik",
-      sortable: true,
-      wrap: true,
-      // maxWidth: "200px",
-    },
+    // {
+    //   name: "NIP/NIK",
+    //   selector: "nip_nik",
+    //   sortable: true,
+    //   wrap: true,
+    //   // maxWidth: "200px",
+    // },
     {
       name: "Nama",
       selector: "nama",
@@ -163,46 +149,34 @@ const DataPTTH = () => {
       wrap: true,
     },
     {
-      name: "Penetap SK",
-      selector: "penetap_sk",
+      name: "Jabatan",
+      selector: "jabatan",
       sortable: true,
       wrap: true,
-      cell: (row) => {
-        if (row.penetap_sk !== "-") {
-          return <>{row.penetap_sk}</>;
-        } else {
-          return (
-            <>
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi
-              </CBadge>
-            </>
-          );
-        }
-      },
     },
     {
-      name: "Tugas",
-      selector: "tugas",
+      name: "Sub Bidang",
+      selector: "sub_bidang",
       sortable: true,
       wrap: true,
-      cell: (row) => {
-        if (row.tugas !== "-") {
-          return <>{row.tugas}</>;
-        } else {
-          return (
-            <>
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi
-              </CBadge>
-            </>
-          );
-        }
-      },
     },
-
+    // {
+    //   name: "Status",
+    //   selector: "status_pegawai",
+    //   sortable: true,
+    //   wrap: true,
+    //   cell: (row) => {
+    //     if (row.status_pegawai === 1) {
+    //       return <>PNS</>;
+    //     } else if (row.status_pegawai === 2) {
+    //       return <>PTTH</>;
+    //     } else if (row.status_pegawai === 3) {
+    //       return <>PTTB</>;
+    //     }
+    //   },
+    // },
     {
-      maxWidth: "150px",
+      // maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -213,12 +187,20 @@ const DataPTTH = () => {
               className="btn btn-sm"
               onClick={() => goToDetail(row.id)}
             >
-              <CIcon content={cilInfo} color="white" />
+              Kelengkapan
             </CButton>
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
+              onClick={() => {
+                if (row.status_pegawai === 1) {
+                  goToEditPNS(row.id);
+                } else if (row.status_pegawai === 2) {
+                  goToEditPTTH(row.id);
+                } else if (row.status_pegawai === 3) {
+                  goToEditPTTB(row.id);
+                }
+              }}
             >
               <CIcon content={cilPen} color="white" />
             </CButton>
@@ -270,107 +252,69 @@ const DataPTTH = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToTambah = () => {
-    history.push("/epekerja/admin/pegawai/ptth-tambah");
-  };
+  // const goToTambah = () => {
+  //   history.push("/epekerja/admin/pegawai-tambah");
+  // };
 
-  const goToEdit = (id) => {
+  const goToEditPNS = (id) => {
+    history.push(`/epekerja/admin/pegawai-edit/${id}`);
+  };
+  const goToEditPTTH = (id) => {
     history.push(`/epekerja/admin/pegawai/ptth-edit/${id}`);
+  };
+  const goToEditPTTB = (id) => {
+    history.push(`/epekerja/admin/pegawai/pttb-edit/${id}`);
   };
 
   const goToDetail = (id) => {
     history.push(`/epekerja/admin/pegawai-detail/${id}`);
   };
 
-  const ExpandableComponent = ({ data }) => (
-    <>
-      <div style={{ padding: "10px 63px" }}>
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>Tgl. Penetapan SK</strong>
-          </CCol>
-          <CCol>
-            {data.tgl_penetapan_sk === "-" ? (
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi,{" "}
-                <a
-                  href="."
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToEdit(data.id);
-                  }}
-                >
-                  Klik Disini
-                </a>{" "}
-                untuk mengubah
-              </CBadge>
-            ) : (
-              data.tgl_penetapan_sk
-            )}
-          </CCol>
-        </CRow>
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>No. SK</strong>
-          </CCol>
-          <CCol>
-            {data.no_sk === "-" ? (
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi,{" "}
-                <a
-                  href="."
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToEdit(data.id);
-                  }}
-                >
-                  Klik Disini
-                </a>{" "}
-                untuk mengubah
-              </CBadge>
-            ) : (
-              data.no_sk
-            )}
-          </CCol>
-        </CRow>
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>Tgl. Mulai Tugas</strong>
-          </CCol>
-          <CCol>
-            {data.tgl_mulai_tugas === "-" ? (
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi,{" "}
-                <a
-                  href="."
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToEdit(data.id);
-                  }}
-                >
-                  Klik Disini
-                </a>{" "}
-                untuk mengubah
-              </CBadge>
-            ) : (
-              data.tgl_mulai_tugas
-            )}
-          </CCol>
-        </CRow>
-      </div>
-    </>
-  );
+  const ExpandableComponent = ({ data }) => {
+    let status_pegawai = "";
+    if (data.status_pegawai === 1) {
+      status_pegawai = "PNS";
+    } else if (data.status_pegawai === 2) {
+      status_pegawai = "PTTH";
+    } else if (data.status_pegawai === 3) {
+      status_pegawai = "PTTB";
+    }
+    return (
+      <>
+        <div style={{ padding: "10px 63px" }}>
+          <CRow className="mb-1">
+            <CCol md="2">
+              <strong>NIP/NIK</strong>
+            </CCol>
+            <CCol>{data.nip_nik}</CCol>
+          </CRow>
+          <CRow className="mb-1">
+            <CCol md="2">
+              <strong>No. HP</strong>
+            </CCol>
+            <CCol>{data.no_hp}</CCol>
+          </CRow>
+          <CRow className="mb-1">
+            <CCol md="2">
+              <strong>Status Pegawai</strong>
+            </CCol>
+            <CCol>{status_pegawai}</CCol>
+          </CRow>
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data PTTH</h3>
+          <h3>Semua Data Pegawai</h3>
         </CCardHeader>
         <CCardBody>
-          <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
+          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
             Tambah Data
-          </CButton>
+          </CButton> */}
 
           <DataTable
             columns={columns}
@@ -385,6 +329,8 @@ const DataPTTH = () => {
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
             expandableRows
+            expandOnRowClicked
+            highlightOnHover
             expandableRowsComponent={<ExpandableComponent />}
           />
         </CCardBody>
@@ -393,4 +339,4 @@ const DataPTTH = () => {
   );
 };
 
-export default DataPTTH;
+export default SemuaPegawai;

@@ -19,7 +19,7 @@ import {
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
 
-const TambahPTTB = () => {
+const TambahPTTH = () => {
   const history = useHistory();
 
   const goBackToParent = () => {
@@ -30,7 +30,7 @@ const TambahPTTB = () => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Tambah PTTB</h3>
+          <h3>Tambah PTTH</h3>
           <CButton
             type="button"
             color="warning"
@@ -122,14 +122,14 @@ const TambahPTTB = () => {
 
                 <CFormGroup row>
                   <CCol>
-                    <CLabel>Kontrak Ke</CLabel>
+                    <CLabel>Tgl. Mulai Tugas</CLabel>
                   </CCol>
                   <CCol md="9" sm="12">
                     <CInput
-                      type="number"
-                      name="kontrak_ke"
-                      id="kontrak_ke"
-                      placeholder="Masukkan kontrak ke berapa"
+                      type="date"
+                      name="tgl_mulai_tugas"
+                      id="tgl_mulai_tugas"
+                      placeholder="Masukkan tgl. mulai tugas"
                       required
                     />
                   </CCol>
@@ -145,21 +145,6 @@ const TambahPTTB = () => {
                       name="tugas"
                       id="tugas"
                       placeholder="Masukkan tugas"
-                      required
-                    />
-                  </CCol>
-                </CFormGroup>
-
-                <CFormGroup row>
-                  <CCol>
-                    <CLabel>Masa Kerja</CLabel>
-                  </CCol>
-                  <CCol md="9" sm="12">
-                    <CInput
-                      type="text"
-                      name="masa_kerja"
-                      id="masa_kerja"
-                      placeholder="Masukkan masa kerja"
                       required
                     />
                   </CCol>
@@ -328,7 +313,7 @@ const TambahPTTB = () => {
                   </CCol>
                 </CFormGroup>
 
-                <h4 style={{ fontWeight: "normal" }}>Data Pendidikan</h4>
+                <h4 style={{ fontWeight: "normal" }}>Data Pendidikan Terakhir</h4>
                 <hr />
                 <CFormGroup row>
                   <CCol>
@@ -410,4 +395,4 @@ const TambahPTTB = () => {
   );
 };
 
-export default TambahPTTB;
+export default TambahPTTH;

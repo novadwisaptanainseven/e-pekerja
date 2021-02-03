@@ -130,7 +130,7 @@ const TambahPegawai = () => {
                     </CSelect>
                   </CCol>
                 </CFormGroup>
-                <CFormGroup row>
+                {/* <CFormGroup row>
                   <CCol>
                     <CLabel>Status Pegawai</CLabel>
                   </CCol>
@@ -142,7 +142,7 @@ const TambahPegawai = () => {
                       <option value="3">Option #3</option>
                     </CSelect>
                   </CCol>
-                </CFormGroup>
+                </CFormGroup> */}
                 <CFormGroup row>
                   <CCol>
                     <CLabel>Agama</CLabel>
@@ -257,8 +257,6 @@ const TambahPegawai = () => {
                     />
                   </CCol>
                 </CFormGroup>
-              </CCol>
-              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel>NPWP</CLabel>
@@ -273,6 +271,8 @@ const TambahPegawai = () => {
                     />
                   </CCol>
                 </CFormGroup>
+              </CCol>
+              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel>TMT. Golongan</CLabel>
@@ -404,7 +404,9 @@ const TambahPegawai = () => {
                     />
                   </CCol>
                 </CFormGroup>
-                <h4 style={{ fontWeight: "normal" }}>Data Pendidikan</h4>
+                <h4 style={{ fontWeight: "normal" }}>
+                  Data Pendidikan Terakhir
+                </h4>
                 <hr />
                 <CFormGroup row>
                   <CCol>

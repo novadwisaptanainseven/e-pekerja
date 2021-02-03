@@ -50,16 +50,14 @@ const TambahDataDiklat = () => {
         />
       </CFormGroup>
       <CFormGroup>
-        <CLabel htmlFor="foto_diklat">Foto Diklat</CLabel>
+        <CLabel htmlFor="dokumentasi_diklat">Dokumentasi Diklat</CLabel>
         <CInput
           type="file"
-          id="foto_diklat"
-          placeholder="Masukkan foto diklat"
+          id="dokumentasi_diklat"
+          placeholder="Masukkan dokumentasi diklat"
           required
         />
-        <CFormText>
-          Foto harus bertipe jpg, jpeg, atau png dan sizenya kurang dari 2 MB
-        </CFormText>
+        <CFormText>Upload file dokumentasi diklat jika ada</CFormText>
       </CFormGroup>
     </>
   );

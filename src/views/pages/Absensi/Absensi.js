@@ -4,19 +4,16 @@ import {
   CCardHeader,
   CCardBody,
   CButton,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CForm,
-  CModalBody,
-  CModalFooter,
+  CButtonGroup,
+  CRow,
+  CCol,
+  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
-import CIcon from "@coreui/icons-react";
-import { cilPrint } from "@coreui/icons";
-import EditKGB from "./EditKGB";
 import { useHistory } from "react-router-dom";
+import CIcon from "@coreui/icons-react";
+import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -73,59 +70,55 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
-const KGB = () => {
+const Absensi = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const [modalEdit, setModalEdit] = useState({
-    modal: false,
-    id: null,
-  });
 
   const data = [
     {
       no: 1,
       id: 1,
       nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga Nopandani, MMT",
-      jabatan: "Kepala Dinas",
-      gaji_pokok_lama: "Rp. 3.831.900",
-      gaji_pokok_baru: "Rp. 3.952.600",
-      tmt_kenaikan_gaji: "1 Februari 2021",
-      peraturan: "PP No.30 Tahun 2015",
-      kenaikan_gaji_yad: "1 Februari 2023",
-      status_kgb: 1,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
+      nama: "Ir. H. Dadang Airlangga N, MMT",
+      senin: 1,
+      selasa: 1,
+      rabu: 1,
+      kamis: 1,
+      jumat: 1,
     },
     {
       no: 2,
       id: 2,
       nip: "19651127 199301 1 001",
-      nama: "NELLY KALA, ST",
-      jabatan: "Sekretaris",
-      gaji_pokok_lama: "Rp. 3.831.900",
-      gaji_pokok_baru: "-",
-      tmt_kenaikan_gaji: "-",
-      peraturan: "-",
-      kenaikan_gaji_yad: "-",
-      status_kgb: 0,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
+      nama: "Nova Dwi Sapta",
+      senin: 1,
+      selasa: 0,
+      rabu: 1,
+      kamis: 2,
+      jumat: 1,
     },
     {
       no: 3,
       id: 3,
       nip: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
-      gaji_pokok_lama: "Rp. 3.831.900",
-      gaji_pokok_baru: "-",
-      tmt_kenaikan_gaji: "1 Februari 2021",
-      peraturan: "PP No.30 Tahun 2015",
-      kenaikan_gaji_yad: "1 Februari 2023",
-      status_kgb: 0,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
-      expired: 1,
-      status_kenaikan_gaji_yad: 1,
+      nama: "Ikwal Ramadhani",
+      senin: 2,
+      selasa: 2,
+      rabu: 3,
+      kamis: 3,
+      jumat: 1,
+    },
+    {
+      no: 3,
+      id: 3,
+      nip: "19651127 199301 1 001",
+      nama: "Iqbal Wahyudi",
+      senin: 5,
+      selasa: 5,
+      rabu: 5,
+      kamis: 1,
+      jumat: 1,
     },
   ];
 
@@ -147,12 +140,6 @@ const KGB = () => {
 
   const columns = [
     {
-      name: "NIP",
-      selector: "nip",
-      sortable: true,
-      wrap: true,
-    },
-    {
       name: "Nama",
       selector: "nama",
       sortable: true,
@@ -160,26 +147,62 @@ const KGB = () => {
       wrap: true,
     },
     {
-      name: "Jabatan",
-      selector: "jabatan",
+      name: "Senin",
+      selector: "senin",
       sortable: true,
       wrap: true,
     },
     {
-      name: "Pangkat / Gol",
-      selector: "pangkat_golongan",
+      name: "Selasa",
+      selector: "selasa",
       sortable: true,
       wrap: true,
     },
+    {
+      name: "Rabu",
+      selector: "rabu",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Kamis",
+      selector: "kamis",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Jumat",
+      selector: "jumat",
+      sortable: true,
+      wrap: true,
+    },
+
     {
       maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton color="info" onClick={() => goToDaftarKGB(row.id)}>
-            Daftar KGB
-          </CButton>
+          <CButtonGroup>
+            <CButton
+              color="success"
+              className="btn btn-sm"
+              onClick={() => goToEdit(row.id)}
+            >
+              <CIcon content={cilPen} color="white" />
+            </CButton>
+            <CButton
+              color="danger"
+              className="btn btn-sm"
+              onClick={() =>
+                window.confirm(
+                  `Anda yakin ingin hapus data dengan id : ${row.id}`
+                )
+              }
+            >
+              <CIcon content={cilTrash} color="white" />
+            </CButton>
+          </CButtonGroup>
         </div>
       ),
     },
@@ -216,17 +239,38 @@ const KGB = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToDaftarKGB = (id) => {
-    history.push(`/epekerja/admin/kgb-daftar/${id}`);
+  const goToTambah = () => {
+    history.push("/epekerja/admin/cuti-tambah");
   };
+
+  const goToEdit = (id) => {
+    history.push(`/epekerja/admin/cuti-edit/${id}`);
+  };
+
+  const ExpandableComponent = ({ data }) => (
+    <>
+      <div style={{ padding: "10px 63px" }}>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>NIP</strong>
+          </CCol>
+          <CCol>{data.nip}</CCol>
+        </CRow>
+      </div>
+    </>
+  );
 
   return (
     <>
       <CCard>
         <CCardHeader>
-          <h3>Kenaikan Gaji Berkala Pegawai</h3>
+          <h3>Absensi Pegawai</h3>
         </CCardHeader>
         <CCardBody>
+          <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
+            Tambah Data
+          </CButton>
+
           <DataTable
             columns={columns}
             data={filteredData}
@@ -234,49 +278,20 @@ const KGB = () => {
             responsive={true}
             customStyles={customStyles}
             pagination
+            // paginationRowsPerPageOptions={[5, 10, 15]}
+            // paginationPerPage={5}
             paginationResetDefaultPage={resetPaginationToggle}
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
+            expandOnRowClicked
+            expandableRows
+            expandableRowsComponent={<ExpandableComponent />}
             highlightOnHover
           />
         </CCardBody>
       </CCard>
-
-      {/* Modal Edit KGB */}
-      <CModal
-        show={modalEdit.modal}
-        onClose={() => {
-          setModalEdit({
-            ...modalEdit,
-            modal: !modalEdit.modal,
-            id: null,
-          });
-        }}
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Perbarui Gaji</CModalTitle>
-        </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditKGB id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
-      </CModal>
     </>
   );
 };
 
-export default KGB;
+export default Absensi;

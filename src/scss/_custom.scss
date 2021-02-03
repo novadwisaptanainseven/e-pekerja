@@ -14,6 +14,11 @@
   //   margin-left: 9px;
   // }
 
+  .my-card-header {
+    flex-direction: column;
+    justify-content: unset;
+  }
+
   .button-control {
     width: 100%;
   }

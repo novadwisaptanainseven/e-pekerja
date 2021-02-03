@@ -1,6 +1,6 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
-import { cilBriefcase, cilGroup, cilBadge, cilAvTimer, cilMoney } from "@coreui/icons";
+import { cilBriefcase, cilGroup, cilBadge, cilAvTimer, cilMoney, cilEnvelopeClosed, cilShortText } from "@coreui/icons";
 
 const _nav_admin = [
   {
@@ -60,7 +60,7 @@ const _nav_admin = [
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "PNS / PTTH / PTTB",
+        name: "PNS",
         to: "/epekerja/admin/pegawai",
       },
       {
@@ -72,6 +72,11 @@ const _nav_admin = [
         _tag: "CSidebarNavItem",
         name: "PTTB",
         to: "/epekerja/admin/pegawai/pttb",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Semua Pegawai",
+        to: "/epekerja/admin/pegawai/semua-pegawai",
       },
     ],
   },
@@ -97,7 +102,26 @@ const _nav_admin = [
     _tag: "CSidebarNavItem",
     name: "Cuti Pegawai",
     to: "/epekerja/admin/cuti",
-    icon: <CIcon content={cilMoney} customClasses="c-sidebar-nav-icon" />,
+    icon: <CIcon content={cilEnvelopeClosed} customClasses="c-sidebar-nav-icon" />,
+  },
+  {
+    _tag: "CSidebarNavDropdown",
+    name: "Absensi Pegawai",
+    to: "/epekerja/admin/absensi",
+    icon: <CIcon content={cilShortText} customClasses="c-sidebar-nav-icon" />,
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "Absensi",
+        to: "/epekerja/admin/absensi",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Rekap Absensi",
+        to: "/epekerja/admin/rekap-absensi",
+      },
+      
+    ],
   },
 ];
 
