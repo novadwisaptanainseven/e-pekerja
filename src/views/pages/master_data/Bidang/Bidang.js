@@ -49,10 +49,10 @@ const Bidang = () => {
       selector: "keterangan",
       sortable: true,
       wrap: true,
-      minWidth: '300px'
+      minWidth: "300px",
     },
     {
-      maxWidth: '150px',
+      maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -62,7 +62,7 @@ const Bidang = () => {
             className="btn btn-sm mr-1"
             onClick={() => goToEdit(row.id)}
           >
-            Edit
+            Ubah
           </CButton>
           <CButton
             color="danger"

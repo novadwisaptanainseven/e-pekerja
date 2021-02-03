@@ -27,7 +27,7 @@ const EditPangkatEselon = ({ match }) => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Edit Pangkat Eselon : {params.id}</h3>
+          <h3>Ubah Pangkat Eselon : {params.id}</h3>
         </CCardHeader>
         <CForm>
           <CCardBody>

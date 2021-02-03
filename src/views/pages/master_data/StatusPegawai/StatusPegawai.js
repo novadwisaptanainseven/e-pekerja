@@ -38,16 +38,16 @@ const StatusPegawai = () => {
       name: "Status",
       selector: "status_pegawai",
       sortable: true,
-      maxWidth: '150px'
+      maxWidth: "150px",
     },
     {
       name: "Keterangan",
       selector: "keterangan",
       sortable: true,
-      wrap: true
+      wrap: true,
     },
     {
-      maxWidth: '200px',
+      maxWidth: "200px",
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -57,7 +57,7 @@ const StatusPegawai = () => {
             className="btn btn-sm mr-1"
             onClick={() => goToEdit(row.id)}
           >
-            Edit
+            Ubah
           </CButton>
           <CButton
             color="danger"

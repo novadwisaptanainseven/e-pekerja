@@ -28,7 +28,7 @@ const EditSubBidang = ({ match }) => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Edit Sub Bidang : {params.id}</h3>
+          <h3>Ubah Sub Bidang : {params.id}</h3>
         </CCardHeader>
         <CForm>
           <CCardBody>

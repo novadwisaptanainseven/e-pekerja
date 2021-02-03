@@ -27,7 +27,7 @@ const EditPangkatGolongan = ({ match }) => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Edit Pangkat Golongan : {params.id}</h3>
+          <h3>Ubah Pangkat Golongan : {params.id}</h3>
         </CCardHeader>
         <CForm>
           <CCardBody>
@@ -39,7 +39,11 @@ const EditPangkatGolongan = ({ match }) => {
                 </CFormGroup>
                 <CFormGroup>
                   <CLabel htmlFor="name">Keterangan</CLabel>
-                  <CInput id="name" placeholder="Masukkan keterangan" required />
+                  <CInput
+                    id="name"
+                    placeholder="Masukkan keterangan"
+                    required
+                  />
                 </CFormGroup>
               </CCol>
             </CRow>
