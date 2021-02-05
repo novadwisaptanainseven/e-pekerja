@@ -4,16 +4,13 @@ import {
   CCardHeader,
   CCardBody,
   CButton,
-  CButtonGroup,
-  CRow,
-  CCol,
-  CBadge,
+  CPopover,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint } from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -81,44 +78,28 @@ const AbsensiPTTB = () => {
       id: 1,
       nip: "19651127 199301 1 001",
       nama: "Ir. H. Dadang Airlangga N, MMT",
-      senin: 1,
-      selasa: 1,
-      rabu: 1,
-      kamis: 1,
-      jumat: 1,
+      jabatan: "Kepala Dinas",
     },
     {
       no: 2,
       id: 2,
       nip: "19651127 199301 1 001",
       nama: "Nova Dwi Sapta",
-      senin: 1,
-      selasa: 0,
-      rabu: 1,
-      kamis: 2,
-      jumat: 1,
+      jabatan: "Programmer",
     },
     {
       no: 3,
       id: 3,
       nip: "19651127 199301 1 001",
       nama: "Ikwal Ramadhani",
-      senin: 2,
-      selasa: 2,
-      rabu: 3,
-      kamis: 3,
-      jumat: 1,
+      jabatan: "IT Support",
     },
     {
-      no: 3,
-      id: 3,
+      no: 4,
+      id: 4,
       nip: "19651127 199301 1 001",
       nama: "Iqbal Wahyudi",
-      senin: 5,
-      selasa: 5,
-      rabu: 5,
-      kamis: 1,
-      jumat: 1,
+      jabatan: "Programmer",
     },
   ];
 
@@ -140,6 +121,13 @@ const AbsensiPTTB = () => {
 
   const columns = [
     {
+      name: "NIP",
+      selector: "nip",
+      sortable: true,
+      // maxWidth: "200px",
+      wrap: true,
+    },
+    {
       name: "Nama",
       selector: "nama",
       sortable: true,
@@ -147,51 +135,26 @@ const AbsensiPTTB = () => {
       wrap: true,
     },
     {
-      name: "Senin",
-      selector: "senin",
+      name: "Jabatan",
+      selector: "jabatan",
       sortable: true,
+      // maxWidth: "200px",
       wrap: true,
     },
-    {
-      name: "Selasa",
-      selector: "selasa",
-      sortable: true,
-      wrap: true,
-    },
-    {
-      name: "Rabu",
-      selector: "rabu",
-      sortable: true,
-      wrap: true,
-    },
-    {
-      name: "Kamis",
-      selector: "kamis",
-      sortable: true,
-      wrap: true,
-    },
-    {
-      name: "Jumat",
-      selector: "jumat",
-      sortable: true,
-      wrap: true,
-    },
-
     {
       maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButtonGroup>
-            <CButton
-              color="success"
-              className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
-            >
-              <CIcon content={cilPen} color="white" />
-            </CButton>
-            <CButton
+          <CButton
+            color="success"
+            className="btn btn-sm"
+            onClick={() => goToRiwayat(row.id)}
+          >
+            Absensi
+          </CButton>
+          {/* <CButton
               color="danger"
               className="btn btn-sm"
               onClick={() =>
@@ -201,8 +164,7 @@ const AbsensiPTTB = () => {
               }
             >
               <CIcon content={cilTrash} color="white" />
-            </CButton>
-          </CButtonGroup>
+            </CButton> */}
         </div>
       ),
     },
@@ -232,33 +194,19 @@ const AbsensiPTTB = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
-          Cetak <CIcon content={cilPrint} />
-        </CButton>
+        <CPopover content="Cetak Rekapan Absensi Pegawai">
+          <CButton utton type="button" color="info" className="ml-2">
+            <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
+            <CIcon content={cilPrint} />
+          </CButton>
+        </CPopover>
       </>
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToTambah = () => {
-    history.push("/epekerja/admin/cuti-tambah");
+  const goToRiwayat = (id) => {
+    history.push(`/epekerja/admin/absensi/riwayat-absensi/${id}`);
   };
-
-  const goToEdit = (id) => {
-    history.push(`/epekerja/admin/cuti-edit/${id}`);
-  };
-
-  const ExpandableComponent = ({ data }) => (
-    <>
-      <div style={{ padding: "10px 63px" }}>
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>NIP</strong>
-          </CCol>
-          <CCol>{data.nip}</CCol>
-        </CRow>
-      </div>
-    </>
-  );
 
   return (
     <>
@@ -267,9 +215,9 @@ const AbsensiPTTB = () => {
           <h3>Absensi Pegawai Tidak Tetap Bulanan (PTTB)</h3>
         </CCardHeader>
         <CCardBody>
-          <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
+          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
             Tambah Data
-          </CButton>
+          </CButton> */}
 
           <DataTable
             columns={columns}
@@ -283,9 +231,6 @@ const AbsensiPTTB = () => {
             paginationResetDefaultPage={resetPaginationToggle}
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
-            expandOnRowClicked
-            expandableRows
-            expandableRowsComponent={<ExpandableComponent />}
             highlightOnHover
           />
         </CCardBody>

@@ -4,13 +4,16 @@ import {
   CCardHeader,
   CCardBody,
   CButton,
-  CPopover,
+  CButtonGroup,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint } from "@coreui/icons";
+import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { SampleFotoPegawai } from "src/assets";
 
 const TextField = styled.input`
   height: 37px;
@@ -67,7 +70,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
-const AbsensiPTTH = () => {
+const Penghargaan = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -78,28 +81,40 @@ const AbsensiPTTH = () => {
       id: 1,
       nip: "19651127 199301 1 001",
       nama: "Ir. H. Dadang Airlangga N, MMT",
-      jabatan: "Kepala Dinas",
+      nama_penghargaan: "Penghargaan 1",
+      pemberi: "Walikota Samarinda",
+      tgl_penghargaan: "10-12-2021",
+      dokumentasi: "foto",
     },
     {
       no: 2,
       id: 2,
-      nip: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
+      nip: "19640315 199203 1 014",
+      nama: "H. Akhmad Husein, ST, MT",
+      nama_penghargaan: "Penghargaan 2",
+      pemberi: "Walikota Samarinda",
+      tgl_penghargaan: "10-12-2021",
+      dokumentasi: "foto",
     },
     {
       no: 3,
       id: 3,
-      nip: "19651127 199301 1 001",
-      nama: "Ikwal Ramadhani",
-      jabatan: "IT Support",
+      nip: "19660425 199312 1 001",
+      nama: "Joko Karyono, ST, MT",
+      nama_penghargaan: "Penghargaan 3",
+      pemberi: "Walikota Samarinda",
+      tgl_penghargaan: "10-12-2021",
+      dokumentasi: "file",
     },
     {
       no: 4,
       id: 4,
-      nip: "19651127 199301 1 001",
-      nama: "Iqbal Wahyudi",
-      jabatan: "Programmer",
+      nip: "19660425 199312 1 001",
+      nama: "Joko Karyono, ST, MT",
+      nama_penghargaan: "Penghargaan 4",
+      pemberi: "Walikota Samarinda",
+      tgl_penghargaan: "10-12-2021",
+      dokumentasi: "file",
     },
   ];
 
@@ -110,8 +125,11 @@ const AbsensiPTTH = () => {
 
     // )
     {
-      if (item.nama) {
-        if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
+      if (item.nama && item.nama_penghargaan) {
+        if (
+          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.nama_penghargaan.toLowerCase().includes(filterText.toLowerCase())
+        ) {
           return true;
         }
       }
@@ -121,11 +139,17 @@ const AbsensiPTTH = () => {
 
   const columns = [
     {
+      name: "No",
+      selector: "no",
+      sortable: true,
+      width: "50px",
+    },
+    {
       name: "NIP",
       selector: "nip",
       sortable: true,
-      // maxWidth: "200px",
       wrap: true,
+      // maxWidth: "200px",
     },
     {
       name: "Nama",
@@ -135,10 +159,9 @@ const AbsensiPTTH = () => {
       wrap: true,
     },
     {
-      name: "Jabatan",
-      selector: "jabatan",
+      name: "Nama Penghargaan",
+      selector: "nama_penghargaan",
       sortable: true,
-      // maxWidth: "200px",
       wrap: true,
     },
     {
@@ -147,24 +170,31 @@ const AbsensiPTTH = () => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton
-            color="success"
-            className="btn btn-sm"
-            onClick={() => goToRiwayat(row.id)}
-          >
-            Absensi
-          </CButton>
-          {/* <CButton
+          <CButtonGroup>
+            <CButton
+              color="info"
+              className="btn btn-sm"
+              onClick={() => goToDetail(row.id)}
+            >
+              <CIcon content={cilInfo} color="white" />
+            </CButton>
+            <CButton
+              color="success"
+              className="btn btn-sm"
+              onClick={() => goToEdit(row.id)}
+            >
+              <CIcon content={cilPen} color="white" />
+            </CButton>
+            <CButton
               color="danger"
               className="btn btn-sm"
               onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
+                window.confirm("Anda yakin ingin menghapus data ini ?")
               }
             >
               <CIcon content={cilTrash} color="white" />
-            </CButton> */}
+            </CButton>
+          </CButtonGroup>
         </div>
       ),
     },
@@ -194,30 +224,66 @@ const AbsensiPTTH = () => {
           filterText={filterText}
         />
 
-        <CPopover content="Cetak Rekapan Absensi Pegawai">
-          <CButton utton type="button" color="info" className="ml-2">
-            <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
-            <CIcon content={cilPrint} />
-          </CButton>
-        </CPopover>
+        <CButton type="button" color="info" className="ml-2">
+          Cetak <CIcon content={cilPrint} />
+        </CButton>
       </>
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToRiwayat = (id) => {
-    history.push(`/epekerja/admin/absensi/riwayat-absensi/${id}`);
+  const goToTambah = (id) => {
+    history.push(`/epekerja/admin/penghargaan-tambah`);
   };
+
+  const goToEdit = (id) => {
+    history.push(`/epekerja/admin/penghargaan-edit/${id}`);
+  };
+
+  const goToDetail = (id) => {
+    history.push(`/epekerja/admin/penghargaan-detail/${id}`);
+  };
+
+  const ExpandableComponent = ({ data }) => (
+    <>
+      <div style={{ padding: "10px 63px" }}>
+        <CRow className="mb-1">
+          <CCol md="3">
+            <strong>Pemberi</strong>
+          </CCol>
+          <CCol>{data.pemberi}</CCol>
+        </CRow>
+        <CRow className="mb-1">
+          <CCol md="3">
+            <strong>Tgl. Penghargaan</strong>
+          </CCol>
+          <CCol>{data.tgl_penghargaan}</CCol>
+        </CRow>
+        <CRow className="mb-1">
+          <CCol md="3">
+            <strong>Dokumentasi</strong>
+          </CCol>
+          <CCol>
+            {data.dokumentasi === "foto" ? (
+              <img width={200} src={SampleFotoPegawai} alt="foto-penghargaan" />
+            ) : (
+              <a href=".">dokumentasi_penghargaan.pdf</a>
+            )}
+          </CCol>
+        </CRow>
+      </div>
+    </>
+  );
 
   return (
     <>
       <CCard>
         <CCardHeader>
-          <h3>Absensi Pegawai Tidak Tetap Harian (PTTH)</h3>
+          <h3>Penghargaan</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
-          </CButton> */}
+          <CButton type="button" color="primary" onClick={goToTambah}>
+            Tambah Penghargaan
+          </CButton>
 
           <DataTable
             columns={columns}
@@ -231,6 +297,9 @@ const AbsensiPTTH = () => {
             paginationResetDefaultPage={resetPaginationToggle}
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
+            expandableRows={true}
+            expandableRowsComponent={<ExpandableComponent />}
+            expandOnRowClicked
             highlightOnHover
           />
         </CCardBody>
@@ -239,4 +308,4 @@ const AbsensiPTTH = () => {
   );
 };
 
-export default AbsensiPTTH;
+export default Penghargaan;

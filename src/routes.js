@@ -146,6 +146,44 @@ const AbsensiPTTB = React.lazy(() =>
 const RiwayatAbsensi = React.lazy(() =>
   import("./views/pages/Absensi/RiwayatAbsensi")
 );
+const RekapAbsensi = React.lazy(() =>
+  import("./views/pages/Absensi/RekapAbsensi")
+);
+
+// Penghargaan
+const Penghargaan = React.lazy(() =>
+  import("./views/pages/Penghargaan/Penghargaan")
+);
+const TambahPenghargaan = React.lazy(() =>
+  import("./views/pages/Penghargaan/TambahPenghargaan")
+);
+const EditPenghargaan = React.lazy(() =>
+  import("./views/pages/Penghargaan/EditPenghargaan")
+);
+const DetailPenghargaan = React.lazy(() =>
+  import("./views/pages/Penghargaan/DetailPenghargaan")
+);
+
+// Pensiun
+const Pensiun = React.lazy(() => import("./views/pages/Pensiun/Pensiun"));
+const TambahPensiun = React.lazy(() =>
+  import("./views/pages/Pensiun/TambahPensiun")
+);
+const EditPensiun = React.lazy(() =>
+  import("./views/pages/Pensiun/EditPensiun")
+);
+const DetailPensiun = React.lazy(() =>
+  import("./views/pages/Pensiun/DetailPensiun")
+);
+
+// Users
+const Users = React.lazy(() => import("./views/pages/Users/Users"));
+const UserDetail = React.lazy(() => import("./views/pages/Users/UserDetail"));
+
+// Akun
+const Akun = React.lazy(() => import("./views/pages/Akun/Akun"));
+const EditAkun = React.lazy(() => import("./views/pages/Akun/EditAkun"));
+const EditPassword = React.lazy(() => import("./views/pages/Akun/EditPassword"));
 
 const routes = [
   { path: "/epekerja/admin", exact: true, name: "Home" },
@@ -408,25 +446,112 @@ const routes = [
 
   // Absensi Pegawai
   {
-    path: "/epekerja/admin/absensi-pns",
-    name: "Absensi PNS",
+    path: "/epekerja/admin/absensi",
+    name: "Absensi",
     component: AbsensiPNS,
     exact: true,
   },
   {
-    path: "/epekerja/admin/absensi-ptth",
+    path: "/epekerja/admin/absensi/pns",
+    name: "Absensi PNS",
+    component: AbsensiPNS,
+  },
+  {
+    path: "/epekerja/admin/absensi/ptth",
     name: "Absensi PTTH",
     component: AbsensiPTTH,
   },
   {
-    path: "/epekerja/admin/absensi-pttb",
+    path: "/epekerja/admin/absensi/pttb",
     name: "Absensi PTTB",
     component: AbsensiPTTB,
   },
   {
-    path: "/epekerja/admin/riwayat-absensi/:id",
+    path: "/epekerja/admin/absensi/riwayat-absensi/:id",
     name: "Riwayat Absensi Pegawai",
     component: RiwayatAbsensi,
+  },
+  {
+    path: "/epekerja/admin/absensi/rekap-absensi",
+    name: "Rekap Absensi Pegawai",
+    component: RekapAbsensi,
+  },
+
+  // Penghargaan
+  {
+    path: "/epekerja/admin/penghargaan",
+    name: "Penghargaan",
+    component: Penghargaan,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/penghargaan-tambah",
+    name: "Tambah Penghargaan",
+    component: TambahPenghargaan,
+  },
+  {
+    path: "/epekerja/admin/penghargaan-edit/:id",
+    name: "Edit Penghargaan",
+    component: EditPenghargaan,
+  },
+  {
+    path: "/epekerja/admin/penghargaan-detail/:id",
+    name: "Detail Penghargaan",
+    component: DetailPenghargaan,
+  },
+
+  // Pensiun
+  {
+    path: "/epekerja/admin/pensiun",
+    name: "Pensiun",
+    component: Pensiun,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/pensiun-tambah",
+    name: "Tambah Pensiun",
+    component: TambahPensiun,
+  },
+  {
+    path: "/epekerja/admin/pensiun-edit/:id",
+    name: "Edit Pensiun",
+    component: EditPensiun,
+  },
+  {
+    path: "/epekerja/admin/pensiun-detail/:id",
+    name: "Detail Pensiun",
+    component: DetailPensiun,
+  },
+
+  // Users
+  {
+    path: "/epekerja/admin/users",
+    name: "Users",
+    component: Users,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/user-detail/:id",
+    name: "Detail User",
+    component: UserDetail,
+  },
+
+  // Akun
+  {
+    path: "/epekerja/admin/akun",
+    name: "Akun Saya",
+    component: Akun,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/akun-edit/:id",
+    name: "Edit Akun",
+    component: EditAkun,
+  },
+  {
+    path: "/epekerja/admin/akun-edit-password/:id",
+    name: "Edit Password",
+    component: EditPassword,
   },
 ];
 

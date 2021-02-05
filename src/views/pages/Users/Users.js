@@ -4,13 +4,16 @@ import {
   CCardHeader,
   CCardBody,
   CButton,
-  CPopover,
+  CButtonGroup,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint } from "@coreui/icons";
+import { cilInfo, cilPen } from "@coreui/icons";
+import { SampleFotoPegawai } from "src/assets";
 
 const TextField = styled.input`
   height: 37px;
@@ -67,7 +70,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
-const AbsensiPTTH = () => {
+const Users = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -76,30 +79,27 @@ const AbsensiPTTH = () => {
     {
       no: 1,
       id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      jabatan: "Kepala Dinas",
+      nip_nik: "19651127 199301 1 001",
+      nama: "Nova Dwi Sapta Nain Seven",
+      username: "novadwisapta",
+      level: 1,
     },
     {
       no: 2,
       id: 2,
-      nip: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
+      nip_nik: "19640315 199203 1 014",
+      nama: "H. Akhmad Husein, ST, MT",
+      username: "akhmadhusein",
+      level: 2,
     },
     {
       no: 3,
       id: 3,
-      nip: "19651127 199301 1 001",
+      nip_nik: "19660425 199312 1 001",
       nama: "Ikwal Ramadhani",
-      jabatan: "IT Support",
-    },
-    {
-      no: 4,
-      id: 4,
-      nip: "19651127 199301 1 001",
-      nama: "Iqbal Wahyudi",
-      jabatan: "Programmer",
+      tgl_pensiun: "2021-02-02",
+      username: "ikwalramadhani",
+      level: 2,
     },
   ];
 
@@ -110,8 +110,12 @@ const AbsensiPTTH = () => {
 
     // )
     {
-      if (item.nama) {
-        if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
+      if (item.nama && item.nip_nik && item.username) {
+        if (
+          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.username.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.nip_nik.toLowerCase().includes(filterText.toLowerCase())
+        ) {
           return true;
         }
       }
@@ -121,11 +125,17 @@ const AbsensiPTTH = () => {
 
   const columns = [
     {
-      name: "NIP",
-      selector: "nip",
+      name: "No",
+      selector: "no",
       sortable: true,
-      // maxWidth: "200px",
+      width: "50px",
+    },
+    {
+      name: "NIP / NIK",
+      selector: "nip_nik",
+      sortable: true,
       wrap: true,
+      // maxWidth: "200px",
     },
     {
       name: "Nama",
@@ -135,11 +145,25 @@ const AbsensiPTTH = () => {
       wrap: true,
     },
     {
-      name: "Jabatan",
-      selector: "jabatan",
+      name: "Username",
+      selector: "username",
       sortable: true,
-      // maxWidth: "200px",
       wrap: true,
+      // maxWidth: "100px",
+    },
+    {
+      name: "Level",
+      selector: "level",
+      sortable: true,
+      wrap: true,
+      // maxWidth: "100px",
+      cell: (row) => {
+        if (row.level === 1) {
+          return "Administrator";
+        } else {
+          return "User";
+        }
+      },
     },
     {
       maxWidth: "150px",
@@ -147,24 +171,32 @@ const AbsensiPTTH = () => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton
-            color="success"
-            className="btn btn-sm"
-            onClick={() => goToRiwayat(row.id)}
-          >
-            Absensi
-          </CButton>
-          {/* <CButton
+          <CButtonGroup>
+            <CButton
+              color="info"
+              className="btn btn-sm"
+              onClick={row.id === 1 ? () => goToAkun() : () => goToDetail(row.id)}
+            >
+              <CIcon content={cilInfo} color="white" />
+            </CButton>
+            <CButton
+              disabled={row.level !== 1 ? true : false}
+              color="success"
+              className="btn btn-sm"
+              onClick={() => goToEdit(row.id)}
+            >
+              <CIcon content={cilPen} color="white" />
+            </CButton>
+            {/* <CButton
               color="danger"
               className="btn btn-sm"
               onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
+                window.confirm("Anda yakin ingin menghapus data ini ?")
               }
             >
               <CIcon content={cilTrash} color="white" />
             </CButton> */}
+          </CButtonGroup>
         </div>
       ),
     },
@@ -194,29 +226,59 @@ const AbsensiPTTH = () => {
           filterText={filterText}
         />
 
-        <CPopover content="Cetak Rekapan Absensi Pegawai">
-          <CButton utton type="button" color="info" className="ml-2">
-            <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
-            <CIcon content={cilPrint} />
-          </CButton>
-        </CPopover>
+        {/* <CButton type="button" color="info" className="ml-2">
+          Cetak <CIcon content={cilPrint} />
+        </CButton> */}
       </>
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToRiwayat = (id) => {
-    history.push(`/epekerja/admin/absensi/riwayat-absensi/${id}`);
+  // const goToTambah = (id) => {
+  //   history.push(`/epekerja/admin/pensiun-tambah`);
+  // };
+
+  const goToEdit = (id) => {
+    history.push(`/epekerja/admin/pensiun-edit/${id}`);
+  };
+  const goToAkun = () => {
+    history.push(`/epekerja/admin/akun`);
+  };
+
+  const goToDetail = (id) => {
+    history.push(`/epekerja/admin/user-detail/${id}`);
+  };
+
+  const ExpandableComponent = ({ data }) => {
+    return (
+      <>
+        <div style={{ padding: "10px 63px" }}>
+          <CRow>
+            <CCol md="2">
+              <strong>Foto Profil</strong>
+            </CCol>
+            <CCol>
+              <img
+                className="img-thumbnail"
+                width={100}
+                src={SampleFotoPegawai}
+                alt="foto-profil"
+              />
+            </CCol>
+          </CRow>
+        </div>
+      </>
+    );
   };
 
   return (
     <>
       <CCard>
         <CCardHeader>
-          <h3>Absensi Pegawai Tidak Tetap Harian (PTTH)</h3>
+          <h3>Data Users</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
+          {/* <CButton type="button" color="primary" onClick={goToTambah}>
+            Tambah Pensiun
           </CButton> */}
 
           <DataTable
@@ -231,6 +293,9 @@ const AbsensiPTTH = () => {
             paginationResetDefaultPage={resetPaginationToggle}
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
+            expandableRows
+            expandOnRowClicked
+            expandableRowsComponent={<ExpandableComponent />}
             highlightOnHover
           />
         </CCardBody>
@@ -239,4 +304,4 @@ const AbsensiPTTH = () => {
   );
 };
 
-export default AbsensiPTTH;
+export default Users;

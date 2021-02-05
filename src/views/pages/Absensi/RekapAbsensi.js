@@ -10,7 +10,6 @@ import {
   CForm,
   CModalBody,
   CModalFooter,
-  CBadge,
   CRow,
   CCol,
   CCollapse,
@@ -20,20 +19,75 @@ import {
 import DataTable from "react-data-table-component";
 // import styled from "styled-components";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
-import { useHistory } from "react-router-dom";
+import { cilPrint } from "@coreui/icons";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
 import TambahAbsen from "./TambahAbsen";
 import EditAbsen from "./EditAbsensi";
+import styled from "styled-components";
 
-const RiwayatAbsensi = () => {
+const TextField = styled.input`
+  height: 37px;
+  width: 200px;
+  border-radius: 3px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 1px solid #e5e5e5;
+  padding: 0 32px 0 16px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const ClearButton = styled.button`
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  height: 37px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3e5973;
+  border: none;
+  color: white;
+  padding: 0 10px;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #283c4f;
+  }
+`;
+
+// Handle filter pencarian
+
+const FilterComponent = ({ filterText, onFilter, onClear }) => (
+  <>
+    <TextField
+      id="search"
+      type="text"
+      placeholder="Cari pegawai"
+      aria-label="Search Input"
+      value={filterText}
+      onChange={onFilter}
+    />
+    <ClearButton type="button" onClick={onClear}>
+      Reset
+    </ClearButton>
+  </>
+);
+
+const RekapAbsensi = () => {
+  const [filterText, setFilterText] = useState("");
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [modalTambah, setModalTambah] = useState(false);
-  const [collapse, setCollapse] = useState(false);
   const [collapse2, setCollapse2] = useState(false);
-  const history = useHistory();
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -51,122 +105,111 @@ const RiwayatAbsensi = () => {
     id: null,
   });
 
-  const goBackToParent = () => {
-    history.goBack();
-  };
-
   const data = [
     {
       no: 1,
       id: 1,
-      tgl_absen: "15-02-2021",
-      hari: "Senin",
-      keterangan: 1,
+      nama: "Nova Dwi Sapta",
+      jabatan: "Programmer",
+      hadir: 10,
+      izin: 2,
+      sakit: 1,
+      cuti: 0,
+      tanpa_keterangan: 2,
     },
     {
       no: 2,
       id: 2,
-      tgl_absen: "16-02-2021",
-      hari: "Selasa",
-      keterangan: 1,
+      nama: "Ikwal Ramadhani",
+      jabatan: "IT Support",
+      hadir: 10,
+      izin: 2,
+      sakit: 1,
+      cuti: 0,
+      tanpa_keterangan: 2,
     },
     {
       no: 3,
       id: 3,
-      tgl_absen: "17-02-2021",
-      hari: "Rabu",
-      keterangan: 0,
+      nama: "Iqbal Wahyudi",
+      jabatan: "Programmer",
+      hadir: 10,
+      izin: 2,
+      sakit: 1,
+      cuti: 0,
+      tanpa_keterangan: 2,
     },
     {
       no: 4,
       id: 4,
-      tgl_absen: "18-02-2021",
-      hari: "Kamis",
-      keterangan: 2,
-    },
-    {
-      no: 5,
-      id: 5,
-      tgl_absen: "19-02-2021",
-      hari: "Jumat",
-      keterangan: 3,
+      nama: "Ir. H. Dadang",
+      jabatan: "Programmer",
+      hadir: 10,
+      izin: 2,
+      sakit: 1,
+      cuti: 0,
+      tanpa_keterangan: 2,
     },
   ];
 
+  const filteredData = data.filter((item) => {
+    if (item.nama) {
+      if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
+        return true;
+      }
+    }
+    return false;
+  });
+
   const columns = [
     {
-      name: "No",
-      selector: "no",
-      sortable: true,
-      wrap: true,
-      width: "50px",
-    },
-    {
-      name: "Tgl. Absen",
-      selector: "tgl_absen",
+      name: "Nama",
+      selector: "nama",
       sortable: true,
       // maxWidth: "150px",
       wrap: true,
     },
     {
-      name: "Hari",
-      selector: "hari",
+      name: "Jabatan",
+      selector: "jabatan",
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
     },
     {
-      name: "Keterangan",
-      selector: "keterangan",
+      name: "Hadir",
+      selector: "hadir",
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
-      cell: (row) => {
-        switch (row.keterangan) {
-          case 0:
-            return (
-              <CBadge color="secondary" shape="pill" className="px-2 py-2">
-                Tanpa Keterangan
-              </CBadge>
-            );
-          case 1:
-            return (
-              <CBadge color="success" shape="pill" className="px-2 py-2">
-                Hadir
-              </CBadge>
-            );
-          case 2:
-            return (
-              <CBadge color="danger" shape="pill" className="px-2 py-2">
-                Tidak Hadir
-              </CBadge>
-            );
-          case 3:
-            return (
-              <CBadge color="dark" shape="pill" className="px-2 py-2">
-                Izin
-              </CBadge>
-            );
-          case 4:
-            return (
-              <CBadge color="warning" shape="pill" className="px-2 py-2">
-                Sakit
-              </CBadge>
-            );
-          case 5:
-            return (
-              <CBadge color="info" shape="pill" className="px-2 py-2">
-                Cuti
-              </CBadge>
-            );
-          default:
-            return (
-              <CBadge color="dark" shape="pill" className="px-2 py-2">
-                Tanpa Keterangan
-              </CBadge>
-            );
-        }
-      },
+    },
+    {
+      name: "Izin",
+      selector: "izin",
+      sortable: true,
+      wrap: true,
+      // maxWidth: "150px",
+    },
+    {
+      name: "Sakit",
+      selector: "sakit",
+      sortable: true,
+      wrap: true,
+      // maxWidth: "150px",
+    },
+    {
+      name: "Cuti",
+      selector: "cuti",
+      sortable: true,
+      wrap: true,
+      // maxWidth: "150px",
+    },
+    {
+      name: "Tanpa Keterangan",
+      selector: "tanpa_keterangan",
+      sortable: true,
+      wrap: true,
+      // maxWidth: "150px",
     },
     {
       maxWidth: "180px",
@@ -174,26 +217,8 @@ const RiwayatAbsensi = () => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton
-            color="warning"
-            onClick={() => {
-              setModalEdit({
-                ...modalEdit,
-                modal: !modalEdit.modal,
-                id: row.id,
-              });
-            }}
-            className="text-white mr-1"
-          >
-            <CIcon content={cilPen} />
-          </CButton>
-          <CButton
-            color="danger"
-            onClick={() =>
-              window.confirm(`Anda yakin ingin menghapus data ini ?`)
-            }
-          >
-            <CIcon content={cilTrash} />
+          <CButton color="warning" className="text-white mr-1">
+            Cetak <CIcon content={cilPrint} />
           </CButton>
         </div>
       ),
@@ -208,87 +233,30 @@ const RiwayatAbsensi = () => {
     },
   };
 
-  const SubHeaderComponentMemo = () => {
+  const SubHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText("");
+      }
+    };
+
     return (
       <>
-        <div
-          className="d-flex justify-content-between"
-          style={{ width: "100%" }}
-        >
-          <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Tambah Absen
+        <FilterComponent
+          onFilter={(e) => setFilterText(e.target.value)}
+          onClear={handleClear}
+          filterText={filterText}
+        />
+        <CPopover content="Cetak Rekapan Absensi Pegawai">
+          <CButton type="button" color="info" className="ml-2">
+            <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
+            <CIcon content={cilPrint} />
           </CButton>
-          <div className="d-flex">
-            <CPopover content="Cetak Rekapan Absensi Pegawai">
-              <CButton type="button" color="info" className="ml-2">
-                <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
-                <CIcon content={cilPrint} />
-              </CButton>
-            </CPopover>
-            <CButton
-              onClick={goBackToParent}
-              type="button"
-              color="warning"
-              className="ml-2 text-white"
-            >
-              Kembali
-            </CButton>
-          </div>
-        </div>
+        </CPopover>
       </>
     );
-  };
-
-  const InformasiComponent = () => (
-    <>
-      <CRow className="text-center">
-        <CCol>
-          <CCard className="pt-3 bg-success text-white">
-            <h6>Hadir</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-        <CCol>
-          <CCard className="pt-3 bg-danger text-white">
-            <h6>Tidak Hadir</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-        <CCol>
-          <CCard className="pt-3 bg-dark text-white">
-            <h6>Izin</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-      </CRow>
-      <CRow className="text-center">
-        <CCol>
-          <CCard className="pt-3 bg-warning text-white">
-            <h6>Sakit</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-        <CCol>
-          <CCard className="pt-3 bg-info text-white">
-            <h6>Cuti</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-      </CRow>
-      <CRow className="text-center">
-        <CCol>
-          <CCard className="pt-3 bg-secondary">
-            <h6>Tanpa Keterangan</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-      </CRow>
-    </>
-  );
+  }, [filterText, resetPaginationToggle]);
 
   const handleDateChange = (item) => {
     setState([item.selection]);
@@ -323,34 +291,13 @@ const RiwayatAbsensi = () => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between my-card-header">
-          <h3>Riwayat Absensi Pegawai</h3>
+          <h3>Rekap Absensi Pegawai</h3>
           <span className="font-weight-normal">
             Nova Dwi Sapta Nain Seven S.Tr.Kom
           </span>
         </CCardHeader>
         <CCardBody>
           <CRow>
-            <CCol md="6">
-              <CCard className="shadow">
-                <CCardHeader className="bg-dark">
-                  <h5 className="mb-0">Informasi Absensi</h5>
-                </CCardHeader>
-                <CCollapse show={collapse}>
-                  <CCardBody>
-                    <InformasiComponent />
-                  </CCardBody>
-                </CCollapse>
-                <CCardFooter>
-                  <CButton
-                    type="button"
-                    color="secondary"
-                    onClick={() => setCollapse(!collapse)}
-                  >
-                    {!collapse ? "Klik untuk melihat" : "Tutup"}
-                  </CButton>
-                </CCardFooter>
-              </CCard>
-            </CCol>
             <CCol md="6">
               <CCard className="shadow">
                 <CCardHeader className="bg-dark">
@@ -377,14 +324,14 @@ const RiwayatAbsensi = () => {
 
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             noHeader
             responsive={true}
             customStyles={customStyles}
             pagination
             // paginationResetDefaultPage={resetPaginationToggle}
             subHeader
-            subHeaderComponent={<SubHeaderComponentMemo />}
+            subHeaderComponent={SubHeaderComponentMemo}
             highlightOnHover
           />
         </CCardBody>
@@ -455,4 +402,4 @@ const RiwayatAbsensi = () => {
   );
 };
 
-export default RiwayatAbsensi;
+export default RekapAbsensi;

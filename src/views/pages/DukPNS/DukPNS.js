@@ -13,7 +13,7 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo, cilPen } from "@coreui/icons";
+import { cilPrint, cilInfo} from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -190,7 +190,7 @@ const DukPNS = () => {
       wrap: true,
     },
     {
-      maxWidth: "150px",
+      // maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
@@ -208,7 +208,7 @@ const DukPNS = () => {
               className="btn btn-sm"
               onClick={() => goToEdit(row.id)}
             >
-              <CIcon content={cilPen} color="white" />
+              Catatan Mutasi
             </CButton>
           </CButtonGroup>
         </div>

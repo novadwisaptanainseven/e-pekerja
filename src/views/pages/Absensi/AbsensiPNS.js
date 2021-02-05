@@ -4,17 +4,13 @@ import {
   CCardHeader,
   CCardBody,
   CButton,
-  CButtonGroup,
-  CRow,
-  CCol,
-  CBadge,
   CPopover,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint } from "@coreui/icons";
 
 const TextField = styled.input`
   height: 37px;
@@ -208,12 +204,8 @@ const AbsensiPNS = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToTambah = () => {
-    history.push("/epekerja/admin/cuti-tambah");
-  };
-
   const goToRiwayat = (id) => {
-    history.push(`/epekerja/admin/riwayat-absensi/${id}`);
+    history.push(`/epekerja/admin/absensi/riwayat-absensi/${id}`);
   };
 
   return (
