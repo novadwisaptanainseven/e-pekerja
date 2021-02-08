@@ -34,7 +34,7 @@ const TheContent = () => {
                 )
               );
             })}
-            <Redirect from="/" to="/epekerja/dashboard" />
+            <Redirect from="/" to="/epekerja/user/dashboard" />
           </Switch>
         </Suspense>
       </CContainer>

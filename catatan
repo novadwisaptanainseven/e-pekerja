@@ -1,1 +1,18 @@
+Link 
 1. https://date-fns.org/v2.8.1/docs/format -> Format Tanggal
+
+
+
+Catatan
+Halaman Admin
+1. Tambah penghargaan di detail Pegawai
+
+Halaman User
+1. Isi dashboard yaitu :
+   - Jumlah keluarga
+   - Informasi absensi
+   - Data diri singkat (Nama, Foto)
+
+2. Ketika foto ijazah diklik maka akan menampilkan preview foto ijazah
+
+3. Tambah Penghargaan Pegawai di data kepegawaian

@@ -6,7 +6,6 @@ import {
   Redirect,
 } from "react-router-dom";
 import "./scss/style.scss";
-// import TheLayoutAdmin from "./containers/TheLayoutAdmin";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -15,7 +14,7 @@ const loading = (
 );
 
 // Containers
-// const TheLayout = React.lazy(() => import("./containers/TheLayout"));
+const TheLayout = React.lazy(() => import("./containers/TheLayout"));
 const TheLayoutAdmin = React.lazy(() => import("./containers/TheLayoutAdmin"));
 
 // Pages
@@ -58,6 +57,11 @@ class App extends Component {
               path="/epekerja/admin"
               name="Home"
               render={(props) => <TheLayoutAdmin {...props} />}
+            />
+            <Route
+              path="/epekerja/user"
+              name="Home"
+              render={(props) => <TheLayout {...props} />}
             />
             <Redirect from="/" to="/epekerja/admin/dashboard" />
           </Switch>
