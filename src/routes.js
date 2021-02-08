@@ -3,8 +3,15 @@ import React from "react";
 // Import Dashboard
 const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
 
-// Import DataKepegawaian
-const DataKepegawaian = React.lazy(() => import("./views/pages/User/DataKepegawaian"));
+// Import Data Kepegawaian
+const DataKepegawaian = React.lazy(() =>
+  import("./views/pages/User/DataKepegawaian")
+);
+
+// Import Akun
+const Akun = React.lazy(() => import("./views/pages/User/Akun"));
+const EditAkun = React.lazy(() => import("./views/pages/User/Akun/EditAkun"));
+const EditPassword = React.lazy(() => import("./views/pages/User/Akun/EditPassword"));
 
 const routes = [
   // Dashboard
@@ -20,6 +27,23 @@ const routes = [
     path: "/epekerja/user/data-kepegawaian",
     name: "Data Kepegawaian",
     component: DataKepegawaian,
+  },
+
+  // Data Akun
+  {
+    path: "/epekerja/user/akun",
+    name: "Akun",
+    component: Akun,
+  },
+  {
+    path: "/epekerja/user/akun-edit",
+    name: "Edit Akun",
+    component: EditAkun,
+  },
+  {
+    path: "/epekerja/user/akun-edit-password",
+    name: "Edit Password",
+    component: EditPassword,
   },
 ];
 

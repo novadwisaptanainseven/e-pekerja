@@ -18,6 +18,7 @@ import DataDiklat from "./DataDiklat/DataDiklat";
 import DataBerkas from "./DataBerkas/DataBerkas";
 import RiwayatKerja from "./RiwayatKerja/RiwayatKerja";
 import { useHistory } from "react-router-dom";
+import Penghargaan from "./Penghargaan/Penghargaan";
 
 const DetailPegawai = () => {
   const history = useHistory();
@@ -54,6 +55,9 @@ const DetailPegawai = () => {
                 <CNavLink>Riwayat Kerja</CNavLink>
               </CNavItem>
               <CNavItem>
+                <CNavLink>Penghargaan</CNavLink>
+              </CNavItem>
+              <CNavItem>
                 <CNavLink>Berkas</CNavLink>
               </CNavItem>
             </CNav>
@@ -72,6 +76,9 @@ const DetailPegawai = () => {
               </CTabPane>
               <CTabPane>
                 <RiwayatKerja />
+              </CTabPane>
+              <CTabPane>
+                <Penghargaan />
               </CTabPane>
               <CTabPane>
                 <DataBerkas />

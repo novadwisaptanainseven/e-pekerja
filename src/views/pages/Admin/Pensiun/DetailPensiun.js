@@ -36,7 +36,7 @@ const DetailPenghargaan = ({ match }) => {
         <CForm className="form-horizontal">
           <CCardBody>
             <CButton type="button" color="info" className="mb-3">
-              Cetak Surat Cuti <CIcon content={cilPrint} />
+              Cetak Surat Pensiun <CIcon content={cilPrint} />
             </CButton>
             <table className="table table-striped table-borderless">
               <tbody>

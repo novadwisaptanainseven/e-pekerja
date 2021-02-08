@@ -182,14 +182,6 @@ const DaftarKGB = () => {
             <CButton type="button" color="info" className="ml-2">
               Cetak <CIcon content={cilPrint} />
             </CButton>
-            <CButton
-              onClick={goBackToParent}
-              type="button"
-              color="warning"
-              className="ml-2 text-white"
-            >
-              Kembali
-            </CButton>
           </div>
         </div>
       </>
@@ -218,10 +210,18 @@ const DaftarKGB = () => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between my-card-header">
-          <h3>Daftar Kenaikan Gaji Berkala</h3>
-          <span className="font-weight-normal">
-            Nova Dwi Sapta Nain Seven S.Tr.Kom
-          </span>
+          <div className="title mb-2">
+            <h3>Daftar Kenaikan Gaji Berkala</h3>
+            <h5 className="font-weight-normal">Nova Dwi Sapta Nain Seven</h5>
+          </div>
+          <CButton
+            color="warning"
+            className="text-white"
+            style={{ height: "40px", width: "100px" }}
+            onClick={goBackToParent}
+          >
+            Kembali
+          </CButton>
         </CCardHeader>
         <CCardBody>
           <DataTable

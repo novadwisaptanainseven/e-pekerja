@@ -177,7 +177,7 @@ const DataPendidikan = () => {
       <CModal
         show={modalEdit.modal}
         onClose={() =>
-          setModalEdit({ ...modalEdit, modal: !modalEdit, id: null })
+          setModalEdit({ ...modalEdit, modal: !modalEdit.modal, id: null })
         }
         size="lg"
       >

@@ -1,11 +1,28 @@
-Link 
-1. https://date-fns.org/v2.8.1/docs/format -> Format Tanggal
+
+
+
+
 
 
 
 Catatan
 Halaman Admin
-1. Tambah penghargaan di detail Pegawai
+1. Tambah penghargaan di detail Pegawai (Selesai)
+2. Tambah nama pegawai di judul KGB (Selesai)
+3. Perbaiki tombol kembali di KGB (Selesai)
+4. Tambah nama pegawai di judul Cuti (Selesai)
+5. Perbaiki tombol kembali di cuti (Selesai)
+6. Hitung informasi absensi berdasarkan per tahun (Selesai)
+7. Ganti teks kalender menjadi filter berdasarkan tanggal (Selesai)
+8. Perbaikin tombol kembali di absensi (Selesai)
+9. Tambah nama pegawai di judul Absensi (Selesai)
+10. Tambah Riwayat Penghargaan 
+11. Cetak surat pensiun (Selesai)
+12. Di form tambah pegawai, buat form input data akun.
+    - nama -> nama pegawai
+    - username -> nik
+    - password -> tgl_lahir
+13. Memperbaiki alur absensi. Referensi ada di Figma
 
 Halaman User
 1. Isi dashboard yaitu :
@@ -15,4 +32,4 @@ Halaman User
 
 2. Ketika foto ijazah diklik maka akan menampilkan preview foto ijazah
 
-3. Tambah Penghargaan Pegawai di data kepegawaian
+3. Tambah Penghargaan Pegawai di data kepegawaian (Selesai)

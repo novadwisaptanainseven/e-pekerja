@@ -35,10 +35,10 @@ const TheHeaderDropdown = () => {
         <CDropdownItem header tag="div" color="light" className="text-center">
           <strong>Pengaturan</strong>
         </CDropdownItem>
-        <CDropdownItem onClick={goToAkun}>
+        {/* <CDropdownItem onClick={goToAkun}>
           <CIcon name="cil-user" className="mfe-2" />
           Profil
-        </CDropdownItem>
+        </CDropdownItem> */}
 
         <CDropdownItem onClick={logout}>
           <CIcon name="cil-lock-locked" className="mfe-2" />

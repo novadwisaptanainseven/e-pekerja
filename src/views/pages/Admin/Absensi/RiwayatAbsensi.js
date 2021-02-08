@@ -229,66 +229,45 @@ const RiwayatAbsensi = () => {
                 <CIcon content={cilPrint} />
               </CButton>
             </CPopover>
-            <CButton
-              onClick={goBackToParent}
-              type="button"
-              color="warning"
-              className="ml-2 text-white"
-            >
-              Kembali
-            </CButton>
           </div>
         </div>
       </>
     );
   };
 
-  const InformasiComponent = () => (
-    <>
-      <CRow className="text-center">
-        <CCol>
-          <CCard className="pt-3 bg-success text-white">
-            <h6>Hadir</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-        <CCol>
-          <CCard className="pt-3 bg-danger text-white">
-            <h6>Tidak Hadir</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-        <CCol>
-          <CCard className="pt-3 bg-dark text-white">
-            <h6>Izin</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-      </CRow>
-      <CRow className="text-center">
-        <CCol>
-          <CCard className="pt-3 bg-warning text-white">
-            <h6>Sakit</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-        <CCol>
-          <CCard className="pt-3 bg-info text-white">
-            <h6>Cuti</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-      </CRow>
-      <CRow className="text-center">
-        <CCol>
-          <CCard className="pt-3 bg-secondary">
-            <h6>Tanpa Keterangan</h6>
-            <p>2</p>
-          </CCard>
-        </CCol>
-      </CRow>
-    </>
-  );
+  const InformasiComponent = () => {
+    const arr = [2020, 2021, 2022];
+
+    return (
+      <>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              
+              <th>Tahun</th>
+              <th>Hadir</th>
+              <th>Izin</th>
+              <th>Sakit</th>
+              <th>Cuti</th>
+              <th>TK</th>
+            </tr>
+          </thead>
+          <tbody>
+            {arr.map((item, index) => (
+              <tr>
+                <td>{item}</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    );
+  };
 
   const handleDateChange = (item) => {
     setState([item.selection]);
@@ -323,17 +302,25 @@ const RiwayatAbsensi = () => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between my-card-header">
-          <h3>Riwayat Absensi Pegawai</h3>
-          <span className="font-weight-normal">
-            Nova Dwi Sapta Nain Seven S.Tr.Kom
-          </span>
+          <div className="title mb-2">
+            <h3>Riwayat Absensi Pegawai</h3>
+            <h5 className="font-weight-normal">Nova Dwi Sapta Nain Seven</h5>
+          </div>
+          <CButton
+            color="warning"
+            className="text-white"
+            style={{ height: "40px", width: "100px" }}
+            onClick={goBackToParent}
+          >
+            Kembali
+          </CButton>
         </CCardHeader>
         <CCardBody>
           <CRow>
             <CCol md="6">
               <CCard className="shadow">
                 <CCardHeader className="bg-dark">
-                  <h5 className="mb-0">Informasi Absensi</h5>
+                  <h5 className="mb-0">Informasi Absensi Per Tahun</h5>
                 </CCardHeader>
                 <CCollapse show={collapse}>
                   <CCardBody>
@@ -354,7 +341,7 @@ const RiwayatAbsensi = () => {
             <CCol md="6">
               <CCard className="shadow">
                 <CCardHeader className="bg-dark">
-                  <h5 className="mb-0">Kalender</h5>
+                  <h5 className="mb-0">Filter berdasarkan Tanggal</h5>
                 </CCardHeader>
                 <CCollapse show={collapse2}>
                   <CCardBody className="text-center">
