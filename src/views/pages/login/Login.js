@@ -101,8 +101,8 @@ const Login = () => {
                   <div>
                     <h2>Registrasi</h2>
                     <p>
-                      Buat akun kepegawaian sebagai user pegawai DISPERKIM untuk melihat
-                      data diri Anda
+                      Buat akun kepegawaian sebagai user pegawai DISPERKIM untuk
+                      melihat data diri Anda
                     </p>
                     <Link to="/epekerja/register">
                       <CButton
