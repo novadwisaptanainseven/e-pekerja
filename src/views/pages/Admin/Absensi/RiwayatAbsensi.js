@@ -243,7 +243,6 @@ const RiwayatAbsensi = () => {
         <table className="table table-striped">
           <thead>
             <tr>
-              
               <th>Tahun</th>
               <th>Hadir</th>
               <th>Izin</th>
@@ -386,26 +385,16 @@ const RiwayatAbsensi = () => {
         <CModalHeader closeButton>
           <CModalTitle>Tambah Absensi Pegawai</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahAbsen />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahAbsen
+          modal={{
+            setModal: setModalTambah,
+            modal: modalTambah,
+          }}
+        />
       </CModal>
 
-      {/* Modal Edit Cuti */}
+      {/* Modal Edit */}
       <CModal
         show={modalEdit.modal}
         onClose={() => {

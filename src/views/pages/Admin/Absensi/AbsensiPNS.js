@@ -14,6 +14,11 @@ import {
   CInputGroup,
   CInputGroupPrepend,
   CInputGroupText,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
@@ -21,6 +26,8 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import { format } from "date-fns";
+import TambahAbsen from "./TambahAbsen";
+// const TambahAbsen = React.lazy(() => import("./TambahAbsen"));
 
 const TextField = styled.input`
   height: 37px;
@@ -89,15 +96,26 @@ const AbsensiPNS = () => {
       nip: "19651127 199301 1 001",
       nama: "Ir. H. Dadang Airlangga N, MMT",
       jabatan: "Kepala Dinas",
-      year: 2021,
-      month: 2,
-      tgl_absen: {
-        1: 1,
-        2: 2,
-        3: 1,
-        4: 3,
-        5: 5,
-      },
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
     {
       no: 2,
@@ -105,15 +123,26 @@ const AbsensiPNS = () => {
       nip: "19651127 199301 1 001",
       nama: "Nova Dwi Sapta",
       jabatan: "Programmer",
-      year: 2021,
-      month: 2,
-      tgl_absen: {
-        1: 1,
-        2: 2,
-        3: 1,
-        4: 3,
-        5: 5,
-      },
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
     {
       no: 3,
@@ -121,15 +150,26 @@ const AbsensiPNS = () => {
       nip: "19651127 199301 1 001",
       nama: "Ikwal Ramadhani",
       jabatan: "IT Support",
-      year: 2021,
-      month: 2,
-      tgl_absen: {
-        1: 1,
-        2: 2,
-        3: 1,
-        4: 3,
-        5: 5,
-      },
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
     {
       no: 4,
@@ -137,15 +177,26 @@ const AbsensiPNS = () => {
       nip: "19651127 199301 1 001",
       nama: "Iqbal Wahyudi",
       jabatan: "Programmer",
-      year: 2021,
-      month: 2,
-      tgl_absen: {
-        1: 1,
-        2: 2,
-        3: 1,
-        4: 3,
-        5: 5,
-      },
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
   ];
 
@@ -259,6 +310,12 @@ const AbsensiPNS = () => {
 
   // Expandable Component
   const ExpandableComponent = ({ data }) => {
+    const [modal, setModal] = useState({
+      modal: false,
+      tgl: null,
+      absen: null,
+      keterangan: null,
+    });
     const [days, setDays] = useState([]);
     const current_year = new Date().getFullYear();
     const current_month = new Date().getMonth();
@@ -356,9 +413,6 @@ const AbsensiPNS = () => {
       console.log(arr_tgl_absen);
     };
 
-    // Ketika pertama kali dirender
-    // getDays(current_month, current_year);
-
     return (
       <>
         <div style={{ padding: "10px 63px" }}>
@@ -405,15 +459,7 @@ const AbsensiPNS = () => {
                       onClick={getDaysOnTampil}
                       className="mr-2"
                     >
-                      Tampilkan Tanggal
-                    </CButton>
-
-                    <CButton
-                      type="submit"
-                      color="warning"
-                      onClick={(e) => handleOnSubmit(e)}
-                    >
-                      Simpan Absen
+                      Tampilkan Absen
                     </CButton>
                   </CCol>
                 </CFormGroup>
@@ -422,30 +468,80 @@ const AbsensiPNS = () => {
             <CRow>
               {days.length > 0 &&
                 days.map((item, index) => {
+                  // Get filter tanggal
+                  let filter_tgl = format(
+                    new Date(filterYear, filterMonth, 1),
+                    "yyyy-MM"
+                  );
+
+                  // Get tgl absen ketika modal muncul
+                  let data_tgl = data.absen[index]
+                    ? format(new Date(data.absen[index].tgl), "yyyy-MM")
+                    : null;
+
+                  // Get keterangan
+                  let data_keterangan =
+                    filter_tgl === data_tgl ? data.absen[index].keterangan : "";
+
+                  let data_absen_index =
+                    filter_tgl === data_tgl ? data.absen[index].absen : "empty";
+
+                  let data_absen =
+                    filter_tgl === data_tgl ? data.absen[index].absen : "";
+
+                  // Ubah data absen dari integer menjadi String text
+                  switch (data_absen) {
+                    case 0:
+                      data_absen = "TK";
+                      break;
+                    case 1:
+                      data_absen = "Hadir";
+                      break;
+                    case 2:
+                      data_absen = "Izin";
+                      break;
+                    case 3:
+                      data_absen = "Sakit";
+                      break;
+                    case 4:
+                      data_absen = "Cuti";
+                      break;
+
+                    default:
+                      data_absen = "";
+                      break;
+                  }
+
                   return (
                     <>
-                      <CCol lg="2" md="3" sm="3" xs="6" key={index} className="mb-2">
+                      <CCol
+                        lg="2"
+                        md="3"
+                        sm="3"
+                        xs="6"
+                        key={index}
+                        className="mb-2"
+                      >
                         <CInputGroup className="mb-3">
                           <CInputGroupPrepend>
                             <CInputGroupText>{item}</CInputGroupText>
                           </CInputGroupPrepend>
-                          <CSelect
-                            custom
-                            defaultValue={
-                              data.tgl_absen[item] ? data.tgl_absen[item] : ""
-                            }
+                          <CInput
+                            type="text"
                             name={item}
                             id={item}
-                            onChange={(e) => handleOnChangeAbsensi(e)}
-                          >
-                            <option value="">-- Absensi --</option>
-                            <option value="0">Tidak Hadir</option>
-                            <option value="1">Hadir</option>
-                            <option value="2">Izin</option>
-                            <option value="3">Sakit</option>
-                            <option value="4">Cuti</option>
-                            <option value="5">TK</option>
-                          </CSelect>
+                            readOnly
+                            value={data_absen}
+                            onClick={() =>
+                              setModal({
+                                ...modal,
+                                modal: !modal.modal,
+                                tgl: item,
+                                absen: data_absen_index,
+                                keterangan: data_keterangan,
+                              })
+                            }
+                          />
                         </CInputGroup>
                       </CCol>
                     </>
@@ -454,6 +550,31 @@ const AbsensiPNS = () => {
             </CRow>
           </CForm>
         </div>
+
+        {/* Modal */}
+        <CModal
+          show={modal.modal}
+          onClose={() => setModal({ ...modal, modal: !modal.modal })}
+          size="lg"
+        >
+          <CModalHeader closeButton>
+            <CModalTitle>Tambah Absensi Pegawai</CModalTitle>
+          </CModalHeader>
+
+          <TambahAbsen
+            data={{
+              filterMonth: filterMonth,
+              filterYear: filterYear,
+              tgl: modal.tgl,
+              absen: modal.absen,
+              keterangan: modal.keterangan,
+            }}
+            modal={{
+              setModal: setModal,
+              modal: modal,
+            }}
+          />
+        </CModal>
       </>
     );
   };

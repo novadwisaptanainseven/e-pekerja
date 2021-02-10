@@ -1,15 +1,7 @@
 
 Catatan
 Halaman Admin
-1. Tambah penghargaan di detail Pegawai (Selesai)
-2. Tambah nama pegawai di judul KGB (Selesai)
-3. Perbaiki tombol kembali di KGB (Selesai)
-4. Tambah nama pegawai di judul Cuti (Selesai)
-5. Perbaiki tombol kembali di cuti (Selesai)
-6. Hitung informasi absensi berdasarkan per tahun (Selesai)
-7. Ganti teks kalender menjadi filter berdasarkan tanggal (Selesai)
-8. Perbaikin tombol kembali di absensi (Selesai)
-9. Tambah nama pegawai di judul Absensi (Selesai)
+1. Tambah field keterangan dan keterangan diubah menjadi absen di menu Absensi Pegawai
 10. Tambah Riwayat Penghargaan 
 11. Cetak surat pensiun (Selesai)
 12. Di form tambah pegawai, buat form input data akun.
