@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
+import ExpandableComponent from "./ExpandableComponent";
 
 const TextField = styled.input`
   height: 37px;
@@ -79,6 +80,26 @@ const AbsensiPTTB = () => {
       nip: "19651127 199301 1 001",
       nama: "Ir. H. Dadang Airlangga N, MMT",
       jabatan: "Kepala Dinas",
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
     {
       no: 2,
@@ -86,6 +107,26 @@ const AbsensiPTTB = () => {
       nip: "19651127 199301 1 001",
       nama: "Nova Dwi Sapta",
       jabatan: "Programmer",
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
     {
       no: 3,
@@ -93,6 +134,26 @@ const AbsensiPTTB = () => {
       nip: "19651127 199301 1 001",
       nama: "Ikwal Ramadhani",
       jabatan: "IT Support",
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
     {
       no: 4,
@@ -100,6 +161,26 @@ const AbsensiPTTB = () => {
       nip: "19651127 199301 1 001",
       nama: "Iqbal Wahyudi",
       jabatan: "Programmer",
+      absen: [
+        {
+          tgl: "2021-02-01",
+          hari: "senin",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-02",
+          hari: "selasa",
+          absen: 1,
+          keterangan: "",
+        },
+        {
+          tgl: "2021-02-03",
+          hari: "rabu",
+          absen: 2,
+          keterangan: "Ada acara pernikahan keluarga",
+        },
+      ],
     },
   ];
 
@@ -232,6 +313,9 @@ const AbsensiPTTB = () => {
             subHeader
             subHeaderComponent={SubHeaderComponentMemo}
             highlightOnHover
+            expandableRows
+            expandOnRowClicked
+            expandableRowsComponent={<ExpandableComponent />}
           />
         </CCardBody>
       </CCard>

@@ -1,14 +1,14 @@
 
 Catatan
 Halaman Admin
-1. Tambah field keterangan dan keterangan diubah menjadi absen di menu Absensi Pegawai
+1. Tambah field keterangan dan keterangan diubah menjadi absen di menu Absensi Pegawai (Selesai)
+2. Terapkan sistem baru absensi di semua menu absen yaitu PNS, PTTH, PTTB 
 10. Tambah Riwayat Penghargaan 
-11. Cetak surat pensiun (Selesai)
 12. Di form tambah pegawai, buat form input data akun.
     - nama -> nama pegawai
     - username -> nik
     - password -> tgl_lahir
-13. Memperbaiki alur absensi. Referensi ada di Figma
+13. Memperbaiki alur absensi. Referensi ada di Figma (Selesai)
 
 Halaman User
 

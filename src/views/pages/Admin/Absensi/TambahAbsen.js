@@ -181,8 +181,8 @@ const TambahAbsen = ({ data, modal }) => {
                   </option>
                 </CSelect>
               ) : (
-                <CSelect custom name="absen" id="absen" value="">
-                  <option value="">-- Pilih absen --</option>
+                <CSelect custom name="absen" id="absen">
+                  <option value="" selected>-- Pilih absen --</option>
                   <option value="0">Tanpa Keterangan</option>
                   <option value="1">Hadir</option>
                   <option value="2">Izin</option>

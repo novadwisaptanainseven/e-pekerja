@@ -15,6 +15,9 @@ import {
   CCollapse,
   CCardFooter,
   CPopover,
+  CFormGroup,
+  CLabel,
+  CSelect,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 // import styled from "styled-components";
@@ -87,6 +90,7 @@ const RekapAbsensi = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [modalTambah, setModalTambah] = useState(false);
+  const [dataTahun, setDataTahun] = useState(null);
   const [collapse2, setCollapse2] = useState(false);
   const [state, setState] = useState([
     {
@@ -263,8 +267,8 @@ const RekapAbsensi = () => {
     let timestampStartDate = Date.parse(item.selection.startDate);
     let timestampEndDate = Date.parse(item.selection.endDate);
 
-    let startDate = format(timestampStartDate, "dd-MM-Y");
-    let endDate = format(timestampEndDate, "dd-MM-Y");
+    let startDate = format(timestampStartDate, "Y-MM-dd");
+    let endDate = format(timestampEndDate, "Y-MM-dd");
 
     setFormattedDate({
       ...formattedDate,
@@ -287,26 +291,116 @@ const RekapAbsensi = () => {
     );
   };
 
+  // Mencetak option - option dari select filter tahun
+  const filterTahun = () => {
+    let first_year = 2015;
+    let current_year = new Date().getFullYear();
+    let range_year = current_year - first_year;
+    let arr = [];
+
+    for (let i = first_year; i <= current_year; i++) {
+      arr.push(i);
+    }
+
+    return arr;
+  };
+
+  // handle change of Filter Tahun
+  const handleChangeFilterTahun = (e) => {
+    setDataTahun(e.target.value);
+  };
+
+  // Tombol untuk menampilkan data berdasarkan filter Tahun
+  const handleOnTampilkanDataTahun = () => {
+    console.log(dataTahun);
+  };
+
+  // Tombol untuk menampilkan data berdasarkan filter Tahun
+  const handleOnTampilkanDataTanggal = () => {
+    console.log(formattedDate);
+  };
+
   return (
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between my-card-header">
-          <h3>Rekap Absensi Pegawai</h3>
-          <span className="font-weight-normal">
-            Nova Dwi Sapta Nain Seven S.Tr.Kom
-          </span>
+          <div className="title mb-2">
+            <h3>Rekap Absensi Pegawai</h3>
+            <h5 className="font-weight-normal">Nova Dwi Sapta Nain Seven</h5>
+          </div>
+          {/* <CButton
+            color="warning"
+            className="text-white"
+            style={{ height: "40px", width: "100px" }}
+            onClick={goBackToParent}
+          >
+            Kembali
+          </CButton> */}
         </CCardHeader>
         <CCardBody>
           <CRow>
             <CCol md="6">
               <CCard className="shadow">
                 <CCardHeader className="bg-dark">
-                  <h5 className="mb-0">Kalender</h5>
+                  <h5 className="mb-0">Filter berdasarkan Tanggal</h5>
                 </CCardHeader>
                 <CCollapse show={collapse2}>
                   <CCardBody className="text-center">
                     <p>Atur range tanggal untuk menampilkan data absensi</p>
                     <Kalender />
+                    <CButton
+                      type="button"
+                      color="primary"
+                      className="float-right mb-3"
+                      onClick={handleOnTampilkanDataTanggal}
+                    >
+                      Tampilkan Data
+                    </CButton>
+                  </CCardBody>
+                </CCollapse>
+                <CCardFooter>
+                  <CButton
+                    type="button"
+                    color="secondary"
+                    onClick={() => setCollapse2(!collapse2)}
+                  >
+                    {!collapse2 ? "Klik untuk melihat" : "Tutup"}
+                  </CButton>
+                </CCardFooter>
+              </CCard>
+            </CCol>
+            <CCol md="6">
+              <CCard className="shadow">
+                <CCardHeader className="bg-dark">
+                  <h5 className="mb-0">Filter berdasarkan per Tahun</h5>
+                </CCardHeader>
+                <CCollapse show={collapse2}>
+                  <CCardBody>
+                    <CForm>
+                      <CFormGroup>
+                        <CLabel>Masukkan tahun</CLabel>
+                        <CSelect
+                          costum
+                          name="filter_tahun"
+                          id="filter_tahun"
+                          value={dataTahun}
+                          onChange={(e) => handleChangeFilterTahun(e)}
+                        >
+                          <option value="">--- Pilih Tahun ---</option>
+                          {filterTahun().map((item, index) => (
+                            <option value={item}>{item}</option>
+                          ))}
+                        </CSelect>
+                      </CFormGroup>
+                      <CButton
+                        type="button"
+                        color="primary"
+                        className="float-right mb-3"
+                        onClick={handleOnTampilkanDataTahun}
+                      >
+                        Tampilkan Data
+                      </CButton>
+                    </CForm>
                   </CCardBody>
                 </CCollapse>
                 <CCardFooter>
