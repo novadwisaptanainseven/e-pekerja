@@ -29,6 +29,8 @@ const EditDataKeluarga = ({ id }) => {
         <CLabel htmlFor="hubungan">Hubungan</CLabel>
         <CSelect custom name="hubungan" id="hubungan">
           <option value="">-- Pilih Hubungan --</option>
+          <option value="ayah">Ayah</option>
+          <option value="ibu">Ibu</option>
           <option value="suami">Suami</option>
           <option value="istri">Istri</option>
           <option value="anak_kandung">Anak Kandung</option>

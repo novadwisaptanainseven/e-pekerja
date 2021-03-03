@@ -9,11 +9,14 @@ import {
   CModalBody,
   CModalFooter,
   CForm,
+  CCol,
+  CRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
 import TambahDataPendidikan from "./TambahDataPendidikan";
 import EditDataPendidikan from "./EditDataPendidikan";
+import { SampleIjazah } from "src/assets/index";
 
 const DataPendidikan = () => {
   const [modalTambah, setModalTambah] = useState(false);
@@ -30,6 +33,7 @@ const DataPendidikan = () => {
       jenjang: "D4/S1",
       tahun_lulus: "2020",
       no_ijazah: "12-AD-IA-39",
+      file_ijazah: "ijazah.jpg",
     },
     {
       id: 2,
@@ -38,6 +42,7 @@ const DataPendidikan = () => {
       jenjang: "S1",
       tahun_lulus: "2020",
       no_ijazah: "12-AD-IA-39",
+      file_ijazah: "ijazah.pdf",
     },
   ];
 
@@ -121,6 +126,31 @@ const DataPendidikan = () => {
     },
   };
 
+  // Expandable Component
+  const ExpandableComponent = ({ data }) => {
+    let ext_file = data.file_ijazah.split(".");
+    let ext_status = ext_file[ext_file.length - 1];
+
+    return (
+      <>
+        <div style={{ padding: "10px 63px" }}>
+          <CRow>
+            <CCol md="2">
+              <strong>File Ijazah</strong>
+            </CCol>
+            <CCol>
+              {ext_status === "jpg" ? (
+                <img width={200} src={SampleIjazah} alt={data.file_ijazah} />
+              ) : (
+                <a href="#">{data.file_ijazah}</a>
+              )}
+            </CCol>
+          </CRow>
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       <div className="my-3">
@@ -142,6 +172,10 @@ const DataPendidikan = () => {
           noHeader
           responsive={true}
           customStyles={customStyles}
+          expandableRows
+          expandableRowsComponent={<ExpandableComponent />}
+          highlightOnHover
+          expandOnRowClicked
         />
       </div>
 

@@ -13,6 +13,7 @@ import {
   CForm,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
+import Select from "react-select";
 
 const TambahPensiun = () => {
   const history = useHistory();
@@ -42,12 +43,17 @@ const TambahPensiun = () => {
                 <CLabel>Nama Pegawai</CLabel>
               </CCol>
               <CCol>
-                <CSelect custom name="nama" id="nama">
-                  <option value="">-- Pilih Pegawai --</option>
-                  <option value="1">Nova Dwi Sapta (02312321312321)</option>
-                  <option value="2">Ikwal Ramadhani (02312321312321)</option>
-                  <option value="3">Iqbal Wahyudi (02312321312321)</option>
-                </CSelect>
+                <Select
+                  name="nama"
+                  id="nama"
+                  isSearchable
+                  isClearable
+                  options={[
+                    { value: "1", label: "Nova Dwi Sapta Nain Seven" },
+                    { value: "2", label: "Ikwal Ramadhani" },
+                    { value: "3", label: "Iqbal Wahyudi" },
+                  ]}
+                />
               </CCol>
             </CFormGroup>
 

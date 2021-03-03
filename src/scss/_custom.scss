@@ -8,6 +8,15 @@
   width: 100%;
 }
 
+.input-error {
+  border: 1px solid rgb(255, 80, 80);
+  border-radius: 5px;
+}
+
+.text-error {
+  font-size: 0.96em;
+}
+
 @media screen and (max-width: "768px") {
   .my-card-header {
     flex-direction: column;

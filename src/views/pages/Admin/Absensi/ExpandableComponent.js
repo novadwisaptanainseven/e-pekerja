@@ -93,18 +93,18 @@ const ExpandableComponent = ({ data }) => {
     });
   };
 
-//   const handleOnSubmit = (e) => {
-//     e.preventDefault();
-//     let arr_tgl_absen = [];
+  //   const handleOnSubmit = (e) => {
+  //     e.preventDefault();
+  //     let arr_tgl_absen = [];
 
-//     for (const tgl in saveDay.tgl_absen) {
-//       arr_tgl_absen.push(
-//         `${tgl}/${saveDay.month}/${saveDay.year} => ${saveDay.tgl_absen[tgl]}`
-//       );
-//     }
+  //     for (const tgl in saveDay.tgl_absen) {
+  //       arr_tgl_absen.push(
+  //         `${tgl}/${saveDay.month}/${saveDay.year} => ${saveDay.tgl_absen[tgl]}`
+  //       );
+  //     }
 
-//     console.log(arr_tgl_absen);
-//   };
+  //     console.log(arr_tgl_absen);
+  //   };
 
   return (
     <>

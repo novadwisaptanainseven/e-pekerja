@@ -145,22 +145,20 @@ const Penghargaan = () => {
       width: "50px",
     },
     {
-      name: "NIP",
-      selector: "nip",
-      sortable: true,
-      wrap: true,
-      // maxWidth: "200px",
-    },
-    {
-      name: "Nama",
-      selector: "nama",
-      sortable: true,
-      // maxWidth: "200px",
-      wrap: true,
-    },
-    {
       name: "Nama Penghargaan",
       selector: "nama_penghargaan",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Pemberi",
+      selector: "pemberi",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Tgl. Penghargaan",
+      selector: "tgl_penghargaan",
       sortable: true,
       wrap: true,
     },
@@ -211,18 +209,6 @@ const Penghargaan = () => {
   const ExpandableComponent = ({ data }) => (
     <>
       <div style={{ padding: "10px 63px" }}>
-        <CRow className="mb-1">
-          <CCol md="3">
-            <strong>Pemberi</strong>
-          </CCol>
-          <CCol>{data.pemberi}</CCol>
-        </CRow>
-        <CRow className="mb-1">
-          <CCol md="3">
-            <strong>Tgl. Penghargaan</strong>
-          </CCol>
-          <CCol>{data.tgl_penghargaan}</CCol>
-        </CRow>
         <CRow className="mb-1">
           <CCol md="3">
             <strong>Dokumentasi</strong>

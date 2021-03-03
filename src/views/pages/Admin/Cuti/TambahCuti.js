@@ -4,7 +4,7 @@ import { CFormGroup, CInput, CLabel, CCol, CSelect } from "@coreui/react";
 const TambahCuti = () => {
   return (
     <>
-      <CFormGroup row>
+      {/* <CFormGroup row>
         <CCol md="3">
           <CLabel>Nama Pegawai</CLabel>
         </CCol>
@@ -16,7 +16,7 @@ const TambahCuti = () => {
             <option value="3">Iqbal Wahyudi (02312321312321)</option>
           </CSelect>
         </CCol>
-      </CFormGroup>
+      </CFormGroup> */}
 
       <CFormGroup row>
         <CCol md="3">

@@ -9,11 +9,14 @@ import {
   CModalBody,
   CModalFooter,
   CForm,
+  CCol,
+  CRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
 import TambahDataDiklat from "./TambahDataDiklat";
 import EditDataDiklat from "./EditDataDiklat";
+import { SampleIjazah } from "src/assets";
 
 const DataDiklat = () => {
   const [modalTambah, setModalTambah] = useState(false);
@@ -30,6 +33,7 @@ const DataDiklat = () => {
       penyelenggara: "Penyelenggara",
       tahun_diklat: "1997",
       jml_jam: "500",
+      dokumentasi: "dokumentasi_diklat.jpg",
     },
     {
       id: 2,
@@ -38,6 +42,7 @@ const DataDiklat = () => {
       penyelenggara: "Penyelenggara",
       tahun_diklat: "2003",
       jml_jam: "360",
+      dokumentasi: "dokumentasi_diklat.pdf",
     },
   ];
 
@@ -121,6 +126,31 @@ const DataDiklat = () => {
     },
   };
 
+  // Expandable Component
+  const ExpandableComponent = ({ data }) => {
+    let ext_file = data.dokumentasi.split(".");
+    let ext_status = ext_file[ext_file.length - 1];
+
+    return (
+      <>
+        <div style={{ padding: "10px 63px" }}>
+          <CRow>
+            <CCol md="2">
+              <strong>Dokumentasi</strong>
+            </CCol>
+            <CCol>
+              {ext_status === "jpg" ? (
+                <img width={200} src={SampleIjazah} alt={data.dokumentasi} />
+              ) : (
+                <a href="#">{data.dokumentasi}</a>
+              )}
+            </CCol>
+          </CRow>
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       <div className="my-3">
@@ -142,6 +172,10 @@ const DataDiklat = () => {
           noHeader
           responsive={true}
           customStyles={customStyles}
+          expandableRows
+          expandableRowsComponent={<ExpandableComponent />}
+          expandOnRowClicked
+          highlightOnHover
         />
       </div>
 

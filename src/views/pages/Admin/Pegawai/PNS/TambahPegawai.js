@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCard,
   CCardBody,
@@ -21,6 +21,32 @@ import { useHistory } from "react-router-dom";
 
 const TambahPegawai = () => {
   const history = useHistory();
+  const [selectedFile, setSelectedFile] = useState();
+  const [preview, setPreview] = useState();
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+
+    // Free memory when ever this component is unmounted
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [selectedFile]);
+
+  const onSelectFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile(undefined);
+      return;
+    }
+
+    setSelectedFile(e.target.files[0]);
+  };
 
   const goBackToParent = () => {
     history.goBack();
@@ -271,8 +297,6 @@ const TambahPegawai = () => {
                     />
                   </CCol>
                 </CFormGroup>
-              </CCol>
-              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel>TMT. Golongan</CLabel>
@@ -301,6 +325,8 @@ const TambahPegawai = () => {
                     />
                   </CCol>
                 </CFormGroup>
+              </CCol>
+              <CCol md="6">
                 <CFormGroup row>
                   <CCol>
                     <CLabel>TMT. Jabatan</CLabel>
@@ -332,7 +358,12 @@ const TambahPegawai = () => {
                 <CFormGroup row>
                   <CLabel col>Foto</CLabel>
                   <CCol xs="12" md="9">
-                    <CInputFile custom id="custom-file-input" />
+                    <CInputFile
+                      custom
+                      name="foto"
+                      id="custom-file-input"
+                      onChange={(e) => onSelectFile(e)}
+                    />
                     <CLabel
                       style={{ width: "353px", left: 15 }}
                       htmlFor="custom-file-input"
@@ -340,6 +371,14 @@ const TambahPegawai = () => {
                     >
                       Pilih Foto
                     </CLabel>
+                    {preview && (
+                      <img
+                        src={preview}
+                        alt={preview}
+                        className="img-thumbnail mt-2 mb-1"
+                        width={200}
+                      />
+                    )}
                     <CFormText className="help-block">
                       Foto harus bertipe jpg, jpeg, atau png dengan ukuran
                       kurang dari 2 MB
@@ -418,6 +457,34 @@ const TambahPegawai = () => {
                       name="nama_akademi"
                       id="nama_akademi"
                       placeholder="Masukkan nama akademi"
+                      required
+                    />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol>
+                    <CLabel>Jurusan</CLabel>
+                  </CCol>
+                  <CCol md="9" sm="12">
+                    <CInput
+                      type="text"
+                      name="jurusan"
+                      id="jurusan"
+                      placeholder="Masukkan jurusan"
+                      required
+                    />
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol>
+                    <CLabel>Tahun Lulus</CLabel>
+                  </CCol>
+                  <CCol md="9" sm="12">
+                    <CInput
+                      type="text"
+                      name="tahun_lulus"
+                      id="tahun_lulus"
+                      placeholder="Masukkan tahun lulus"
                       required
                     />
                   </CCol>

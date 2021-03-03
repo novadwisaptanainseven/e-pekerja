@@ -12,6 +12,14 @@ const TambahBerkas = () => {
           <CInput type="file" name="berkas" id="berkas" />
         </CCol>
       </CFormGroup>
+      <CFormGroup row>
+        <CCol md="2">
+          <CLabel>Keterangan</CLabel>
+        </CCol>
+        <CCol>
+          <CInput type="text" name="keterangan" id="keterangan" />
+        </CCol>
+      </CFormGroup>
     </>
   );
 };

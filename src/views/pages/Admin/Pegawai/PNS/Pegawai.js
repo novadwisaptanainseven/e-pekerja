@@ -83,6 +83,7 @@ const Pegawai = () => {
       sub_bidang: "Pembinaan Permukiman",
       pangkat_golongan: "IIa / Pengatur Muda",
       no_hp: "0812323121",
+      jabatan: "Kepala Dinas",
     },
     {
       no: 2,
@@ -92,6 +93,7 @@ const Pegawai = () => {
       sub_bidang: "Sub. Bagian Perencanaan Program dan Keuangan",
       pangkat_golongan: "IIa / Pengatur Muda",
       no_hp: "0812323121",
+      jabatan: "Kepala Bidang",
     },
     {
       no: 3,
@@ -101,6 +103,7 @@ const Pegawai = () => {
       sub_bidang: "Pembinaan Permukiman",
       pangkat_golongan: "IIa / Pengatur Muda",
       no_hp: "0812323121",
+      jabatan: "Staff Administrasi",
     },
   ];
 
@@ -246,6 +249,12 @@ const Pegawai = () => {
   const ExpandableComponent = ({ data }) => (
     <>
       <div style={{ padding: "10px 63px" }}>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>Jabatan</strong>
+          </CCol>
+          <CCol>{data.jabatan}</CCol>
+        </CRow>
         <CRow className="mb-1">
           <CCol md="2">
             <strong>Pangkat / Gol</strong>

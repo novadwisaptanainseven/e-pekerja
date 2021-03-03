@@ -129,7 +129,7 @@ const EditPegawai = ({ match }) => {
                     </CSelect>
                   </CCol>
                 </CFormGroup>
-                <CFormGroup row>
+                {/* <CFormGroup row>
                   <CCol>
                     <CLabel>Status Pegawai</CLabel>
                   </CCol>
@@ -141,7 +141,7 @@ const EditPegawai = ({ match }) => {
                       <option value="3">Option #3</option>
                     </CSelect>
                   </CCol>
-                </CFormGroup>
+                </CFormGroup> */}
                 <CFormGroup row>
                   <CCol>
                     <CLabel>Agama</CLabel>
@@ -213,6 +213,20 @@ const EditPegawai = ({ match }) => {
                         Perempuan
                       </CLabel>
                     </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol>
+                    <CLabel>No. HP</CLabel>
+                  </CCol>
+                  <CCol md="9" sm="12">
+                    <CInput
+                      type="text"
+                      name="no_hp"
+                      id="no_hp"
+                      placeholder="Masukkan no hp"
+                      required
+                    />
                   </CCol>
                 </CFormGroup>
               </CCol>
@@ -315,20 +329,7 @@ const EditPegawai = ({ match }) => {
                     />
                   </CCol>
                 </CFormGroup>
-                <CFormGroup row>
-                  <CCol>
-                    <CLabel>No. HP</CLabel>
-                  </CCol>
-                  <CCol md="9" sm="12">
-                    <CInput
-                      type="text"
-                      name="no_hp"
-                      id="no_hp"
-                      placeholder="Masukkan no hp"
-                      required
-                    />
-                  </CCol>
-                </CFormGroup>
+
                 <CFormGroup row>
                   <CLabel col>Foto</CLabel>
                   <CCol xs="12" md="9">

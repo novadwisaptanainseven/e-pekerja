@@ -4,7 +4,7 @@ import { CFormGroup, CLabel, CInput, CFormText, CCol } from "@coreui/react";
 const TambahPenghargaan = () => {
   return (
     <>
-      <CFormGroup row>
+      {/* <CFormGroup row>
         <CCol md="3">
           <CLabel>Nama penerima</CLabel>
         </CCol>
@@ -16,7 +16,7 @@ const TambahPenghargaan = () => {
             placeholder="Masukkan nama penerima penghargaan"
           />
         </CCol>
-      </CFormGroup>
+      </CFormGroup> */}
       <CFormGroup row>
         <CCol md="3">
           <CLabel>Nama Penghargaan</CLabel>

@@ -105,6 +105,10 @@ const DataDiri = () => {
                   <th>Masa Kerja Seluruhnya</th>
                   <td>2 tahun 4 bulan</td>
                 </tr>
+                <tr>
+                  <th>Gaji Pokok</th>
+                  <td>Rp. 3.000.000</td>
+                </tr>
               </tbody>
             </table>
           </CCol>

@@ -326,7 +326,6 @@ const RekapAbsensi = () => {
         <CCardHeader className="d-flex justify-content-between my-card-header">
           <div className="title mb-2">
             <h3>Rekap Absensi Pegawai</h3>
-            <h5 className="font-weight-normal">Nova Dwi Sapta Nain Seven</h5>
           </div>
           {/* <CButton
             color="warning"

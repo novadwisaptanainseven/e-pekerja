@@ -12,6 +12,7 @@ import {
   CModalFooter,
   CRow,
   CCol,
+  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 // import styled from "styled-components";
@@ -44,7 +45,7 @@ const DaftarKGB = () => {
       tmt_kenaikan_gaji: "1 Februari 2021",
       peraturan: "PP No.30 Tahun 2015",
       kenaikan_gaji_yad: "1 Februari 2023",
-      status_kgb: 1,
+      status_kgb: 2,
       pangkat_golongan: "IV/c (Pembina Utama Muda)",
       created_at: "03-02-2021",
     },
@@ -56,7 +57,7 @@ const DaftarKGB = () => {
       tmt_kenaikan_gaji: "1 Februari 2023",
       peraturan: "PP No.30 Tahun 2015",
       kenaikan_gaji_yad: "1 Februari 2025",
-      status_kgb: 1,
+      status_kgb: 2,
       pangkat_golongan: "IV/c (Pembina Utama Muda)",
       created_at: "05-02-2021",
     },
@@ -192,13 +193,30 @@ const DaftarKGB = () => {
   const ExpandableComponent = ({ data }) => (
     <div style={{ padding: "10px 63px" }}>
       <CRow className="mb-1">
-        <CCol md="3">
+        <CCol md="4">
           <strong>Tgl. Pembuatan KGB</strong>
         </CCol>
         <CCol>{data.created_at}</CCol>
       </CRow>
       <CRow className="mb-1">
-        <CCol md="3">
+        <CCol md="4">
+          <strong>Status</strong>
+        </CCol>
+        <CCol>
+          {data.status_kgb === 1 && (
+            <CBadge className="py-2 px-3" color="success" shape="pill">
+              Sedang Berjalan
+            </CBadge>
+          )}
+          {data.status_kgb === 2 && (
+            <CBadge className="py-2 px-3" color="warning" shape="pill">
+              Masa KGB kadaluarsa
+            </CBadge>
+          )}
+        </CCol>
+      </CRow>
+      <CRow className="mb-1">
+        <CCol md="4">
           <strong>Peraturan</strong>
         </CCol>
         <CCol>{data.peraturan}</CCol>
