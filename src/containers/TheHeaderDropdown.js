@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CDropdown,
   CDropdownItem,
@@ -9,23 +9,50 @@ import {
 import CIcon from "@coreui/icons-react";
 import { SampleAvatar } from "src/assets";
 import { useHistory } from "react-router-dom";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { logout } from "src/context/actions/Auth/logout";
+import { cekUser } from "src/context/actions/Auth/cekUser";
+import { getImage } from "src/context/actions/DownloadFile";
+
+const MySwal = withReactContent(Swal);
 
 const TheHeaderDropdown = () => {
   const history = useHistory();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    cekUser(setCurrentUser);
+  }, []);
 
   const goToAkun = () => {
     history.push(`/epekerja/admin/akun`);
-  }
-  const logout = () => {
-    history.push(`/epekerja/login`);
-  }
+  };
+  const handleLogout = () => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Logout",
+      text: "Anda yakin ingin logout ?",
+      confirmButtonText: "YA",
+      showCancelButton: "TIDAK",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Anda berhasil Logout", "", "success").then((res) => {
+          logout();
+        });
+      }
+    });
+  };
 
   return (
     <CDropdown inNav className="c-header-nav-items mx-2" direction="down">
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <div className="c-avatar">
           <CImg
-            src={SampleAvatar}
+            src={currentUser ? getImage(currentUser.foto_profil) : ""}
+            style={{
+              height: "36px",
+            }}
             className="c-avatar-img"
             alt="admin@bootstrapmaster.com"
           />
@@ -40,7 +67,7 @@ const TheHeaderDropdown = () => {
           Profil
         </CDropdownItem> */}
 
-        <CDropdownItem onClick={logout}>
+        <CDropdownItem onClick={handleLogout}>
           <CIcon name="cil-lock-locked" className="mfe-2" />
           Log Out
         </CDropdownItem>

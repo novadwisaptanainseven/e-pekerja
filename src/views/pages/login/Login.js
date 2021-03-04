@@ -23,12 +23,13 @@ import { login } from "src/context/actions/Auth/login";
 import { cilInfo } from "@coreui/icons";
 import { LoadAnimationBlue } from "src/assets";
 import { LOGIN_CLEAN_UP } from "src/context/actionTypes";
+import { checkToken } from "src/helpers/checkToken";
 
 const Login = () => {
   const history = useHistory();
-  const [formLogin, setFormLogin] = useState(null);
   const { loginState, loginDispatch } = useContext(GlobalContext);
   const { loading, data, error } = loginState;
+  const [tokenAlert, setTokenAlert] = useState(true);
 
   // Inisialisasi state untuk handle login
   const initState = {
@@ -38,6 +39,10 @@ const Login = () => {
 
   // Jika login berhasil, redirect ke dashboard
   useEffect(() => {
+    if (tokenAlert) {
+      checkToken(history);
+    }
+
     if (data) {
       // Jika level user adalah admin, maka redirect ke dashboard admin
       if (data.level === 1) {
@@ -49,12 +54,14 @@ const Login = () => {
       }
     }
 
+    // Untuk menampilkan alert ketika user belum logout
+
     return () => {
       loginDispatch({
         type: LOGIN_CLEAN_UP,
       });
     };
-  }, [data]);
+  }, [data, tokenAlert]);
 
   // Set rules of form validation using Yup
   const validationSchema = Yup.object().shape({
@@ -64,6 +71,7 @@ const Login = () => {
 
   const handleFormSubmit = (values) => {
     // Lakukan proses login
+    setTokenAlert(false);
     login(values, loginDispatch);
   };
 
