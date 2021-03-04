@@ -1,9 +1,10 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { CContainer, CFade } from "@coreui/react";
 
 // routes config
 import routes from "../routes_admin";
+import { GlobalContext } from "src/context/Provider";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -12,6 +13,14 @@ const loading = (
 );
 
 const TheContentAdmin = () => {
+  const { userState } = useContext(GlobalContext);
+
+  useEffect(() => {
+    console.log(userState);
+  }, [userState]);
+
+  console.log(userState.data);
+
   return (
     <main className="c-main">
       <CContainer fluid>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CDropdown,
   CDropdownItem,
@@ -14,20 +14,19 @@ import withReactContent from "sweetalert2-react-content";
 import { logout } from "src/context/actions/Auth/logout";
 import { cekUser } from "src/context/actions/Auth/cekUser";
 import { getImage } from "src/context/actions/DownloadFile";
+import { GlobalContext } from "src/context/Provider";
 
 const MySwal = withReactContent(Swal);
 
 const TheHeaderDropdown = () => {
   const history = useHistory();
   const [currentUser, setCurrentUser] = useState(null);
+  const { userState, userDispatch } = useContext(GlobalContext);
 
   useEffect(() => {
-    cekUser(setCurrentUser);
+    cekUser(setCurrentUser, userDispatch);
   }, []);
 
-  const goToAkun = () => {
-    history.push(`/epekerja/admin/akun`);
-  };
   const handleLogout = () => {
     MySwal.fire({
       icon: "warning",
@@ -39,6 +38,9 @@ const TheHeaderDropdown = () => {
       if (result.isConfirmed) {
         Swal.fire("Anda berhasil Logout", "", "success").then((res) => {
           logout();
+          sessionStorage.removeItem("token");
+          sessionStorage.removeItem("level");
+          window.location.href = "/epekerja/login";
         });
       }
     });

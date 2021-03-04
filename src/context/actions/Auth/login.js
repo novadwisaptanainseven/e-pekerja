@@ -14,6 +14,7 @@ export const login = (values, dispatch) => {
     .post("login", values)
     .then((res) => {
       sessionStorage.token = res.data.token;
+      sessionStorage.level = res.data.user.level;
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data.user,
