@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useMemo, useRef } from "react";
 import {
   CCard,
   CCardBody,
@@ -10,15 +10,25 @@ import {
 import CIcon from "@coreui/icons-react";
 
 import { CChartPie } from "@coreui/react-chartjs";
+import { GlobalContext } from "src/context/Provider";
+import { getDashboardInformation } from "src/context/actions/Dashboard/getDashboardInformation";
+import axiosInstance from "src/helpers/axios";
 
 const Dashboard = () => {
+  const { dashboardState, dashboardDispatch } = useContext(GlobalContext);
+  const { data, loading, error } = dashboardState;
+
+  useEffect(() => {
+    getDashboardInformation(dashboardDispatch);
+  }, []);
+
   return (
     <>
       <CRow>
         <CCol xs="12" sm="6" lg="4">
           <CWidgetIcon
             text="Total Pegawai"
-            header="100"
+            header={data ? `${data.total_pegawai}` : "..."}
             color="info"
             iconPadding={false}
           >
@@ -28,7 +38,7 @@ const Dashboard = () => {
         <CCol xs="12" sm="6" lg="4">
           <CWidgetIcon
             text="Pegawai Cuti"
-            header="100"
+            header={data ? `${data.total_cuti}` : "..."}
             color="primary"
             iconPadding={false}
           >
@@ -38,7 +48,7 @@ const Dashboard = () => {
         <CCol xs="12" sm="6" lg="4">
           <CWidgetIcon
             text="Total Pengguna"
-            header="100"
+            header={data ? `${data.total_users}` : "..."}
             color="success"
             iconPadding={false}
           >
@@ -47,50 +57,58 @@ const Dashboard = () => {
         </CCol>
       </CRow>
 
-      <CRow>
-        <CCol xs="12" lg="6">
-          <CCard>
-            <CCardHeader>Klasifikasi Data Pegawai</CCardHeader>
-            <CCardBody>
-              <CChartPie
-                datasets={[
-                  {
-                    backgroundColor: ["#41B883", "#FFCE56", "#00D8FF"],
-                    data: [50, 20, 30],
-                  },
-                ]}
-                labels={["PNS", "PTTB", "PTTH"]}
-                options={{
-                  tooltips: {
-                    enabled: true,
-                  },
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs="12" lg="6">
-          <CCard>
-            <CCardHeader>Gender Pegawai</CCardHeader>
-            <CCardBody>
-              <CChartPie
-                datasets={[
-                  {
-                    backgroundColor: ["#36A2EB", "#FF6384"],
-                    data: [30, 10],
-                  },
-                ]}
-                labels={["Pria", "Wanita"]}
-                options={{
-                  tooltips: {
-                    enabled: true,
-                  },
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
+      {data && !loading && (
+        <>
+          <CRow>
+            <CCol xs="12" lg="6">
+              <CCard>
+                <CCardHeader>Klasifikasi Data Pegawai</CCardHeader>
+                <CCardBody>
+                  <CChartPie
+                    datasets={[
+                      {
+                        backgroundColor: ["#41B883", "#FFCE56", "#00D8FF"],
+                        data: [
+                          data.total_pns,
+                          data.total_pttb,
+                          data.total_ptth,
+                        ],
+                      },
+                    ]}
+                    labels={["PNS", "PTTB", "PTTH"]}
+                    options={{
+                      tooltips: {
+                        enabled: true,
+                      },
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs="12" lg="6">
+              <CCard>
+                <CCardHeader>Gender Pegawai</CCardHeader>
+                <CCardBody>
+                  <CChartPie
+                    datasets={[
+                      {
+                        backgroundColor: ["#36A2EB", "#FF6384"],
+                        data: [data.total_pria, data.total_wanita],
+                      },
+                    ]}
+                    labels={["Pria", "Wanita"]}
+                    options={{
+                      tooltips: {
+                        enabled: true,
+                      },
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+        </>
+      )}
     </>
   );
 };

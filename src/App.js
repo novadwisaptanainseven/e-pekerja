@@ -65,7 +65,7 @@ class App extends Component {
                 name="Home"
                 render={(props) => <TheLayout {...props} />}
               />
-              <Redirect from="/" to="/epekerja/admin/dashboard" />
+              <Redirect from="/" to="/epekerja/login" />
             </Switch>
           </React.Suspense>
         </Router>

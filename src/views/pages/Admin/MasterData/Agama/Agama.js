@@ -1,28 +1,24 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
+import { GlobalContext } from "src/context/Provider";
+import { getAgama } from "src/context/actions/Agama/getAgama";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { deleteAgama } from "src/context/actions/Agama/deleteAgama";
+
+const MySwal = withReactContent(swal2);
 
 const Agama = () => {
   const history = useHistory();
+  const { agamaState, agamaDispatch } = useContext(GlobalContext);
+  const { data, loading, error } = agamaState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      agama: "Islam",
-    },
-    {
-      no: 2,
-      id: 2,
-      agama: "Kristen",
-    },
-    {
-      no: 3,
-      id: 3,
-      agama: "Hindu",
-    },
-  ];
+  useEffect(() => {
+    // Get Data Agama
+    getAgama(agamaDispatch);
+  }, []);
 
   const columns = [
     {
@@ -44,18 +40,14 @@ const Agama = () => {
           <CButton
             color="success"
             className="btn btn-sm mr-1"
-            onClick={() => goToEdit(row.id)}
+            onClick={() => goToEdit(row.id_agama)}
           >
             Ubah
           </CButton>
           <CButton
             color="danger"
             className="btn btn-sm mr-1"
-            onClick={() =>
-              window.confirm(
-                `Anda yakin ingin hapus data dengan id : ${row.id}`
-              )
-            }
+            onClick={() => handleDelete(row.id_agama)}
           >
             Hapus
           </CButton>
@@ -78,6 +70,30 @@ const Agama = () => {
 
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/master-data/agama-edit/${id}`);
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Delete pesan
+        deleteAgama(id, agamaDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   return (

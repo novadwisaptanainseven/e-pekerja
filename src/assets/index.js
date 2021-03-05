@@ -4,6 +4,7 @@ import SampleIjazah from "./img/ijazah_sample.jpg";
 import SampleSertifikat from "./img/sertifikat_sample.JPG";
 import BGProfil from "./img/herringbone.png";
 import LoadAnimationBlue from "./img/load_animation_blue.gif";
+import LoadAnimationWhite from "./img/load_animation_white.gif";
 
 export {
   SampleAvatar,
@@ -12,4 +13,5 @@ export {
   SampleIjazah,
   SampleSertifikat,
   LoadAnimationBlue,
+  LoadAnimationWhite,
 };

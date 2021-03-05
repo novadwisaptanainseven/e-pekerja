@@ -8,7 +8,14 @@ Halaman Admin
     - nama -> nama pegawai
     - username -> nik
     - password -> tgl_lahir
-13. Memperbaiki alur absensi. Referensi ada di Figma (Selesai)
+
+13. Integrasikan Backend dengan Frontend via API
+15. Tangani menu pangkat golongan
+16. Tangani menu pangkat eselon
+17. Tangani menu jabatan
+18. Tangani menu bidang
+19. Tangani menu sub bidang
+20. Tangani menu status pegawai
 
 Halaman User
 
