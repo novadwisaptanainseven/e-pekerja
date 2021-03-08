@@ -7,6 +7,8 @@ import dashboardReducer from "./reducers/Dashboard";
 import initStateDashboard from "./initStates/initStateDashboard";
 import agamaReducer from "./reducers/MasterData/Agama";
 import initStateAgama from "./initStates/initStateAgama";
+import statusPegawaiReducer from "./reducers/MasterData/StatusPegawai";
+import initStateStatusPegawai from "./reducers/MasterData/StatusPegawai";
 import initStateGolongan from "./initStates/initStateGolongan";
 import golonganReducer from "./reducers/MasterData/PangkatGolongan";
 import MasterDataReducer from "./reducers/MasterData/MasterDataReducer";
@@ -38,6 +40,11 @@ export const GlobalProvider = ({ children }) => {
   // Agama
   const [agamaState, agamaDispatch] = useReducer(agamaReducer, initStateAgama);
 
+  // Status Pegawai
+  const [statusPegawaiState, statusPegawaiDispatch] = useReducer(
+    statusPegawaiReducer,
+    initStateStatusPegawai
+  );
   // Pangkat Golongan
   const [golonganState, golonganDispatch] = useReducer(
     golonganReducer,
@@ -84,6 +91,8 @@ export const GlobalProvider = ({ children }) => {
         dashboardDispatch,
         agamaState,
         agamaDispatch,
+        statusPegawaiState,
+        statusPegawaiDispatch,
         golonganState,
         golonganDispatch,
         eselonState,
