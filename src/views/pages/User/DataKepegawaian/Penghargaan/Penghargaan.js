@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import {
-  CCard,
-  CCardHeader,
-  CCardBody,
   CButton,
-  CButtonGroup,
   CRow,
   CCol,
   CModal,
@@ -15,65 +11,16 @@ import {
   CModalFooter,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { cilInfo } from "@coreui/icons";
 import { SampleSertifikat } from "src/assets";
-import TambahPenghargaan from "./TambahPenghargaan";
-import EditPenghargaan from "./EditPenghargaan";
 import DetailPenghargaan from "./DetailPenghargaan";
 
-const TextField = styled.input`
-  height: 37px;
-  width: 200px;
-  border-radius: 3px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border: 1px solid #e5e5e5;
-  padding: 0 32px 0 16px;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const ClearButton = styled.button`
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  height: 37px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #3e5973;
-  border: none;
-  color: white;
-  padding: 0 10px;
-  transition: 0.3s;
-
-  &:hover {
-    background-color: #283c4f;
-  }
-`;
-
 const Penghargaan = () => {
-  const [modalTambah, setModalTambah] = useState(false);
-  const [modalEdit, setModalEdit] = useState({
-    modal: false,
-    id: null,
-  });
   const [modalDetail, setModalDetail] = useState({
     modal: false,
     id: null,
   });
-  const history = useHistory();
-  const [filterText, setFilterText] = useState("");
-  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
   const data = [
     {
@@ -117,25 +64,6 @@ const Penghargaan = () => {
       dokumentasi: "file",
     },
   ];
-
-  const filteredData = data.filter((item) =>
-    // (
-    //   item.nama && item.sub_bidang &&
-    //   item.nama.toLowerCase().includes(filterText.toLowerCase())
-
-    // )
-    {
-      if (item.nama && item.nama_penghargaan) {
-        if (
-          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.nama_penghargaan.toLowerCase().includes(filterText.toLowerCase())
-        ) {
-          return true;
-        }
-      }
-      return false;
-    }
-  );
 
   const columns = [
     {
@@ -194,18 +122,6 @@ const Penghargaan = () => {
     },
   };
 
-  const goToTambah = (id) => {
-    history.push(`/epekerja/admin/penghargaan-tambah`);
-  };
-
-  const goToEdit = (id) => {
-    history.push(`/epekerja/admin/penghargaan-edit/${id}`);
-  };
-
-  const goToDetail = (id) => {
-    history.push(`/epekerja/admin/penghargaan-detail/${id}`);
-  };
-
   const ExpandableComponent = ({ data }) => (
     <>
       <div style={{ padding: "10px 63px" }}>
@@ -227,29 +143,15 @@ const Penghargaan = () => {
 
   return (
     <>
-      {/* <div className="button-control mb-2 mt-4">
-        <CButton
-          color="primary"
-          className="btn btn-md"
-          onClick={() => setModalTambah(!modalTambah)}
-        >
-          Tambah Penghargaan
-        </CButton>
-        <CButton type="button" color="info">
-          Cetak <CIcon content={cilPrint} />
-        </CButton>
-      </div> */}
-
       <DataTable
         columns={columns}
-        data={filteredData}
+        data={data}
         noHeader
         responsive={true}
         customStyles={customStyles}
         pagination
         // paginationRowsPerPageOptions={[5, 10, 15]}
         // paginationPerPage={5}
-        paginationResetDefaultPage={resetPaginationToggle}
         expandableRows={true}
         expandableRowsComponent={<ExpandableComponent />}
         expandOnRowClicked

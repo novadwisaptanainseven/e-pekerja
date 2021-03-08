@@ -15,32 +15,11 @@ const StatusPegawai = () => {
   const { statusPegawaiState, statusPegawaiDispatch } = useContext(
     GlobalContext
   );
-  const { data, loading, error } = statusPegawaiState;
-
-  // const data = [
-  //   {
-  //     no: 1,
-  //     id: 1,
-  //     status_pegawai: "PNS",
-  //     keterangan: "Pegawai Negeri Sipil",
-  //   },
-  //   {
-  //     no: 2,
-  //     id: 2,
-  //     status_pegawai: "PTTH",
-  //     keterangan: "Pegawai Tidak Tetap Harian",
-  //   },
-  //   {
-  //     no: 3,
-  //     id: 3,
-  //     status_pegawai: "PTTB",
-  //     keterangan: "Pegawai Tidak Tetap Bulanan",
-  //   },
-  // ];
+  const { data } = statusPegawaiState;
 
   useEffect(() => {
     getStatusPegawai(statusPegawaiDispatch);
-  }, []);
+  }, [statusPegawaiDispatch]);
 
   const columns = [
     {

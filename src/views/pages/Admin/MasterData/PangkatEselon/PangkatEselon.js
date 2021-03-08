@@ -13,12 +13,12 @@ const MySwal = withReactContent(swal2);
 const PangkatEselon = () => {
   const history = useHistory();
   const { eselonState, eselonDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = eselonState;
+  const { data } = eselonState;
 
   useEffect(() => {
     // Get data eselon
     getEselon(eselonDispatch);
-  }, []);
+  }, [eselonDispatch]);
 
   const columns = [
     {

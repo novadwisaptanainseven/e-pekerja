@@ -142,7 +142,7 @@ const DataPendidikan = () => {
               {ext_status === "jpg" ? (
                 <img width={200} src={SampleIjazah} alt={data.file_ijazah} />
               ) : (
-                <a href="#">{data.file_ijazah}</a>
+                <a href=".">{data.file_ijazah}</a>
               )}
             </CCol>
           </CRow>

@@ -46,7 +46,7 @@ const TambahAgama = () => {
     }).then((res) => {
       history.push("/epekerja/admin/master-data/agama");
     });
-  }, [history, MySwal]);
+  }, [history]);
 
   // Fungsi untuk menampilkan alert error tambah data
   const showAlertError = useCallback(
@@ -65,7 +65,7 @@ const TambahAgama = () => {
         setLoading(false);
       });
     },
-    [MySwal]
+    []
   );
 
   // Setting validasi form menggunakan YUP & FORMIK

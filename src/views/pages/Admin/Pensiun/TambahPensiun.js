@@ -4,7 +4,6 @@ import {
   CInput,
   CLabel,
   CCol,
-  CSelect,
   CCard,
   CCardBody,
   CCardFooter,

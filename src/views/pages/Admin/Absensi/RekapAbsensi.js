@@ -295,7 +295,7 @@ const RekapAbsensi = () => {
   const filterTahun = () => {
     let first_year = 2015;
     let current_year = new Date().getFullYear();
-    let range_year = current_year - first_year;
+    // let range_year = current_year - first_year;
     let arr = [];
 
     for (let i = first_year; i <= current_year; i++) {

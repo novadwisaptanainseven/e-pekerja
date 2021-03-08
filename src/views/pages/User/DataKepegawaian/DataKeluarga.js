@@ -1,27 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import DataTable from "react-data-table-component";
-import {
-  CButtonGroup,
-  CButton,
-  CRow,
-  CCol,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CModalFooter,
-  CForm,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash } from "@coreui/icons";
+import { CRow, CCol } from "@coreui/react";
 
 const DataKeluarga = () => {
-  const [modalTambah, setModalTambah] = useState(false);
-  const [modalEdit, setModalEdit] = useState({
-    modal: false,
-    id: null,
-  });
-
   const data = [
     {
       id: 1,
@@ -82,41 +63,6 @@ const DataKeluarga = () => {
       wrap: true,
       sortable: true,
     },
-    // {
-    //   name: "Aksi",
-    //   selector: "aksi",
-    //   wrap: true,
-    //   cell: (row) => (
-    //     <>
-    //       <CButtonGroup>
-    //         <CButton
-    //           color="success"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             setModalEdit({
-    //               ...modalEdit,
-    //               modal: !modalEdit.modal,
-    //               id: row.id,
-    //             })
-    //           }
-    //         >
-    //           <CIcon content={cilPen} color="white" />
-    //         </CButton>
-    //         <CButton
-    //           color="danger"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             window.confirm(
-    //               `Anda yakin ingin hapus data dengan id : ${row.id}`
-    //             )
-    //           }
-    //         >
-    //           <CIcon content={cilTrash} color="white" />
-    //         </CButton>
-    //       </CButtonGroup>
-    //     </>
-    //   ),
-    // },
   ];
 
   const customStyles = {

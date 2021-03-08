@@ -21,12 +21,12 @@ const MySwal = withReactContent(swal2);
 const Agama = () => {
   const history = useHistory();
   const { agamaState, agamaDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = agamaState;
+  const { data } = agamaState;
 
   useEffect(() => {
     // Get Data Agama
     getAgama(agamaDispatch);
-  }, []);
+  }, [agamaDispatch]);
 
   const columns = [
     {

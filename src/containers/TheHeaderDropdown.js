@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CDropdown,
   CDropdownItem,
@@ -7,24 +7,19 @@ import {
   CImg,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { SampleAvatar } from "src/assets";
-import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { logout } from "src/context/actions/Auth/logout";
 import { cekUser } from "src/context/actions/Auth/cekUser";
 import { getImage } from "src/context/actions/DownloadFile";
-import { GlobalContext } from "src/context/Provider";
 
 const MySwal = withReactContent(Swal);
 
 const TheHeaderDropdown = () => {
-  const history = useHistory();
   const [currentUser, setCurrentUser] = useState(null);
-  const { userState, userDispatch } = useContext(GlobalContext);
 
   useEffect(() => {
-    cekUser(setCurrentUser, userDispatch);
+    cekUser(setCurrentUser);
   }, []);
 
   const handleLogout = () => {

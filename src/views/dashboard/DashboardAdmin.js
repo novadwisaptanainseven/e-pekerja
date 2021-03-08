@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   CCard,
   CCardBody,
@@ -12,15 +12,14 @@ import CIcon from "@coreui/icons-react";
 import { CChartPie } from "@coreui/react-chartjs";
 import { GlobalContext } from "src/context/Provider";
 import { getDashboardInformation } from "src/context/actions/Dashboard/getDashboardInformation";
-import axiosInstance from "src/helpers/axios";
 
 const Dashboard = () => {
   const { dashboardState, dashboardDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = dashboardState;
+  const { data, loading } = dashboardState;
 
   useEffect(() => {
     getDashboardInformation(dashboardDispatch);
-  }, []);
+  }, [dashboardDispatch]);
 
   return (
     <>

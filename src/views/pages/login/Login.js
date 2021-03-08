@@ -61,7 +61,7 @@ const Login = () => {
         type: LOGIN_CLEAN_UP,
       });
     };
-  }, [data, tokenAlert]);
+  }, [data, tokenAlert, history, loginDispatch]);
 
   // Set rules of form validation using Yup
   const validationSchema = Yup.object().shape({

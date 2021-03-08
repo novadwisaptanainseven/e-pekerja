@@ -14,12 +14,12 @@ const MySwal = withReactContent(swal2);
 const PangkatGolongan = () => {
   const history = useHistory();
   const { golonganState, golonganDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = golonganState;
+  const { data } = golonganState;
 
   useEffect(() => {
     // Get data golongan
     getGolongan(golonganDispatch);
-  }, []);
+  }, [golonganDispatch]);
 
   const columns = [
     {

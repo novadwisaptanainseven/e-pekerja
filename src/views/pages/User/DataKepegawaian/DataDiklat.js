@@ -1,17 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import DataTable from "react-data-table-component";
-import { CButtonGroup, CButton, CRow, CCol } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
+import { CRow, CCol } from "@coreui/react";
 import { SampleIjazah } from "src/assets";
 
 const DataDiklat = () => {
-  const [modalTambah, setModalTambah] = useState(false);
-  //   const [modalEdit, setModalEdit] = useState({
-  //     modal: false,
-  //     id: null,
-  //   });
-
   const data = [
     {
       id: 1,
@@ -66,43 +58,6 @@ const DataDiklat = () => {
       wrap: true,
       sortable: true,
     },
-
-    // {
-    //   name: "Aksi",
-    //   selector: "aksi",
-    //   wrap: true,
-    //   maxWidth: "100px",
-    //   cell: (row) => (
-    //     <>
-    //       <CButtonGroup>
-    //         <CButton
-    //           color="success"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             setModalEdit({
-    //               ...modalEdit,
-    //               modal: !modalEdit.modal,
-    //               id: row.id,
-    //             })
-    //           }
-    //         >
-    //           <CIcon content={cilPen} color="white" />
-    //         </CButton>
-    //         <CButton
-    //           color="danger"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             window.confirm(
-    //               `Anda yakin ingin hapus data dengan id : ${row.id}`
-    //             )
-    //           }
-    //         >
-    //           <CIcon content={cilTrash} color="white" />
-    //         </CButton>
-    //       </CButtonGroup>
-    //     </>
-    //   ),
-    // },
   ];
 
   const customStyles = {
@@ -129,7 +84,7 @@ const DataDiklat = () => {
               {ext_status === "jpg" ? (
                 <img width={200} src={SampleIjazah} alt={data.dokumentasi} />
               ) : (
-                <a href="#">{data.dokumentasi}</a>
+                <a href=".">{data.dokumentasi}</a>
               )}
             </CCol>
           </CRow>
@@ -141,18 +96,6 @@ const DataDiklat = () => {
   return (
     <>
       <div className="my-3">
-        <div className="button-control mb-2">
-          {/* <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Tambah Data
-          </CButton>
-          <CButton type="button" color="info">
-            Cetak <CIcon content={cilPrint} />
-          </CButton> */}
-        </div>
         <DataTable
           columns={columns}
           data={data}

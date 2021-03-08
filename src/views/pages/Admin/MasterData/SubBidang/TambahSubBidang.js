@@ -21,7 +21,6 @@ import {
   CSelect,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-import { getBidang } from "src/context/actions/MasterData/Bidang/getBidang";
 import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
 import { insertSubBidang } from "src/context/actions/MasterData/SubBidang/insertSubBidang";
 

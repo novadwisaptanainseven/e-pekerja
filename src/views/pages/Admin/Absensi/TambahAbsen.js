@@ -69,7 +69,7 @@ const TambahAbsen = ({ data, modal }) => {
       // Get Nama Hari
       setNamaHari(getNamaHari());
     }
-  }, [data]);
+  }, [data, getNamaHari]);
 
   // Handle kosongkan input keterangan ketika tombol close modal diklik
   const handleCloseModal = () => {

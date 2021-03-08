@@ -23,12 +23,12 @@ const MySwal = withReactContent(swal2);
 const Bidang = () => {
   const history = useHistory();
   const { bidangState, bidangDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = bidangState;
+  const { data } = bidangState;
 
   useEffect(() => {
     // Get data bidang
     getBidang(bidangDispatch);
-  }, []);
+  }, [bidangDispatch]);
 
   const columns = [
     {

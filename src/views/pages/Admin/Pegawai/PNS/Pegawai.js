@@ -84,12 +84,12 @@ const Pegawai = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { pnsState, pnsDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = pnsState;
+  const { data } = pnsState;
 
   useEffect(() => {
     // Get data PNS
     getPNS(pnsDispatch);
-  }, []);
+  }, [pnsDispatch]);
 
   const filteredData = data.filter((item) =>
     // (

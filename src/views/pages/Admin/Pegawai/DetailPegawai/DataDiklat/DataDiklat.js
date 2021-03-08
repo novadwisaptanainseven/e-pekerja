@@ -142,7 +142,7 @@ const DataDiklat = () => {
               {ext_status === "jpg" ? (
                 <img width={200} src={SampleIjazah} alt={data.dokumentasi} />
               ) : (
-                <a href="#">{data.dokumentasi}</a>
+                <a href=".">{data.dokumentasi}</a>
               )}
             </CCol>
           </CRow>

@@ -1,4 +1,4 @@
-import { ERROR, LOADING, SUCCESS } from "src/context/actionTypes";
+
 import axiosInstance from "src/helpers/axios";
 
 export const getSelectBidang = (setBidang) => {

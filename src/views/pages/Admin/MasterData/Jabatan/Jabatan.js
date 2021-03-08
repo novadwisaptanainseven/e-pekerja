@@ -21,12 +21,12 @@ const MySwal = withReactContent(swal2);
 const Jabatan = () => {
   const history = useHistory();
   const { jabatanState, jabatanDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = jabatanState;
+  const { data } = jabatanState;
 
   useEffect(() => {
     // Get data jabatan
     getJabatan(jabatanDispatch);
-  }, []);
+  }, [jabatanDispatch]);
 
   const columns = [
     {

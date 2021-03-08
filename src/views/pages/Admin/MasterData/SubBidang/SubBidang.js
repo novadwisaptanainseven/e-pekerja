@@ -81,12 +81,12 @@ const SubBidang = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { subBidangState, subBidangDispatch } = useContext(GlobalContext);
-  const { data, loading, error } = subBidangState;
+  const { data } = subBidangState;
 
   useEffect(() => {
     // Get data sub bidang
     getSubBidang(subBidangDispatch);
-  }, []);
+  }, [subBidangDispatch]);
 
   const filteredData = data.filter(
     (item) =>

@@ -9,11 +9,9 @@ import {
   CTabContent,
   CTabPane,
   CNavLink,
-  CButton,
 } from "@coreui/react";
 import DataDiri from "./DataDiri";
 import DataKeluarga from "./DataKeluarga";
-import { useHistory } from "react-router-dom";
 import DataPendidikan from "./DataPendidikan";
 import DataDiklat from "./DataDiklat";
 import RiwayatKerja from "./RiwayatKerja";
@@ -21,18 +19,11 @@ import DataBerkas from "./DataBerkas/DataBerkas";
 import Penghargaan from "./Penghargaan/Penghargaan";
 
 const DetailPegawai = () => {
-  const history = useHistory();
-
-  const goToParent = () => {
-    history.goBack();
-  };
-
   return (
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
           <h3>Data Kepegawaian</h3>
-          
         </CCardHeader>
         <CCardBody>
           <CTabs>
@@ -81,7 +72,6 @@ const DetailPegawai = () => {
               <CTabPane>
                 <DataBerkas />
               </CTabPane>
-              
             </CTabContent>
           </CTabs>
         </CCardBody>

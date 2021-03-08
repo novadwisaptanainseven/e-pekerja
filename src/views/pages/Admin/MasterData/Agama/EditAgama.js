@@ -56,7 +56,7 @@ const EditAgama = ({ match }) => {
     }).then((res) => {
       history.push("/epekerja/admin/master-data/agama");
     });
-  }, [history, MySwal]);
+  }, [history]);
 
   // Fungsi untuk menampilkan alert error Edit data
   const showAlertError = useCallback(
@@ -75,7 +75,7 @@ const EditAgama = ({ match }) => {
         setLoading(false);
       });
     },
-    [MySwal]
+    []
   );
 
   // Setting validasi form menggunakan YUP & FORMIK

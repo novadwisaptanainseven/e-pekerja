@@ -1,32 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   CCard,
   CCardHeader,
   CCardBody,
   CButton,
   CPopover,
-  CCol,
-  CRow,
-  CForm,
-  CSelect,
-  CFormGroup,
-  CInput,
-  CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CModalFooter,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
-import { format } from "date-fns";
-import TambahAbsen from "./TambahAbsen";
 import ExpandableComponent from "./ExpandableComponent";
 // const TambahAbsen = React.lazy(() => import("./TambahAbsen"));
 

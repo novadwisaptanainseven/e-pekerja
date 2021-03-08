@@ -30,7 +30,7 @@ const ExpandableComponent = ({ data }) => {
   const current_month = new Date().getMonth();
   const [filterYear, setFilterYear] = useState(current_year);
   const [filterMonth, setFilterMonth] = useState(current_month);
-  const [saveDay, setSaveDay] = useState({});
+  // const [saveDay, setSaveDay] = useState({});
 
   // Get Years
   const years = [];
@@ -66,13 +66,13 @@ const ExpandableComponent = ({ data }) => {
 
   // Tangani perubahan nilai pada select
   const handleChangeYear = (e) => {
-    setSaveDay({});
+    // setSaveDay({});
     setDays([]);
     setFilterYear(parseInt(e.target.value));
   };
 
   const handleChangeMonth = (e) => {
-    setSaveDay({});
+    // setSaveDay({});
     setDays([]);
     setFilterMonth(parseInt(e.target.value));
   };
@@ -81,17 +81,17 @@ const ExpandableComponent = ({ data }) => {
     getDays(filterMonth, filterYear);
   };
 
-  const handleOnChangeAbsensi = (e) => {
-    setSaveDay({
-      ...saveDay,
-      year: filterYear,
-      month: filterMonth + 1,
-      tgl_absen: {
-        ...saveDay.tgl_absen,
-        [e.target.name]: e.target.value,
-      },
-    });
-  };
+  // const handleOnChangeAbsensi = (e) => {
+  //   setSaveDay({
+  //     ...saveDay,
+  //     year: filterYear,
+  //     month: filterMonth + 1,
+  //     tgl_absen: {
+  //       ...saveDay.tgl_absen,
+  //       [e.target.name]: e.target.value,
+  //     },
+  //   });
+  // };
 
   //   const handleOnSubmit = (e) => {
   //     e.preventDefault();

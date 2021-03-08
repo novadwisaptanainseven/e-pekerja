@@ -13,13 +13,13 @@ export const getPNS = (dispatch) => {
         type: SUCCESS,
         payload: res.data.data,
       });
-      console.log(res.data);
+      // console.log(res.data);
     })
     .catch((err) => {
       dispatch({
         type: ERROR,
         payload: err.response.data.message,
       });
-      console.log(err.response.data);
+      // console.log(err.response.data);
     });
 };

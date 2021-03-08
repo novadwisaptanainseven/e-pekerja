@@ -57,7 +57,7 @@ const EditStatusPegawai = ({ match }) => {
     }).then((res) => {
       history.push("/epekerja/admin/master-data/status-pegawai");
     });
-  }, [history, MySwal]);
+  }, [history]);
 
   // Fungsi untuk menampilkan alert error Edit data
   const showAlertError = useCallback(
@@ -76,7 +76,7 @@ const EditStatusPegawai = ({ match }) => {
         setLoading(false);
       });
     },
-    [MySwal]
+    []
   );
 
   // Setting validasi form menggunakan YUP & FORMIK
