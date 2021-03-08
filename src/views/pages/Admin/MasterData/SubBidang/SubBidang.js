@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+
 import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import { getSubBidang } from "src/context/actions/MasterData/SubBidang/getSubBidang";
+import { deleteSubBidang } from "src/context/actions/MasterData/SubBidang/deleteSubBidang";
+
+const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 32px;
@@ -63,60 +72,18 @@ const SubBidang = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { subBidangState, subBidangDispatch } = useContext(GlobalContext);
+  const { data, loading, error } = subBidangState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      bidang: "Sekretariat",
-      nm_sub_bidang: "Sub. Bagian Umum dan Kepegawaian",
-      keterangan: "Urusan administrasi kepegawaian",
-    },
-    {
-      no: 2,
-      id: 2,
-      bidang: "Sekretariat",
-      nm_sub_bidang: "Sub. Bagian Perencanaan Program dan Keuangan",
-      keterangan: "Koordinasi administrasi keuangan",
-    },
-    {
-      no: 3,
-      id: 3,
-      bidang: "Permukiman",
-      nm_sub_bidang: "Pembinaan Permukiman",
-      keterangan:
-        "Melaksanakan kebijakan, program dan Kegiatan di bidang permukiman.",
-    },
-    {
-      no: 4,
-      id: 4,
-      bidang: "Permukiman",
-      nm_sub_bidang: "Pembinaan Permukiman",
-      keterangan:
-        "Melaksanakan kebijakan, program dan Kegiatan di bidang permukiman.",
-    },
-    {
-      no: 5,
-      id: 5,
-      bidang: "Permukiman",
-      nm_sub_bidang: "Pembinaan Permukiman",
-      keterangan:
-        "Melaksanakan kebijakan, program dan Kegiatan di bidang permukiman.",
-    },
-    {
-      no: 6,
-      id: 6,
-      bidang: "Permukiman",
-      nm_sub_bidang: "Pembinaan Permukiman",
-      keterangan:
-        "Melaksanakan kebijakan, program dan Kegiatan di bidang permukiman.",
-    },
-  ];
+  useEffect(() => {
+    // Get data sub bidang
+    getSubBidang(subBidangDispatch);
+  }, []);
 
   const filteredData = data.filter(
     (item) =>
-      item.nm_sub_bidang &&
-      item.nm_sub_bidang.toLowerCase().includes(filterText.toLowerCase())
+      item.nama_sub_bidang &&
+      item.nama_sub_bidang.toLowerCase().includes(filterText.toLowerCase())
     // console.log(item.nm_sub_bidang)
   );
 
@@ -132,11 +99,11 @@ const SubBidang = () => {
       name: "Bidang",
       selector: "bidang",
       sortable: true,
-      // maxWidth: "200px",
+      maxWidth: "200px",
     },
     {
       name: "Sub Bidang",
-      selector: "nm_sub_bidang",
+      selector: "nama_sub_bidang",
       sortable: true,
       // maxWidth: "200px",
       minWidth: "200px",
@@ -158,18 +125,14 @@ const SubBidang = () => {
           <CButton
             color="success"
             className="btn btn-sm mr-1"
-            onClick={() => goToEdit(row.id)}
+            onClick={() => goToEdit(row.id_sub_bidang)}
           >
             Ubah
           </CButton>
           <CButton
             color="danger"
             className="btn btn-sm mr-1"
-            onClick={() =>
-              window.confirm(
-                `Anda yakin ingin hapus data dengan id : ${row.id}`
-              )
-            }
+            onClick={() => handleDelete(row.id_bidang)}
           >
             Hapus
           </CButton>
@@ -209,6 +172,30 @@ const SubBidang = () => {
 
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/master-data/sub-bidang-edit/${id}`);
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deleteSubBidang untuk menghapus data SubBidang
+        deleteSubBidang(id, subBidangDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   return (

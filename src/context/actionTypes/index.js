@@ -1,3 +1,9 @@
+// Default
+export const LOADING = "LOADING";
+export const SUCCESS = "SUCCESS";
+export const ERROR = "ERROR";
+export const CLEAN_UP = "CLEAN_UP";
+
 export const LOGIN_LOADING = "LOGIN_LOADING";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_ERROR = "LOGIN_ERROR";

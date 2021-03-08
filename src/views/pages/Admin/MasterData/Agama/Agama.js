@@ -3,10 +3,10 @@ import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { GlobalContext } from "src/context/Provider";
-import { getAgama } from "src/context/actions/Agama/getAgama";
+import { getAgama } from "src/context/actions/MasterData/Agama/getAgama";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { deleteAgama } from "src/context/actions/Agama/deleteAgama";
+import { deleteAgama } from "src/context/actions/MasterData/Agama/deleteAgama";
 
 const MySwal = withReactContent(swal2);
 

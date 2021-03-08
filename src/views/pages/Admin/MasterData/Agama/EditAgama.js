@@ -17,9 +17,9 @@ import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { getAgamaById } from "src/context/actions/Agama/getAgamaById";
+import { getAgamaById } from "src/context/actions/MasterData/Agama/getAgamaById";
 import { LoadAnimationWhite } from "src/assets";
-import { editAgama } from "src/context/actions/Agama/editAgama";
+import { editAgama } from "src/context/actions/MasterData/Agama/editAgama";
 
 const MySwal = withReactContent(swal2);
 
@@ -83,6 +83,7 @@ const EditAgama = ({ match }) => {
     agama: Yup.string().required("Agama harus diisi!"),
   });
 
+  // Menangani value form submit
   const handleFormSubmit = (values) => {
     editAgama(params.id, values, setLoading, showAlertSuccess, showAlertError);
   };
@@ -117,6 +118,7 @@ const EditAgama = ({ match }) => {
                         type="text"
                         id="agama"
                         name="agama"
+                        placeholder="Masukkan agama"
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.agama}

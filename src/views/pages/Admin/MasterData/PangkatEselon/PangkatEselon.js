@@ -1,31 +1,23 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+import { getEselon } from "src/context/actions/MasterData/PangkatEselon/getEselon";
+import { deleteEselon } from "src/context/actions/MasterData/PangkatEselon/deleteEselon";
+const MySwal = withReactContent(swal2);
 
 const PangkatEselon = () => {
   const history = useHistory();
+  const { eselonState, eselonDispatch } = useContext(GlobalContext);
+  const { data, loading, error } = eselonState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      eselon: "II. b",
-      keterangan: "Kepala Dinas",
-    },
-    {
-      no: 2,
-      id: 2,
-      eselon: "III. a",
-      keterangan: "Sekretaris",
-    },
-    {
-      no: 3,
-      id: 3,
-      eselon: "III. b",
-      keterangan: "Kepala Bidang",
-    },
-  ];
+  useEffect(() => {
+    // Get data eselon
+    getEselon(eselonDispatch);
+  }, []);
 
   const columns = [
     {
@@ -54,18 +46,14 @@ const PangkatEselon = () => {
           <CButton
             color="success"
             className="btn btn-sm mr-1"
-            onClick={() => goToEdit(row.id)}
+            onClick={() => goToEdit(row.id_pangkat_eselon)}
           >
             Ubah
           </CButton>
           <CButton
             color="danger"
             className="btn btn-sm mr-1"
-            onClick={() =>
-              window.confirm(
-                `Anda yakin ingin hapus data dengan id : ${row.id}`
-              )
-            }
+            onClick={() => handleDelete(row.id_pangkat_eselon)}
           >
             Hapus
           </CButton>
@@ -88,6 +76,30 @@ const PangkatEselon = () => {
 
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/master-data/pangkat-eselon-edit/${id}`);
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Delete pesan
+        deleteEselon(id, eselonDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   return (
