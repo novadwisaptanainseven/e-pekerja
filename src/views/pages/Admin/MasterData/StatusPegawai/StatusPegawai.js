@@ -1,31 +1,46 @@
-import React from "react";
-import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
+import { CButton, CCard, CCardBody, CCardHeader } from "@coreui/react";
+import React, { useContext, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
+import { deleteStatusPegawai } from "src/context/actions/StatusPegawai/deleteStatusPegawai";
+import { getStatusPegawai } from "src/context/actions/StatusPegawai/getStatusPegawai";
+import { GlobalContext } from "src/context/Provider";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(swal2);
 
 const StatusPegawai = () => {
   const history = useHistory();
+  const { statusPegawaiState, statusPegawaiDispatch } = useContext(
+    GlobalContext
+  );
+  const { data, loading, error } = statusPegawaiState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      status_pegawai: "PNS",
-      keterangan: "Pegawai Negeri Sipil",
-    },
-    {
-      no: 2,
-      id: 2,
-      status_pegawai: "PTTH",
-      keterangan: "Pegawai Tidak Tetap Harian",
-    },
-    {
-      no: 3,
-      id: 3,
-      status_pegawai: "PTTB",
-      keterangan: "Pegawai Tidak Tetap Bulanan",
-    },
-  ];
+  // const data = [
+  //   {
+  //     no: 1,
+  //     id: 1,
+  //     status_pegawai: "PNS",
+  //     keterangan: "Pegawai Negeri Sipil",
+  //   },
+  //   {
+  //     no: 2,
+  //     id: 2,
+  //     status_pegawai: "PTTH",
+  //     keterangan: "Pegawai Tidak Tetap Harian",
+  //   },
+  //   {
+  //     no: 3,
+  //     id: 3,
+  //     status_pegawai: "PTTB",
+  //     keterangan: "Pegawai Tidak Tetap Bulanan",
+  //   },
+  // ];
+
+  useEffect(() => {
+    getStatusPegawai(statusPegawaiDispatch);
+  }, []);
 
   const columns = [
     {
@@ -55,18 +70,14 @@ const StatusPegawai = () => {
           <CButton
             color="success"
             className="btn btn-sm mr-1"
-            onClick={() => goToEdit(row.id)}
+            onClick={() => goToEdit(row.id_status_pegawai)}
           >
             Ubah
           </CButton>
           <CButton
             color="danger"
             className="btn btn-sm mr-1"
-            onClick={() =>
-              window.confirm(
-                `Anda yakin ingin hapus data dengan id : ${row.id}`
-              )
-            }
+            onClick={() => handleDelete(row.id_status_pegawai)}
           >
             Hapus
           </CButton>
@@ -89,6 +100,30 @@ const StatusPegawai = () => {
 
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/master-data/status-pegawai-edit/${id}`);
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Delete pesan
+        deleteStatusPegawai(id, statusPegawaiDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   return (

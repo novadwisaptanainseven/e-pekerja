@@ -7,6 +7,8 @@ import dashboardReducer from "./reducers/Dashboard";
 import initStateDashboard from "./initStates/initStateDashboard";
 import agamaReducer from "./reducers/MasterData/Agama";
 import initStateAgama from "./initStates/initStateAgama";
+import statusPegawaiReducer from "./reducers/MasterData/StatusPegawai";
+import initStateStatusPegawai from "./reducers/MasterData/StatusPegawai";
 
 export const GlobalContext = createContext({});
 
@@ -29,6 +31,12 @@ export const GlobalProvider = ({ children }) => {
   // Agama
   const [agamaState, agamaDispatch] = useReducer(agamaReducer, initStateAgama);
 
+  // Status Pegawai
+  const [statusPegawaiState, statusPegawaiDispatch] = useReducer(
+    statusPegawaiReducer,
+    initStateStatusPegawai
+  );
+
   return (
     <GlobalContext.Provider
       value={{
@@ -40,6 +48,8 @@ export const GlobalProvider = ({ children }) => {
         dashboardDispatch,
         agamaState,
         agamaDispatch,
+        statusPegawaiState,
+        statusPegawaiDispatch,
       }}
     >
       {children}
