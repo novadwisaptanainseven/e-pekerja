@@ -1,4 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import { LoadAnimationWhite } from "src/assets";
+
 import {
   CCard,
   CCardHeader,
@@ -15,8 +22,12 @@ import {
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
 
+const MySwal = withReactContent(swal2);
+
 const TambahSubBidang = ({ match }) => {
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
+  const [bidang, setBidang] = useState()
 
   // Kembali ke menu agama
   const goBackToParent = () => {

@@ -7,6 +7,12 @@ import dashboardReducer from "./reducers/Dashboard";
 import initStateDashboard from "./initStates/initStateDashboard";
 import agamaReducer from "./reducers/MasterData/Agama";
 import initStateAgama from "./initStates/initStateAgama";
+import initStateGolongan from "./initStates/initStateGolongan";
+import golonganReducer from "./reducers/MasterData/PangkatGolongan";
+import MasterDataReducer from "./reducers/MasterData/MasterDataReducer";
+import initStateEselon from "./initStates/initStateEselon";
+import initStateJabatan from "./initStates/initStateJabatan";
+import initState from "./initStates/initState";
 
 export const GlobalContext = createContext({});
 
@@ -29,6 +35,36 @@ export const GlobalProvider = ({ children }) => {
   // Agama
   const [agamaState, agamaDispatch] = useReducer(agamaReducer, initStateAgama);
 
+  // Pangkat Golongan
+  const [golonganState, golonganDispatch] = useReducer(
+    golonganReducer,
+    initStateGolongan
+  );
+
+  // Pangkat Eselon
+  const [eselonState, eselonDispatch] = useReducer(
+    MasterDataReducer,
+    initStateEselon
+  );
+
+  // Jabatan
+  const [jabatanState, jabatanDispatch] = useReducer(
+    MasterDataReducer,
+    initStateJabatan
+  );
+
+  // Bidang
+  const [bidangState, bidangDispatch] = useReducer(
+    MasterDataReducer,
+    initState
+  );
+
+  // Sub Bidang
+  const [subBidangState, subBidangDispatch] = useReducer(
+    MasterDataReducer,
+    initState
+  );
+
   return (
     <GlobalContext.Provider
       value={{
@@ -40,6 +76,16 @@ export const GlobalProvider = ({ children }) => {
         dashboardDispatch,
         agamaState,
         agamaDispatch,
+        golonganState,
+        golonganDispatch,
+        eselonState,
+        eselonDispatch,
+        jabatanState,
+        jabatanDispatch,
+        bidangState,
+        bidangDispatch,
+        subBidangState,
+        subBidangDispatch,
       }}
     >
       {children}

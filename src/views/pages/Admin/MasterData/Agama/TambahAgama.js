@@ -18,7 +18,7 @@ import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { LoadAnimationWhite } from "src/assets";
-import { insertAgama } from "src/context/actions/Agama/insertAgama";
+import { insertAgama } from "src/context/actions/MasterData/Agama/insertAgama";
 
 const MySwal = withReactContent(swal2);
 
@@ -83,7 +83,7 @@ const TambahAgama = () => {
     }
 
     // Insert Agama
-    insertAgama(values, setLoading, showAlertSuccess, showAlertError);
+    insertAgama(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
   return (

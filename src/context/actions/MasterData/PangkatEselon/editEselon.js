@@ -1,6 +1,6 @@
 import axiosInstance from "src/helpers/axios";
 
-export const editAgama = (
+export const editEselon = (
   id,
   values,
   setLoading,
@@ -10,7 +10,7 @@ export const editAgama = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/agama/${id}`, values)
+    .put(`admin/master-data/pangkat-eselon/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);
@@ -18,6 +18,6 @@ export const editAgama = (
     })
     .catch((err) => {
       console.log(err.response.data);
-      showAlertError();
+      showAlertError(err.response.data.errors);
     });
 };

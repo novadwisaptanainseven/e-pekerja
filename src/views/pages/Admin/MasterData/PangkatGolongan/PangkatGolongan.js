@@ -1,31 +1,24 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+import { getGolongan } from "src/context/actions/MasterData/PangkatGolongan/getGolongan";
+import { deleteGolongan } from "src/context/actions/MasterData/PangkatGolongan/deleteGolongan";
+
+const MySwal = withReactContent(swal2);
 
 const PangkatGolongan = () => {
   const history = useHistory();
+  const { golonganState, golonganDispatch } = useContext(GlobalContext);
+  const { data, loading, error } = golonganState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      golongan: "IIa",
-      keterangan: "Pengatur Muda",
-    },
-    {
-      no: 2,
-      id: 2,
-      golongan: "IIb",
-      keterangan: "Pengatur Muda Tingkat 1",
-    },
-    {
-      no: 3,
-      id: 3,
-      golongan: "IIc",
-      keterangan: "Pengatur",
-    },
-  ];
+  useEffect(() => {
+    // Get data golongan
+    getGolongan(golonganDispatch);
+  }, []);
 
   const columns = [
     {
@@ -56,18 +49,14 @@ const PangkatGolongan = () => {
           <CButton
             color="success"
             className="btn btn-sm mr-1"
-            onClick={() => goToEdit(row.id)}
+            onClick={() => goToEdit(row.id_pangkat_golongan)}
           >
             Ubah
           </CButton>
           <CButton
             color="danger"
             className="btn btn-sm mr-1"
-            onClick={() =>
-              window.confirm(
-                `Anda yakin ingin hapus data dengan id : ${row.id}`
-              )
-            }
+            onClick={() => handleDelete(row.id_pangkat_golongan)}
           >
             Hapus
           </CButton>
@@ -90,6 +79,30 @@ const PangkatGolongan = () => {
 
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/master-data/pangkat-golongan-edit/${id}`);
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Delete pesan
+        deleteGolongan(id, golonganDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   return (

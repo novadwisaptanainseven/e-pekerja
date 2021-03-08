@@ -1,34 +1,26 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+
 import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
+import { deleteBidang } from "src/context/actions/MasterData/Bidang/deleteBidang";
+import { getBidang } from "src/context/actions/MasterData/Bidang/getBidang";
+
+const MySwal = withReactContent(swal2);
 
 const Bidang = () => {
   const history = useHistory();
+  const { bidangState, bidangDispatch } = useContext(GlobalContext);
+  const { data, loading, error } = bidangState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nama_bidang: "Sekretariat",
-      keterangan:
-        "Pelayanan administrasi kepegawaian, umum, keuangan dan program",
-    },
-    {
-      no: 2,
-      id: 2,
-      nama_bidang: "Permukiman",
-      keterangan:
-        "Unsur pelaksana pemerintah Kota Samarinda dalam bidang Permukiman",
-    },
-    {
-      no: 3,
-      id: 3,
-      nama_bidang: "Perumahan",
-      keterangan:
-        "Unsur pelaksana Pemerintah Kota Samarinda dalam bidang Perumahan",
-    },
-  ];
+  useEffect(() => {
+    // Get data bidang
+    getBidang(bidangDispatch);
+  }, []);
 
   const columns = [
     {
@@ -60,18 +52,14 @@ const Bidang = () => {
           <CButton
             color="success"
             className="btn btn-sm mr-1"
-            onClick={() => goToEdit(row.id)}
+            onClick={() => goToEdit(row.id_bidang)}
           >
             Ubah
           </CButton>
           <CButton
             color="danger"
             className="btn btn-sm mr-1"
-            onClick={() =>
-              window.confirm(
-                `Anda yakin ingin hapus data dengan id : ${row.id}`
-              )
-            }
+            onClick={() => handleDelete(row.id_bidang)}
           >
             Hapus
           </CButton>
@@ -94,6 +82,30 @@ const Bidang = () => {
 
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/master-data/bidang-edit/${id}`);
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deleteBidang untuk menghapus data bidang
+        deleteBidang(id, bidangDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   return (
