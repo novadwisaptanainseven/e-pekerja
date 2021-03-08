@@ -1,5 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
+import {
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+  CRow,
+  CCol,
+} from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 
@@ -8,6 +15,7 @@ import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 import { getJabatan } from "src/context/actions/MasterData/Jabatan/getJabatan";
 import { deleteJabatan } from "src/context/actions/MasterData/Jabatan/deleteJabatan";
+import { LoadAnimationBlue } from "src/assets";
 const MySwal = withReactContent(swal2);
 
 const Jabatan = () => {
@@ -108,13 +116,30 @@ const Jabatan = () => {
             Tambah Data
           </CButton>
 
-          <DataTable
-            columns={columns}
-            data={data}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={data}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>

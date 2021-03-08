@@ -4,11 +4,19 @@ import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 
-import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
+import {
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+  CRow,
+  CCol,
+} from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { deleteBidang } from "src/context/actions/MasterData/Bidang/deleteBidang";
 import { getBidang } from "src/context/actions/MasterData/Bidang/getBidang";
+import { LoadAnimationBlue } from "src/assets";
 
 const MySwal = withReactContent(swal2);
 
@@ -119,13 +127,30 @@ const Bidang = () => {
             Tambah Data
           </CButton>
 
-          <DataTable
-            columns={columns}
-            data={data}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={data}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>

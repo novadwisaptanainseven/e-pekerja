@@ -13,6 +13,7 @@ import MasterDataReducer from "./reducers/MasterData/MasterDataReducer";
 import initStateEselon from "./initStates/initStateEselon";
 import initStateJabatan from "./initStates/initStateJabatan";
 import initState from "./initStates/initState";
+import pegawaiReducer from "./reducers/Pegawai/pegawaiReducer";
 
 export const GlobalContext = createContext({});
 
@@ -31,6 +32,8 @@ export const GlobalProvider = ({ children }) => {
     dashboardReducer,
     initStateDashboard
   );
+
+  // Master Data
 
   // Agama
   const [agamaState, agamaDispatch] = useReducer(agamaReducer, initStateAgama);
@@ -65,6 +68,11 @@ export const GlobalProvider = ({ children }) => {
     initState
   );
 
+  // Pegawai
+
+  // PNS
+  const [pnsState, pnsDispatch] = useReducer(pegawaiReducer, initState);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -86,6 +94,8 @@ export const GlobalProvider = ({ children }) => {
         bidangDispatch,
         subBidangState,
         subBidangDispatch,
+        pnsState,
+        pnsDispatch,
       }}
     >
       {children}

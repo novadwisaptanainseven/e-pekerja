@@ -4,12 +4,20 @@ import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 
-import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
+import {
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+  CRow,
+  CCol,
+} from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { getSubBidang } from "src/context/actions/MasterData/SubBidang/getSubBidang";
 import { deleteSubBidang } from "src/context/actions/MasterData/SubBidang/deleteSubBidang";
+import { LoadAnimationBlue } from "src/assets";
 
 const MySwal = withReactContent(swal2);
 
@@ -132,7 +140,7 @@ const SubBidang = () => {
           <CButton
             color="danger"
             className="btn btn-sm mr-1"
-            onClick={() => handleDelete(row.id_bidang)}
+            onClick={() => handleDelete(row.id_sub_bidang)}
           >
             Hapus
           </CButton>
@@ -209,19 +217,36 @@ const SubBidang = () => {
             Tambah Data
           </CButton>
 
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            paginationRowsPerPageOptions={[5, 10, 15]}
-            paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              paginationPerPage={10}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>

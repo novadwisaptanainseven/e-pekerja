@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -21,17 +21,83 @@ import {
   CSelect,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
+import { getBidang } from "src/context/actions/MasterData/Bidang/getBidang";
+import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
+import { insertSubBidang } from "src/context/actions/MasterData/SubBidang/insertSubBidang";
 
 const MySwal = withReactContent(swal2);
 
 const TambahSubBidang = ({ match }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [bidang, setBidang] = useState()
+  const [bidang, setBidang] = useState([]);
+
+  useEffect(() => {
+    // Get bidang
+    getSelectBidang(setBidang);
+  }, []);
 
   // Kembali ke menu agama
   const goBackToParent = () => {
     history.goBack();
+  };
+
+  // Inisialisasi state formik
+  const initState = {
+    id_bidang: "",
+    nama_sub_bidang: "",
+    keterangan: "",
+  };
+
+  // Fungsi untuk menampilkan alert success tambah data
+  const showAlertSuccess = () => {
+    MySwal.fire({
+      icon: "success",
+      title: "Tambah Data Berhasil",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then((res) => {
+      history.push("/epekerja/admin/master-data/sub-bidang");
+    });
+  };
+
+  // Fungsi untuk menampilkan alert error tambah data
+  const showAlertError = (message) => {
+    let err_message = "";
+
+    for (const key in message) {
+      err_message += `${message[key]}, `;
+    }
+
+    MySwal.fire({
+      icon: "error",
+      title: "Tambah Data Gagal",
+      text: err_message,
+    }).then((result) => {
+      setLoading(false);
+    });
+  };
+
+  // Setting validasi form menggunakan YUP & FORMIK
+  const validationSchema = Yup.object().shape({
+    id_bidang: Yup.string().required("Bidang harus dipilih!"),
+    nama_sub_bidang: Yup.string().required("Sub Bidang harus diisi!"),
+    keterangan: Yup.string().required("Keterangan harus diisi!"),
+  });
+
+  // Menangani value dari form submit
+  const handleFormSubmit = (values) => {
+    const formData = new FormData();
+    formData.append("id_bidang", values.id_bidang);
+    formData.append("nama_sub_bidang", values.nama_sub_bidang);
+    formData.append("keterangan", values.keterangan);
+
+    for (var pair of formData.entries()) {
+      console.log(pair);
+    }
+
+    // Memanggil method Insert Bidang untuk menambah data Bidang ke database
+    insertSubBidang(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
   return (
@@ -40,47 +106,121 @@ const TambahSubBidang = ({ match }) => {
         <CCardHeader>
           <h3>Tambah Sub Bidang</h3>
         </CCardHeader>
-        <CForm>
-          <CCardBody>
-            <CRow>
-              <CCol xs="12" md="6">
-                <CFormGroup>
-                  <CLabel>Bidang</CLabel>
-                  <CSelect custom name="select" id="select">
-                    <option value="0">-- Pilih Bidang --</option>
-                    <option value="1">Option #1</option>
-                    <option value="2">Option #2</option>
-                    <option value="3">Option #3</option>
-                  </CSelect>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="name">Sub Bidang</CLabel>
-                  <CInput
-                    id="name"
-                    placeholder="Masukkan sub bidang"
-                    required
-                  />
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="name">Keterangan</CLabel>
-                  <CInput
-                    id="name"
-                    placeholder="Masukkan keterangan"
-                    required
-                  />
-                </CFormGroup>
-              </CCol>
-            </CRow>
-          </CCardBody>
-          <CCardFooter>
-            <CButton type="submit" color="primary" className="mr-1">
-              Simpan
-            </CButton>
-            <CButton type="button" color="danger" onClick={goBackToParent}>
-              Kembali
-            </CButton>
-          </CCardFooter>
-        </CForm>
+        <Formik
+          initialValues={initState}
+          validationSchema={validationSchema}
+          onSubmit={(values) => handleFormSubmit(values)}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+          }) => (
+            <CForm onSubmit={handleSubmit}>
+              <CCardBody>
+                <CRow>
+                  <CCol xs="12" md="6">
+                    <CFormGroup>
+                      <CLabel>Bidang</CLabel>
+                      <CSelect
+                        custom
+                        name="id_bidang"
+                        id="id_bidang"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.id_bidang}
+                        className={
+                          errors.id_bidang && touched.id_bidang
+                            ? "is-invalid"
+                            : null
+                        }
+                      >
+                        <option value="">-- Pilih Bidang --</option>
+                        {bidang.length > 0 &&
+                          bidang.map((item, index) => (
+                            <option key={index} value={item.id_bidang}>
+                              {item.nama_bidang}
+                            </option>
+                          ))}
+                      </CSelect>
+                      {errors.id_bidang && touched.id_bidang && (
+                        <div className="invalid-feedback">
+                          {errors.id_bidang}
+                        </div>
+                      )}
+                    </CFormGroup>
+                    <CFormGroup>
+                      <CLabel htmlFor="name">Sub Bidang</CLabel>
+                      <CInput
+                        id="nama_sub_bidang"
+                        name="nama_sub_bidang"
+                        placeholder="Masukkan sub bidang"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.nama_sub_bidang}
+                        className={
+                          errors.nama_sub_bidang && touched.nama_sub_bidang
+                            ? "is-invalid"
+                            : null
+                        }
+                      />
+                      {errors.nama_sub_bidang && touched.nama_sub_bidang && (
+                        <div className="invalid-feedback">
+                          {errors.nama_sub_bidang}
+                        </div>
+                      )}
+                    </CFormGroup>
+                    <CFormGroup>
+                      <CLabel htmlFor="name">Keterangan</CLabel>
+                      <CInput
+                        id="keterangan"
+                        name="keterangan"
+                        placeholder="Masukkan keterangan"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.keterangan}
+                        className={
+                          errors.keterangan && touched.keterangan
+                            ? "is-invalid"
+                            : null
+                        }
+                      />
+                      {errors.keterangan && touched.keterangan && (
+                        <div className="invalid-feedback">
+                          {errors.keterangan}
+                        </div>
+                      )}
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+              </CCardBody>
+              <CCardFooter>
+                <CButton
+                  type="submit"
+                  color="primary"
+                  className="mr-1"
+                  disabled={loading ? true : false}
+                >
+                  {loading ? (
+                    <img
+                      width={21}
+                      src={LoadAnimationWhite}
+                      alt="load-animation"
+                    />
+                  ) : (
+                    "Simpan"
+                  )}
+                </CButton>
+                <CButton type="button" color="danger" onClick={goBackToParent}>
+                  Kembali
+                </CButton>
+              </CCardFooter>
+            </CForm>
+          )}
+        </Formik>
       </CCard>
     </>
   );

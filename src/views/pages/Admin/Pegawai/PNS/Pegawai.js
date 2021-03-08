@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CCard,
   CCardHeader,
@@ -13,6 +19,10 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
+import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
+import { deletePNS } from "src/context/actions/Pegawai/PNS/deletePNS";
+
+const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -73,39 +83,13 @@ const Pegawai = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { pnsState, pnsDispatch } = useContext(GlobalContext);
+  const { data, loading, error } = pnsState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      sub_bidang: "Pembinaan Permukiman",
-      pangkat_golongan: "IIa / Pengatur Muda",
-      no_hp: "0812323121",
-      jabatan: "Kepala Dinas",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19640315 199203 1 014",
-      nama: "H. Akhmad Husein, ST, MT",
-      sub_bidang: "Sub. Bagian Perencanaan Program dan Keuangan",
-      pangkat_golongan: "IIa / Pengatur Muda",
-      no_hp: "0812323121",
-      jabatan: "Kepala Bidang",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19650726 198903 2 005",
-      nama: "Erminawati, S.Pd, M.Pd",
-      sub_bidang: "Pembinaan Permukiman",
-      pangkat_golongan: "IIa / Pengatur Muda",
-      no_hp: "0812323121",
-      jabatan: "Staff Administrasi",
-    },
-  ];
+  useEffect(() => {
+    // Get data PNS
+    getPNS(pnsDispatch);
+  }, []);
 
   const filteredData = data.filter((item) =>
     // (
@@ -175,25 +159,21 @@ const Pegawai = () => {
             <CButton
               color="info"
               className="btn btn-sm"
-              onClick={() => goToDetail(row.id)}
+              onClick={() => goToDetail(row.id_pegawai)}
             >
               Kelengkapan
             </CButton>
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
+              onClick={() => goToEdit(row.id_pegawai)}
             >
               <CIcon content={cilPen} color="white" />
             </CButton>
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
+              onClick={() => handleDelete(row.id_pegawai)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -246,6 +226,30 @@ const Pegawai = () => {
     history.push(`/epekerja/admin/pegawai-detail/${id}`);
   };
 
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deletePNS untuk menghapus data PNS
+        deletePNS(id, pnsDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
+  };
+
   const ExpandableComponent = ({ data }) => (
     <>
       <div style={{ padding: "10px 63px" }}>
@@ -259,7 +263,9 @@ const Pegawai = () => {
           <CCol md="2">
             <strong>Pangkat / Gol</strong>
           </CCol>
-          <CCol>{data.pangkat_golongan}</CCol>
+          <CCol>
+            {data.ket_golongan} ({data.golongan})
+          </CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="2">
@@ -282,23 +288,40 @@ const Pegawai = () => {
             Tambah Data
           </CButton>
 
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows
-            expandOnRowClicked
-            highlightOnHover
-            expandableRowsComponent={<ExpandableComponent />}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows
+              expandOnRowClicked
+              highlightOnHover
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>
