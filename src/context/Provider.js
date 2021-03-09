@@ -16,6 +16,10 @@ import initStateEselon from "./initStates/initStateEselon";
 import initStateJabatan from "./initStates/initStateJabatan";
 import initState from "./initStates/initState";
 import pegawaiReducer from "./reducers/Pegawai/pegawaiReducer";
+import pensiunReducer from "./reducers/Pensiun/pensiunReducer";
+import initStatePensiun from "./initStates/initStatePensiun";
+import penghargaanReducer from "./reducers/Penghargaan";
+import initStatePenghargaan from "./initStates/initStatePenghargaan";
 
 export const GlobalContext = createContext({});
 
@@ -80,6 +84,18 @@ export const GlobalProvider = ({ children }) => {
   // PNS
   const [pnsState, pnsDispatch] = useReducer(pegawaiReducer, initState);
 
+  // Pensiun
+  const [pensiunState, pensiunDispatch] = useReducer(
+    pensiunReducer,
+    initStatePensiun
+  );
+
+  // Penghargaan
+  const [penghargaanState, penghargaanDispatch] = useReducer(
+    penghargaanReducer,
+    initStatePenghargaan
+  );
+
   return (
     <GlobalContext.Provider
       value={{
@@ -105,6 +121,10 @@ export const GlobalProvider = ({ children }) => {
         subBidangDispatch,
         pnsState,
         pnsDispatch,
+        pensiunState,
+        pensiunDispatch,
+        penghargaanState,
+        penghargaanDispatch,
       }}
     >
       {children}
