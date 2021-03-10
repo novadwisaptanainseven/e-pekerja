@@ -207,12 +207,21 @@ const Pegawai = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={() => handleCetak()}
+        >
           Cetak <CIcon content={cilPrint} />
         </CButton>
       </>
     );
   }, [filterText, resetPaginationToggle]);
+
+  const handleCetak = () => {
+    window.open(sessionStorage.baseURL + "rekap-pns-pdf");
+  };
 
   const goToTambah = () => {
     history.push("/epekerja/admin/pegawai-tambah");

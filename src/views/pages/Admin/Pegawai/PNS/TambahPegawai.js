@@ -280,9 +280,9 @@ const TambahPegawai = () => {
     formData.append("no_ijazah", values.no_ijazah);
     formData.append("foto_ijazah", values.foto_ijazah);
 
-    for (var pair of formData.entries()) {
-      console.log(pair);
-    }
+    // for (var pair of formData.entries()) {
+    //   console.log(pair);
+    // }
 
     // Memanggil method Insert Bidang untuk menambah data Bidang ke database
     insertPNS(formData, setLoading, showAlertSuccess, showAlertError);

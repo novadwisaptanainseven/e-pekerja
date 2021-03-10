@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CButtonGroup,
   CButton,
@@ -16,47 +20,29 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
 import TambahDataKeluarga from "./TambahDataKeluarga";
 import EditDataKeluarga from "./EditDataKeluarga";
+import { getKeluarga } from "src/context/actions/Pegawai/Keluarga/getKeluarga";
+import { deleteKeluarga } from "src/context/actions/Pegawai/Keluarga/deleteKeluarga";
+import { format } from "date-fns";
 
-const DataKeluarga = () => {
+const MySwal = withReactContent(swal2);
+
+const DataKeluarga = ({ id }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
+  const [keluarga, setKeluarga] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const data = [
-    {
-      id: 1,
-      nik: "213123123213",
-      nama: "Rahma",
-      hubungan: "Istri",
-      ttl: "Samarinda, 21 Januari 1998",
-      pekerjaan: "Dosen",
-      agama: "Islam",
-      jenis_kelamin: "Perempuan",
-      telepon: "08123213",
-      alamat:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, amet!",
-    },
-    {
-      id: 2,
-      nik: "213123123213",
-      nama: "Ramond",
-      hubungan: "Anak Kandung",
-      ttl: "Samarinda, 21 Januari 1998",
-      pekerjaan: "Mahasiswa",
-      agama: "Islam",
-      jenis_kelamin: "Laki - Laki",
-      telepon: "08123213",
-      alamat:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, amet!",
-    },
-  ];
+  useEffect(() => {
+    getKeluarga(id, setKeluarga, setLoading);
+  }, [id]);
 
   const columns = [
     {
       name: "NIK / NIP",
-      selector: "nik",
+      selector: "nik_nip",
       wrap: true,
       sortable: true,
     },
@@ -77,6 +63,15 @@ const DataKeluarga = () => {
       selector: "ttl",
       wrap: true,
       sortable: true,
+      cell: (row) => (
+        <>
+          <div>
+            {`${row.tempat_lahir}, ${
+              row.tgl_lahir && format(new Date(row.tgl_lahir), "d-M-Y")
+            }`}
+          </div>
+        </>
+      ),
     },
     {
       name: "Pekerjaan",
@@ -98,7 +93,7 @@ const DataKeluarga = () => {
                 setModalEdit({
                   ...modalEdit,
                   modal: !modalEdit.modal,
-                  id: row.id,
+                  id: row.id_keluarga,
                 })
               }
             >
@@ -107,11 +102,7 @@ const DataKeluarga = () => {
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
+              onClick={() => handleDelete(id, row.id_keluarga)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -160,31 +151,78 @@ const DataKeluarga = () => {
     </>
   );
 
+  // Menangani tombol hapus
+  const handleDelete = (id_pegawai, id_keluarga) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deleteKeluarga untuk menghapus data Keluarga
+        deleteKeluarga(id_pegawai, id_keluarga, setKeluarga);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
+  };
+
   return (
     <>
-      <div className="my-3">
-        <div className="button-control mb-2">
-          <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Tambah Data
-          </CButton>
-          <CButton type="button" color="info">
-            Cetak <CIcon content={cilPrint} />
-          </CButton>
-        </div>
-        <DataTable
-          columns={columns}
-          data={data}
-          noHeader
-          responsive={true}
-          customStyles={customStyles}
-          expandableRows
-          expandableRowsComponent={<ExpandableComponent />}
-        />
-      </div>
+      {!loading && (
+        <>
+          <div className="my-3">
+            <div className="button-control mb-2">
+              <CButton
+                color="primary"
+                className="btn btn-md"
+                onClick={() => setModalTambah(!modalTambah)}
+              >
+                Tambah Data
+              </CButton>
+              <CButton type="button" color="info">
+                Cetak <CIcon content={cilPrint} />
+              </CButton>
+            </div>
+            <DataTable
+              columns={columns}
+              data={keluarga}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              expandableRows
+              expandableRowsComponent={<ExpandableComponent />}
+              expandOnRowClicked
+              highlightOnHover
+            />
+          </div>
+        </>
+      )}
+
+      {loading && (
+        <>
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
+          </div>
+        </>
+      )}
 
       {/* Modal Tambah */}
       <CModal
@@ -195,23 +233,12 @@ const DataKeluarga = () => {
         <CModalHeader closeButton>
           <CModalTitle>Tambah Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahDataKeluarga />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahDataKeluarga
+          id={id}
+          modalTambah={modalTambah}
+          setModalTambah={setModalTambah}
+        />
       </CModal>
 
       {/* Modal Edit */}

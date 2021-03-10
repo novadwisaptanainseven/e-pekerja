@@ -13,9 +13,10 @@ Halaman Admin
 14. Tangani menu pegawai
     - PNS 
       - Menampilkan data (selesai)
-      - Tambah data
+      - Tambah data (Selesai)
       - Detail data
-      - Edit data
+        - Tangani Tambah Data Keluarga
+      - Edit data (Selesai)
       - Hapus data
 
     - PTTH
@@ -34,13 +35,7 @@ Halaman Admin
 
 14. Perbaiki alur pensiun. Jika pegawai telah pensiun atau pindah maka ubah status kerja pegawai di tabel pegawai. Lalu tampilkan data pegawai yang status kerjanya aktif
 
-
-
-
 Halaman User
-
-
-
 
 Algoritma
 1. Format tanggal yang tersimpan di database y-m-d

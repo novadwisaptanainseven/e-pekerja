@@ -20,7 +20,8 @@ import RiwayatKerja from "./RiwayatKerja/RiwayatKerja";
 import { useHistory } from "react-router-dom";
 import Penghargaan from "./Penghargaan/Penghargaan";
 
-const DetailPegawai = () => {
+const DetailPegawai = ({ match }) => {
+  const params = match.params;
   const history = useHistory();
 
   const goToParent = () => {
@@ -63,25 +64,25 @@ const DetailPegawai = () => {
             </CNav>
             <CTabContent>
               <CTabPane>
-                <DataDiri />
+                <DataDiri id={params.id} />
               </CTabPane>
               <CTabPane>
-                <DataKeluarga />
+                <DataKeluarga id={params.id} />
               </CTabPane>
               <CTabPane>
-                <DataPendidikan />
+                <DataPendidikan id={params.id} />
               </CTabPane>
               <CTabPane>
-                <DataDiklat />
+                <DataDiklat id={params.id} />
               </CTabPane>
               <CTabPane>
-                <RiwayatKerja />
+                <RiwayatKerja id={params.id} />
               </CTabPane>
               <CTabPane>
-                <Penghargaan />
+                <Penghargaan id={params.id} />
               </CTabPane>
               <CTabPane>
-                <DataBerkas />
+                <DataBerkas id={params.id} />
               </CTabPane>
             </CTabContent>
           </CTabs>
