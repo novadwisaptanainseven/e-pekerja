@@ -81,7 +81,6 @@ const Penghargaan = () => {
   const history = useHistory();
   const { penghargaanState, penghargaanDispatch } = useContext(GlobalContext);
   const { data } = penghargaanState;
-  console.log("datanya : ", penghargaanState);
 
   useEffect(() => {
     getPenghargaan(penghargaanDispatch);
@@ -147,13 +146,11 @@ const Penghargaan = () => {
       selector: "nip",
       sortable: true,
       wrap: true,
-      // maxWidth: "200px",
     },
     {
       name: "Nama",
-      selector: "nama_penerima",
+      selector: "nama",
       sortable: true,
-      // maxWidth: "200px",
       wrap: true,
     },
     {
@@ -298,7 +295,9 @@ const Penghargaan = () => {
             {data.dokumentasi === "foto" ? (
               <img width={200} src={SampleFotoPegawai} alt="foto-penghargaan" />
             ) : (
-              <a href=".">dokumentasi_penghargaan.pdf</a>
+              <a target="blank" href={data.dokumentasi}>
+                Klik untuk melihat file
+              </a>
             )}
           </CCol>
         </CRow>
