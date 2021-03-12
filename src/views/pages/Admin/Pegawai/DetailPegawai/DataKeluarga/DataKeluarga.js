@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import DataTable from "react-data-table-component";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -12,9 +13,6 @@ import {
   CModal,
   CModalHeader,
   CModalTitle,
-  CModalBody,
-  CModalFooter,
-  CForm,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
@@ -36,6 +34,7 @@ const DataKeluarga = ({ id }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Get Keluarga by Id Pegawai
     getKeluarga(id, setKeluarga, setLoading);
   }, [id]);
 
@@ -170,6 +169,8 @@ const DataKeluarga = ({ id }) => {
           icon: "success",
           title: "Terhapus",
           text: "Data berhasil dihapus",
+        }).then((res) => {
+          getKeluarga(id_pegawai, setKeluarga, setLoading);
         });
       }
     });
@@ -238,6 +239,11 @@ const DataKeluarga = ({ id }) => {
           id={id}
           modalTambah={modalTambah}
           setModalTambah={setModalTambah}
+          keluarga={{
+            setLoadingKeluarga: setLoading,
+            data: keluarga,
+            setData: setKeluarga,
+          }}
         />
       </CModal>
 
@@ -245,30 +251,25 @@ const DataKeluarga = ({ id }) => {
       <CModal
         show={modalEdit.modal}
         onClose={() =>
-          setModalEdit({ ...modalEdit, modal: !modalEdit, id: null })
+          setModalEdit({ ...modalEdit, modal: !modalEdit.modal, id: null })
         }
         size="lg"
       >
         <CModalHeader closeButton>
           <CModalTitle>Edit Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditDataKeluarga id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <EditDataKeluarga
+          idPegawai={id}
+          idKeluarga={modalEdit.id}
+          modalEdit={modalEdit.modal}
+          setModalEdit={setModalEdit}
+          keluarga={{
+            setLoadingKeluarga: setLoading,
+            data: keluarga,
+            setData: setKeluarga,
+          }}
+        />
       </CModal>
     </>
   );

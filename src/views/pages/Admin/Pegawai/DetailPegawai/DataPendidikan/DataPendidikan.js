@@ -1,50 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import DataTable from "react-data-table-component";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CButtonGroup,
   CButton,
   CModal,
   CModalHeader,
   CModalTitle,
-  CModalBody,
-  CModalFooter,
-  CForm,
   CCol,
   CRow,
+  CModalBody,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
 import TambahDataPendidikan from "./TambahDataPendidikan";
 import EditDataPendidikan from "./EditDataPendidikan";
-import { SampleIjazah } from "src/assets/index";
+import { getPendidikan } from "src/context/actions/Pegawai/Pendidikan/getPendidikan";
+import { deletePendidikan } from "src/context/actions/Pegawai/Pendidikan/deletePendidikan";
+import { getIjazah } from "src/context/actions/DownloadFile";
 
-const DataPendidikan = () => {
+const MySwal = withReactContent(swal2);
+
+const DataPendidikan = ({ id }) => {
   const [modalTambah, setModalTambah] = useState(false);
+  const [previewImage, setPreviewImage] = useState({
+    modal: false,
+    image: null,
+  });
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
+  const [pendidikan, setPendidikan] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const data = [
-    {
-      id: 1,
-      nama_akademi: "Politeknik Negeri Samarinda",
-      jurusan: "Teknologi Informasi",
-      jenjang: "D4/S1",
-      tahun_lulus: "2020",
-      no_ijazah: "12-AD-IA-39",
-      file_ijazah: "ijazah.jpg",
-    },
-    {
-      id: 2,
-      nama_akademi: "Universitas Mulawarman",
-      jurusan: "Ilmu Komputer",
-      jenjang: "S1",
-      tahun_lulus: "2020",
-      no_ijazah: "12-AD-IA-39",
-      file_ijazah: "ijazah.pdf",
-    },
-  ];
+  useEffect(() => {
+    // Get Pendidikan by Id Pegawai
+    getPendidikan(id, setPendidikan, setLoading);
+  }, [id]);
 
   const columns = [
     {
@@ -64,14 +61,14 @@ const DataPendidikan = () => {
       selector: "jenjang",
       wrap: true,
       sortable: true,
-      maxWidth: "100px",
+      // maxWidth: "100px",
     },
     {
       name: "Tahun Lulus",
       selector: "tahun_lulus",
       wrap: true,
       sortable: true,
-      maxWidth: "150px",
+      // maxWidth: "150px",
     },
     {
       name: "No. Ijazah",
@@ -84,7 +81,7 @@ const DataPendidikan = () => {
       name: "Aksi",
       selector: "aksi",
       wrap: true,
-      maxWidth: "100px",
+      // maxWidth: "100px",
       cell: (row) => (
         <>
           <CButtonGroup>
@@ -95,7 +92,7 @@ const DataPendidikan = () => {
                 setModalEdit({
                   ...modalEdit,
                   modal: !modalEdit.modal,
-                  id: row.id,
+                  id: row.id_pendidikan,
                 })
               }
             >
@@ -104,11 +101,7 @@ const DataPendidikan = () => {
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
+              onClick={() => handleDelete(id, row.id_pendidikan)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -128,8 +121,12 @@ const DataPendidikan = () => {
 
   // Expandable Component
   const ExpandableComponent = ({ data }) => {
-    let ext_file = data.file_ijazah.split(".");
-    let ext_status = ext_file[ext_file.length - 1];
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = data.foto_ijazah.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
 
     return (
       <>
@@ -139,10 +136,18 @@ const DataPendidikan = () => {
               <strong>File Ijazah</strong>
             </CCol>
             <CCol>
-              {ext_status === "jpg" ? (
-                <img width={200} src={SampleIjazah} alt={data.file_ijazah} />
+              {EXT_IMAGE.includes(ext_file2) ? (
+                <img
+                  width={200}
+                  src={getIjazah(data.foto_ijazah)}
+                  alt="foto-ijazah"
+                  onClick={() => handlePreviewImage(data.foto_ijazah)}
+                  style={{ cursor: "pointer" }}
+                />
               ) : (
-                <a href=".">{data.file_ijazah}</a>
+                <a href={getIjazah(data.foto_ijazah)} target="_blank">
+                  {filename}
+                </a>
               )}
             </CCol>
           </CRow>
@@ -151,33 +156,90 @@ const DataPendidikan = () => {
     );
   };
 
+  // Menangani preview gambar
+  const handlePreviewImage = (foto_ijazah) => {
+    // window.open(getIjazah(foto_ijazah), "blank");
+    setPreviewImage({
+      ...previewImage,
+      modal: !previewImage.modal,
+      image: foto_ijazah,
+    });
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id_pegawai, id_pendidikan) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deletePendidikan untuk menghapus data Pendidikan
+        deletePendidikan(id_pegawai, id_pendidikan, setPendidikan);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        }).then((res) => {
+          getPendidikan(id_pegawai, setPendidikan, setLoading);
+        });
+      }
+    });
+  };
+
   return (
     <>
-      <div className="my-3">
-        <div className="button-control mb-2">
-          <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Tambah Data
-          </CButton>
-          <CButton type="button" color="info">
-            Cetak <CIcon content={cilPrint} />
-          </CButton>
-        </div>
-        <DataTable
-          columns={columns}
-          data={data}
-          noHeader
-          responsive={true}
-          customStyles={customStyles}
-          expandableRows
-          expandableRowsComponent={<ExpandableComponent />}
-          highlightOnHover
-          expandOnRowClicked
-        />
-      </div>
+      {!loading && (
+        <>
+          <div className="my-3">
+            <div className="button-control mb-2">
+              <CButton
+                color="primary"
+                className="btn btn-md"
+                onClick={() => setModalTambah(!modalTambah)}
+              >
+                Tambah Data
+              </CButton>
+              <CButton type="button" color="info">
+                Cetak <CIcon content={cilPrint} />
+              </CButton>
+            </div>
+            <DataTable
+              columns={columns}
+              data={pendidikan}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              expandableRows
+              expandableRowsComponent={<ExpandableComponent />}
+              highlightOnHover
+              expandOnRowClicked
+            />
+          </div>
+        </>
+      )}
+
+      {loading && (
+        <>
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
+          </div>
+        </>
+      )}
 
       {/* Modal Tambah */}
       <CModal
@@ -188,23 +250,17 @@ const DataPendidikan = () => {
         <CModalHeader closeButton>
           <CModalTitle>Tambah Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahDataPendidikan />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahDataPendidikan
+          id={id}
+          modalTambah={modalTambah}
+          setModalTambah={setModalTambah}
+          pendidikan={{
+            setLoadingPendidikan: setLoading,
+            data: pendidikan,
+            setData: setPendidikan,
+          }}
+        />
       </CModal>
 
       {/* Modal Edit */}
@@ -218,23 +274,44 @@ const DataPendidikan = () => {
         <CModalHeader closeButton>
           <CModalTitle>Edit Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditDataPendidikan id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <EditDataPendidikan
+          idPegawai={id}
+          idPendidikan={modalEdit.id}
+          modalEdit={modalEdit.modal}
+          setModalEdit={setModalEdit}
+          pendidikan={{
+            setLoadingPendidikan: setLoading,
+            data: pendidikan,
+            setData: setPendidikan,
+          }}
+        />
+      </CModal>
+
+      {/* Modal Preview Image */}
+      <CModal
+        show={previewImage.modal}
+        onClose={() =>
+          setPreviewImage({
+            ...previewImage,
+            modal: !previewImage.modal,
+            image: null,
+          })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Preview</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {previewImage.image && (
+            <img
+              style={{ width: "100%" }}
+              src={getIjazah(previewImage.image)}
+              alt="foto-ijazah"
+            />
+          )}
+        </CModalBody>
       </CModal>
     </>
   );

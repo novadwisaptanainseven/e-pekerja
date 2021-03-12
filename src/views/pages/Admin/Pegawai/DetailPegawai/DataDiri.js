@@ -11,6 +11,10 @@ const DataDiri = ({ id }) => {
   useEffect(() => {
     // Get PNS By ID
     getPNSById(id, setData);
+
+    return () => {
+      setData(null);
+    };
   }, [id]);
 
   return (

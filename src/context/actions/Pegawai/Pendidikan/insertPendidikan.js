@@ -1,28 +1,30 @@
 import axiosInstance from "src/helpers/axios";
-import { getKeluarga } from "./getKeluarga";
+import { getPendidikan } from "./getPendidikan";
 
-export const editKeluarga = (
+export const insertPendidikan = (
   id_pegawai,
-  id_keluarga,
   values,
   setLoading,
   showAlertSuccess,
   showAlertError,
-  setDataKeluarga,
-  setLoadingKeluarga
+  setLoadingPendidikan,
+  setDataPendidikan
 ) => {
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pegawai/${id_pegawai}/keluarga/${id_keluarga}`, values)
+    .post(`admin/pegawai/${id_pegawai}/pendidikan`, values, {
+      header: {
+        "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
+      },
+    })
     .then((res) => {
       // console.log(res.data);
       setLoading(false);
-      getKeluarga(id_pegawai, setDataKeluarga, setLoadingKeluarga);
+      getPendidikan(id_pegawai, setDataPendidikan, setLoadingPendidikan);
       showAlertSuccess();
     })
     .catch((err) => {
-      setLoading(false);
       // console.log(err.response.data);
       showAlertError(err.response.data.errors);
     });

@@ -15,7 +15,9 @@ Halaman Admin
       - Menampilkan data (selesai)
       - Tambah data (Selesai)
       - Detail data
-        - Tangani Tambah Data Keluarga
+        - Data Keluarga (Selesai)
+        - Data Pendidikan 
+          - Tangani open file pdf
       - Edit data (Selesai)
       - Hapus data
 

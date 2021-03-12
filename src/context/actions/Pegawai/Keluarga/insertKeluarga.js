@@ -1,11 +1,14 @@
 import axiosInstance from "src/helpers/axios";
+import { getKeluarga } from "./getKeluarga";
 
 export const insertKeluarga = (
   id_pegawai,
   values,
   setLoading,
   showAlertSuccess,
-  showAlertError
+  showAlertError,
+  setLoadingKeluarga,
+  setDataKeluarga
 ) => {
   setLoading(true);
 
@@ -18,6 +21,7 @@ export const insertKeluarga = (
     .then((res) => {
       // console.log(res.data);
       setLoading(false);
+      getKeluarga(id_pegawai, setDataKeluarga, setLoadingKeluarga);
       showAlertSuccess();
     })
     .catch((err) => {

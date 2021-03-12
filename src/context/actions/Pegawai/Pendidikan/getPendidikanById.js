@@ -1,18 +1,13 @@
-
 import axiosInstance from "src/helpers/axios";
 
-export const getKeluarga = (id_pegawai, setData, setLoading) => {
-  setLoading(true);
-
+export const getPendidikanById = (id_pegawai, id_pendidikan, setData) => {
   axiosInstance
-    .get(`admin/pegawai/${id_pegawai}/keluarga`)
+    .get(`admin/pegawai/${id_pegawai}/pendidikan/${id_pendidikan}`)
     .then((res) => {
       setData(res.data.data);
-      setLoading(false);
       // console.log(res.data);
     })
     .catch((err) => {
-      setLoading(false);
       // console.log(err.response.data);
     });
 };

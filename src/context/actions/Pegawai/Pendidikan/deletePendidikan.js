@@ -1,16 +1,16 @@
 import axiosInstance from "src/helpers/axios";
-import { getKeluarga } from "./getKeluarga";
+import { getPendidikan } from "./getPendidikan";
 
-export const deleteKeluarga = (
+export const deletePendidikan = (
   id_pegawai,
-  id_keluarga,
+  id_pendidikan,
   setData,
   setLoading
 ) => {
   axiosInstance
-    .delete(`admin/pegawai/${id_pegawai}/keluarga/${id_keluarga}`)
+    .delete(`admin/pegawai/${id_pegawai}/pendidikan/${id_pendidikan}`)
     .then((res) => {
-      getKeluarga(id_pegawai, setData, setLoading);
+      getPendidikan(id_pegawai, setData, setLoading);
       console.log(res.data);
     })
     .catch((err) => {

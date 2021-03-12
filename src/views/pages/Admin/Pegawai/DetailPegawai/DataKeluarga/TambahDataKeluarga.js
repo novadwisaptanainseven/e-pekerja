@@ -26,7 +26,7 @@ import { insertKeluarga } from "src/context/actions/Pegawai/Keluarga/insertKelua
 
 const MySwal = withReactContent(swal2);
 
-const TambahDataKeluarga = ({ id, modalTambah, setModalTambah }) => {
+const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
   const history = useHistory();
   const [agama, setAgama] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -58,6 +58,7 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah }) => {
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
+      setModalTambah(!modalTambah);
       history.push(`/epekerja/admin/pegawai-detail/${id}`);
     });
   };
@@ -112,7 +113,15 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah }) => {
     }
 
     // Memanggil method Insert Keluarga untuk menambah data Keluarga ke database
-    insertKeluarga(id, formData, setLoading, showAlertSuccess, showAlertError);
+    insertKeluarga(
+      id,
+      formData,
+      setLoading,
+      showAlertSuccess,
+      showAlertError,
+      keluarga.setLoadingKeluarga,
+      keluarga.setData
+    );
   };
 
   return (
@@ -185,6 +194,8 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah }) => {
                   <option value="Istri">Istri</option>
                   <option value="Anak Kandung">Anak Kandung</option>
                   <option value="Anak Tiri">Anak Tiri</option>
+                  <option value="Saudara">Saudara</option>
+                  <option value="Saudari">Saudari</option>
                 </CSelect>
                 {errors.hubungan && touched.hubungan && (
                   <div className="invalid-feedback">{errors.hubungan}</div>

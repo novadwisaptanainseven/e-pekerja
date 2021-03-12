@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -19,20 +19,30 @@ import DataBerkas from "./DataBerkas/DataBerkas";
 import RiwayatKerja from "./RiwayatKerja/RiwayatKerja";
 import { useHistory } from "react-router-dom";
 import Penghargaan from "./Penghargaan/Penghargaan";
+import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 
 const DetailPegawai = ({ match }) => {
   const params = match.params;
   const history = useHistory();
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    // Get Pegawai By Id
+    getPNSById(params.id, setData);
+  }, [params]);
 
   const goToParent = () => {
-    history.goBack();
+    history.push(`/epekerja/admin/pegawai`);
   };
 
   return (
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Detail Pegawai</h3>
+          <h3>
+            Detail Pegawai :{" "}
+            <span className="font-weight-normal">{data && data.nama}</span>
+          </h3>
           <CButton color="warning" className="text-white" onClick={goToParent}>
             Kembali
           </CButton>
