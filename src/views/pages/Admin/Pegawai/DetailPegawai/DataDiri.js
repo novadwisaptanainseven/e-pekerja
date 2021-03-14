@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CRow, CCol, CCard, CCardHeader, CCardBody } from "@coreui/react";
-import { LoadAnimationBlue, SampleFotoPegawai } from "src/assets";
+import { LoadAnimationBlue } from "src/assets";
 import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";

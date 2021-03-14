@@ -41,7 +41,9 @@ const DetailPegawai = ({ match }) => {
         <CCardHeader className="d-flex justify-content-between">
           <h3>
             Detail Pegawai :{" "}
-            <span className="font-weight-normal">{data && data.nama}</span>
+            <span className="font-weight-normal">
+              {data ? data.nama : "loading..."}
+            </span>
           </h3>
           <CButton color="warning" className="text-white" onClick={goToParent}>
             Kembali

@@ -39,6 +39,7 @@ const EditDataPendidikan = ({
     if (idPendidikan) {
       getPendidikanById(idPegawai, idPendidikan, setData);
     }
+    return () => setData(null);
   }, [idPegawai, idPendidikan]);
 
   // Inisialisasi State Formik
@@ -91,7 +92,6 @@ const EditDataPendidikan = ({
   ];
 
   const validationSchema = Yup.object().shape({
-    nik_nip: Yup.string().required("NIK/NIP harus diisi!"),
     nama_akademi: Yup.string().required("Nama akademi harus diisi!"),
     jenjang: Yup.string().required("Jenjang harus diisi!"),
     jurusan: Yup.string().required("Jurusan harus diisi!"),

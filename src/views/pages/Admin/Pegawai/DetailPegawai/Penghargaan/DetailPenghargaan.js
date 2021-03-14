@@ -1,43 +1,75 @@
-import React from "react";
-import { SampleSertifikat } from "src/assets";
+import React, { useState, useEffect } from "react";
+import { getPenghargaanById } from "src/context/actions/Pegawai/Penghargaan/getPenghargaanById";
+import { format } from "date-fns";
+import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
 
-const DetailPenghargaan = ({ id }) => {
+const DetailPenghargaan = ({ idPegawai, idPenghargaan }) => {
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    // Get Penghargaan by Id
+    getPenghargaanById(idPegawai, idPenghargaan, setData);
+
+    return () => setData("");
+  }, [idPegawai, idPenghargaan]);
+
+  // Menangani Preview Dokumentasi
+  const PreviewDokumentasi = ({ dokumentasi }) => {
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = dokumentasi.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
+
+    return (
+      <>
+        {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+          <img
+            src={getDokPenghargaan(dokumentasi)}
+            alt="dokumentasi-penghargaan"
+            style={{ width: "100%" }}
+          />
+        ) : (
+          <a
+            href={getDokPenghargaan(dokumentasi)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {filename}
+          </a>
+        )}
+      </>
+    );
+  };
 
   return (
     <>
       <table className="table table-striped table-borderless">
         <tbody>
           <tr>
-            <th>NIP</th>
-            <td>19651127 199301 1 001</td>
-          </tr>
-          <tr>
-            <th>Nama Penerima</th>
-            <td>Ir. H. Dadang Airlangga N, MMT</td>
-          </tr>
-          <tr>
             <th>Nama Penghargaan</th>
-            <td>Penghargaan 1</td>
+            <td>{data ? data.nama_penghargaan : "Loading..."}</td>
           </tr>
           <tr>
             <th>Pemberi</th>
-            <td>Walikota Samarinda</td>
+            <td>{data ? data.pemberi : "Loading..."}</td>
           </tr>
           <tr>
             <th>Tgl. Penghargaan</th>
-            <td>10-12-2021</td>
+            <td>
+              {data
+                ? format(new Date(data.tgl_penghargaan), "dd/MM/y")
+                : "Loading..."}
+            </td>
           </tr>
           <tr>
             <th>Dokumentasi</th>
             <td>
-              {id === 1 ? (
-                <img
-                  src={SampleSertifikat}
-                  width={200}
-                  alt="foto-penghargaan"
-                />
+              {data ? (
+                <PreviewDokumentasi dokumentasi={data.dokumentasi} />
               ) : (
-                <a href=".">dokumentasi_penghargaan.pdf</a>
+                "Loading..."
               )}
             </td>
           </tr>

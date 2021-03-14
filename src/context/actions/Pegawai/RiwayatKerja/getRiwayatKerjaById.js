@@ -1,0 +1,13 @@
+import axiosInstance from "src/helpers/axios";
+
+export const getRiwayatKerjaById = (id_pegawai, id_riwayat_kerja, setData) => {
+  axiosInstance
+    .get(`admin/pegawai/${id_pegawai}/riwayat-kerja/${id_riwayat_kerja}`)
+    .then((res) => {
+      setData(res.data.data);
+      // console.log(res.data);
+    })
+    .catch((err) => {
+      // console.log(err.response.data);
+    });
+};

@@ -162,7 +162,6 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
                 <CLabel htmlFor="nama">Nama</CLabel>
                 <CInput
                   id="nama"
-                  placeholder="Masukkan nama"
                   name="nama"
                   placeholder="Masukkan nama"
                   value={values.nama}
@@ -362,7 +361,7 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
               <CButton
                 type="submit"
                 color="primary"
-                onClick={() => handleFormSubmit(values)}
+                // onClick={() => handleFormSubmit(values)}
                 disabled={loading ? true : false}
               >
                 {loading ? (

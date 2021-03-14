@@ -166,7 +166,6 @@ const EditDataKeluarga = ({
                 <CLabel htmlFor="nama">Nama</CLabel>
                 <CInput
                   id="nama"
-                  placeholder="Masukkan nama"
                   name="nama"
                   placeholder="Masukkan nama"
                   value={values.nama}
@@ -372,7 +371,7 @@ const EditDataKeluarga = ({
               <CButton
                 type="submit"
                 color="primary"
-                onClick={() => handleFormSubmit(values)}
+                // onClick={() => handleFormSubmit(values)}
                 disabled={loading ? true : false}
               >
                 {loading ? (

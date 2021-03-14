@@ -29,7 +29,6 @@ const TambahDataPendidikan = ({
   pendidikan,
 }) => {
   const history = useHistory();
-  const [agama, setAgama] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // Inisialisasi State Formik
@@ -82,7 +81,6 @@ const TambahDataPendidikan = ({
   ];
 
   const validationSchema = Yup.object().shape({
-    nik_nip: Yup.string().required("NIK/NIP harus diisi!"),
     nama_akademi: Yup.string().required("Nama akademi harus diisi!"),
     jenjang: Yup.string().required("Jenjang harus diisi!"),
     jurusan: Yup.string().required("Jurusan harus diisi!"),
@@ -279,7 +277,7 @@ const TambahDataPendidikan = ({
               <CButton
                 type="submit"
                 color="primary"
-                onClick={() => handleFormSubmit(values)}
+                // onClick={() => handleFormSubmit(values)}
                 disabled={loading ? true : false}
               >
                 {loading ? (

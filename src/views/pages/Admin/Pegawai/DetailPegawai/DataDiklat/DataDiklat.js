@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import DataTable from "react-data-table-component";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CButtonGroup,
   CButton,
@@ -7,8 +12,6 @@ import {
   CModalHeader,
   CModalTitle,
   CModalBody,
-  CModalFooter,
-  CForm,
   CCol,
   CRow,
 } from "@coreui/react";
@@ -16,35 +19,29 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
 import TambahDataDiklat from "./TambahDataDiklat";
 import EditDataDiklat from "./EditDataDiklat";
-import { SampleIjazah } from "src/assets";
+import { getDiklat } from "src/context/actions/Pegawai/Diklat/getDiklat";
+import { deleteDiklat } from "src/context/actions/Pegawai/Diklat/deleteDiklat";
+import getDokDiklat from "src/context/actions/DownloadFile/getDokDiklat";
 
-const DataDiklat = () => {
+const MySwal = withReactContent(swal2);
+
+const DataDiklat = ({ id }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
+  const [previewImage, setPreviewImage] = useState({
+    modal: false,
+    image: null,
+  });
+  const [diklat, setDiklat] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const data = [
-    {
-      id: 1,
-      nama_diklat: "Adumla",
-      jenis_diklat: "Jenis Diklat",
-      penyelenggara: "Penyelenggara",
-      tahun_diklat: "1997",
-      jml_jam: "500",
-      dokumentasi: "dokumentasi_diklat.jpg",
-    },
-    {
-      id: 2,
-      nama_diklat: "Diklatpim Tk. III",
-      jenis_diklat: "Jenis Diklat",
-      penyelenggara: "Penyelenggara",
-      tahun_diklat: "2003",
-      jml_jam: "360",
-      dokumentasi: "dokumentasi_diklat.pdf",
-    },
-  ];
+  useEffect(() => {
+    // Get Diklat By Id Pegawai
+    getDiklat(id, setDiklat, setLoading);
+  }, [id]);
 
   const columns = [
     {
@@ -75,7 +72,7 @@ const DataDiklat = () => {
     },
     {
       name: "Jumlah Jam",
-      selector: "jml_jam",
+      selector: "jumlah_jam",
       wrap: true,
       sortable: true,
     },
@@ -95,7 +92,7 @@ const DataDiklat = () => {
                 setModalEdit({
                   ...modalEdit,
                   modal: !modalEdit.modal,
-                  id: row.id,
+                  id: row.id_diklat,
                 })
               }
             >
@@ -104,11 +101,7 @@ const DataDiklat = () => {
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
+              onClick={() => handleDelete(id, row.id_diklat)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -126,10 +119,49 @@ const DataDiklat = () => {
     },
   };
 
+  // Menangani tombol hapus
+  const handleDelete = (id_pegawai, id_diklat) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deleteDiklat untuk menghapus data Diklat
+        deleteDiklat(id_pegawai, id_diklat, setDiklat);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        }).then((res) => {
+          getDiklat(id_pegawai, setDiklat, setLoading);
+        });
+      }
+    });
+  };
+
+  // Menangani preview gambar
+  const handlePreviewImage = (dokumentasi) => {
+    setPreviewImage({
+      ...previewImage,
+      modal: !previewImage.modal,
+      image: dokumentasi,
+    });
+  };
+
   // Expandable Component
   const ExpandableComponent = ({ data }) => {
-    let ext_file = data.dokumentasi.split(".");
-    let ext_status = ext_file[ext_file.length - 1];
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = data.dokumentasi.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
 
     return (
       <>
@@ -139,10 +171,22 @@ const DataDiklat = () => {
               <strong>Dokumentasi</strong>
             </CCol>
             <CCol>
-              {ext_status === "jpg" ? (
-                <img width={200} src={SampleIjazah} alt={data.dokumentasi} />
+              {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+                <img
+                  width={200}
+                  src={getDokDiklat(data.dokumentasi)}
+                  alt="dokumentasi-diklat"
+                  onClick={() => handlePreviewImage(data.dokumentasi)}
+                  style={{ cursor: "pointer" }}
+                />
               ) : (
-                <a href=".">{data.dokumentasi}</a>
+                <a
+                  href={getDokDiklat(data.dokumentasi)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {filename}
+                </a>
               )}
             </CCol>
           </CRow>
@@ -153,31 +197,52 @@ const DataDiklat = () => {
 
   return (
     <>
-      <div className="my-3">
-        <div className="button-control mb-2">
-          <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Tambah Data
-          </CButton>
-          <CButton type="button" color="info">
-            Cetak <CIcon content={cilPrint} />
-          </CButton>
-        </div>
-        <DataTable
-          columns={columns}
-          data={data}
-          noHeader
-          responsive={true}
-          customStyles={customStyles}
-          expandableRows
-          expandableRowsComponent={<ExpandableComponent />}
-          expandOnRowClicked
-          highlightOnHover
-        />
-      </div>
+      {!loading && (
+        <>
+          <div className="my-3">
+            <div className="button-control mb-2">
+              <CButton
+                color="primary"
+                className="btn btn-md"
+                onClick={() => setModalTambah(!modalTambah)}
+              >
+                Tambah Data
+              </CButton>
+              <CButton type="button" color="info">
+                Cetak <CIcon content={cilPrint} />
+              </CButton>
+            </div>
+            <DataTable
+              columns={columns}
+              data={diklat}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              expandableRows
+              expandableRowsComponent={<ExpandableComponent />}
+              expandOnRowClicked
+              highlightOnHover
+            />
+          </div>
+        </>
+      )}
+
+      {loading && (
+        <>
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
+          </div>
+        </>
+      )}
 
       {/* Modal Tambah */}
       <CModal
@@ -188,23 +253,17 @@ const DataDiklat = () => {
         <CModalHeader closeButton>
           <CModalTitle>Tambah Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahDataDiklat />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahDataDiklat
+          id={id}
+          modalTambah={modalTambah}
+          setModalTambah={setModalTambah}
+          diklat={{
+            setLoadingDiklat: setLoading,
+            data: diklat,
+            setData: setDiklat,
+          }}
+        />
       </CModal>
 
       {/* Modal Edit */}
@@ -218,23 +277,44 @@ const DataDiklat = () => {
         <CModalHeader closeButton>
           <CModalTitle>Edit Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditDataDiklat id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <EditDataDiklat
+          idPegawai={id}
+          idDiklat={modalEdit.id}
+          modalEdit={modalEdit.modal}
+          setModalEdit={setModalEdit}
+          diklat={{
+            setLoadingDiklat: setLoading,
+            data: diklat,
+            setData: setDiklat,
+          }}
+        />
+      </CModal>
+
+      {/* Modal Preview Image */}
+      <CModal
+        show={previewImage.modal}
+        onClose={() =>
+          setPreviewImage({
+            ...previewImage,
+            modal: !previewImage.modal,
+            image: null,
+          })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Preview</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {previewImage.image && (
+            <img
+              style={{ width: "100%" }}
+              src={getDokDiklat(previewImage.image)}
+              alt="dokumentasi-diklat"
+            />
+          )}
+        </CModalBody>
       </CModal>
     </>
   );

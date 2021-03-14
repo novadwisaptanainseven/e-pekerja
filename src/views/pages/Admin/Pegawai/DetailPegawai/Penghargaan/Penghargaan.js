@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CButton,
   CButtonGroup,
@@ -14,12 +19,17 @@ import {
 import DataTable from "react-data-table-component";
 import CIcon from "@coreui/icons-react";
 import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
-import { SampleSertifikat } from "src/assets";
 import TambahPenghargaan from "./TambahPenghargaan";
 import EditPenghargaan from "./EditPenghargaan";
 import DetailPenghargaan from "./DetailPenghargaan";
+import { getPenghargaan } from "src/context/actions/Pegawai/Penghargaan/getPenghargaan";
+import { format } from "date-fns/esm";
+import { deletePenghargaan } from "src/context/actions/Pegawai/Penghargaan/deletePenghargaan";
+import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
 
-const Penghargaan = () => {
+const MySwal = withReactContent(swal2);
+
+const Penghargaan = ({ id }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
@@ -29,57 +39,19 @@ const Penghargaan = () => {
     modal: false,
     id: null,
   });
+  const [previewImage, setPreviewImage] = useState({
+    modal: false,
+    image: null,
+  });
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      nama_penghargaan: "Penghargaan 1",
-      pemberi: "Walikota Samarinda",
-      tgl_penghargaan: "10-12-2021",
-      dokumentasi: "foto",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19640315 199203 1 014",
-      nama: "H. Akhmad Husein, ST, MT",
-      nama_penghargaan: "Penghargaan 2",
-      pemberi: "Walikota Samarinda",
-      tgl_penghargaan: "10-12-2021",
-      dokumentasi: "foto",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19660425 199312 1 001",
-      nama: "Joko Karyono, ST, MT",
-      nama_penghargaan: "Penghargaan 3",
-      pemberi: "Walikota Samarinda",
-      tgl_penghargaan: "10-12-2021",
-      dokumentasi: "file",
-    },
-    {
-      no: 4,
-      id: 4,
-      nip: "19660425 199312 1 001",
-      nama: "Joko Karyono, ST, MT",
-      nama_penghargaan: "Penghargaan 4",
-      pemberi: "Walikota Samarinda",
-      tgl_penghargaan: "10-12-2021",
-      dokumentasi: "file",
-    },
-  ];
+  useEffect(() => {
+    // Get Penghargaan by Id Pegawai
+    getPenghargaan(id, setData, setLoading);
+  }, [id]);
 
   const columns = [
-    {
-      name: "No",
-      selector: "no",
-      sortable: true,
-      width: "50px",
-    },
     {
       name: "Nama Penghargaan",
       selector: "nama_penghargaan",
@@ -97,6 +69,7 @@ const Penghargaan = () => {
       selector: "tgl_penghargaan",
       sortable: true,
       wrap: true,
+      cell: (row) => format(new Date(row.tgl_penghargaan), "dd/MM/y"),
     },
     {
       maxWidth: "150px",
@@ -112,7 +85,7 @@ const Penghargaan = () => {
                 setModalDetail({
                   ...modalDetail,
                   modal: !modalDetail.modal,
-                  id: row.id,
+                  id: row.id_penghargaan,
                 })
               }
             >
@@ -125,7 +98,7 @@ const Penghargaan = () => {
                 setModalEdit({
                   ...modalEdit,
                   modal: !modalEdit.modal,
-                  id: row.id,
+                  id: row.id_penghargaan,
                 })
               }
             >
@@ -134,9 +107,7 @@ const Penghargaan = () => {
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm("Anda yakin ingin menghapus data ini ?")
-              }
+              onClick={() => handleDelete(id, row.id_penghargaan)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -154,54 +125,131 @@ const Penghargaan = () => {
     },
   };
 
-  const ExpandableComponent = ({ data }) => (
-    <>
-      <div style={{ padding: "10px 63px" }}>
-        <CRow className="mb-1">
-          <CCol md="3">
-            <strong>Dokumentasi</strong>
-          </CCol>
-          <CCol>
-            {data.dokumentasi === "foto" ? (
-              <img width={200} src={SampleSertifikat} alt="foto-penghargaan" />
-            ) : (
-              <a href=".">dokumentasi_penghargaan.pdf</a>
-            )}
-          </CCol>
-        </CRow>
-      </div>
-    </>
-  );
+  // Menangani tombol hapus
+  const handleDelete = (id_pegawai, id_penghargaan) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deletePenghargaan untuk menghapus data Penghargaan
+        deletePenghargaan(id_pegawai, id_penghargaan, setData);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        }).then((res) => {
+          getPenghargaan(id_pegawai, setData, setLoading);
+        });
+      }
+    });
+  };
+
+  // Menangani preview gambar
+  const handlePreviewImage = (dokumentasi) => {
+    setPreviewImage({
+      ...previewImage,
+      modal: !previewImage.modal,
+      image: dokumentasi,
+    });
+  };
+
+  const ExpandableComponent = ({ data }) => {
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = data.dokumentasi.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
+
+    return (
+      <>
+        <div style={{ padding: "10px 63px" }}>
+          <CRow className="mb-1">
+            <CCol md="3">
+              <strong>Dokumentasi</strong>
+            </CCol>
+            <CCol>
+              {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+                <img
+                  width={200}
+                  src={getDokPenghargaan(data.dokumentasi)}
+                  alt="dokumentasi-penghargaan"
+                  onClick={() => handlePreviewImage(data.dokumentasi)}
+                  style={{ cursor: "pointer" }}
+                />
+              ) : (
+                <a
+                  href={getDokPenghargaan(data.dokumentasi)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {filename}
+                </a>
+              )}
+            </CCol>
+          </CRow>
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
-      <div className="button-control mb-2 mt-4">
-        <CButton
-          color="primary"
-          className="btn btn-md"
-          onClick={() => setModalTambah(!modalTambah)}
-        >
-          Tambah Penghargaan
-        </CButton>
-        <CButton type="button" color="info">
-          Cetak <CIcon content={cilPrint} />
-        </CButton>
-      </div>
+      {!loading && (
+        <>
+          <div className="button-control mb-2 mt-4">
+            <CButton
+              color="primary"
+              className="btn btn-md"
+              onClick={() => setModalTambah(!modalTambah)}
+            >
+              Tambah Penghargaan
+            </CButton>
+            <CButton type="button" color="info">
+              Cetak <CIcon content={cilPrint} />
+            </CButton>
+          </div>
 
-      <DataTable
-        columns={columns}
-        data={data}
-        noHeader
-        responsive={true}
-        customStyles={customStyles}
-        pagination
-        // paginationRowsPerPageOptions={[5, 10, 15]}
-        // paginationPerPage={5}
-        expandableRows={true}
-        expandableRowsComponent={<ExpandableComponent />}
-        expandOnRowClicked
-        highlightOnHover
-      />
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+            pagination
+            // paginationRowsPerPageOptions={[5, 10, 15]}
+            // paginationPerPage={5}
+            expandableRows={true}
+            expandableRowsComponent={<ExpandableComponent />}
+            expandOnRowClicked
+            highlightOnHover
+          />
+        </>
+      )}
+
+      {loading && (
+        <>
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
+          </div>
+        </>
+      )}
 
       {/* Modal Tambah */}
       <CModal
@@ -210,25 +258,19 @@ const Penghargaan = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Tambah Penghargaan</CModalTitle>
+          <CModalTitle>Tambah Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahPenghargaan />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahPenghargaan
+          id={id}
+          modal={modalTambah}
+          setModal={setModalTambah}
+          penghargaan={{
+            setLoading: setLoading,
+            data: data,
+            setData: setData,
+          }}
+        />
       </CModal>
 
       {/* Modal Edit */}
@@ -240,25 +282,20 @@ const Penghargaan = () => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Edit Penghargaan</CModalTitle>
+          <CModalTitle>Edit Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditPenghargaan id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <EditPenghargaan
+          idPegawai={id}
+          idPenghargaan={modalEdit.id}
+          modal={modalEdit}
+          setModal={setModalEdit}
+          penghargaan={{
+            setLoading: setLoading,
+            data: data,
+            setData: setData,
+          }}
+        />
       </CModal>
 
       {/* Modal Detail */}
@@ -278,7 +315,7 @@ const Penghargaan = () => {
         </CModalHeader>
         <CForm>
           <CModalBody>
-            <DetailPenghargaan id={modalDetail.id} />
+            <DetailPenghargaan idPegawai={id} idPenghargaan={modalDetail.id} />
           </CModalBody>
           <CModalFooter>
             <CButton type="submit" color="primary">
@@ -293,6 +330,32 @@ const Penghargaan = () => {
             </CButton>
           </CModalFooter>
         </CForm>
+      </CModal>
+
+      {/* Modal Preview Image */}
+      <CModal
+        show={previewImage.modal}
+        onClose={() =>
+          setPreviewImage({
+            ...previewImage,
+            modal: !previewImage.modal,
+            image: null,
+          })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Preview</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {previewImage.image && (
+            <img
+              style={{ width: "100%" }}
+              src={getDokPenghargaan(previewImage.image)}
+              alt="dokumentasi-penghargaan"
+            />
+          )}
+        </CModalBody>
       </CModal>
     </>
   );

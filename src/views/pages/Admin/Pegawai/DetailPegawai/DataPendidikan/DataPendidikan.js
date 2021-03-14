@@ -145,7 +145,7 @@ const DataPendidikan = ({ id }) => {
                   style={{ cursor: "pointer" }}
                 />
               ) : (
-                <a href={getIjazah(data.foto_ijazah)} target="_blank">
+                <a href={getIjazah(data.foto_ijazah)} target="_blank" rel="noreferrer">
                   {filename}
                 </a>
               )}
