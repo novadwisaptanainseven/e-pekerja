@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CCard,
   CCardHeader,
@@ -14,6 +20,11 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
+import { getPTTH } from "src/context/actions/Pegawai/PTTH/getPTTH";
+import { deletePTTH } from "src/context/actions/Pegawai/PTTH/deletePTTH";
+import { format } from "date-fns";
+
+const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -74,72 +85,25 @@ const DataPTTH = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { ptthState, ptthDispatch } = useContext(GlobalContext);
+  const { data } = ptthState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nik: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta Nain Seven",
-      penetap_sk: "Ir. H. Dadang",
-      tgl_penetapan_sk: "27 November 2021",
-      no_sk: "102321312",
-      tgl_mulai_tugas: "10-11-2021",
-      tugas: "Programmer",
-    },
-    {
-      no: 2,
-      id: 2,
-      nik: "19651127 199301 1 001",
-      nama: "Ikwal Ramadhani",
-      penetap_sk: "Ir. H. Dadang",
-      tgl_penetapan_sk: "27 November 2021",
-      no_sk: "102321312",
-      tgl_mulai_tugas: "10-11-2021",
-      tugas: "IT Support",
-    },
-    {
-      no: 3,
-      id: 3,
-      nik: "19651127 199301 1 001",
-      nama: "Iqbal Wahyudi",
-      penetap_sk: "Ir. H. Dadang",
-      tgl_penetapan_sk: "27 November 2021",
-      no_sk: "102321312",
-      tgl_mulai_tugas: "10-11-2021",
-      tugas: "Programmer",
-    },
-    {
-      no: 4,
-      id: 4,
-      nik: "19651127 199301 1 001",
-      nama: "Deny Wiranto",
-      penetap_sk: "-",
-      tgl_penetapan_sk: "-",
-      no_sk: "-",
-      tgl_mulai_tugas: "-",
-      tugas: "-",
-    },
-  ];
+  useEffect(() => {
+    // Get data PTTH
+    getPTTH(ptthDispatch);
+  }, [ptthDispatch]);
 
-  const filteredData = data.filter((item) =>
-    // (
-    //   item.nama && item.sub_bidang &&
-    //   item.nama.toLowerCase().includes(filterText.toLowerCase())
-
-    // )
-    {
-      if (item.nama && item.tugas) {
-        if (
-          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.tugas.toLowerCase().includes(filterText.toLowerCase())
-        ) {
-          return true;
-        }
+  const filteredData = data.filter((item) => {
+    if (item.nama && item.tugas) {
+      if (
+        item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.tugas.toLowerCase().includes(filterText.toLowerCase())
+      ) {
+        return true;
       }
-      return false;
     }
-  );
+    return false;
+  });
 
   const columns = [
     {
@@ -148,13 +112,6 @@ const DataPTTH = () => {
       sortable: true,
       width: "50px",
     },
-    // {
-    //   name: "NIK",
-    //   selector: "nik",
-    //   sortable: true,
-    //   wrap: true,
-    //   // maxWidth: "200px",
-    // },
     {
       name: "Nama",
       selector: "nama",
@@ -167,38 +124,12 @@ const DataPTTH = () => {
       selector: "penetap_sk",
       sortable: true,
       wrap: true,
-      cell: (row) => {
-        if (row.penetap_sk !== "-") {
-          return <>{row.penetap_sk}</>;
-        } else {
-          return (
-            <>
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi
-              </CBadge>
-            </>
-          );
-        }
-      },
     },
     {
       name: "Tugas",
-      selector: "tugas",
+      selector: "jabatan",
       sortable: true,
       wrap: true,
-      cell: (row) => {
-        if (row.tugas !== "-") {
-          return <>{row.tugas}</>;
-        } else {
-          return (
-            <>
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi
-              </CBadge>
-            </>
-          );
-        }
-      },
     },
 
     {
@@ -211,25 +142,21 @@ const DataPTTH = () => {
             <CButton
               color="info"
               className="btn btn-sm"
-              onClick={() => goToDetail(row.id)}
+              onClick={() => goToDetail(row.id_pegawai)}
             >
               Kelengkapan
             </CButton>
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
+              onClick={() => goToEdit(row.id_pegawai)}
             >
               <CIcon content={cilPen} color="white" />
             </CButton>
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
+              onClick={() => handleDelete(row.id_pegawai)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -282,6 +209,30 @@ const DataPTTH = () => {
     history.push(`/epekerja/admin/pegawai-detail/${id}`);
   };
 
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deletePTTH untuk menghapus data PTTH
+        deletePTTH(id, ptthDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
+  };
+
   const ExpandableComponent = ({ data }) => (
     <>
       <div style={{ padding: "10px 63px" }}>
@@ -295,73 +246,19 @@ const DataPTTH = () => {
           <CCol md="2">
             <strong>Tgl. Penetapan SK</strong>
           </CCol>
-          <CCol>
-            {data.tgl_penetapan_sk === "-" ? (
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi,{" "}
-                <a
-                  href="."
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToEdit(data.id);
-                  }}
-                >
-                  Klik Disini
-                </a>{" "}
-                untuk mengubah
-              </CBadge>
-            ) : (
-              data.tgl_penetapan_sk
-            )}
-          </CCol>
+          <CCol>{format(new Date(data.tgl_penetapan_sk), "dd/MM/y")}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="2">
             <strong>No. SK</strong>
           </CCol>
-          <CCol>
-            {data.no_sk === "-" ? (
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi,{" "}
-                <a
-                  href="."
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToEdit(data.id);
-                  }}
-                >
-                  Klik Disini
-                </a>{" "}
-                untuk mengubah
-              </CBadge>
-            ) : (
-              data.no_sk
-            )}
-          </CCol>
+          <CCol>{data.no_sk}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="2">
             <strong>Tgl. Mulai Tugas</strong>
           </CCol>
-          <CCol>
-            {data.tgl_mulai_tugas === "-" ? (
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                Belum Diisi,{" "}
-                <a
-                  href="."
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToEdit(data.id);
-                  }}
-                >
-                  Klik Disini
-                </a>{" "}
-                untuk mengubah
-              </CBadge>
-            ) : (
-              data.tgl_mulai_tugas
-            )}
-          </CCol>
+          <CCol>{format(new Date(data.tgl_mulai_tugas), "dd/MM/y")}</CCol>
         </CRow>
       </div>
     </>
@@ -378,23 +275,40 @@ const DataPTTH = () => {
             Tambah Data
           </CButton>
 
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows
-            highlightOnHover
-            expandOnRowClicked
-            expandableRowsComponent={<ExpandableComponent />}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows
+              highlightOnHover
+              expandOnRowClicked
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>

@@ -21,6 +21,7 @@ import EditDataKeluarga from "./EditDataKeluarga";
 import { getKeluarga } from "src/context/actions/Pegawai/Keluarga/getKeluarga";
 import { deleteKeluarga } from "src/context/actions/Pegawai/Keluarga/deleteKeluarga";
 import { format } from "date-fns";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
 
 const MySwal = withReactContent(swal2);
 
@@ -189,7 +190,11 @@ const DataKeluarga = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton type="button" color="info">
+              <CButton
+                type="button"
+                color="info"
+                onClick={() => printLaporan(id, "keluarga")}
+              >
                 Cetak <CIcon content={cilPrint} />
               </CButton>
             </div>

@@ -21,6 +21,7 @@ import EditRiwayatKerja from "./EditRiwayatKerja";
 import { deleteRiwayatKerja } from "src/context/actions/Pegawai/RiwayatKerja/deleteRiwayatKerja";
 import { getRiwayatKerja } from "src/context/actions/Pegawai/RiwayatKerja/getRiwayatKerja";
 import { format } from "date-fns/esm";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
 
 const MySwal = withReactContent(swal2);
 
@@ -167,7 +168,11 @@ const DataRiwayatKerja = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton type="button" color="info">
+              <CButton
+                type="button"
+                color="info"
+                onClick={() => printLaporan(id, "riwayat-kerja")}
+              >
                 Cetak <CIcon content={cilPrint} />
               </CButton>
             </div>

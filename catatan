@@ -14,12 +14,9 @@ Halaman Admin
     - PNS 
       - Menampilkan data (selesai)
       - Tambah data (Selesai)
-      - Detail data
-        - Data Keluarga (Selesai)
-        - Data Pendidikan 
-          - Tangani open file pdf
+      - Detail data (Selesai)
       - Edit data (Selesai)
-      - Hapus data
+      - Hapus data (Selesai)
 
     - PTTH
       - Menampilkan data

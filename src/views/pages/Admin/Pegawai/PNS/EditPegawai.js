@@ -32,6 +32,7 @@ import { getSelectGolongan } from "src/context/actions/MasterData/PangkatGolonga
 import { getSelectEselon } from "src/context/actions/MasterData/PangkatEselon/getSelectEselon";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { editPNS } from "src/context/actions/Pegawai/PNS/editPNS";
+import { getImage } from "src/context/actions/DownloadFile";
 
 const MySwal = withReactContent(swal2);
 
@@ -69,7 +70,7 @@ const EditPegawai = ({ match }) => {
 
   useEffect(() => {
     if (!selectedFile) {
-      setPreview(null);
+      setPreview(pns ? getImage(pns.foto) : "");
       return;
     }
 
@@ -80,7 +81,7 @@ const EditPegawai = ({ match }) => {
     return () => {
       URL.revokeObjectURL(objectUrl);
     };
-  }, [selectedFile]);
+  }, [pns, selectedFile]);
 
   const onSelectFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -111,7 +112,7 @@ const EditPegawai = ({ match }) => {
     tmt_cpns: pns ? pns.tmt_cpns : "",
     tmt_jabatan: pns ? pns.tmt_jabatan : "",
     no_hp: pns ? pns.no_hp : "",
-    foto: undefined,
+    foto: pns ? pns.foto : "",
   };
 
   // Fungsi untuk menampilkan alert success Edit data
@@ -842,7 +843,6 @@ const EditPegawai = ({ match }) => {
                               />
                             )}
                             <CFormText className="help-block">
-                              {preview}
                               Foto harus bertipe jpg, jpeg, atau png dan sizenya
                               kurang dari 2 MB
                             </CFormText>

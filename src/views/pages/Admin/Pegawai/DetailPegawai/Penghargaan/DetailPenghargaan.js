@@ -8,7 +8,9 @@ const DetailPenghargaan = ({ idPegawai, idPenghargaan }) => {
 
   useEffect(() => {
     // Get Penghargaan by Id
-    getPenghargaanById(idPegawai, idPenghargaan, setData);
+    if (idPegawai && idPenghargaan) {
+      getPenghargaanById(idPegawai, idPenghargaan, setData);
+    }
 
     return () => setData("");
   }, [idPegawai, idPenghargaan]);

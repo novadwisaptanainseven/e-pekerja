@@ -22,6 +22,7 @@ import EditDataPendidikan from "./EditDataPendidikan";
 import { getPendidikan } from "src/context/actions/Pegawai/Pendidikan/getPendidikan";
 import { deletePendidikan } from "src/context/actions/Pegawai/Pendidikan/deletePendidikan";
 import { getIjazah } from "src/context/actions/DownloadFile";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
 
 const MySwal = withReactContent(swal2);
 
@@ -145,7 +146,11 @@ const DataPendidikan = ({ id }) => {
                   style={{ cursor: "pointer" }}
                 />
               ) : (
-                <a href={getIjazah(data.foto_ijazah)} target="_blank" rel="noreferrer">
+                <a
+                  href={getIjazah(data.foto_ijazah)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {filename}
                 </a>
               )}
@@ -205,7 +210,11 @@ const DataPendidikan = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton type="button" color="info">
+              <CButton
+                type="button"
+                color="info"
+                onClick={() => printLaporan(id, "pendidikan")}
+              >
                 Cetak <CIcon content={cilPrint} />
               </CButton>
             </div>

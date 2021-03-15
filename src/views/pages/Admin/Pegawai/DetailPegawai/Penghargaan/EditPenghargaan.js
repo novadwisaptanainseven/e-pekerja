@@ -36,7 +36,7 @@ const EditPenghargaan = ({
 
   useEffect(() => {
     // Get Penghargaan by Id
-    if (idPenghargaan) {
+    if (idPenghargaan && idPegawai) {
       getPenghargaanById(idPegawai, idPenghargaan, setData);
     }
 

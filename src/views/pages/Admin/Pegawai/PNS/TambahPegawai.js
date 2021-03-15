@@ -192,7 +192,7 @@ const TambahPegawai = () => {
   ];
 
   const validationSchema = Yup.object().shape({
-    nip: Yup.string().required("NIK Harus diisi!"),
+    nip: Yup.string().required("NIP Harus diisi!"),
     nama: Yup.string().required("Nama harus diisi!"),
     id_jabatan: Yup.string().required("Jabatan harus diisi!"),
     id_sub_bidang: Yup.string().required("Sub Bidang harus diisi!"),
@@ -284,7 +284,7 @@ const TambahPegawai = () => {
     //   console.log(pair);
     // }
 
-    // Memanggil method Insert Bidang untuk menambah data Bidang ke database
+    // Memanggil method Insert PNS untuk menambah data PNS ke database
     insertPNS(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
@@ -821,7 +821,7 @@ const TambahPegawai = () => {
                           type="text"
                           name="no_hp"
                           id="no_hp"
-                          placeholder="Masukkan no hp"
+                          placeholder="Masukkan no. hp"
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={values.no_hp}

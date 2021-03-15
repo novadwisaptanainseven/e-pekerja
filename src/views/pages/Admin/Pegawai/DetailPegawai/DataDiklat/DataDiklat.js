@@ -22,6 +22,7 @@ import EditDataDiklat from "./EditDataDiklat";
 import { getDiklat } from "src/context/actions/Pegawai/Diklat/getDiklat";
 import { deleteDiklat } from "src/context/actions/Pegawai/Diklat/deleteDiklat";
 import getDokDiklat from "src/context/actions/DownloadFile/getDokDiklat";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
 
 const MySwal = withReactContent(swal2);
 
@@ -208,7 +209,11 @@ const DataDiklat = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton type="button" color="info">
+              <CButton
+                type="button"
+                color="info"
+                onClick={() => printLaporan(id, "diklat")}
+              >
                 Cetak <CIcon content={cilPrint} />
               </CButton>
             </div>

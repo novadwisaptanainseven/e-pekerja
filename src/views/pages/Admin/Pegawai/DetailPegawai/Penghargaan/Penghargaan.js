@@ -26,6 +26,7 @@ import { getPenghargaan } from "src/context/actions/Pegawai/Penghargaan/getPengh
 import { format } from "date-fns/esm";
 import { deletePenghargaan } from "src/context/actions/Pegawai/Penghargaan/deletePenghargaan";
 import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
 
 const MySwal = withReactContent(swal2);
 
@@ -48,7 +49,9 @@ const Penghargaan = ({ id }) => {
 
   useEffect(() => {
     // Get Penghargaan by Id Pegawai
-    getPenghargaan(id, setData, setLoading);
+    if (id) {
+      getPenghargaan(id, setData, setLoading);
+    }
   }, [id]);
 
   const columns = [
@@ -212,7 +215,11 @@ const Penghargaan = ({ id }) => {
             >
               Tambah Penghargaan
             </CButton>
-            <CButton type="button" color="info">
+            <CButton
+              type="button"
+              color="info"
+              onClick={() => printLaporan(id, "penghargaan")}
+            >
               Cetak <CIcon content={cilPrint} />
             </CButton>
           </div>
