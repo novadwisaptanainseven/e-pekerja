@@ -21,6 +21,7 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
 import { deletePNS } from "src/context/actions/Pegawai/PNS/deletePNS";
+import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
 
 const MySwal = withReactContent(swal2);
 
@@ -211,7 +212,7 @@ const Pegawai = () => {
           type="button"
           color="info"
           className="ml-2"
-          onClick={() => handleCetak()}
+          onClick={() => printDaftarPegawai("pns")}
         >
           Cetak <CIcon content={cilPrint} />
         </CButton>
@@ -219,9 +220,9 @@ const Pegawai = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  const handleCetak = () => {
-    window.open(sessionStorage.baseURL + "rekap-pns-pdf");
-  };
+  // const handleCetak = () => {
+  //   window.open(sessionStorage.baseURL + "rekap-pns-pdf");
+  // };
 
   const goToTambah = () => {
     history.push("/epekerja/admin/pegawai-tambah");

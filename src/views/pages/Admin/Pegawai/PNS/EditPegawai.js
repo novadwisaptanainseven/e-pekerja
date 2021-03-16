@@ -153,7 +153,7 @@ const EditPegawai = ({ match }) => {
   ];
 
   const validationSchema = Yup.object().shape({
-    nip: Yup.string().required("NIK Harus diisi!"),
+    nip: Yup.string().required("NIP harus diisi!"),
     nama: Yup.string().required("Nama harus diisi!"),
     id_jabatan: Yup.string().required("Jabatan harus diisi!"),
     id_sub_bidang: Yup.string().required("Sub Bidang harus diisi!"),
@@ -227,7 +227,7 @@ const EditPegawai = ({ match }) => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Edit Pegawai : </h3>
+          <h3>Edit Pegawai</h3>
           <CButton
             type="button"
             color="warning"

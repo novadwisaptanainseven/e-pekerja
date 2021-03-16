@@ -32,7 +32,7 @@ const DetailPegawai = ({ match }) => {
   }, [params]);
 
   const goToParent = () => {
-    history.push(`/epekerja/admin/pegawai`);
+    history.goBack();
   };
 
   return (

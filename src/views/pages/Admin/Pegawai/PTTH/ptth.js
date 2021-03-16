@@ -23,6 +23,7 @@ import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 import { getPTTH } from "src/context/actions/Pegawai/PTTH/getPTTH";
 import { deletePTTH } from "src/context/actions/Pegawai/PTTH/deletePTTH";
 import { format } from "date-fns";
+import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
 
 const MySwal = withReactContent(swal2);
 
@@ -94,10 +95,10 @@ const DataPTTH = () => {
   }, [ptthDispatch]);
 
   const filteredData = data.filter((item) => {
-    if (item.nama && item.tugas) {
+    if (item.nama && item.jabatan) {
       if (
         item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.tugas.toLowerCase().includes(filterText.toLowerCase())
+        item.jabatan.toLowerCase().includes(filterText.toLowerCase())
       ) {
         return true;
       }
@@ -190,7 +191,12 @@ const DataPTTH = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={() => printDaftarPegawai("ptth")}
+        >
           Cetak <CIcon content={cilPrint} />
         </CButton>
       </>
