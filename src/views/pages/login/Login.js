@@ -21,7 +21,7 @@ import { Formik } from "formik";
 import { GlobalContext } from "src/context/Provider";
 import { login } from "src/context/actions/Auth/login";
 import { cilInfo } from "@coreui/icons";
-import { LoadAnimationBlue } from "src/assets";
+import { LoadAnimationBlue, LogoKotaSamarinda } from "src/assets";
 import { LOGIN_CLEAN_UP } from "src/context/actionTypes";
 import { checkToken } from "src/helpers/checkToken";
 
@@ -76,10 +76,27 @@ const Login = () => {
   };
 
   return (
-    <div className="c-app c-default-layout flex-row align-items-center">
+    <div
+      style={{ marginTop: "100px" }}
+      className="c-app c-default-layout flex-row"
+    >
       <CContainer>
+        <CRow className="mb-3">
+          <CCol className="text-center">
+            <img
+              width={150}
+              className="mb-3"
+              src={LogoKotaSamarinda}
+              alt="logo-kota-samarinda"
+            />
+            <h1 style={{ fontSize: "3.5em" }}>E-Pekerja</h1>
+            <h1 className="font-weight-normal">
+              Dinas Perumahan dan Kawasan Permukiman Samarinda
+            </h1>
+          </CCol>
+        </CRow>
         <CRow className="justify-content-center">
-          <CCol md="8">
+          <CCol md="5">
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
@@ -203,7 +220,7 @@ const Login = () => {
                   </Formik>
                 </CCardBody>
               </CCard>
-              <CCard
+              {/* <CCard
                 className="text-white bg-primary py-5 d-md-down-none"
                 style={{ width: "44%" }}
               >
@@ -226,7 +243,7 @@ const Login = () => {
                     </Link>
                   </div>
                 </CCardBody>
-              </CCard>
+              </CCard> */}
             </CCardGroup>
           </CCol>
         </CRow>

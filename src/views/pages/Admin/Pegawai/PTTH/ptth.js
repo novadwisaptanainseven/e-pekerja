@@ -13,7 +13,6 @@ import {
   CButtonGroup,
   CRow,
   CCol,
-  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";

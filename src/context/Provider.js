@@ -87,6 +87,9 @@ export const GlobalProvider = ({ children }) => {
   // PTTH
   const [ptthState, ptthDispatch] = useReducer(pegawaiReducer, initState);
 
+  // PTTB
+  const [pttbState, pttbDispatch] = useReducer(pegawaiReducer, initState);
+
   // Pensiun
   const [pensiunState, pensiunDispatch] = useReducer(
     pensiunReducer,
@@ -126,6 +129,8 @@ export const GlobalProvider = ({ children }) => {
         pnsDispatch,
         ptthState,
         ptthDispatch,
+        pttbState,
+        pttbDispatch,
         pensiunState,
         pensiunDispatch,
         penghargaanState,

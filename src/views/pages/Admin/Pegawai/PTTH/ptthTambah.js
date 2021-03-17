@@ -202,7 +202,10 @@ const TambahPTTH = () => {
     tgl_penetapan_sk: Yup.string().required("Tgl. penetapan SK harus diisi!"),
     no_sk: Yup.string().required("No. SK harus diisi!"),
     tgl_mulai_tugas: Yup.string().required("Tgl. mulai tugas harus diisi!"),
-    gaji_pokok: Yup.string().required("Gaji pokok harus diisi!"),
+    gaji_pokok: Yup.number()
+      .typeError("Gaji pokok harus berupa bilangan")
+      .integer("Gaji pokok harus berupa bilangan")
+      .required("Gaji pokok harus diisi!"),
     tgl_lahir: Yup.string().required("Tgl. lahir harus diisi!"),
     tempat_lahir: Yup.string().required("Tempat lahir harus diisi!"),
     alamat: Yup.string().required("Alamat harus diisi!"),
@@ -757,7 +760,7 @@ const TambahPTTH = () => {
                       </CCol>
                       <CCol md="9" sm="12">
                         <CInput
-                          type="number"
+                          type="text"
                           name="gaji_pokok"
                           id="gaji_pokok"
                           placeholder="Masukkan gaji pokok"

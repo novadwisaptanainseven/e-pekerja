@@ -5,6 +5,7 @@ import SampleSertifikat from "./img/sertifikat_sample.JPG";
 import BGProfil from "./img/herringbone.png";
 import LoadAnimationBlue from "./img/load_animation_blue.gif";
 import LoadAnimationWhite from "./img/load_animation_white.gif";
+import LogoKotaSamarinda from "./img/logo-kota-samarinda.png";
 
 export {
   SampleAvatar,
@@ -14,4 +15,5 @@ export {
   SampleSertifikat,
   LoadAnimationBlue,
   LoadAnimationWhite,
+  LogoKotaSamarinda,
 };

@@ -4,20 +4,9 @@ import { LoadAnimationBlue } from "src/assets";
 import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
-import { getPTTHById } from "src/context/actions/Pegawai/PTTH/getPTTHById";
+import { getPTTBById } from "src/context/actions/Pegawai/PTTB/getPTTBById";
 
-const DataDiriPTTH = ({ data }) => {
-  // const [data, setData] = useState("");
-
-  // useEffect(() => {
-  //   // Get PNS By ID
-  //   getPTTHById(id, setData);
-
-  //   return () => {
-  //     setData(null);
-  //   };
-  // }, [id]);
-
+const DataDiriPTTB = ({ data }) => {
   return (
     <>
       {data ? (
@@ -29,7 +18,7 @@ const DataDiriPTTH = ({ data }) => {
                   <tbody>
                     <tr>
                       <th>NIP</th>
-                      <td>{data.nik}</td>
+                      <td>{data.nip}</td>
                     </tr>
                     <tr>
                       <th>Nama</th>
@@ -60,7 +49,7 @@ const DataDiriPTTH = ({ data }) => {
                     </tr>
                     <tr>
                       <th>Jabatan</th>
-                      <td>{data.nama_jabatan}</td>
+                      <td>{data.jabatan}</td>
                     </tr>
                     <tr>
                       <th>Bidang</th>
@@ -70,7 +59,6 @@ const DataDiriPTTH = ({ data }) => {
                       <th>Sub Bidang</th>
                       <td>{data.sub_bidang}</td>
                     </tr>
-
                     <tr>
                       <th>Penetap SK</th>
                       <td>{data.penetap_sk}</td>
@@ -91,7 +79,14 @@ const DataDiriPTTH = ({ data }) => {
                         {format(new Date(data.tgl_mulai_tugas), "d/MM/Y")}
                       </td>
                     </tr>
-
+                    <tr>
+                      <th>Kontrak Ke</th>
+                      <td>{data.kontrak_ke}</td>
+                    </tr>
+                    <tr>
+                      <th>Masa Kerja</th>
+                      <td>{data.masa_kerja}</td>
+                    </tr>
                     <tr>
                       <th>Status Pegawai</th>
                       <td>
@@ -157,4 +152,4 @@ const DataDiriPTTH = ({ data }) => {
   );
 };
 
-export default DataDiriPTTH;
+export default DataDiriPTTB;

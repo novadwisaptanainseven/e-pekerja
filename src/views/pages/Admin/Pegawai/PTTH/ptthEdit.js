@@ -173,7 +173,10 @@ const EditPTTH = ({ match }) => {
     jenis_kelamin: Yup.string().required("Jenis kelamin harus diisi!"),
     bpjs: Yup.string().required("BPJS harus diisi!"),
     npwp: Yup.string().required("NPWP harus diisi!"),
-    gaji_pokok: Yup.string().required("Gaji pokok harus diisi!"),
+    gaji_pokok: Yup.number()
+      .typeError("Gaji pokok harus berupa bilangan")
+      .integer("Gaji pokok harus berupa bilangan")
+      .required("Gaji pokok harus diisi!"),
     no_hp: Yup.string().required("No HP harus diisi!"),
     foto: Yup.mixed()
       .test("size", "Kapasitas file maksimal 2 mb", (value) => {
