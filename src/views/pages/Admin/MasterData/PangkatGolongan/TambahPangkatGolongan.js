@@ -70,7 +70,7 @@ const TambahPangkatGolongan = ({ match }) => {
   const validationSchema = Yup.object().shape({
     golongan: Yup.string()
       .required("Golongan harus diisi!")
-      .max(4, "Panjang karakter tidak boleh lebih dari 4 karakter"),
+      .max(6, "Panjang karakter tidak boleh lebih dari 4 karakter"),
     keterangan: Yup.string().required("Keterangan harus diisi!"),
   });
 

@@ -291,7 +291,7 @@ const Pegawai = () => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data Pegawai</h3>
+          <h3>Data Pegawai Negeri Sipil (PNS)</h3>
         </CCardHeader>
         <CCardBody>
           <CButton color="primary" className="btn btn-md" onClick={goToTambah}>

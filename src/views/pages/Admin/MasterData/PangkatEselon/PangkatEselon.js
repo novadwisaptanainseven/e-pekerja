@@ -33,12 +33,12 @@ const PangkatEselon = () => {
       selector: "eselon",
       sortable: true,
     },
-    {
-      name: "Keterangan",
-      selector: "keterangan",
-      sortable: true,
-      wrap: true,
-    },
+    // {
+    //   name: "Keterangan",
+    //   selector: "keterangan",
+    //   sortable: true,
+    //   wrap: true,
+    // },
     {
       name: "Action",
       sortable: true,

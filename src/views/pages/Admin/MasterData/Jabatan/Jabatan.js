@@ -40,6 +40,7 @@ const Jabatan = () => {
       name: "Jabatan",
       selector: "nama_jabatan",
       sortable: true,
+      wrap: true,
     },
     {
       name: "Action",

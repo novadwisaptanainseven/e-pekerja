@@ -20,6 +20,7 @@ import pensiunReducer from "./reducers/Pensiun/pensiunReducer";
 import initStatePensiun from "./initStates/initStatePensiun";
 import penghargaanReducer from "./reducers/Penghargaan";
 import initStatePenghargaan from "./initStates/initStatePenghargaan";
+import reducer from "./reducers/reducer";
 
 export const GlobalContext = createContext({});
 
@@ -90,6 +91,15 @@ export const GlobalProvider = ({ children }) => {
   // PTTB
   const [pttbState, pttbDispatch] = useReducer(pegawaiReducer, initState);
 
+  // Semua Pegawai
+  const [pegawaiState, pegawaiDispatch] = useReducer(pegawaiReducer, initState);
+
+  // Masa Kerja
+  const [masaKerjaState, masaKerjaDispatch] = useReducer(reducer, initState);
+
+  // Daftr Urut Kepangkatan (DUK)
+  const [dukState, dukDispatch] = useReducer(reducer, initState);
+
   // Pensiun
   const [pensiunState, pensiunDispatch] = useReducer(
     pensiunReducer,
@@ -131,6 +141,12 @@ export const GlobalProvider = ({ children }) => {
         ptthDispatch,
         pttbState,
         pttbDispatch,
+        pegawaiState,
+        pegawaiDispatch,
+        masaKerjaState,
+        masaKerjaDispatch,
+        dukState,
+        dukDispatch,
         pensiunState,
         pensiunDispatch,
         penghargaanState,

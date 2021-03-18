@@ -50,11 +50,11 @@ const _nav_admin = [
         name: "Bidang",
         to: "/epekerja/admin/master-data/bidang",
       },
-      {
-        _tag: "CSidebarNavItem",
-        name: "Sub Bidang",
-        to: "/epekerja/admin/master-data/sub-bidang",
-      },
+      // {
+      //   _tag: "CSidebarNavItem",
+      //   name: "Sub Bidang",
+      //   to: "/epekerja/admin/master-data/sub-bidang",
+      // },
       {
         _tag: "CSidebarNavItem",
         name: "Status Pegawai",

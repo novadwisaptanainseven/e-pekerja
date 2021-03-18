@@ -42,6 +42,7 @@ const Bidang = () => {
       name: "Nama Bidang",
       selector: "nama_bidang",
       sortable: true,
+      wrap: true,
       maxWidth: "200px",
     },
     {

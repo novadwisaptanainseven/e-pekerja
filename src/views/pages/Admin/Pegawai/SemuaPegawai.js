@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CCard,
   CCardHeader,
@@ -12,7 +18,11 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint } from "@coreui/icons";
+import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
+import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
+
+const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -73,39 +83,13 @@ const SemuaPegawai = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { pegawaiState, pegawaiDispatch } = useContext(GlobalContext);
+  const { data } = pegawaiState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip_nik: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      jabatan: "Kepala Dinas",
-      sub_bidang: "Pembinaan Permukiman",
-      status_pegawai: 1,
-      no_hp: "0812323121",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip_nik: "123445677",
-      nama: "Nova Dwi Sapta Nain Seven, S.Tr.Kom",
-      jabatan: "Programmer",
-      sub_bidang: "Program dan Keuangan",
-      status_pegawai: 2,
-      no_hp: "0812323121",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip_nik: "4343123123",
-      nama: "Ikwal Ramadhani, S.Tr.Kom",
-      jabatan: "IT Support",
-      sub_bidang: "Program dan Keuangan",
-      status_pegawai: 3,
-      no_hp: "0812323121",
-    },
-  ];
+  useEffect(() => {
+    // Get semua pegawai
+    getAllPegawai(pegawaiDispatch);
+  }, [pegawaiDispatch]);
 
   const filteredData = data.filter((item) =>
     // (
@@ -134,13 +118,6 @@ const SemuaPegawai = () => {
       sortable: true,
       width: "50px",
     },
-    // {
-    //   name: "NIP/NIK",
-    //   selector: "nip_nik",
-    //   sortable: true,
-    //   wrap: true,
-    //   // maxWidth: "200px",
-    // },
     {
       name: "Nama",
       selector: "nama",
@@ -160,21 +137,7 @@ const SemuaPegawai = () => {
       sortable: true,
       wrap: true,
     },
-    // {
-    //   name: "Status",
-    //   selector: "status_pegawai",
-    //   sortable: true,
-    //   wrap: true,
-    //   cell: (row) => {
-    //     if (row.status_pegawai === 1) {
-    //       return <>PNS</>;
-    //     } else if (row.status_pegawai === 2) {
-    //       return <>PTTH</>;
-    //     } else if (row.status_pegawai === 3) {
-    //       return <>PTTB</>;
-    //     }
-    //   },
-    // },
+
     {
       // maxWidth: "150px",
       name: "Action",
@@ -185,36 +148,32 @@ const SemuaPegawai = () => {
             <CButton
               color="info"
               className="btn btn-sm"
-              onClick={() => goToDetail(row.id)}
+              onClick={() => goToDetail(row.id_pegawai)}
             >
               Kelengkapan
             </CButton>
-            <CButton
+            {/* <CButton
               color="success"
               className="btn btn-sm"
               onClick={() => {
-                if (row.status_pegawai === 1) {
-                  goToEditPNS(row.id);
-                } else if (row.status_pegawai === 2) {
-                  goToEditPTTH(row.id);
-                } else if (row.status_pegawai === 3) {
-                  goToEditPTTB(row.id);
+                if (row.id_status_pegawai === 1) {
+                  goToEditPNS(row.id_pegawai);
+                } else if (row.id_status_pegawai === 2) {
+                  goToEditPTTH(row.id_pegawai);
+                } else if (row.id_status_pegawai === 3) {
+                  goToEditPTTB(row.id_pegawai);
                 }
               }}
             >
               <CIcon content={cilPen} color="white" />
-            </CButton>
-            <CButton
+            </CButton> */}
+            {/* <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
+              onClick={() => handleDelete(row.id_pegawai)}
             >
               <CIcon content={cilTrash} color="white" />
-            </CButton>
+            </CButton> */}
           </CButtonGroup>
         </div>
       ),
@@ -245,7 +204,12 @@ const SemuaPegawai = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={() => printDaftarPegawai("semua-pegawai")}
+        >
           Cetak <CIcon content={cilPrint} />
         </CButton>
       </>
@@ -270,23 +234,47 @@ const SemuaPegawai = () => {
     history.push(`/epekerja/admin/pegawai-detail/${id}`);
   };
 
+  // Menangani tombol hapus
+  // const handleDelete = (id) => {
+  //   MySwal.fire({
+  //     icon: "warning",
+  //     title: "Anda yakin ingin menghapus data ini ?",
+  //     text: "Jika yakin, klik YA",
+  //     showConfirmButton: true,
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "YA",
+  //   }).then((res) => {
+  //     if (res.isConfirmed) {
+  //       // Memanggil method deletePNS untuk menghapus data PNS
+  //       deletePNS(id, pnsDispatch);
+  //       MySwal.fire({
+  //         icon: "success",
+  //         title: "Terhapus",
+  //         text: "Data berhasil dihapus",
+  //       });
+  //     }
+  //   });
+  // };
+
   const ExpandableComponent = ({ data }) => {
-    let status_pegawai = "";
-    if (data.status_pegawai === 1) {
-      status_pegawai = "PNS";
-    } else if (data.status_pegawai === 2) {
-      status_pegawai = "PTTH";
-    } else if (data.status_pegawai === 3) {
-      status_pegawai = "PTTB";
-    }
+    // let status_pegawai = "";
+    // if (data.status_pegawai === 1) {
+    //   status_pegawai = "PNS";
+    // } else if (data.status_pegawai === 2) {
+    //   status_pegawai = "PTTH";
+    // } else if (data.status_pegawai === 3) {
+    //   status_pegawai = "PTTB";
+    // }
     return (
       <>
         <div style={{ padding: "10px 63px" }}>
           <CRow className="mb-1">
             <CCol md="2">
-              <strong>NIP/NIK</strong>
+              <strong>{data.nip ? "NIP" : "NIK"}</strong>
             </CCol>
-            <CCol>{data.nip_nik}</CCol>
+            <CCol>{data.nip ? data.nip : data.nik}</CCol>
           </CRow>
           <CRow className="mb-1">
             <CCol md="2">
@@ -298,7 +286,7 @@ const SemuaPegawai = () => {
             <CCol md="2">
               <strong>Status Pegawai</strong>
             </CCol>
-            <CCol>{status_pegawai}</CCol>
+            <CCol>{data.status_pegawai}</CCol>
           </CRow>
         </div>
       </>
@@ -312,27 +300,40 @@ const SemuaPegawai = () => {
           <h3>Semua Data Pegawai</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
-          </CButton> */}
-
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows
-            expandOnRowClicked
-            highlightOnHover
-            expandableRowsComponent={<ExpandableComponent />}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows
+              expandOnRowClicked
+              highlightOnHover
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>

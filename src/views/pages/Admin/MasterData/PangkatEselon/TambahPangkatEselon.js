@@ -34,7 +34,7 @@ const TambahPangkatEselon = ({ match }) => {
   // Inisialisasi state formik
   const initState = {
     eselon: "",
-    keterangan: "",
+    // keterangan: "",
   };
 
   // Fungsi untuk menampilkan alert success tambah data
@@ -71,14 +71,14 @@ const TambahPangkatEselon = ({ match }) => {
     eselon: Yup.string()
       .required("Eselon harus diisi!")
       .max(4, "Panjang karakter tidak boleh lebih dari 4 karakter"),
-    keterangan: Yup.string().required("Keterangan harus diisi!"),
+    // keterangan: Yup.string().required("Keterangan harus diisi!"),
   });
 
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
     formData.append("eselon", values.eselon);
-    formData.append("keterangan", values.keterangan);
+    // formData.append("keterangan", values.keterangan);
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -128,7 +128,7 @@ const TambahPangkatEselon = ({ match }) => {
                         <div className="invalid-feedback">{errors.eselon}</div>
                       )}
                     </CFormGroup>
-                    <CFormGroup>
+                    {/* <CFormGroup>
                       <CLabel htmlFor="name">Keterangan</CLabel>
                       <CInput
                         id="keterangan"
@@ -148,7 +148,7 @@ const TambahPangkatEselon = ({ match }) => {
                           {errors.keterangan}
                         </div>
                       )}
-                    </CFormGroup>
+                    </CFormGroup> */}
                   </CCol>
                 </CRow>
               </CCardBody>

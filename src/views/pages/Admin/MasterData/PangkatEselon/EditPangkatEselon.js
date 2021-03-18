@@ -45,7 +45,7 @@ const EditPangkatEselon = ({ match }) => {
   // Inisialisasi state formik
   const initState = {
     eselon: eselon ? eselon.eselon : "",
-    keterangan: eselon ? eselon.keterangan : "",
+    // keterangan: eselon ? eselon.keterangan : "",
   };
 
   // Fungsi untuk menampilkan alert success edit data
@@ -81,8 +81,8 @@ const EditPangkatEselon = ({ match }) => {
   const validationSchema = Yup.object().shape({
     eselon: Yup.string()
       .required("Eselon harus diisi!")
-      .max(4, "Panjang karakter tidak boleh lebih dari 4 karakter"),
-    keterangan: Yup.string().required("Keterangan harus diisi!"),
+      .max(6, "Panjang karakter tidak boleh lebih dari 4 karakter"),
+    // keterangan: Yup.string().required("Keterangan harus diisi!"),
   });
 
   // Menangani value form submit
@@ -132,7 +132,7 @@ const EditPangkatEselon = ({ match }) => {
                         <div className="invalid-feedback">{errors.eselon}</div>
                       )}
                     </CFormGroup>
-                    <CFormGroup>
+                    {/* <CFormGroup>
                       <CLabel htmlFor="name">Keterangan</CLabel>
                       <CInput
                         id="keterangan"
@@ -152,7 +152,7 @@ const EditPangkatEselon = ({ match }) => {
                           {errors.keterangan}
                         </div>
                       )}
-                    </CFormGroup>
+                    </CFormGroup> */}
                   </CCol>
                 </CRow>
               </CCardBody>

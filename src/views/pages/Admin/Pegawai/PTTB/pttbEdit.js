@@ -30,7 +30,6 @@ import { getSelectSubBidang } from "src/context/actions/MasterData/SubBidang/get
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { getImage } from "src/context/actions/DownloadFile";
-import { editPTTH } from "src/context/actions/Pegawai/PTTH/editPTTH";
 import { editPTTB } from "src/context/actions/Pegawai/PTTB/editPTTB";
 
 const MySwal = withReactContent(swal2);
@@ -51,6 +50,10 @@ const EditPTTB = ({ match }) => {
     history.goBack();
   };
 
+  const previewGajiDefault = () => {
+    convertToCurrency(data.gaji_pokok);
+  };
+
   useEffect(() => {
     // Get PTTB by ID
     getPTTBById(params.id, setData);
@@ -61,6 +64,12 @@ const EditPTTB = ({ match }) => {
     // Get Agama
     getSelectAgama(setAgama);
   }, [params]);
+
+  useEffect(() => {
+    if (data) {
+      previewGajiDefault();
+    }
+  }, [data]);
 
   useEffect(() => {
     if (!selectedFile) {

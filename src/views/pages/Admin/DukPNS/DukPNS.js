@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GlobalContext } from "src/context/Provider";
+import { LoadAnimationBlue } from "src/assets";
+
 import {
   CCard,
   CCardHeader,
@@ -13,7 +19,10 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo} from "@coreui/icons";
+import { cilPrint, cilInfo } from "@coreui/icons";
+import { getDUK } from "src/context/actions/DUK/getDUK";
+
+const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -74,65 +83,13 @@ const DukPNS = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { dukState, dukDispatch } = useContext(GlobalContext);
+  const { data } = dukState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      pangkat_golongan: "IV/c (Pembina Utama)",
-      tmt_golongan: "01/04/14",
-      jabatan: "Kepala Dinas (Eselon II.b)",
-      mk_golongan: "10 Tahun 5 Bulan",
-      pendidikan: "Magister Manajemen Teknologi",
-      tgl_lahir: "27-11-1965",
-      catatan_mutasi: "Kepala Dinas Kebersihan dan Pertamanan",
-      tmt_cpns: "01-02-1989",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19640315 199203 1 014",
-      nama: "H. Akhmad Husein, ST, MT",
-      pangkat_golongan: "IV/b (Pembina Utama Muda)",
-      tmt_golongan: "01/10/20",
-      jabatan: "Sekretaris (Eselon III.a)",
-      mk_golongan: "10 Tahun 5 Bulan",
-      pendidikan: "Magister Teknik Sipil",
-      tgl_lahir: "15/03/64",
-      catatan_mutasi: "Dinas Bina Marga dan Pengairan",
-      tmt_cpns: "01/03/92",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19660425 199312 1 001",
-      nama: "Joko Karyono, ST, MT",
-      pangkat_golongan: "IV/a (Pembina Utama)",
-      tmt_golongan: "01/10/16",
-      jabatan: "Kabid Kawasan Permukiman",
-      mk_golongan: "17 Tahun 10 Bulan",
-      pendidikan: "Magister Tehnik Sipil",
-      tgl_lahir: "25/04/66",
-      catatan_mutasi: "Dinas Bina Marga dan Pengairan",
-      tmt_cpns: "01/12/93",
-    },
-    {
-      no: 4,
-      id: 4,
-      nip: "19660425 199312 1 001",
-      nama: "Joko Karyono, ST, MT",
-      pangkat_golongan: "IV/a (Pembina Utama)",
-      tmt_golongan: "01/10/16",
-      jabatan: "Kabid Kawasan Permukiman",
-      mk_golongan: "17 Tahun 10 Bulan",
-      pendidikan: "Magister Tehnik Sipil",
-      tgl_lahir: "25/04/66",
-      catatan_mutasi: "-",
-      tmt_cpns: "01/12/93",
-    },
-  ];
+  useEffect(() => {
+    // Get data DUK
+    getDUK(dukDispatch);
+  }, [dukDispatch]);
 
   const filteredData = data.filter((item) =>
     // (
@@ -173,7 +130,7 @@ const DukPNS = () => {
     },
     {
       name: "Pangkat/Gol",
-      selector: "pangkat_golongan",
+      selector: "ket_golongan",
       sortable: true,
       wrap: true,
     },
@@ -185,7 +142,7 @@ const DukPNS = () => {
     // },
     {
       name: "Jabatan",
-      selector: "jabatan",
+      selector: "nama_jabatan",
       sortable: true,
       wrap: true,
     },
@@ -199,14 +156,14 @@ const DukPNS = () => {
             <CButton
               color="info"
               className="btn btn-sm"
-              onClick={() => goToDetail(row.id)}
+              onClick={() => goToDetail(row.id_duk)}
             >
               <CIcon content={cilInfo} color="white" />
             </CButton>
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
+              onClick={() => goToEdit(row.id_duk)}
             >
               Catatan Mutasi
             </CButton>
@@ -323,21 +280,38 @@ const DukPNS = () => {
           <h3>Daftar Urut Kepangkatan Pegawai Negeri Sipil</h3>
         </CCardHeader>
         <CCardBody>
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows={true}
-            expandableRowsComponent={<ExpandableComponent />}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows={true}
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>

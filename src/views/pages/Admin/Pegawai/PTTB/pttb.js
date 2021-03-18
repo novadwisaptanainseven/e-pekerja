@@ -23,6 +23,7 @@ import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 import { getPTTB } from "src/context/actions/Pegawai/PTTB/getPTTB";
 import { deletePTTB } from "src/context/actions/Pegawai/PTTB/deletePTTB";
 import { format } from "date-fns";
+import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
 
 const MySwal = withReactContent(swal2);
 
@@ -196,7 +197,12 @@ const DataPTTB = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={() => printDaftarPegawai("pttb")}
+        >
           Cetak <CIcon content={cilPrint} />
         </CButton>
       </>
@@ -286,7 +292,7 @@ const DataPTTB = () => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data PTTB</h3>
+          <h3>Data Pegawai Tidak Tetap Bulanan (PTTB)</h3>
         </CCardHeader>
         <CCardBody>
           <CButton color="primary" className="btn btn-md" onClick={goToTambah}>

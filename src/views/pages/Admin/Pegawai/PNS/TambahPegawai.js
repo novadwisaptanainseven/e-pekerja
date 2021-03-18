@@ -46,6 +46,7 @@ const TambahPegawai = () => {
   const [golongan, setGolongan] = useState([]);
   const [eselon, setEselon] = useState([]);
   const [agama, setAgama] = useState([]);
+  const [formatGaji, setFormatGaji] = useState("");
 
   useEffect(() => {
     // Get Sub Bidang
@@ -110,6 +111,19 @@ const TambahPegawai = () => {
     setSelectedFile2(e.target.files[0]);
   };
 
+  // Mengubah format gaji dari number ke currency
+  const convertToCurrency = (gaji) => {
+    let formattedGaji = parseInt(gaji).toLocaleString("id", {
+      style: "currency",
+      currency: "IDR",
+    });
+    if (formattedGaji !== "RpNaN") {
+      setFormatGaji(formattedGaji);
+    } else {
+      setFormatGaji("");
+    }
+  };
+
   const goBackToParent = () => {
     history.goBack();
   };
@@ -134,6 +148,7 @@ const TambahPegawai = () => {
     tmt_cpns: "",
     tmt_jabatan: "",
     no_hp: "",
+    gaji_pokok: "",
     foto: undefined,
     mk_jabatan: "",
     mk_sebelum_cpns: "",
@@ -210,6 +225,10 @@ const TambahPegawai = () => {
     tmt_cpns: Yup.string().required("TMT. CPNS harus diisi!"),
     tmt_jabatan: Yup.string().required("TMT. Jabatan harus diisi!"),
     no_hp: Yup.string().required("No. HP harus diisi!"),
+    gaji_pokok: Yup.number()
+      .typeError("Gaji pokok harus berupa bilangan")
+      .integer("Gaji pokok harus berupa bilangan")
+      .required("Gaji pokok harus diisi!"),
     foto: Yup.mixed()
       .required("Foto belum dipilih")
       .test(
@@ -268,6 +287,7 @@ const TambahPegawai = () => {
     formData.append("tmt_cpns", values.tmt_cpns);
     formData.append("tmt_jabatan", values.tmt_jabatan);
     formData.append("no_hp", values.no_hp);
+    formData.append("gaji_pokok", values.gaji_pokok);
     formData.append("foto", values.foto);
     formData.append("mk_jabatan", values.mk_jabatan);
     formData.append("mk_sebelum_cpns", values.mk_sebelum_cpns);
@@ -831,6 +851,35 @@ const TambahPegawai = () => {
                         />
                         {errors.no_hp && touched.no_hp && (
                           <div className="invalid-feedback">{errors.no_hp}</div>
+                        )}
+                      </CCol>
+                    </CFormGroup>
+
+                    <CFormGroup row>
+                      <CCol>
+                        <CLabel>Gaji Pokok</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
+                        <CInput
+                          type="text"
+                          name="gaji_pokok"
+                          id="gaji_pokok"
+                          placeholder="Masukkan gaji pokok"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          onKeyUp={(e) => convertToCurrency(e.target.value)}
+                          value={values.gaji_pokok}
+                          className={
+                            errors.gaji_pokok && touched.gaji_pokok
+                              ? "is-invalid"
+                              : null
+                          }
+                        />
+                        <div className="mt-1">{formatGaji}</div>
+                        {errors.gaji_pokok && touched.gaji_pokok && (
+                          <div className="invalid-feedback">
+                            {errors.gaji_pokok}
+                          </div>
                         )}
                       </CCol>
                     </CFormGroup>

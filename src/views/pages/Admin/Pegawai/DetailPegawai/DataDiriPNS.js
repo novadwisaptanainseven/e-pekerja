@@ -121,8 +121,8 @@ const DataDiriPNS = ({ data }) => {
                 <tr>
                   <th>Gaji Pokok</th>
                   <td>
-                    {data && data.kgb
-                      ? data.kgb.gaji_pokok_baru.toLocaleString("id", {
+                    {data
+                      ? data.gaji_pokok.toLocaleString("id", {
                           style: "currency",
                           currency: "IDR",
                         })

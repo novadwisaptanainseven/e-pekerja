@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -48,9 +48,14 @@ const EditPegawai = ({ match }) => {
   const [golongan, setGolongan] = useState([]);
   const [eselon, setEselon] = useState([]);
   const [agama, setAgama] = useState([]);
+  const [formatGaji, setFormatGaji] = useState("");
 
   const goBackToParent = () => {
     history.goBack();
+  };
+
+  const previewGajiDefault = () => {
+    convertToCurrency(pns.gaji_pokok);
   };
 
   useEffect(() => {
@@ -67,6 +72,12 @@ const EditPegawai = ({ match }) => {
     // Get Agama
     getSelectAgama(setAgama);
   }, [params]);
+
+  useEffect(() => {
+    if (pns) {
+      previewGajiDefault();
+    }
+  }, [pns]);
 
   useEffect(() => {
     if (!selectedFile) {
@@ -92,6 +103,19 @@ const EditPegawai = ({ match }) => {
     setSelectedFile(e.target.files[0]);
   };
 
+  // Mengubah format gaji dari number ke currency
+  const convertToCurrency = (gaji) => {
+    let formattedGaji = parseInt(gaji).toLocaleString("id", {
+      style: "currency",
+      currency: "IDR",
+    });
+    if (formattedGaji !== "RpNaN") {
+      setFormatGaji(formattedGaji);
+    } else {
+      setFormatGaji("");
+    }
+  };
+
   // Inisialisasi State Formik
   const initState = {
     nip: pns ? pns.nip : "",
@@ -112,7 +136,8 @@ const EditPegawai = ({ match }) => {
     tmt_cpns: pns ? pns.tmt_cpns : "",
     tmt_jabatan: pns ? pns.tmt_jabatan : "",
     no_hp: pns ? pns.no_hp : "",
-    foto: pns ? pns.foto : "",
+    gaji_pokok: pns ? pns.gaji_pokok : "",
+    foto: undefined,
   };
 
   // Fungsi untuk menampilkan alert success Edit data
@@ -171,6 +196,10 @@ const EditPegawai = ({ match }) => {
     tmt_cpns: Yup.string().required("TMT. CPNS harus diisi!"),
     tmt_jabatan: Yup.string().required("TMT. Jabatan harus diisi!"),
     no_hp: Yup.string().required("No. HP harus diisi!"),
+    gaji_pokok: Yup.number()
+      .typeError("Gaji pokok harus berupa bilangan")
+      .integer("Gaji pokok harus berupa bilangan")
+      .required("Gaji pokok harus diisi!"),
     foto: Yup.mixed()
       .test("size", "Kapasitas file maksimal 2 mb", (value) => {
         if (value) {
@@ -211,6 +240,7 @@ const EditPegawai = ({ match }) => {
     formData.append("tmt_cpns", values.tmt_cpns);
     formData.append("tmt_jabatan", values.tmt_jabatan);
     formData.append("no_hp", values.no_hp);
+    formData.append("gaji_pokok", values.gaji_pokok);
     if (values.foto) {
       formData.append("foto", values.foto);
     }
@@ -614,6 +644,35 @@ const EditPegawai = ({ match }) => {
                             {errors.no_hp && touched.no_hp && (
                               <div className="invalid-feedback">
                                 {errors.no_hp}
+                              </div>
+                            )}
+                          </CCol>
+                        </CFormGroup>
+
+                        <CFormGroup row>
+                          <CCol>
+                            <CLabel>Gaji Pokok</CLabel>
+                          </CCol>
+                          <CCol md="9" sm="12">
+                            <CInput
+                              type="text"
+                              name="gaji_pokok"
+                              id="gaji_pokok"
+                              placeholder="Masukkan gaji pokok"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              onKeyUp={(e) => convertToCurrency(e.target.value)}
+                              value={values.gaji_pokok}
+                              className={
+                                errors.gaji_pokok && touched.gaji_pokok
+                                  ? "is-invalid"
+                                  : null
+                              }
+                            />
+                            <div className="mt-1">{formatGaji}</div>
+                            {errors.gaji_pokok && touched.gaji_pokok && (
+                              <div className="invalid-feedback">
+                                {errors.gaji_pokok}
                               </div>
                             )}
                           </CCol>

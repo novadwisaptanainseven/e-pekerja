@@ -273,7 +273,7 @@ const DataPTTH = () => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data PTTH</h3>
+          <h3>Data Pegawai Tidak Tetap Harian (PTTH)</h3>
         </CCardHeader>
         <CCardBody>
           <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
