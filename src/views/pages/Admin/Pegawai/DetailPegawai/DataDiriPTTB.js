@@ -56,10 +56,6 @@ const DataDiriPTTB = ({ data }) => {
                       <td>{data.nama_bidang}</td>
                     </tr>
                     <tr>
-                      <th>Sub Bidang</th>
-                      <td>{data.sub_bidang}</td>
-                    </tr>
-                    <tr>
                       <th>Penetap SK</th>
                       <td>{data.penetap_sk}</td>
                     </tr>

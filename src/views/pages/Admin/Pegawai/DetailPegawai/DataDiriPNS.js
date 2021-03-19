@@ -50,10 +50,7 @@ const DataDiriPNS = ({ data }) => {
                   <th>Bidang</th>
                   <td>{data.bidang}</td>
                 </tr>
-                <tr>
-                  <th>Sub Bidang</th>
-                  <td>{data.sub_bidang}</td>
-                </tr>
+
                 <tr>
                   <th>Pangkat / Golongan</th>
                   <td>

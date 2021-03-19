@@ -25,12 +25,12 @@ import {
   CFormText,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-import { getSelectSubBidang } from "src/context/actions/MasterData/SubBidang/getSelectSubBidang";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getSelectGolongan } from "src/context/actions/MasterData/PangkatGolongan/getSelectGolongan";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { getSelectEselon } from "src/context/actions/MasterData/PangkatEselon/getSelectEselon";
 import { insertPNS } from "src/context/actions/Pegawai/PNS/insertPNS";
+import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
 
 const MySwal = withReactContent(swal2);
 
@@ -42,15 +42,15 @@ const TambahPegawai = () => {
   const [preview2, setPreview2] = useState();
   const [loading, setLoading] = useState(false);
   const [jabatan, setJabatan] = useState([]);
-  const [subBidang, setSubBidang] = useState([]);
+  const [bidang, setBidang] = useState([]);
   const [golongan, setGolongan] = useState([]);
   const [eselon, setEselon] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
 
   useEffect(() => {
-    // Get Sub Bidang
-    getSelectSubBidang(setSubBidang);
+    // Get Bidang
+    getSelectBidang(setBidang);
     // Get Jabatan
     getSelectJabatan(setJabatan);
     // Get Golongan
@@ -133,7 +133,7 @@ const TambahPegawai = () => {
     nip: "",
     nama: "",
     id_jabatan: "",
-    id_sub_bidang: "",
+    id_bidang: "",
     id_golongan: "",
     id_eselon: "",
     id_agama: "",
@@ -210,7 +210,7 @@ const TambahPegawai = () => {
     nip: Yup.string().required("NIP Harus diisi!"),
     nama: Yup.string().required("Nama harus diisi!"),
     id_jabatan: Yup.string().required("Jabatan harus diisi!"),
-    id_sub_bidang: Yup.string().required("Sub Bidang harus diisi!"),
+    id_bidang: Yup.string().required("Bidang harus diisi!"),
     id_golongan: Yup.string().required("Golongan harus diisi!"),
     // id_eselon: Yup.string().required("Eselon harus diisi!"),
     id_agama: Yup.string().required("Agama harus diisi!"),
@@ -272,7 +272,7 @@ const TambahPegawai = () => {
     formData.append("nip", values.nip);
     formData.append("nama", values.nama);
     formData.append("id_jabatan", values.id_jabatan);
-    formData.append("id_sub_bidang", values.id_sub_bidang);
+    formData.append("id_bidang", values.id_bidang);
     formData.append("id_golongan", values.id_golongan);
     formData.append("id_eselon", values.id_eselon);
     formData.append("id_agama", values.id_agama);
@@ -420,32 +420,32 @@ const TambahPegawai = () => {
                     </CFormGroup>
                     <CFormGroup row>
                       <CCol>
-                        <CLabel>Sub Bidang</CLabel>
+                        <CLabel>Bidang</CLabel>
                       </CCol>
                       <CCol md="9" sm="12">
                         <CSelect
                           custom
-                          name="id_sub_bidang"
-                          id="id_sub_bidang"
+                          name="id_bidang"
+                          id="id_bidang"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.id_sub_bidang}
+                          value={values.id_bidang}
                           className={
-                            errors.id_sub_bidang && touched.id_sub_bidang
+                            errors.id_bidang && touched.id_bidang
                               ? "is-invalid"
                               : null
                           }
                         >
-                          <option value="">-- Pilih Sub Bidang --</option>
-                          {subBidang.map((item, index) => (
-                            <option key={index} value={item.id_sub_bidang}>
-                              {item.nama_sub_bidang}
+                          <option value="">-- Pilih Bidang --</option>
+                          {bidang.map((item, index) => (
+                            <option key={index} value={item.id_bidang}>
+                              {item.nama_bidang}
                             </option>
                           ))}
                         </CSelect>
-                        {errors.id_sub_bidang && touched.id_sub_bidang && (
+                        {errors.id_bidang && touched.id_bidang && (
                           <div className="invalid-feedback">
-                            {errors.id_sub_bidang}
+                            {errors.id_bidang}
                           </div>
                         )}
                       </CCol>
@@ -506,7 +506,7 @@ const TambahPegawai = () => {
                           <option value="">-- Pilih Eselon --</option>
                           {eselon.map((item, index) => (
                             <option key={index} value={item.id_pangkat_eselon}>
-                              {item.keterangan} ({item.eselon})
+                              {item.keterangan} {item.eselon}
                             </option>
                           ))}
                         </CSelect>
@@ -515,8 +515,12 @@ const TambahPegawai = () => {
                             {errors.id_eselon}
                           </div>
                         )}
+                        <CFormText className="help-block">
+                          Isi eselon jika ada
+                        </CFormText>
                       </CCol>
                     </CFormGroup>
+
                     {/* <CFormGroup row>
                   <CCol>
                     <CLabel>Status Pegawai</CLabel>

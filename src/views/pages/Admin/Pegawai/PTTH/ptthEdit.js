@@ -26,11 +26,11 @@ import {
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
 import { getPTTHById } from "src/context/actions/Pegawai/PTTH/getPTTHById";
-import { getSelectSubBidang } from "src/context/actions/MasterData/SubBidang/getSelectSubBidang";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { getImage } from "src/context/actions/DownloadFile";
 import { editPTTH } from "src/context/actions/Pegawai/PTTH/editPTTH";
+import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
 
 const MySwal = withReactContent(swal2);
 
@@ -42,7 +42,7 @@ const EditPTTH = ({ match }) => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [jabatan, setJabatan] = useState([]);
-  const [subBidang, setSubBidang] = useState([]);
+  const [bidang, setBidang] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
 
@@ -57,8 +57,8 @@ const EditPTTH = ({ match }) => {
   useEffect(() => {
     // Get PTTH by ID
     getPTTHById(params.id, setData);
-    // Get Sub Bidang
-    getSelectSubBidang(setSubBidang);
+    // Get Bidang
+    getSelectBidang(setBidang);
     // Get Jabatan
     getSelectJabatan(setJabatan);
     // Get Agama
@@ -117,7 +117,7 @@ const EditPTTH = ({ match }) => {
     no_sk: data ? data.no_sk : "",
     tgl_mulai_tugas: data ? data.tgl_mulai_tugas : "",
     id_jabatan: data ? data.id_jabatan : "",
-    id_sub_bidang: data ? data.id_sub_bidang : "",
+    id_bidang: data ? data.id_bidang : "",
     id_agama: data ? data.id_agama : "",
     tempat_lahir: data ? data.tempat_lahir : "",
     tgl_lahir: data ? data.tgl_lahir : "",
@@ -175,7 +175,7 @@ const EditPTTH = ({ match }) => {
     no_sk: Yup.string().required("No. SK harus diisi!"),
     tgl_mulai_tugas: Yup.string().required("Tgl. mulai tugas harus diisi!"),
     id_jabatan: Yup.string().required("Tugas harus diisi!"),
-    id_sub_bidang: Yup.string().required("Sub bidang harus diisi!"),
+    id_bidang: Yup.string().required("Bidang harus diisi!"),
     id_agama: Yup.string().required("Agama harus diisi!"),
     tempat_lahir: Yup.string().required("Tempat lahir harus diisi!"),
     tgl_lahir: Yup.string().required("Tgl lahir harus diisi!"),
@@ -218,7 +218,7 @@ const EditPTTH = ({ match }) => {
     formData.append("tgl_mulai_tugas", values.tgl_mulai_tugas);
     formData.append("id_jabatan", values.id_jabatan);
     formData.append("tugas", values.id_jabatan);
-    formData.append("id_sub_bidang", values.id_sub_bidang);
+    formData.append("id_bidang", values.id_bidang);
     formData.append("id_agama", values.id_agama);
     formData.append("tempat_lahir", values.tempat_lahir);
     formData.append("tgl_lahir", values.tgl_lahir);
@@ -473,32 +473,32 @@ const EditPTTH = ({ match }) => {
                         </CFormGroup>
                         <CFormGroup row>
                           <CCol>
-                            <CLabel>Sub Bidang</CLabel>
+                            <CLabel>Bidang</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
                             <CSelect
                               custom
-                              name="id_sub_bidang"
-                              id="id_sub_bidang"
+                              name="id_bidang"
+                              id="id_bidang"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              value={values.id_sub_bidang}
+                              value={values.id_bidang}
                               className={
-                                errors.id_sub_bidang && touched.id_sub_bidang
+                                errors.id_bidang && touched.id_bidang
                                   ? "is-invalid"
                                   : null
                               }
                             >
-                              <option value="">-- Pilih Sub Bidang --</option>
-                              {subBidang.map((item, index) => (
-                                <option key={index} value={item.id_sub_bidang}>
-                                  {item.nama_sub_bidang}
+                              <option value="">-- Bidang --</option>
+                              {bidang.map((item, index) => (
+                                <option key={index} value={item.id_bidang}>
+                                  {item.nama_bidang}
                                 </option>
                               ))}
                             </CSelect>
-                            {errors.id_sub_bidang && touched.id_sub_bidang && (
+                            {errors.id_bidang && touched.id_bidang && (
                               <div className="invalid-feedback">
-                                {errors.id_sub_bidang}
+                                {errors.id_bidang}
                               </div>
                             )}
                           </CCol>

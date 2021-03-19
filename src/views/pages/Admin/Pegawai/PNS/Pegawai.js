@@ -99,10 +99,11 @@ const Pegawai = () => {
 
     // )
     {
-      if (item.nama && item.sub_bidang) {
+      if (item.nama && item.bidang && item.jabatan) {
         if (
           item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.sub_bidang.toLowerCase().includes(filterText.toLowerCase())
+          item.jabatan.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.bidang.toLowerCase().includes(filterText.toLowerCase())
         ) {
           return true;
         }
@@ -133,23 +134,11 @@ const Pegawai = () => {
       wrap: true,
     },
     {
-      name: "Sub Bidang",
-      selector: "sub_bidang",
+      name: "Bidang",
+      selector: "bidang",
       sortable: true,
       wrap: true,
     },
-    // {
-    //   name: "Pangkat / Gol",
-    //   selector: "pangkat_golongan",
-    //   sortable: true,
-    //   wrap: true,
-    // },
-    // {
-    //   name: "No. HP",
-    //   selector: "no_hp",
-    //   sortable: true,
-    //   wrap: true,
-    // },
     {
       // maxWidth: "150px",
       name: "Action",
