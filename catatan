@@ -9,28 +9,7 @@ Halaman Admin
     - username -> nik
     - password -> tgl_lahir
 
-13. Integrasikan Backend dengan Frontend via API
-14. Tangani menu pegawai
-    - PNS 
-      - Menampilkan data (selesai)
-      - Tambah data (Selesai)
-      - Detail data (Selesai)
-      - Edit data (Selesai)
-      - Hapus data (Selesai)
-
-    - PTTH
-      - Menampilkan data
-      - Tambah data
-      - Detail data
-      - Edit data
-      - Hapus data
-
-    - PTTB
-      - Menampilkan data
-      - Tambah data
-      - Detail data
-      - Edit data
-      - Hapus data
+13. Perbaikin input jumlah jam di menu diklat
 
 14. Perbaiki alur pensiun. Jika pegawai telah pensiun atau pindah maka ubah status kerja pegawai di tabel pegawai. Lalu tampilkan data pegawai yang status kerjanya aktif
 

@@ -4,7 +4,9 @@ import React from "react";
 const Dashboard = React.lazy(() => import("./views/dashboard/DashboardAdmin"));
 
 // Import Agama
-const Agama = React.lazy(() => import("./views/pages/Admin/MasterData/Agama/Agama"));
+const Agama = React.lazy(() =>
+  import("./views/pages/Admin/MasterData/Agama/Agama")
+);
 const TambahAgama = React.lazy(() =>
   import("./views/pages/Admin/MasterData/Agama/TambahAgama")
 );
@@ -79,7 +81,9 @@ const EditStatusPegawai = React.lazy(() =>
 );
 
 // Import Pegawai
-const Pegawai = React.lazy(() => import("./views/pages/Admin/Pegawai/PNS/Pegawai"));
+const Pegawai = React.lazy(() =>
+  import("./views/pages/Admin/Pegawai/PNS/Pegawai")
+);
 const TambahPegawai = React.lazy(() =>
   import("./views/pages/Admin/Pegawai/PNS/TambahPegawai")
 );
@@ -89,8 +93,12 @@ const EditPegawai = React.lazy(() =>
 const DetailPegawai = React.lazy(() =>
   import("./views/pages/Admin/Pegawai/DetailPegawai/DetailPegawai")
 );
-const DataPTTH = React.lazy(() => import("./views/pages/Admin/Pegawai/PTTH/ptth"));
-const DataPTTB = React.lazy(() => import("./views/pages/Admin/Pegawai/PTTB/pttb"));
+const DataPTTH = React.lazy(() =>
+  import("./views/pages/Admin/Pegawai/PTTH/ptth")
+);
+const DataPTTB = React.lazy(() =>
+  import("./views/pages/Admin/Pegawai/PTTB/pttb")
+);
 const TambahPTTH = React.lazy(() =>
   import("./views/pages/Admin/Pegawai/PTTH/ptthTambah")
 );
@@ -108,11 +116,15 @@ const SemuaPegawai = React.lazy(() =>
 );
 
 // DUK PNS
-const DataDukPNS = React.lazy(() => import("./views/pages/Admin/DukPNS/DukPNS"));
+const DataDukPNS = React.lazy(() =>
+  import("./views/pages/Admin/DukPNS/DukPNS")
+);
 const DetailDukPNS = React.lazy(() =>
   import("./views/pages/Admin/DukPNS/DetailDukPNS")
 );
-const EditDukPNS = React.lazy(() => import("./views/pages/Admin/DukPNS/EditDukPNS"));
+const EditDukPNS = React.lazy(() =>
+  import("./views/pages/Admin/DukPNS/EditDukPNS")
+);
 
 // Masa Kerja Pegawai
 const DataMasaKerja = React.lazy(() =>
@@ -131,12 +143,18 @@ const DaftarKGB = React.lazy(() => import("./views/pages/Admin/KGB/DaftarKGB"));
 
 // Cuti Pegawai
 const Cuti = React.lazy(() => import("./views/pages/Admin/Cuti/Cuti"));
-const TambahCuti = React.lazy(() => import("./views/pages/Admin/Cuti/TambahCuti"));
+const TambahCuti = React.lazy(() =>
+  import("./views/pages/Admin/Cuti/TambahCuti")
+);
 const EditCuti = React.lazy(() => import("./views/pages/Admin/Cuti/EditCuti"));
-const RiwayatCuti = React.lazy(() => import("./views/pages/Admin/Cuti/RiwayatCuti"));
+const RiwayatCuti = React.lazy(() =>
+  import("./views/pages/Admin/Cuti/RiwayatCuti")
+);
 
 // Absensi Pegawai
-const AbsensiPNS = React.lazy(() => import("./views/pages/Admin/Absensi/AbsensiPNS"));
+const AbsensiPNS = React.lazy(() =>
+  import("./views/pages/Admin/Absensi/AbsensiPNS")
+);
 const AbsensiPTTH = React.lazy(() =>
   import("./views/pages/Admin/Absensi/AbsensiPTTH")
 );
@@ -178,12 +196,16 @@ const DetailPensiun = React.lazy(() =>
 
 // Users
 const Users = React.lazy(() => import("./views/pages/Admin/Users/Users"));
-const UserDetail = React.lazy(() => import("./views/pages/Admin/Users/UserDetail"));
+const UserDetail = React.lazy(() =>
+  import("./views/pages/Admin/Users/UserDetail")
+);
 
 // Akun
 const Akun = React.lazy(() => import("./views/pages/Admin/Akun/Akun"));
 const EditAkun = React.lazy(() => import("./views/pages/Admin/Akun/EditAkun"));
-const EditPassword = React.lazy(() => import("./views/pages/Admin/Akun/EditPassword"));
+const EditPassword = React.lazy(() =>
+  import("./views/pages/Admin/Akun/EditPassword")
+);
 
 const routes = [
   { path: "/epekerja/admin", exact: true, name: "Home" },
@@ -369,6 +391,7 @@ const routes = [
     path: "/epekerja/admin/pegawai/pttb-edit/:id",
     name: "Edit PTTB",
     component: EditPTTB,
+    exact: true,
   },
   {
     path: "/epekerja/admin/pegawai/semua-pegawai",
@@ -383,7 +406,7 @@ const routes = [
     component: DataDukPNS,
   },
   {
-    path: "/epekerja/admin/duk-detail/:id",
+    path: "/epekerja/admin/duk-detail/:id/:no_urut",
     name: "Detail DUK PNS",
     component: DetailDukPNS,
   },

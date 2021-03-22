@@ -98,10 +98,10 @@ const SemuaPegawai = () => {
 
     // )
     {
-      if (item.nama && item.sub_bidang && item.jabatan) {
+      if (item.nama && item.bidang && item.jabatan) {
         if (
           item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.sub_bidang.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.bidang.toLowerCase().includes(filterText.toLowerCase()) ||
           item.jabatan.toLowerCase().includes(filterText.toLowerCase())
         ) {
           return true;
@@ -132,8 +132,8 @@ const SemuaPegawai = () => {
       wrap: true,
     },
     {
-      name: "Sub Bidang",
-      selector: "sub_bidang",
+      name: "Bidang",
+      selector: "bidang",
       sortable: true,
       wrap: true,
     },

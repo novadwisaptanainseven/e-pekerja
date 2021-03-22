@@ -21,6 +21,7 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint, cilInfo } from "@coreui/icons";
 import { getDUK } from "src/context/actions/DUK/getDUK";
+import printDUK from "src/context/actions/DownloadFile/printDUK";
 
 const MySwal = withReactContent(swal2);
 
@@ -156,7 +157,7 @@ const DukPNS = () => {
             <CButton
               color="info"
               className="btn btn-sm"
-              onClick={() => goToDetail(row.id_duk)}
+              onClick={() => goToDetail(row.id_duk, row.no)}
             >
               <CIcon content={cilInfo} color="white" />
             </CButton>
@@ -197,7 +198,7 @@ const DukPNS = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton type="button" color="info" className="ml-2" onClick={printDUK}>
           Cetak <CIcon content={cilPrint} />
         </CButton>
       </>
@@ -208,8 +209,8 @@ const DukPNS = () => {
     history.push(`/epekerja/admin/duk-edit/${id}`);
   };
 
-  const goToDetail = (id) => {
-    history.push(`/epekerja/admin/duk-detail/${id}`);
+  const goToDetail = (id, no_urut) => {
+    history.push(`/epekerja/admin/duk-detail/${id}/${no_urut}`);
   };
 
   const ExpandableComponent = ({ data }) => (
@@ -294,6 +295,8 @@ const DukPNS = () => {
               subHeader
               subHeaderComponent={SubHeaderComponentMemo}
               expandableRows={true}
+              expandOnRowClicked
+              highlightOnHover
               expandableRowsComponent={<ExpandableComponent />}
             />
           ) : (
