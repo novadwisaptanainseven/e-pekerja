@@ -1,23 +1,17 @@
 import axiosInstance from "src/helpers/axios";
 
-export const editMasaKerja = (
-  id,
-  values,
-  setLoading,
-  showAlertSuccess,
-  showAlertError
-) => {
+export const getKGB = (id_pegawai, setLoading, setData) => {
   setLoading(true);
 
   axiosInstance
-    .put(`admin/masa-kerja/${id}`, values)
+    .get(`admin/pegawai/${id_pegawai}/kgb`)
     .then((res) => {
       console.log(res.data);
+      setData(res.data.data);
       setLoading(false);
-      showAlertSuccess();
     })
     .catch((err) => {
       console.log(err.response.data);
-      showAlertError(err.response.data.errors);
+      setLoading(false);
     });
 };

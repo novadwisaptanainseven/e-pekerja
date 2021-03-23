@@ -1,7 +1,7 @@
 import axiosInstance from "src/helpers/axios";
 
-export const editMasaKerja = (
-  id,
+export const insertKGB = (
+  id_pegawai,
   values,
   setLoading,
   showAlertSuccess,
@@ -10,7 +10,11 @@ export const editMasaKerja = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/masa-kerja/${id}`, values)
+    .post(`admin/pegawai/${id_pegawai}/kgb`, values, {
+      header: {
+        "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
+      },
+    })
     .then((res) => {
       console.log(res.data);
       setLoading(false);

@@ -1,7 +1,8 @@
 import axiosInstance from "src/helpers/axios";
 
-export const editMasaKerja = (
-  id,
+export const editKGB = (
+  id_pegawai,
+  id_kgb,
   values,
   setLoading,
   showAlertSuccess,
@@ -10,7 +11,7 @@ export const editMasaKerja = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/masa-kerja/${id}`, values)
+    .put(`admin/pegawai/${id_pegawai}/kgb/${id_kgb}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

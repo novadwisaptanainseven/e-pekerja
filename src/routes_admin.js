@@ -438,11 +438,13 @@ const routes = [
     path: "/epekerja/admin/kgb",
     name: "Kenaikan Gaji Berkala",
     component: KGB,
+    exact: true,
   },
   {
-    path: "/epekerja/admin/kgb-daftar/:id",
+    path: "/epekerja/admin/kgb/:id/daftar",
     name: "Daftar Kenaikan Gaji Berkala",
     component: DaftarKGB,
+    exact: true,
   },
 
   // Cuti Pegawai

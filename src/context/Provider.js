@@ -97,8 +97,11 @@ export const GlobalProvider = ({ children }) => {
   // Masa Kerja
   const [masaKerjaState, masaKerjaDispatch] = useReducer(reducer, initState);
 
-  // Daftr Urut Kepangkatan (DUK)
+  // Daftar Urut Kepangkatan (DUK)
   const [dukState, dukDispatch] = useReducer(reducer, initState);
+
+  // Kenaikan Gaji Berkala (KGB)
+  const [kgbState, kgbDispatch] = useReducer(reducer, initState);
 
   // Pensiun
   const [pensiunState, pensiunDispatch] = useReducer(
@@ -147,6 +150,8 @@ export const GlobalProvider = ({ children }) => {
         masaKerjaDispatch,
         dukState,
         dukDispatch,
+        kgbState,
+        kgbDispatch,
         pensiunState,
         pensiunDispatch,
         penghargaanState,

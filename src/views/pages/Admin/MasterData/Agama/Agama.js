@@ -93,7 +93,6 @@ const Agama = () => {
       confirmButtonText: "YA",
     }).then((res) => {
       if (res.isConfirmed) {
-        // Delete pesan
         deleteAgama(id, agamaDispatch);
         MySwal.fire({
           icon: "success",

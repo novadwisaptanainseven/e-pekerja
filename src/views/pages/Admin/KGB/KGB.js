@@ -1,22 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
   CCardBody,
   CButton,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CForm,
-  CModalBody,
-  CModalFooter,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
-import EditKGB from "./EditKGB";
 import { useHistory } from "react-router-dom";
+import { GlobalContext } from "src/context/Provider";
+import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
+import { LoadAnimationBlue } from "src/assets";
 
 const TextField = styled.input`
   height: 37px;
@@ -77,75 +75,17 @@ const KGB = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const [modalEdit, setModalEdit] = useState({
-    modal: false,
-    id: null,
-  });
+  const { pnsState, pnsDispatch } = useContext(GlobalContext);
+  const { data, loading } = pnsState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga Nopandani, MMT",
-      jabatan: "Kepala Dinas",
-      gaji_pokok_lama: "Rp. 3.831.900",
-      gaji_pokok_baru: "Rp. 3.952.600",
-      tmt_kenaikan_gaji: "1 Februari 2021",
-      peraturan: "PP No.30 Tahun 2015",
-      kenaikan_gaji_yad: "1 Februari 2023",
-      status_kgb: 1,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
-      tgl_buat_kgb: "03-02-2021",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19651127 199301 1 001",
-      nama: "NELLY KALA, ST",
-      jabatan: "Sekretaris",
-      gaji_pokok_lama: "Rp. 3.831.900",
-      gaji_pokok_baru: "-",
-      tmt_kenaikan_gaji: "-",
-      peraturan: "-",
-      kenaikan_gaji_yad: "-",
-      status_kgb: 0,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
-      tgl_buat_kgb: "05-02-2021",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
-      gaji_pokok_lama: "Rp. 3.831.900",
-      gaji_pokok_baru: "-",
-      tmt_kenaikan_gaji: "1 Februari 2021",
-      peraturan: "PP No.30 Tahun 2015",
-      kenaikan_gaji_yad: "1 Februari 2023",
-      status_kgb: 0,
-      pangkat_golongan: "IV/c (Pembina Utama Muda)",
-      tgl_buat_kgb: "10-02-2021",
-      expired: 1,
-      status_kenaikan_gaji_yad: 1,
-    },
-  ];
+  useEffect(() => {
+    // Get All Pegawai
+    getPNS(pnsDispatch);
+  }, [pnsDispatch]);
 
-  const filteredData = data.filter((item) =>
-    // (
-    //   item.nama && item.sub_bidang &&
-    //   item.nama.toLowerCase().includes(filterText.toLowerCase())
-
-    // )
-    {
-      if (item.nama) {
-        if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
-          return true;
-        }
-      }
-      return false;
-    }
+  const filteredData = data.filter(
+    (item) =>
+      item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase())
   );
 
   const columns = [
@@ -169,10 +109,15 @@ const KGB = () => {
       wrap: true,
     },
     {
-      name: "Pangkat / Gol",
-      selector: "pangkat_golongan",
+      name: "Golongan",
+      selector: "golongan",
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div>
+          {row.ket_golongan} ({row.golongan})
+        </div>
+      ),
     },
     {
       maxWidth: "150px",
@@ -180,7 +125,7 @@ const KGB = () => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton color="info" onClick={() => goToDaftarKGB(row.id)}>
+          <CButton color="info" onClick={() => goToDaftarKGB(row.id_pegawai)}>
             Daftar KGB
           </CButton>
         </div>
@@ -220,7 +165,7 @@ const KGB = () => {
   }, [filterText, resetPaginationToggle]);
 
   const goToDaftarKGB = (id) => {
-    history.push(`/epekerja/admin/kgb-daftar/${id}`);
+    history.push(`/epekerja/admin/kgb/${id}/daftar`);
   };
 
   return (
@@ -230,54 +175,48 @@ const KGB = () => {
           <h3>Kenaikan Gaji Berkala Pegawai</h3>
         </CCardHeader>
         <CCardBody>
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            highlightOnHover
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          ) : loading ? (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          )}
         </CCardBody>
       </CCard>
-
-      {/* Modal Edit KGB */}
-      <CModal
-        show={modalEdit.modal}
-        onClose={() => {
-          setModalEdit({
-            ...modalEdit,
-            modal: !modalEdit.modal,
-            id: null,
-          });
-        }}
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Perbarui Gaji</CModalTitle>
-        </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditKGB id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
-      </CModal>
     </>
   );
 };

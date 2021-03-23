@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -13,6 +13,11 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
+import { GlobalContext } from "src/context/Provider";
+import { getMasaKerja } from "src/context/actions/MasaKerja/getMasaKerja";
+import { format } from "date-fns";
+import { LoadAnimationBlue } from "src/assets";
+import printMasaKerja from "src/context/actions/DownloadFile/printMasaKerja";
 
 const TextField = styled.input`
   height: 37px;
@@ -73,75 +78,17 @@ const MasaKerja = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { masaKerjaState, masaKerjaDispatch } = useContext(GlobalContext);
+  const { data, loading } = masaKerjaState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga Nopandani, MMT",
-      mk_golongan: "21 Tahun 3 Bulan",
-      mk_jabatan: "4 Tahun 0 Bulan",
-      mk_sebelum_cpns: "0 Tahun 0 Bulan",
-      mk_seluruhnya: "27 Tahun 11 Bulan",
-      jabatan: "Kepala Dinas",
-      golongan: "IV/c",
-      tmt_golongan: "01/04/2014",
-      tmt_jabatan: "30/12/2016",
-      tmt_sebelum_cpns: "01/01/1993",
-      pendidikan: "Magister Manajemen",
-      eselon: "II/b",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19640315 199203 1 014",
-      nama: "H. Akhmad Husein, ST, MT",
-      mk_golongan: "26 Tahun 2 Bulan",
-      mk_jabatan: "4 Tahun 0 Bulan",
-      mk_sebelum_cpns: "6 Tahun 7 Bulan",
-      mk_seluruhnya: "27 Tahun 11 Bulan",
-      jabatan: "Kepala Dinas",
-      golongan: "IV/c",
-      tmt_golongan: "01/04/2014",
-      tmt_jabatan: "30/12/2016",
-      tmt_sebelum_cpns: "01/01/1993",
-      pendidikan: "Magister Manajemen",
-      eselon: "II/b",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19660425 199312 1 001",
-      nama: "Joko Karyono, ST, MT",
-      mk_golongan: "26 Tahun 2 Bulan",
-      mk_jabatan: "4 Tahun 0 Bulan",
-      mk_sebelum_cpns: "6 Tahun 7 Bulan",
-      mk_seluruhnya: "27 Tahun 11 Bulan",
-      jabatan: "Kepala Dinas",
-      golongan: "IV/c",
-      tmt_golongan: "01/04/2014",
-      tmt_jabatan: "30/12/2016",
-      tmt_sebelum_cpns: "01/01/1993",
-      pendidikan: "Magister Manajemen",
-      eselon: "II/b",
-    },
-  ];
+  useEffect(() => {
+    // Get all masa kerja
+    getMasaKerja(masaKerjaDispatch);
+  }, [masaKerjaDispatch]);
 
-  const filteredData = data.filter((item) =>
-    // (
-    //   item.nama && item.sub_bidang &&
-    //   item.nama.toLowerCase().includes(filterText.toLowerCase())
-
-    // )
-    {
-      if (item.nama) {
-        if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
-          return true;
-        }
-      }
-      return false;
-    }
+  const filteredData = data.filter(
+    (item) =>
+      item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase())
   );
 
   const columns = [
@@ -173,7 +120,7 @@ const MasaKerja = () => {
     },
     {
       name: "MK. Seluruhnya",
-      selector: "mk_sebelum_cpns",
+      selector: "mk_seluruhnya",
       sortable: true,
       wrap: true,
     },
@@ -187,14 +134,14 @@ const MasaKerja = () => {
             <CButton
               color="info"
               className="btn btn-sm"
-              onClick={() => goToDetail(row.id)}
+              onClick={() => goToDetail(row.id_masa_kerja)}
             >
               Detail
             </CButton>
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
+              onClick={() => goToEdit(row.id_masa_kerja)}
             >
               Perbarui
             </CButton>
@@ -228,7 +175,12 @@ const MasaKerja = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={printMasaKerja}
+        >
           Cetak <CIcon content={cilPrint} />
         </CButton>
       </>
@@ -256,13 +208,13 @@ const MasaKerja = () => {
           <CCol md="3">
             <strong>Jabatan</strong>
           </CCol>
-          <CCol>{data.jabatan}</CCol>
+          <CCol>{data.nama_jabatan}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="3">
             <strong>TMT. Jabatan</strong>
           </CCol>
-          <CCol>{data.tmt_jabatan}</CCol>
+          <CCol>{format(new Date(data.tmt_jabatan), "dd/MM/y")}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="3">
@@ -274,7 +226,7 @@ const MasaKerja = () => {
           <CCol md="3">
             <strong>TMT. Golongan</strong>
           </CCol>
-          <CCol>{data.tmt_golongan}</CCol>
+          <CCol>{format(new Date(data.tmt_golongan), "dd/MM/y")}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="3">
@@ -284,9 +236,9 @@ const MasaKerja = () => {
         </CRow>
         <CRow className="mb-1">
           <CCol md="3">
-            <strong>TMT. Sebelum CPNS</strong>
+            <strong>TMT. CPNS</strong>
           </CCol>
-          <CCol>{data.tmt_sebelum_cpns}</CCol>
+          <CCol>{format(new Date(data.tmt_cpns), "dd/MM/y")}</CCol>
         </CRow>
       </div>
     </>
@@ -299,19 +251,52 @@ const MasaKerja = () => {
           <h3>Masa Kerja Pegawai Negeri Sipil</h3>
         </CCardHeader>
         <CCardBody>
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows={true}
-            expandableRowsComponent={<ExpandableComponent />}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows={true}
+              expandOnRowClicked
+              highlightOnHover
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          ) : loading ? (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows={true}
+              expandOnRowClicked
+              highlightOnHover
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          )}
         </CCardBody>
       </CCard>
     </>
