@@ -14,6 +14,7 @@ Halaman Admin
 15. Perbaiki input masa kerja di menu tambah pegawai
 
 14. Perbaiki alur pensiun. Jika pegawai telah pensiun atau pindah maka ubah status kerja pegawai di tabel pegawai. Lalu tampilkan data pegawai yang status kerjanya aktif
+15. Hilangan tombol delete di histori KGB
 
 Halaman User
 

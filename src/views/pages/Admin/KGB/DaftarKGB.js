@@ -29,7 +29,8 @@ import { getKGB } from "src/context/actions/KGB/getKGB";
 import { deleteKGB } from "src/context/actions/KGB/deleteKGB";
 import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { LoadAnimationBlue } from "src/assets";
-import { format, getTime } from "date-fns";
+import { format } from "date-fns";
+import printKGBPegawai from "src/context/actions/DownloadFile/printKGBPegawai";
 
 const MySwal = withReactContent(swal2);
 
@@ -122,6 +123,50 @@ const DaftarKGB = ({ match }) => {
       ),
     },
     {
+      name: "Status",
+      selector: "status",
+      sortable: true,
+      wrap: true,
+      cell: (row) => {
+        // Get timestamp from current date
+        let timestampCurrent = new Date().getTime();
+        // Get timestamp from tmt kenaikan gaji
+        let timestampTMTGaji = new Date(row.tmt_kenaikan_gaji).getTime();
+        // Get timestamp from kenaikan gaji yad
+        let timestampGajiYAD = new Date(row.kenaikan_gaji_yad).getTime();
+
+        let status = false;
+
+        if (timestampCurrent < timestampTMTGaji) {
+          status = "akan-aktif";
+        } else if (timestampCurrent <= timestampGajiYAD) {
+          status = "aktif";
+        } else {
+          status = "tidak-aktif";
+        }
+
+        return (
+          <div>
+            {status === "akan-aktif" && (
+              <CBadge className="py-2 px-3" color="dark" shape="pill">
+                KGB Belum Aktif
+              </CBadge>
+            )}
+            {status === "aktif" && (
+              <CBadge className="py-2 px-3" color="success" shape="pill">
+                KGB Aktif
+              </CBadge>
+            )}
+            {status === "tidak-aktif" && (
+              <CBadge className="py-2 px-3" color="warning" shape="pill">
+                KGB Kadaluarsa
+              </CBadge>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       // maxWidth: "150px",
       name: "Action",
       sortable: true,
@@ -195,7 +240,7 @@ const DaftarKGB = ({ match }) => {
       confirmButtonText: "YA",
     }).then((res) => {
       if (res.isConfirmed) {
-        deleteKGB(params.id, id_kgb, setData);
+        deleteKGB(params.id, id_kgb, setLoading, setData);
         MySwal.fire({
           icon: "success",
           title: "Terhapus",
@@ -220,7 +265,12 @@ const DaftarKGB = ({ match }) => {
             Tambah KGB
           </CButton>
           <div className="d-flex">
-            <CButton type="button" color="info" className="ml-2">
+            <CButton
+              type="button"
+              color="info"
+              className="ml-2"
+              onClick={() => printKGBPegawai(params.id)}
+            >
               Cetak <CIcon content={cilPrint} />
             </CButton>
           </div>
@@ -231,55 +281,17 @@ const DaftarKGB = ({ match }) => {
 
   // Expandable Component
   const ExpandableComponent = ({ data }) => {
-    // Get timestamp from current date
-    let timestampCurrent = new Date().getTime();
-    // Get timestamp from tmt kenaikan gaji
-    let timestampTMTGaji = new Date(data.tmt_kenaikan_gaji).getTime();
-    // Get timestamp from kenaikan gaji yad
-    let timestampGajiYAD = new Date(data.kenaikan_gaji_yad).getTime();
-
-    let status = "";
-
-    if (timestampCurrent < timestampTMTGaji) {
-      status = "akan-aktif";
-    } else if (timestampCurrent <= timestampGajiYAD) {
-      status = "aktif";
-    } else {
-      status = "tidak-aktif";
-    }
-
     return (
       <div style={{ padding: "10px 63px" }}>
         <CRow className="mb-1">
-          <CCol md="4">
+          <CCol md="2">
             <strong>Tgl. Pembuatan KGB</strong>
           </CCol>
           <CCol>{format(new Date(data.created_at), "dd/MM/y")}</CCol>
         </CRow>
+
         <CRow className="mb-1">
-          <CCol md="4">
-            <strong>Status</strong>
-          </CCol>
-          <CCol>
-            {status === "akan-aktif" && (
-              <CBadge className="py-2 px-3" color="dark" shape="pill">
-                KGB Belum Aktif
-              </CBadge>
-            )}
-            {status === "aktif" && (
-              <CBadge className="py-2 px-3" color="success" shape="pill">
-                KGB Aktif
-              </CBadge>
-            )}
-            {status === "tidak-aktif" && (
-              <CBadge className="py-2 px-3" color="warning" shape="pill">
-                KGB Kadaluarsa
-              </CBadge>
-            )}
-          </CCol>
-        </CRow>
-        <CRow className="mb-1">
-          <CCol md="4">
+          <CCol md="2">
             <strong>Peraturan</strong>
           </CCol>
           <CCol>{data.peraturan}</CCol>
@@ -364,23 +376,12 @@ const DaftarKGB = ({ match }) => {
         <CModalHeader closeButton>
           <CModalTitle>Tambah Kenaikan Gaji Berkala</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahKGB />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahKGB
+          modalTambah={modalTambah}
+          setModalTambah={setModalTambah}
+          id_pegawai={params.id}
+        />
       </CModal>
 
       {/* Modal Edit KGB */}
@@ -396,25 +397,15 @@ const DaftarKGB = ({ match }) => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Perbarui Gaji</CModalTitle>
+          <CModalTitle>Edit Histori Gaji</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditKGB id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <EditKGB
+          id_kgb={modalEdit.id}
+          id_pegawai={params.id}
+          modalEdit={modalEdit}
+          setModalEdit={setModalEdit}
+        />
       </CModal>
     </>
   );

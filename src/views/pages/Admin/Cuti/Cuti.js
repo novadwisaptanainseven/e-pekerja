@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -10,6 +10,8 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
@@ -17,6 +19,9 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilGroup } from "@coreui/icons";
 import DaftarPegawaiCuti from "./DaftarPegawaiCuti";
+import { GlobalContext } from "src/context/Provider";
+import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
+import { LoadAnimationBlue } from "src/assets";
 
 const TextField = styled.input`
   height: 37px;
@@ -78,64 +83,18 @@ const Cuti = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { pnsState, pnsDispatch } = useContext(GlobalContext);
+  const { data, loading } = pnsState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      jabatan: "Kepala Dinas",
-      jenis_cuti: "Cuti Isolasi Mandiri",
-      tgl_mulai: "10-09-2021",
-      tgl_selesai: "24-09-2021",
-      lama_cuti: "14 Hari",
-      status_cuti: 1,
-      keterangan: "Sedang Isolasi Mandiri selam 14 hari",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
-      jenis_cuti: "Cuti Liburan",
-      tgl_mulai: "10-09-2021",
-      tgl_selesai: "10-10-2021",
-      lama_cuti: "1 Bulan",
-      status_cuti: 2,
-      keterangan: "Liburan ke luar negeri",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19651127 199301 1 001",
-      nama: "Ikwal Ramadhani",
-      jabatan: "IT Support",
-      jenis_cuti: "Cuti Liburan",
-      tgl_mulai: "10-09-2021",
-      tgl_selesai: "10-10-2021",
-      lama_cuti: "1 Bulan",
-      status_cuti: 0,
-      keterangan: "Liburan ke luar negeri",
-    },
-  ];
-
-  const filteredData = data.filter((item) =>
-    // (
-    //   item.nama && item.sub_bidang &&
-    //   item.nama.toLowerCase().includes(filterText.toLowerCase())
-
-    // )
-    {
-      if (item.nama) {
-        if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
-          return true;
-        }
-      }
-      return false;
-    }
+  const filteredData = data.filter(
+    (item) =>
+      item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase())
   );
+
+  useEffect(() => {
+    // Get All Pegawai
+    getPNS(pnsDispatch);
+  }, [pnsDispatch]);
 
   const columns = [
     {
@@ -232,24 +191,48 @@ const Cuti = () => {
           <h3>Cuti Pegawai</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
-          </CButton> */}
-
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            highlightOnHover
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          ) : loading ? (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          )}
         </CCardBody>
       </CCard>
 

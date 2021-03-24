@@ -90,6 +90,13 @@ const KGB = () => {
 
   const columns = [
     {
+      name: "No",
+      selector: "no",
+      sortable: true,
+      wrap: true,
+      maxWidth: "30px",
+    },
+    {
       name: "NIP",
       selector: "nip",
       sortable: true,
