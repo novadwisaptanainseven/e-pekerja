@@ -129,7 +129,7 @@ const Cuti = () => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton color="info" onClick={() => goToRiwayatCuti(row.id)}>
+          <CButton color="info" onClick={() => goToRiwayatCuti(row.id_pegawai)}>
             Buat Cuti
           </CButton>
         </div>
@@ -181,7 +181,7 @@ const Cuti = () => {
   }, [filterText, resetPaginationToggle, modalCuti]);
 
   const goToRiwayatCuti = (id) => {
-    history.push(`/epekerja/admin/cuti-pegawai/${id}`);
+    history.push(`/epekerja/admin/cuti/riwayat/${id}`);
   };
 
   return (

@@ -452,21 +452,25 @@ const routes = [
     path: "/epekerja/admin/cuti",
     name: "Cuti Pegawai",
     component: Cuti,
+    exact: true,
   },
   {
-    path: "/epekerja/admin/cuti-tambah",
+    path: "/epekerja/admin/cuti/tambah",
     name: "Tambah Cuti Pegawai",
     component: TambahCuti,
+    exact: true,
   },
   {
-    path: "/epekerja/admin/cuti-edit/:id",
+    path: "/epekerja/admin/cuti/edit/:id",
     name: "Edit Cuti Pegawai",
     component: EditCuti,
+    exact: true,
   },
   {
-    path: "/epekerja/admin/cuti-pegawai/:id",
+    path: "/epekerja/admin/cuti/riwayat/:id",
     name: "Riwayat Cuti Pegawai",
     component: RiwayatCuti,
+    exact: true,
   },
 
   // Absensi Pegawai

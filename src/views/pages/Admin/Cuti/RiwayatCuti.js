@@ -22,9 +22,9 @@ import { useHistory } from "react-router-dom";
 import TambahCuti from "./TambahCuti";
 import EditCuti from "./EditCuti";
 
-const RiwayatCuti = () => {
+const RiwayatCuti = ({ match }) => {
   const [modalTambah, setModalTambah] = useState(false);
-
+  const params = match.params;
   const history = useHistory();
 
   const [modalEdit, setModalEdit] = useState({
@@ -261,23 +261,12 @@ const RiwayatCuti = () => {
         <CModalHeader closeButton>
           <CModalTitle>Buat Cuti Pegawai</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahCuti />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahCuti
+          id_pegawai={params.id}
+          modalTambah={modalTambah}
+          setModalTambah={setModalTambah}
+        />
       </CModal>
 
       {/* Modal Edit Cuti */}
