@@ -16,9 +16,11 @@ import {
   CForm,
   CModalFooter,
   CButton,
+  CFormText,
 } from "@coreui/react";
 import { useHistory } from "react-router";
 import { format } from "date-fns";
+import { insertCuti } from "src/context/actions/Cuti/insertCuti";
 
 const MySwal = withReactContent(swal2);
 
@@ -27,7 +29,10 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
   const [loading, setLoading] = useState(false);
   const [tglSelesaiCuti, setTglSelesaiCuti] = useState("");
   const [lamaCuti, setLamaCuti] = useState("");
-  const [inputVal, setInputVal] = useState({});
+  const [inputVal, setInputVal] = useState({
+    satuan: "hari",
+    tgl_selesai: "",
+  });
 
   // Inisialisasi State Formik
   const initState = {
@@ -40,7 +45,7 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
 
   // Menghitung tgl selesai berdasarkan lama cuti
   const cariTanggalSelesai = useCallback(() => {
-    // Get timestamp tgl mulai cuti
+    // Get timestamp in miliseconds tgl mulai cuti
     let tsTglMulaiCuti = inputVal.tgl_mulai
       ? new Date(inputVal.tgl_mulai).getTime()
       : 0;
@@ -50,12 +55,16 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
 
     // Mencari interval waktu
     if (satuan === "hari") {
-      interval = inputVal.lama_cuti ? inputVal.lama_cuti * 24 * 60 * 60 : 0;
+      interval = inputVal.lama_cuti
+        ? inputVal.lama_cuti * 24 * 60 * 60 * 1000 // dikalikan 1000 untuk mengubahnya ke dalam satuan miliseconds
+        : 0;
     } else if (satuan === "minggu") {
-      interval = inputVal.lama_cuti ? inputVal.lama_cuti * 7 * 24 * 60 * 60 : 0;
+      interval = inputVal.lama_cuti
+        ? inputVal.lama_cuti * 7 * 24 * 60 * 60 * 1000
+        : 0;
     } else if (satuan === "bulan") {
       interval = inputVal.lama_cuti
-        ? inputVal.lama_cuti * 30 * 24 * 60 * 60
+        ? inputVal.lama_cuti * 30 * 24 * 60 * 60 * 1000
         : 0;
     }
     // Get timestamp tgl selesai cuti
@@ -63,40 +72,16 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
     let tglSelesaiCuti = null;
 
     // Ubah ke dalam bentuk format date
-    tglSelesaiCuti = format(new Date(tsTglSelesaiCuti), "y-MM-dd");
+    // Objek Date menerima argumen berupa miliseconds sehingga timestamp (seconds) perlu dikalikan 1000 untuk dikonversikan dalam satuan miliseconds
+    tglSelesaiCuti = format(new Date(tsTglSelesaiCuti), "yyyy-MM-dd");
     // tglSelesaiCuti = new Date(tsTglSelesaiCuti);
 
-    console.log(new Date(tsTglSelesaiCuti));
-    // setTglSelesaiCuti(inputVal.satuan);
+    setTglSelesaiCuti(tglSelesaiCuti);
   }, [inputVal]);
 
   useEffect(() => {
     cariTanggalSelesai();
   }, [cariTanggalSelesai]);
-
-  const cariTanggalSelesai2 = (values) => {
-    // Get timestamp tgl mulai cuti
-    // let tsTglMulaiCuti = new Date(tglMulaiCuti).getTime();
-    // let interval = null;
-
-    // // Mencari interval waktu
-    // if (satuan === "hari") {
-    //   interval = lamaCuti * 24 * 60 * 60;
-    // } else if (satuan === "minggu") {
-    //   interval = lamaCuti * 7 * 24 * 60 * 60;
-    // } else if (satuan === "bulan") {
-    //   interval = lamaCuti * 30 * 24 * 60 * 60;
-    // }
-
-    // // Get timestamp tgl selesai cuti
-    // let tsTglSelesaiCuti = tsTglMulaiCuti + interval;
-
-    // // Ubah ke dalam bentuk format date
-    // let tglSelesaiCuti = format(new Date(tsTglSelesaiCuti), "y-MM-dd");
-
-    setTglSelesaiCuti(inputVal.lama_cuti);
-    // console.log(inputVal);
-  };
 
   // Fungsi untuk menampilkan alert success tambah data
   const showAlertSuccess = () => {
@@ -141,21 +126,28 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
   });
 
   // Menangani value dari form submit
-  const handleFormSubmit = (values) => {
-    console.log(inputVal);
+  const handleFormSubmit = () => {
+    inputVal.tgl_selesai = tglSelesaiCuti;
 
-    // const formData = new FormData();
-    // formData.append("tgl_mulai", values.tgl_mulai);
-    // formData.append("lama_cuti", values.lama_cuti);
-    // formData.append("satuan", values.satuan);
-    // formData.append("tgl_selesai", values.tgl_selesai);
-    // formData.append("keterangan", values.keterangan);
+    const formData = new FormData();
+    formData.append("tgl_mulai", inputVal.tgl_mulai);
+    formData.append("lama_cuti", inputVal.lama_cuti + " " + inputVal.satuan);
+    // formData.append("satuan", inputVal.satuan);
+    formData.append("tgl_selesai", inputVal.tgl_selesai);
+    formData.append("keterangan", inputVal.keterangan);
 
-    // for (var pair of formData.entries()) {
-    //   console.log(pair);
-    // }
+    for (var pair of formData.entries()) {
+      console.log(pair);
+    }
 
     // Memanggil method Insert Cuti untuk menambah data Cuti ke database
+    insertCuti(
+      id_pegawai,
+      formData,
+      setLoading,
+      showAlertSuccess,
+      showAlertError
+    );
   };
 
   return (
@@ -186,6 +178,7 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
                     name="tgl_mulai"
                     id="tgl_mulai"
                     placeholder="Masukkan tgl mulai cuti"
+                    min={format(new Date(), "yyyy-MM-dd")}
                     onChange={(e) => {
                       setFieldValue("tgl_mulai", e.target.value);
                       setInputVal({
@@ -274,7 +267,7 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
                 <CCol>
                   <CInput
                     readOnly
-                    type="number"
+                    type="date"
                     name="tgl_selesai"
                     id="tgl_selesai"
                     placeholder="Masukkan tgl selesai cuti"
@@ -288,6 +281,9 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
                     onBlur={handleBlur}
                     value={tglSelesaiCuti}
                   />
+                  <CFormText>
+                    <b>Format: </b> Bulan / Tanggal / Tahun
+                  </CFormText>
                 </CCol>
               </CFormGroup>
               <CFormGroup row>
