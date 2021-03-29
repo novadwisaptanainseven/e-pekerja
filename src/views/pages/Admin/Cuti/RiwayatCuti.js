@@ -104,61 +104,96 @@ const RiwayatCuti = ({ match }) => {
       selector: "status_cuti",
       sortable: true,
       wrap: true,
-      // cell: (row) => {
-      //   if (row.status_cuti === 0) {
-      //     return (
-      //       <>
-      //         <CBadge color="info" shape="pill" className="px-2 py-2">
-      //           Akan Cuti
-      //         </CBadge>
-      //       </>
-      //     );
-      //   } else if (row.status_cuti === 1) {
-      //     return (
-      //       <>
-      //         <CBadge color="primary" shape="pill" className="px-2 py-2">
-      //           Sedang Cuti
-      //         </CBadge>
-      //       </>
-      //     );
-      //   } else if (row.status_cuti === 2) {
-      //     return (
-      //       <>
-      //         <CBadge color="dark" shape="pill" className="px-2 py-2">
-      //           Masa Cuti Selesai
-      //         </CBadge>
-      //       </>
-      //     );
-      //   }
-      // },
+      cell: (row) => {
+        // Get timestamp in miliseconds from current date
+        let currentDate = new Date().getTime();
+        // Get timestamp in miliseconds from tglMulaiCuti
+        let tglMulaiCuti = new Date(row.tgl_mulai).getTime();
+        // Get timestamp in miliseconds from tglSelesai
+        let tglSelesaiCuti = new Date(row.tgl_selesai).getTime();
+        let status = "";
+
+        if (currentDate < tglMulaiCuti) {
+          status = "akan-cuti";
+        } else if (currentDate <= tglSelesaiCuti) {
+          status = "cuti";
+        } else {
+          status = "cuti-selesai";
+        }
+
+        return (
+          <div>
+            {status === "akan-cuti" && (
+              <CBadge className="py-2 px-3" color="info" shape="pill">
+                Akan Cuti
+              </CBadge>
+            )}
+            {status === "cuti" && (
+              <CBadge className="py-2 px-3" color="success" shape="pill">
+                Sedang Cuti
+              </CBadge>
+            )}
+            {status === "cuti-selesai" && (
+              <CBadge className="py-2 px-3" color="dark" shape="pill">
+                Masa Cuti Selesai
+              </CBadge>
+            )}
+          </div>
+        );
+      },
     },
     {
       maxWidth: "180px",
       name: "Action",
       sortable: true,
-      cell: (row) => (
-        <div data-tag="allowRowEvents">
-          <CButton className="mr-1" color="info" onClick={0}>
-            <CIcon content={cilPrint} />
-          </CButton>
-          <CButton
-            color="warning"
-            onClick={() => {
-              setModalEdit({
-                ...modalEdit,
-                modal: !modalEdit.modal,
-                id: row.id_cuti,
-              });
-            }}
-            className="text-white mr-1"
-          >
-            <CIcon content={cilPen} />
-          </CButton>
-          <CButton color="danger" onClick={() => handleDelete(row.id_cuti)}>
-            <CIcon content={cilTrash} />
-          </CButton>
-        </div>
-      ),
+      cell: (row) => {
+        // Get timestamp in miliseconds from current date
+        let currentDate = new Date().getTime();
+        // Get timestamp in miliseconds from tglMulaiCuti
+        let tglMulaiCuti = new Date(row.tgl_mulai).getTime();
+        // Get timestamp in miliseconds from tglSelesai
+        let tglSelesaiCuti = new Date(row.tgl_selesai).getTime();
+        let status = "";
+
+        if (currentDate < tglMulaiCuti) {
+          status = "akan-cuti";
+        } else if (currentDate <= tglSelesaiCuti) {
+          status = "cuti";
+        } else {
+          status = "cuti-selesai";
+        }
+        return (
+          <div data-tag="allowRowEvents">
+            <CButton
+              className="mr-1"
+              color="info"
+              disabled={status === "cuti-selesai" ? true : false}
+            >
+              <CIcon content={cilPrint} />
+            </CButton>
+            <CButton
+              color="warning"
+              onClick={() => {
+                setModalEdit({
+                  ...modalEdit,
+                  modal: !modalEdit.modal,
+                  id: row.id_cuti,
+                });
+              }}
+              className="text-white mr-1"
+            >
+              <CIcon content={cilPen} />
+            </CButton>
+            <CButton
+              color="danger"
+              onClick={() => handleDelete(row.id_cuti)}
+              disabled={status === "cuti" ? true : false}
+            >
+              <CIcon content={cilTrash} />
+            </CButton>
+          </div>
+        );
+      },
     },
   ];
 
@@ -334,23 +369,12 @@ const RiwayatCuti = ({ match }) => {
         <CModalHeader closeButton>
           <CModalTitle>Edit Cuti</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditCuti id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <EditCuti
+          id_pegawai={params.id}
+          modalEdit={modalEdit}
+          setModalEdit={setModalEdit}
+        />
       </CModal>
     </>
   );

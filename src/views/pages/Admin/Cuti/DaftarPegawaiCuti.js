@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   CCard,
   CCardHeader,
@@ -8,162 +8,99 @@ import {
   CForm,
   CFormGroup,
   CCol,
-  CInputGroup,
   CInput,
-  CInputGroupAppend,
+  CRow,
 } from "@coreui/react";
+import { getPegawaiCuti } from "src/context/actions/Cuti/getPegawaiCuti";
+import { format } from "date-fns";
+import { LoadAnimationBlue } from "src/assets";
 
 const DaftarPegawaiCuti = () => {
   const [accordion, setAccordion] = useState(null);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filterText, setFilterText] = useState("");
+
+  const filteredData = data.filter(
+    (item) =>
+      item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  useEffect(() => {
+    // Get Pegawai Cuti
+    getPegawaiCuti(setLoading, setData);
+  }, []);
 
   return (
     <>
       <CForm>
         <CFormGroup row className="justify-content-center">
           <CCol md="6">
-            <CInputGroup>
-              <CInput
-                type="text"
-                id="cari"
-                name="cari"
-                placeholder="Pencarian nama"
-              />
-              <CInputGroupAppend>
-                <CButton type="button" color="primary">
-                  Cari
-                </CButton>
-              </CInputGroupAppend>
-            </CInputGroup>
+            <CInput
+              type="text"
+              id="cari"
+              name="cari"
+              placeholder="Pencarian nama"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
           </CCol>
         </CFormGroup>
       </CForm>
 
       <div id="accordion">
-        <CCard className="mb-0">
-          <CCardHeader id="headingOne">
-            <CButton
-              block
-              color="link"
-              className="text-left m-0 p-0"
-              onClick={() => setAccordion(accordion === 0 ? null : 0)}
-            >
-              <h5 className="m-0 p-0 text-dark">
-                Ir. H. Dadang Airlangga N, MMT
-              </h5>
-            </CButton>
-          </CCardHeader>
-          <CCollapse show={accordion === 0}>
-            <CCardBody>
-              <table className="table table-striped">
-                <tbody>
-                  <tr>
-                    <th style={{ width: "130px" }}>Lama Cuti</th>
-                    <td>14 Hari</td>
-                  </tr>
-                  <tr>
-                    <th>Tgl. Mulai Cuti</th>
-                    <td>10-02-2021</td>
-                  </tr>
-                  <tr>
-                    <th>Tgl. Selesai Cuti</th>
-                    <td>24-02-2021</td>
-                  </tr>
-                  <tr>
-                    <th>Keterangan</th>
-                    <td>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Dolore hic corporis libero maiores ex sed ad debitis saepe
-                      possimus ratione iusto, iure maxime? Possimus officia
-                      nihil, suscipit ipsum labore fugit!
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </CCardBody>
-          </CCollapse>
-        </CCard>
-        <CCard className="mb-0">
-          <CCardHeader id="headingTwo">
-            <CButton
-              block
-              color="link"
-              className="text-left m-0 p-0"
-              onClick={() => setAccordion(accordion === 1 ? null : 1)}
-            >
-              <h5 className="m-0 p-0 text-dark">Nova Dwi Sapta Nain Seven</h5>
-            </CButton>
-          </CCardHeader>
-          <CCollapse show={accordion === 1}>
-            <CCardBody>
-              <table className="table table-striped">
-                <tbody>
-                  <tr>
-                    <th style={{ width: "130px" }}>Lama Cuti</th>
-                    <td>14 Hari</td>
-                  </tr>
-                  <tr>
-                    <th>Tgl. Mulai Cuti</th>
-                    <td>10-02-2021</td>
-                  </tr>
-                  <tr>
-                    <th>Tgl. Selesai Cuti</th>
-                    <td>24-02-2021</td>
-                  </tr>
-                  <tr>
-                    <th>Keterangan</th>
-                    <td>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Dolore hic corporis libero maiores ex sed ad debitis saepe
-                      possimus ratione iusto, iure maxime? Possimus officia
-                      nihil, suscipit ipsum labore fugit!
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </CCardBody>
-          </CCollapse>
-        </CCard>
-        <CCard className="mb-0">
-          <CCardHeader id="headingThree">
-            <CButton
-              block
-              color="link"
-              className="text-left m-0 p-0"
-              onClick={() => setAccordion(accordion === 2 ? null : 2)}
-            >
-              <h5 className="m-0 p-0 text-dark">Ikwal Ramadhani</h5>
-            </CButton>
-          </CCardHeader>
-          <CCollapse show={accordion === 2}>
-            <CCardBody>
-              <table className="table table-striped">
-                <tbody>
-                  <tr>
-                    <th style={{ width: "130px" }}>Lama Cuti</th>
-                    <td>14 Hari</td>
-                  </tr>
-                  <tr>
-                    <th>Tgl. Mulai Cuti</th>
-                    <td>10-02-2021</td>
-                  </tr>
-                  <tr>
-                    <th>Tgl. Selesai Cuti</th>
-                    <td>24-02-2021</td>
-                  </tr>
-                  <tr>
-                    <th>Keterangan</th>
-                    <td>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Dolore hic corporis libero maiores ex sed ad debitis saepe
-                      possimus ratione iusto, iure maxime? Possimus officia
-                      nihil, suscipit ipsum labore fugit!
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </CCardBody>
-          </CCollapse>
-        </CCard>
+        {loading && (
+          <CRow>
+            <CCol className="text-center">
+              <img
+                className="mt-4 ml-3"
+                width={30}
+                src={LoadAnimationBlue}
+                alt="load-animation"
+              />
+            </CCol>
+          </CRow>
+        )}
+        {filteredData.map((item, index) => (
+          <CCard key={index} className="mb-0">
+            <CCardHeader id="headingOne">
+              <CButton
+                block
+                color="link"
+                className="text-left m-0 p-0"
+                onClick={() => setAccordion(accordion === index ? null : index)}
+              >
+                <h5 className="m-0 p-0 text-dark">{item.nama}</h5>
+              </CButton>
+            </CCardHeader>
+            <CCollapse show={accordion === index}>
+              <CCardBody>
+                <table className="table table-striped">
+                  <tbody>
+                    <tr>
+                      <th style={{ width: "130px" }}>Lama Cuti</th>
+                      <td>{item.lama_cuti}</td>
+                    </tr>
+                    <tr>
+                      <th>Tgl. Mulai Cuti</th>
+                      <td>{format(new Date(item.tgl_mulai), "dd/MM/yyyy")}</td>
+                    </tr>
+                    <tr>
+                      <th>Tgl. Selesai Cuti</th>
+                      <td>
+                        {format(new Date(item.tgl_selesai), "dd/MM/yyyy")}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Keterangan</th>
+                      <td>{item.keterangan}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </CCardBody>
+            </CCollapse>
+          </CCard>
+        ))}
       </div>
     </>
   );

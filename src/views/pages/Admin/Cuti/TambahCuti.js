@@ -4,7 +4,7 @@ import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import { LoadAnimationBlue, LoadAnimationWhite } from "src/assets";
+import { LoadAnimationWhite } from "src/assets";
 
 import {
   CFormGroup,
@@ -28,7 +28,6 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [tglSelesaiCuti, setTglSelesaiCuti] = useState("");
-  const [lamaCuti, setLamaCuti] = useState("");
   const [inputVal, setInputVal] = useState({
     satuan: "hari",
     tgl_selesai: "",

@@ -9,7 +9,6 @@ import {
   CModalHeader,
   CModalTitle,
   CModalBody,
-  CModalFooter,
   CRow,
   CCol,
 } from "@coreui/react";
@@ -22,6 +21,7 @@ import DaftarPegawaiCuti from "./DaftarPegawaiCuti";
 import { GlobalContext } from "src/context/Provider";
 import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
 import { LoadAnimationBlue } from "src/assets";
+import { getPegawaiCuti } from "src/context/actions/Cuti/getPegawaiCuti";
 
 const TextField = styled.input`
   height: 37px;
@@ -94,6 +94,7 @@ const Cuti = () => {
   useEffect(() => {
     // Get All Pegawai
     getPNS(pnsDispatch);
+    //Get Pegawai Cuti
   }, [pnsDispatch]);
 
   const columns = [
@@ -169,7 +170,7 @@ const Cuti = () => {
             onClick={() => setModalCuti(!modalCuti)}
           >
             <span className="my-text-button">Daftar Pegawai Cuti</span>{" "}
-            <CIcon content={cilGroup} /> (3)
+            <CIcon content={cilGroup} />
           </CButton>
         </CPopover>
 
@@ -249,18 +250,6 @@ const Cuti = () => {
         <CModalBody>
           <DaftarPegawaiCuti />
         </CModalBody>
-        <CModalFooter>
-          <CButton type="submit" color="primary">
-            Simpan
-          </CButton>{" "}
-          <CButton
-            type="button"
-            color="secondary"
-            onClick={() => setModalCuti(!modalCuti)}
-          >
-            Batal
-          </CButton>
-        </CModalFooter>
       </CModal>
     </>
   );

@@ -11,7 +11,12 @@ export const editCuti = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pegawai/${id_pegawai}/cuti/${id_cuti}`, values)
+    .put(`admin/pegawai/${id_pegawai}/cuti/${id_cuti}`, {
+      tgl_mulai: values.tgl_mulai,
+      tgl_selesai: values.tgl_selesai,
+      lama_cuti: values.lama_cuti + " " + values.satuan,
+      keterangan: values.keterangan,
+    })
     .then((res) => {
       console.log(res.data);
       setLoading(false);

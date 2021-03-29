@@ -95,7 +95,7 @@ const TambahAbsen = ({ data, modal }) => {
     const saveData = {
       tgl: valTanggal,
       hari: valHari,
-      absen: absen === "empty" ? "" : absen,
+      absen: absen === "empty" ? "" : parseInt(absen),
       keterangan: valKeterangan,
     };
 
@@ -157,7 +157,12 @@ const TambahAbsen = ({ data, modal }) => {
             </CCol>
             <CCol>
               {absen ? (
-                <CSelect custom name="absen" id="absen">
+                <CSelect
+                  custom
+                  name="absen"
+                  id="absen"
+                  onChange={(e) => setAbsen(e.target.value)}
+                >
                   <option
                     value="empty"
                     selected={absen === "empty" ? true : false}
@@ -182,7 +187,9 @@ const TambahAbsen = ({ data, modal }) => {
                 </CSelect>
               ) : (
                 <CSelect custom name="absen" id="absen">
-                  <option value="" selected>-- Pilih absen --</option>
+                  <option value="" selected>
+                    -- Pilih absen --
+                  </option>
                   <option value="0">Tanpa Keterangan</option>
                   <option value="1">Hadir</option>
                   <option value="2">Izin</option>
@@ -203,13 +210,15 @@ const TambahAbsen = ({ data, modal }) => {
                   name="keterangan"
                   id="keterangan"
                   value={keterangan || ""}
+                  onChange={(e) => setKeterangan(e.target.value)}
                 />
               ) : (
                 <CInput
                   type="text"
                   name="keterangan"
                   id="keterangan"
-                  value=""
+                  value={keterangan}
+                  onChange={(e) => setKeterangan(e.target.value)}
                 />
               )}
             </CCol>
