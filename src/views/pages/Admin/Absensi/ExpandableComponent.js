@@ -13,8 +13,9 @@ import {
   CFormGroup,
   CModalTitle,
 } from "@coreui/react";
-import { format } from "date-fns";
-import React, { useState } from "react";
+import { format, setDay } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { getAbsensiByPegawai } from "src/context/actions/Absensi/getAbsensiByPegawai";
 import TambahAbsen from "./TambahAbsen";
 
 // Expandable Component
@@ -30,7 +31,35 @@ const ExpandableComponent = ({ data }) => {
   const current_month = new Date().getMonth();
   const [filterYear, setFilterYear] = useState(current_year);
   const [filterMonth, setFilterMonth] = useState(current_month);
+  const [absen, setAbsen] = useState([]);
+  const [dayAbsen, setDayAbsen] = useState([]);
+  const [loading, setLoading] = useState(false);
+  let increment = 0;
+  // State untuk mentrigger komponen absen agar terupdate setelah proses tambah/update absen berhasil
+  const [triggerUpdateData, setTriggerUpdateData] = useState(true);
   // const [saveDay, setSaveDay] = useState({});
+
+  useEffect(() => {
+    // Trigger Update Data
+    if (triggerUpdateData === true || triggerUpdateData === false) {
+      // Get absensi by id pegawai
+      getAbsensiByPegawai(data.id_pegawai, setLoading, setAbsen, {
+        tahun: filterYear,
+        bulan: filterMonth + 1,
+      });
+    }
+  }, [data, triggerUpdateData, filterYear, filterMonth]);
+
+  useEffect(() => {
+    if (absen.length > 0) {
+      absen.forEach((item) => {
+        setDayAbsen((prevState) => [
+          ...prevState,
+          format(new Date(item.tgl_absen), "d"),
+        ]);
+      });
+    }
+  }, [absen]);
 
   // Get Years
   const years = [];
@@ -66,45 +95,20 @@ const ExpandableComponent = ({ data }) => {
 
   // Tangani perubahan nilai pada select
   const handleChangeYear = (e) => {
-    // setSaveDay({});
     setDays([]);
+    setDayAbsen([]);
     setFilterYear(parseInt(e.target.value));
   };
 
   const handleChangeMonth = (e) => {
-    // setSaveDay({});
     setDays([]);
+    setDayAbsen([]);
     setFilterMonth(parseInt(e.target.value));
   };
 
   const getDaysOnTampil = () => {
     getDays(filterMonth, filterYear);
   };
-
-  // const handleOnChangeAbsensi = (e) => {
-  //   setSaveDay({
-  //     ...saveDay,
-  //     year: filterYear,
-  //     month: filterMonth + 1,
-  //     tgl_absen: {
-  //       ...saveDay.tgl_absen,
-  //       [e.target.name]: e.target.value,
-  //     },
-  //   });
-  // };
-
-  //   const handleOnSubmit = (e) => {
-  //     e.preventDefault();
-  //     let arr_tgl_absen = [];
-
-  //     for (const tgl in saveDay.tgl_absen) {
-  //       arr_tgl_absen.push(
-  //         `${tgl}/${saveDay.month}/${saveDay.year} => ${saveDay.tgl_absen[tgl]}`
-  //       );
-  //     }
-
-  //     console.log(arr_tgl_absen);
-  //   };
 
   return (
     <>
@@ -168,23 +172,42 @@ const ExpandableComponent = ({ data }) => {
                 );
 
                 // Get tgl absen ketika modal muncul
-                let data_tgl = data.absen[index]
-                  ? format(new Date(data.absen[index].tgl), "yyyy-MM")
+                let data_tgl = absen[index]
+                  ? format(new Date(absen[index].tgl_absen), "yyyy-MM")
                   : null;
 
+                let data_keterangan = "";
+                let data_absen_index = "";
+                let data_absen = "";
+
                 // Get keterangan
-                let data_keterangan =
-                  filter_tgl === data_tgl ? data.absen[index].keterangan : "";
+                // let data_keterangan =
+                //   filter_tgl === data_tgl ? absen[index].keterangan : "";
 
-                let data_absen_index =
-                  filter_tgl === data_tgl ? data.absen[index].absen : "empty";
+                // let data_absen_index =
+                //   filter_tgl === data_tgl ? absen[index].absen : "empty";
 
-                let data_absen =
-                  filter_tgl === data_tgl ? data.absen[index].absen : "";
+                // let data_absen =
+                //   filter_tgl === data_tgl ? absen[index].absen : "";
 
+                if (dayAbsen.includes(item.toString())) {
+                  data_keterangan = absen[increment].keterangan;
+
+                  data_absen_index = absen[increment].absen;
+
+                  data_absen = absen[increment].absen;
+
+                  increment++;
+                } else {
+                  data_keterangan = "";
+
+                  data_absen_index = "empty";
+
+                  data_absen = "";
+                }
                 // Ubah data absen dari integer menjadi String text
                 switch (data_absen) {
-                  case 0:
+                  case 5:
                     data_absen = "TK";
                     break;
                   case 1:
@@ -230,6 +253,9 @@ const ExpandableComponent = ({ data }) => {
                               ...modal,
                               modal: !modal.modal,
                               tgl: item,
+                              id_absensi: absen[index]
+                                ? absen[index].id_absensi
+                                : null,
                               absen: data_absen_index,
                               keterangan: data_keterangan,
                             })
@@ -258,9 +284,13 @@ const ExpandableComponent = ({ data }) => {
           data={{
             filterMonth: filterMonth,
             filterYear: filterYear,
+            id_pegawai: data.id_pegawai,
             tgl: modal.tgl,
+            id_absensi: modal.id_absensi,
             absen: modal.absen,
             keterangan: modal.keterangan,
+            setDayAbsen: setDayAbsen,
+            setTriggerUpdateData: setTriggerUpdateData,
           }}
           modal={{
             setModal: setModal,

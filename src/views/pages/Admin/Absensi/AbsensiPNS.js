@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
   CCardBody,
   CButton,
   CPopover,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
@@ -12,6 +14,9 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import ExpandableComponent from "./ExpandableComponent";
+import { GlobalContext } from "src/context/Provider";
+import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
+import { LoadAnimationBlue } from "src/assets";
 // const TambahAbsen = React.lazy(() => import("./TambahAbsen"));
 
 const TextField = styled.input`
@@ -73,117 +78,124 @@ const AbsensiPNS = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { pegawaiState, pegawaiDispatch } = useContext(GlobalContext);
+  const { data, loading } = pegawaiState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      jabatan: "Kepala Dinas",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19651127 199301 1 001",
-      nama: "Ikwal Ramadhani",
-      jabatan: "IT Support",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-    {
-      no: 4,
-      id: 4,
-      nip: "19651127 199301 1 001",
-      nama: "Iqbal Wahyudi",
-      jabatan: "Programmer",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    // Get All Pegawai
+    getAllPegawai(pegawaiDispatch);
+  }, [pegawaiDispatch]);
+
+  // const data = [
+  //   {
+  //     no: 1,
+  //     id: 1,
+  //     nip: "19651127 199301 1 001",
+  //     nama: "Ir. H. Dadang Airlangga N, MMT",
+  //     jabatan: "Kepala Dinas",
+  //     absen: [
+  //       {
+  //         tgl: "2021-02-01",
+  //         hari: "senin",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-02",
+  //         hari: "selasa",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-03",
+  //         hari: "rabu",
+  //         absen: 2,
+  //         keterangan: "Ada acara pernikahan keluarga",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     no: 2,
+  //     id: 2,
+  //     nip: "19651127 199301 1 001",
+  //     nama: "Nova Dwi Sapta",
+  //     jabatan: "Programmer",
+  //     absen: [
+  //       {
+  //         tgl: "2021-02-01",
+  //         hari: "senin",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-02",
+  //         hari: "selasa",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-03",
+  //         hari: "rabu",
+  //         absen: 2,
+  //         keterangan: "Ada acara pernikahan keluarga",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     no: 3,
+  //     id: 3,
+  //     nip: "19651127 199301 1 001",
+  //     nama: "Ikwal Ramadhani",
+  //     jabatan: "IT Support",
+  //     absen: [
+  //       {
+  //         tgl: "2021-02-01",
+  //         hari: "senin",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-02",
+  //         hari: "selasa",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-03",
+  //         hari: "rabu",
+  //         absen: 2,
+  //         keterangan: "Ada acara pernikahan keluarga",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     no: 4,
+  //     id: 4,
+  //     nip: "19651127 199301 1 001",
+  //     nama: "Iqbal Wahyudi",
+  //     jabatan: "Programmer",
+  //     absen: [
+  //       {
+  //         tgl: "2021-02-01",
+  //         hari: "senin",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-02",
+  //         hari: "selasa",
+  //         absen: 1,
+  //         keterangan: "",
+  //       },
+  //       {
+  //         tgl: "2021-02-03",
+  //         hari: "rabu",
+  //         absen: 2,
+  //         keterangan: "Ada acara pernikahan keluarga",
+  //       },
+  //     ],
+  //   },
+  // ];
 
   const filteredData = data.filter((item) =>
     // (
@@ -235,7 +247,7 @@ const AbsensiPNS = () => {
           <CButton
             color="success"
             className="btn btn-sm"
-            onClick={() => goToRiwayat(row.id)}
+            onClick={() => goToRiwayat(row.id_pegawai)}
           >
             Absensi
           </CButton>
@@ -300,27 +312,51 @@ const AbsensiPNS = () => {
           <h3>Absensi Pegawai Negeri Sipil (PNS)</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
-          </CButton> */}
-
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows
-            highlightOnHover
-            expandOnRowClicked
-            expandableRowsComponent={<ExpandableComponent />}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows
+              highlightOnHover
+              expandOnRowClicked
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          ) : loading ? (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          )}
         </CCardBody>
       </CCard>
     </>

@@ -11,13 +11,14 @@ import {
   CButton,
 } from "@coreui/react";
 import { format } from "date-fns";
+import { insertOrUpdateAbsensi } from "src/context/actions/Absensi/insertOrUpdateAbsensi";
 
 const TambahAbsen = ({ data, modal }) => {
   const [tglAbsen, setTglAbsen] = useState("");
   const [absen, setAbsen] = useState("");
   const [keterangan, setKeterangan] = useState("");
   const [namaHari, setNamaHari] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const getNamaHari = useCallback(() => {
     let hari = format(
       new Date(data.filterYear, data.filterMonth, data.tgl),
@@ -93,16 +94,23 @@ const TambahAbsen = ({ data, modal }) => {
       .getAttribute("value");
 
     const saveData = {
-      tgl: valTanggal,
+      id_absensi: data.id_absensi,
+      tgl_absen: valTanggal,
       hari: valHari,
       absen: absen === "empty" ? "" : parseInt(absen),
       keterangan: valKeterangan,
     };
 
     console.log(saveData);
+    // Insert or Update Absensi
+    // insertOrUpdateAbsensi(
+    //   data.id_pegawai,
+    //   setLoading,
+    //   saveData,
+    //   data.setTriggerUpdateData,
+    //   modal.setModal
+    // );
   };
-
-  // console.log(absen);
 
   return (
     <>
@@ -138,7 +146,7 @@ const TambahAbsen = ({ data, modal }) => {
                 />
               ) : (
                 // Jika Tidak Ada nama hari
-                <CSelect custom name="hari" id="hari">
+                <CSelect custom name="hari" id="hari" required>
                   <option value="">-- Pilih Hari --</option>
                   <option value="senin">Senin</option>
                   <option value="selasa">Selasa</option>
@@ -162,14 +170,12 @@ const TambahAbsen = ({ data, modal }) => {
                   name="absen"
                   id="absen"
                   onChange={(e) => setAbsen(e.target.value)}
+                  required={true}
                 >
-                  <option
-                    value="empty"
-                    selected={absen === "empty" ? true : false}
-                  >
-                    -- Pilih absen --
+                  <option value="" selected={absen === "empty" ? true : false}>
+                    -- Pilih Absen --
                   </option>
-                  <option value="0" selected={absen === 0 ? true : false}>
+                  <option value="5" selected={absen === 5 ? true : false}>
                     Tanpa Keterangan
                   </option>
                   <option value="1" selected={absen === 1 ? true : false}>
@@ -186,11 +192,9 @@ const TambahAbsen = ({ data, modal }) => {
                   </option>
                 </CSelect>
               ) : (
-                <CSelect custom name="absen" id="absen">
-                  <option value="" selected>
-                    -- Pilih absen --
-                  </option>
-                  <option value="0">Tanpa Keterangan</option>
+                <CSelect custom name="absen" id="absen" required>
+                  <option value="">-- Pilih Absen --</option>
+                  <option value="5">Tanpa Keterangan</option>
                   <option value="1">Hadir</option>
                   <option value="2">Izin</option>
                   <option value="3">Sakit</option>
@@ -211,6 +215,7 @@ const TambahAbsen = ({ data, modal }) => {
                   id="keterangan"
                   value={keterangan || ""}
                   onChange={(e) => setKeterangan(e.target.value)}
+                  required
                 />
               ) : (
                 <CInput
@@ -219,14 +224,19 @@ const TambahAbsen = ({ data, modal }) => {
                   id="keterangan"
                   value={keterangan}
                   onChange={(e) => setKeterangan(e.target.value)}
+                  required
                 />
               )}
             </CCol>
           </CFormGroup>
         </CModalBody>
         <CModalFooter>
-          <CButton type="submit" color="primary">
-            Simpan
+          <CButton
+            type="submit"
+            color="primary"
+            disabled={loading ? true : false}
+          >
+            {loading ? "Sedang menyimpan..." : "Simpan"}
           </CButton>{" "}
           <CButton type="button" color="secondary" onClick={handleCloseModal}>
             Batal
