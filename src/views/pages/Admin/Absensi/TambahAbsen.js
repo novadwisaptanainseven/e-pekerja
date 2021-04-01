@@ -12,18 +12,24 @@ import {
 } from "@coreui/react";
 import { format } from "date-fns";
 import { insertOrUpdateAbsensi } from "src/context/actions/Absensi/insertOrUpdateAbsensi";
+import { insertAbsensi } from "src/context/actions/Absensi/insertAbsensi";
 
-const TambahAbsen = ({ data, modal }) => {
+const TambahAbsen = ({ data, modal, idPegawai, setRiwayatAbsen }) => {
   const [tglAbsen, setTglAbsen] = useState("");
   const [absen, setAbsen] = useState("");
   const [keterangan, setKeterangan] = useState("");
   const [namaHari, setNamaHari] = useState("");
   const [loading, setLoading] = useState(false);
   const getNamaHari = useCallback(() => {
-    let hari = format(
-      new Date(data.filterYear, data.filterMonth, data.tgl),
-      "EEEEEE"
-    );
+    let hari = "";
+    if (data) {
+      hari = format(
+        new Date(data.filterYear, data.filterMonth, data.tgl),
+        "EEEEEE"
+      );
+    } else {
+      hari = format(new Date(), "EEEEEE");
+    }
 
     switch (hari) {
       case "Su":
@@ -59,6 +65,12 @@ const TambahAbsen = ({ data, modal }) => {
     let tgl_absen = null;
 
     // Cek apakah data dan properti tgl ada
+    if (!data) {
+      tgl_absen = format(new Date(), "yyyy-MM-dd");
+      setTglAbsen(tgl_absen);
+      // Get Nama Hari
+      setNamaHari(getNamaHari());
+    }
     if (data && data.tgl) {
       tgl_absen = format(
         new Date(data.filterYear, data.filterMonth, data.tgl),
@@ -85,31 +97,45 @@ const TambahAbsen = ({ data, modal }) => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
 
-    let valTanggal = document.getElementById("tgl_absen").getAttribute("value");
-    let valHari = document.getElementById("hari").getAttribute("value");
+    // let valTanggal = document.getElementById("tgl_absen").getAttribute("value");
+    // let valHari = document.getElementById("hari").getAttribute("value");
     // let valAbsen = document.getElementById("absen").getAttribute("value");
 
-    let valKeterangan = document
-      .getElementById("keterangan")
-      .getAttribute("value");
+    // let valKeterangan = document
+    //   .getElementById("keterangan")
+    //   .getAttribute("value");
+
+    let id_pegawai = data ? data.id_pegawai : idPegawai;
 
     const saveData = {
-      id_absensi: data.id_absensi,
-      tgl_absen: valTanggal,
-      hari: valHari,
+      // id_pegawai: idPegawai ? idPegawai : data.id_pegawai,
+      id_absensi: data ? data.id_absensi : "",
+      tgl_absen: tglAbsen,
+      hari: namaHari,
       absen: absen === "empty" ? "" : parseInt(absen),
-      keterangan: valKeterangan,
+      keterangan: keterangan,
     };
 
     console.log(saveData);
     // Insert or Update Absensi
-    // insertOrUpdateAbsensi(
-    //   data.id_pegawai,
-    //   setLoading,
-    //   saveData,
-    //   data.setTriggerUpdateData,
-    //   modal.setModal
-    // );
+
+    if (data) {
+      insertOrUpdateAbsensi(
+        id_pegawai,
+        setLoading,
+        saveData,
+        data.setTriggerUpdateData,
+        modal.setModal
+      );
+    } else {
+      insertAbsensi(
+        id_pegawai,
+        setLoading,
+        saveData,
+        modal.setModal,
+        setRiwayatAbsen
+      );
+    }
   };
 
   return (
@@ -126,6 +152,7 @@ const TambahAbsen = ({ data, modal }) => {
                 name="tgl_absen"
                 id="tgl_absen"
                 value={tglAbsen || ""}
+                onChange={(e) => setTglAbsen(e.target.value)}
                 placeholder="Masukkan tanggal absen"
                 readOnly={data && data.tgl ? true : false}
               />
@@ -136,17 +163,25 @@ const TambahAbsen = ({ data, modal }) => {
               <CLabel>Hari</CLabel>
             </CCol>
             <CCol>
-              {namaHari ? (
+              {data ? (
                 // Jika ada nama hari
                 <CInput
                   name="hari"
                   id="hari"
                   value={namaHari || ""}
+                  onChange={(e) => setNamaHari(e.target.value)}
                   readOnly={data && data.tgl ? true : false}
                 />
               ) : (
                 // Jika Tidak Ada nama hari
-                <CSelect custom name="hari" id="hari" required>
+                <CSelect
+                  custom
+                  name="hari"
+                  id="hari"
+                  required
+                  value={namaHari || ""}
+                  onChange={(e) => setNamaHari(e.target.value)}
+                >
                   <option value="">-- Pilih Hari --</option>
                   <option value="senin">Senin</option>
                   <option value="selasa">Selasa</option>
@@ -164,7 +199,7 @@ const TambahAbsen = ({ data, modal }) => {
               <CLabel>Absen</CLabel>
             </CCol>
             <CCol>
-              {absen ? (
+              {data ? (
                 <CSelect
                   custom
                   name="absen"
@@ -192,7 +227,14 @@ const TambahAbsen = ({ data, modal }) => {
                   </option>
                 </CSelect>
               ) : (
-                <CSelect custom name="absen" id="absen" required>
+                <CSelect
+                  custom
+                  name="absen"
+                  id="absen"
+                  required
+                  value={absen}
+                  onChange={(e) => setAbsen(e.target.value)}
+                >
                   <option value="">-- Pilih Absen --</option>
                   <option value="5">Tanpa Keterangan</option>
                   <option value="1">Hadir</option>
@@ -222,7 +264,7 @@ const TambahAbsen = ({ data, modal }) => {
                   type="text"
                   name="keterangan"
                   id="keterangan"
-                  value={keterangan}
+                  value={keterangan || ""}
                   onChange={(e) => setKeterangan(e.target.value)}
                   required
                 />

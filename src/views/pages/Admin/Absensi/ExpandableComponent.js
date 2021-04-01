@@ -176,6 +176,7 @@ const ExpandableComponent = ({ data }) => {
                   ? format(new Date(absen[index].tgl_absen), "yyyy-MM")
                   : null;
 
+                let id_absensi = "";
                 let data_keterangan = "";
                 let data_absen_index = "";
                 let data_absen = "";
@@ -191,6 +192,7 @@ const ExpandableComponent = ({ data }) => {
                 //   filter_tgl === data_tgl ? absen[index].absen : "";
 
                 if (dayAbsen.includes(item.toString())) {
+                  id_absensi = absen[increment].id_absensi;
                   data_keterangan = absen[increment].keterangan;
 
                   data_absen_index = absen[increment].absen;
@@ -199,6 +201,7 @@ const ExpandableComponent = ({ data }) => {
 
                   increment++;
                 } else {
+                  id_absensi = "";
                   data_keterangan = "";
 
                   data_absen_index = "empty";
@@ -253,9 +256,7 @@ const ExpandableComponent = ({ data }) => {
                               ...modal,
                               modal: !modal.modal,
                               tgl: item,
-                              id_absensi: absen[index]
-                                ? absen[index].id_absensi
-                                : null,
+                              id_absensi: id_absensi,
                               absen: data_absen_index,
                               keterangan: data_keterangan,
                             })

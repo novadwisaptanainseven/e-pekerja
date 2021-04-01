@@ -17,6 +17,7 @@ import ExpandableComponent from "./ExpandableComponent";
 import { GlobalContext } from "src/context/Provider";
 import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
 import { LoadAnimationBlue } from "src/assets";
+import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFile/printAbsensi";
 // const TambahAbsen = React.lazy(() => import("./TambahAbsen"));
 
 const TextField = styled.input`
@@ -251,17 +252,6 @@ const AbsensiPNS = () => {
           >
             Absensi
           </CButton>
-          {/* <CButton
-              color="danger"
-              className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
-            >
-              <CIcon content={cilTrash} color="white" />
-            </CButton> */}
         </div>
       ),
     },
@@ -292,7 +282,13 @@ const AbsensiPNS = () => {
         />
 
         <CPopover content="Cetak Rekapan Absensi Pegawai">
-          <CButton utton type="button" color="info" className="ml-2">
+          <CButton
+            utton
+            type="button"
+            color="info"
+            className="ml-2"
+            onClick={() => printRekapAbsensiByStatusPegawai("pns")}
+          >
             <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
             <CIcon content={cilPrint} />
           </CButton>

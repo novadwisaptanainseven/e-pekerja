@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -28,12 +28,20 @@ import { DateRange } from "react-date-range";
 import { format } from "date-fns";
 import TambahAbsen from "./TambahAbsen";
 import EditAbsen from "./EditAbsensi";
+import { getRiwayatAbsensiPegawai } from "src/context/actions/Absensi/getRiwayatAbsensiPegawai";
+import { LoadAnimationBlue } from "src/assets";
+import { getRekapAbsensiPerTahun } from "src/context/actions/Absensi/getRekapAbsensiPerTahun";
 
-const RiwayatAbsensi = () => {
+const RiwayatAbsensi = ({ match }) => {
+  const params = match.params;
   const [modalTambah, setModalTambah] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [collapse2, setCollapse2] = useState(false);
   const history = useHistory();
+  const [data, setData] = useState([]);
+  const [rekap, setRekap] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -42,8 +50,8 @@ const RiwayatAbsensi = () => {
     },
   ]);
   const [formattedDate, setFormattedDate] = useState({
-    startDate: null,
-    endDate: null,
+    startDate: "",
+    endDate: "",
   });
 
   const [modalEdit, setModalEdit] = useState({
@@ -55,43 +63,12 @@ const RiwayatAbsensi = () => {
     history.goBack();
   };
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      tgl_absen: "15-02-2021",
-      hari: "Senin",
-      keterangan: 1,
-    },
-    {
-      no: 2,
-      id: 2,
-      tgl_absen: "16-02-2021",
-      hari: "Selasa",
-      keterangan: 1,
-    },
-    {
-      no: 3,
-      id: 3,
-      tgl_absen: "17-02-2021",
-      hari: "Rabu",
-      keterangan: 0,
-    },
-    {
-      no: 4,
-      id: 4,
-      tgl_absen: "18-02-2021",
-      hari: "Kamis",
-      keterangan: 2,
-    },
-    {
-      no: 5,
-      id: 5,
-      tgl_absen: "19-02-2021",
-      hari: "Jumat",
-      keterangan: 3,
-    },
-  ];
+  useEffect(() => {
+    // Get riwayat absensi
+    getRiwayatAbsensiPegawai(params.id, setLoading, setData, formattedDate);
+    // Get Rekap Absensi
+    getRekapAbsensiPerTahun(params.id, setLoading2, setRekap);
+  }, [params, formattedDate]);
 
   const columns = [
     {
@@ -107,6 +84,9 @@ const RiwayatAbsensi = () => {
       sortable: true,
       // maxWidth: "150px",
       wrap: true,
+      cell: (item) => (
+        <div>{format(new Date(item.tgl_absen), "dd/MM/yyyy")}</div>
+      ),
     },
     {
       name: "Hari",
@@ -116,14 +96,14 @@ const RiwayatAbsensi = () => {
       // maxWidth: "150px",
     },
     {
-      name: "Keterangan",
-      selector: "keterangan",
+      name: "Absen",
+      selector: "absen",
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
       cell: (row) => {
-        switch (row.keterangan) {
-          case 0:
+        switch (row.absen) {
+          case 5:
             return (
               <CBadge color="secondary" shape="pill" className="px-2 py-2">
                 Tanpa Keterangan
@@ -135,25 +115,20 @@ const RiwayatAbsensi = () => {
                 Hadir
               </CBadge>
             );
+
           case 2:
-            return (
-              <CBadge color="danger" shape="pill" className="px-2 py-2">
-                Tidak Hadir
-              </CBadge>
-            );
-          case 3:
             return (
               <CBadge color="dark" shape="pill" className="px-2 py-2">
                 Izin
               </CBadge>
             );
-          case 4:
+          case 3:
             return (
               <CBadge color="warning" shape="pill" className="px-2 py-2">
                 Sakit
               </CBadge>
             );
-          case 5:
+          case 4:
             return (
               <CBadge color="info" shape="pill" className="px-2 py-2">
                 Cuti
@@ -167,6 +142,13 @@ const RiwayatAbsensi = () => {
             );
         }
       },
+    },
+    {
+      name: "Keterangan",
+      selector: "keterangan",
+      sortable: true,
+      wrap: true,
+      // maxWidth: "150px",
     },
     {
       maxWidth: "180px",
@@ -236,7 +218,7 @@ const RiwayatAbsensi = () => {
   };
 
   const InformasiComponent = () => {
-    const arr = [2020, 2021, 2022];
+    // const arr = [2020, 2021, 2022];
 
     return (
       <>
@@ -252,14 +234,14 @@ const RiwayatAbsensi = () => {
             </tr>
           </thead>
           <tbody>
-            {arr.map((item, index) => (
-              <tr>
-                <td>{item}</td>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
+            {rekap.map((item, index) => (
+              <tr key={index}>
+                <td>{item.tahun}</td>
+                <td>{item.hadir}</td>
+                <td>{item.izin}</td>
+                <td>{item.sakit}</td>
+                <td>{item.cuti}</td>
+                <td>{item.tanpa_keterangan}</td>
               </tr>
             ))}
           </tbody>
@@ -273,15 +255,15 @@ const RiwayatAbsensi = () => {
     let timestampStartDate = Date.parse(item.selection.startDate);
     let timestampEndDate = Date.parse(item.selection.endDate);
 
-    let startDate = format(timestampStartDate, "dd-MM-Y");
-    let endDate = format(timestampEndDate, "dd-MM-Y");
+    let startDate = format(timestampStartDate, "y-MM-dd");
+    let endDate = format(timestampEndDate, "y-MM-dd");
 
     setFormattedDate({
       ...formattedDate,
       startDate: startDate,
       endDate: endDate,
     });
-    console.log(formattedDate);
+    // console.log(formattedDate);
   };
 
   const Kalender = () => {
@@ -352,27 +334,56 @@ const RiwayatAbsensi = () => {
                   <CButton
                     type="button"
                     color="secondary"
+                    className="mr-2"
                     onClick={() => setCollapse2(!collapse2)}
                   >
                     {!collapse2 ? "Klik untuk melihat" : "Tutup"}
+                  </CButton>
+                  <CButton
+                    type="button"
+                    color="danger"
+                    onClick={() =>
+                      setFormattedDate({
+                        ...formattedDate,
+                        startDate: "",
+                        endDate: "",
+                      })
+                    }
+                  >
+                    Reset
                   </CButton>
                 </CCardFooter>
               </CCard>
             </CCol>
           </CRow>
 
-          <DataTable
-            columns={columns}
-            data={data}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={<SubHeaderComponentMemo />}
-            highlightOnHover
-          />
+          {!loading ? (
+            <DataTable
+              columns={columns}
+              data={data}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={<SubHeaderComponentMemo />}
+              highlightOnHover
+            />
+          ) : (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          )}
         </CCardBody>
       </CCard>
 
@@ -391,6 +402,8 @@ const RiwayatAbsensi = () => {
             setModal: setModalTambah,
             modal: modalTambah,
           }}
+          idPegawai={params.id}
+          setRiwayatAbsen={setData}
         />
       </CModal>
 
