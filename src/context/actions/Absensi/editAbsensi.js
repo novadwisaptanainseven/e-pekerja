@@ -2,8 +2,9 @@ import axiosInstance from "src/helpers/axios";
 import { getRekapAbsensiPerTahun } from "./getRekapAbsensiPerTahun";
 import { getRiwayatAbsensiPegawai } from "./getRiwayatAbsensiPegawai";
 
-export const insertAbsensi = (
+export const editAbsensi = (
   idPegawai,
+  idAbsensi,
   setLoading,
   values,
   setModal,
@@ -16,11 +17,7 @@ export const insertAbsensi = (
   setLoading(true);
 
   axiosInstance
-    .post(`admin/pegawai/${idPegawai}/absensi`, values, {
-      header: {
-        "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
-      },
-    })
+    .put(`admin/pegawai/${idPegawai}/absensi/${idAbsensi}`, values)
     .then((res) => {
       setLoading(false);
       setModal(false);

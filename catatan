@@ -15,7 +15,7 @@ Halaman Admin
 
 14. Perbaiki alur pensiun. Jika pegawai telah pensiun atau pindah maka ubah status kerja pegawai di tabel pegawai. Lalu tampilkan data pegawai yang status kerjanya aktif
 15. Hilangan tombol delete di histori KGB
-16. Tangani tambah, edit, dan hapus absen di menu absen
+16. Hari akan secara otomatis menyesuaikan input tanggal di menu tambah dan edit absen
 
 Halaman User
 

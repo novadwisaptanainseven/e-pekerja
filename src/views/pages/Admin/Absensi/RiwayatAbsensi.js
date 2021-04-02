@@ -32,6 +32,12 @@ import { getRiwayatAbsensiPegawai } from "src/context/actions/Absensi/getRiwayat
 import { LoadAnimationBlue } from "src/assets";
 import { getRekapAbsensiPerTahun } from "src/context/actions/Absensi/getRekapAbsensiPerTahun";
 
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { deleteAbsensi } from "src/context/actions/Absensi/deleteAbsensi";
+
+const MySwal = withReactContent(swal2);
+
 const RiwayatAbsensi = ({ match }) => {
   const params = match.params;
   const [modalTambah, setModalTambah] = useState(false);
@@ -162,19 +168,14 @@ const RiwayatAbsensi = ({ match }) => {
               setModalEdit({
                 ...modalEdit,
                 modal: !modalEdit.modal,
-                id: row.id,
+                id: row.id_absensi,
               });
             }}
             className="text-white mr-1"
           >
             <CIcon content={cilPen} />
           </CButton>
-          <CButton
-            color="danger"
-            onClick={() =>
-              window.confirm(`Anda yakin ingin menghapus data ini ?`)
-            }
-          >
+          <CButton color="danger" onClick={() => handleDelete(row.id_absensi)}>
             <CIcon content={cilTrash} />
           </CButton>
         </div>
@@ -188,6 +189,37 @@ const RiwayatAbsensi = ({ match }) => {
         fontSize: "1.15em",
       },
     },
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id_absensi) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        deleteAbsensi(
+          params.id,
+          id_absensi,
+          setLoading,
+          setLoading2,
+          setData,
+          setRekap,
+          formattedDate
+        );
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
   };
 
   const SubHeaderComponentMemo = () => {
@@ -404,6 +436,10 @@ const RiwayatAbsensi = ({ match }) => {
           }}
           idPegawai={params.id}
           setRiwayatAbsen={setData}
+          setRekapAbsensi={setRekap}
+          setLoadingRiwayatAbsen={setLoading}
+          setLoadingRekapAbsensi={setLoading2}
+          formattedDateRiwayatAbsen={formattedDate}
         />
       </CModal>
 
@@ -422,23 +458,16 @@ const RiwayatAbsensi = ({ match }) => {
         <CModalHeader closeButton>
           <CModalTitle>Edit Absensi Pegawai</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditAbsen id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+        <EditAbsen
+          modal={modalEdit}
+          setModal={setModalEdit}
+          idPegawai={params.id}
+          setRiwayatAbsen={setData}
+          setRekapAbsensi={setRekap}
+          setLoadingRiwayatAbsen={setLoading}
+          setLoadingRekapAbsensi={setLoading2}
+          formattedDateRiwayatAbsen={formattedDate}
+         />
       </CModal>
     </>
   );

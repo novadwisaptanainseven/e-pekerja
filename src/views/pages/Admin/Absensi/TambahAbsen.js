@@ -14,7 +14,16 @@ import { format } from "date-fns";
 import { insertOrUpdateAbsensi } from "src/context/actions/Absensi/insertOrUpdateAbsensi";
 import { insertAbsensi } from "src/context/actions/Absensi/insertAbsensi";
 
-const TambahAbsen = ({ data, modal, idPegawai, setRiwayatAbsen }) => {
+const TambahAbsen = ({
+  data,
+  modal,
+  idPegawai,
+  setRiwayatAbsen,
+  setRekapAbsensi,
+  setLoadingRiwayatAbsen,
+  setLoadingRekapAbsensi,
+  formattedDateRiwayatAbsen,
+}) => {
   const [tglAbsen, setTglAbsen] = useState("");
   const [absen, setAbsen] = useState("");
   const [keterangan, setKeterangan] = useState("");
@@ -133,7 +142,11 @@ const TambahAbsen = ({ data, modal, idPegawai, setRiwayatAbsen }) => {
         setLoading,
         saveData,
         modal.setModal,
-        setRiwayatAbsen
+        setRiwayatAbsen,
+        setRekapAbsensi,
+        setLoadingRiwayatAbsen,
+        setLoadingRekapAbsensi,
+        formattedDateRiwayatAbsen
       );
     }
   };
