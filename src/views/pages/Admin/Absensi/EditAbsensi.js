@@ -31,10 +31,14 @@ const EditAbsen = ({
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState("");
 
-  const getNamaHari = useCallback(() => {
+  const getNamaHari = useCallback(($tgl = null) => {
     let hari = "";
 
-    hari = format(new Date(), "EEEEEE");
+    if ($tgl) {
+      hari = format(new Date($tgl), "EEEEEE");
+    } else {
+      hari = format(new Date(), "EEEEEE");
+    }
 
     switch (hari) {
       case "Su":
@@ -88,6 +92,10 @@ const EditAbsen = ({
       setAbsen(data.absen);
     }
   }, [data]);
+
+  useEffect(() => {
+    setNamaHari(getNamaHari(tglAbsen));
+  }, [tglAbsen]);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -147,6 +155,7 @@ const EditAbsen = ({
                 value={namaHari || ""}
                 onChange={(e) => setNamaHari(e.target.value)}
                 required
+                disabled
               >
                 <option value="">-- Pilih Hari --</option>
                 <option value="senin">Senin</option>

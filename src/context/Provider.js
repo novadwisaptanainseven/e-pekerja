@@ -103,6 +103,12 @@ export const GlobalProvider = ({ children }) => {
   // Kenaikan Gaji Berkala (KGB)
   const [kgbState, kgbDispatch] = useReducer(reducer, initState);
 
+  // Rekap Absensi
+  const [rekapAbsensiState, rekapAbsensiDispatch] = useReducer(
+    reducer,
+    initState
+  );
+
   // Pensiun
   const [pensiunState, pensiunDispatch] = useReducer(
     pensiunReducer,
@@ -152,6 +158,8 @@ export const GlobalProvider = ({ children }) => {
         dukDispatch,
         kgbState,
         kgbDispatch,
+        rekapAbsensiState,
+        rekapAbsensiDispatch,
         pensiunState,
         pensiunDispatch,
         penghargaanState,

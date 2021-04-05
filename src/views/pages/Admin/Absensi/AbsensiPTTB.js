@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
   CCardBody,
   CButton,
   CPopover,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
@@ -12,6 +14,13 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import ExpandableComponent from "./ExpandableComponent";
+import { GlobalContext } from "src/context/Provider";
+import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
+import { LoadAnimationBlue } from "src/assets";
+import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFile/printAbsensi";
+import { getPTTH } from "src/context/actions/Pegawai/PTTH/getPTTH";
+import { getPTTB } from "src/context/actions/Pegawai/PTTB/getPTTB";
+// const TambahAbsen = React.lazy(() => import("./TambahAbsen"));
 
 const TextField = styled.input`
   height: 37px;
@@ -72,117 +81,13 @@ const AbsensiPTTB = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { pttbState, pttbDispatch } = useContext(GlobalContext);
+  const { data, loading } = pttbState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      jabatan: "Kepala Dinas",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19651127 199301 1 001",
-      nama: "Ikwal Ramadhani",
-      jabatan: "IT Support",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-    {
-      no: 4,
-      id: 4,
-      nip: "19651127 199301 1 001",
-      nama: "Iqbal Wahyudi",
-      jabatan: "Programmer",
-      absen: [
-        {
-          tgl: "2021-02-01",
-          hari: "senin",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-02",
-          hari: "selasa",
-          absen: 1,
-          keterangan: "",
-        },
-        {
-          tgl: "2021-02-03",
-          hari: "rabu",
-          absen: 2,
-          keterangan: "Ada acara pernikahan keluarga",
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    // Get All Pegawai
+    getPTTB(pttbDispatch);
+  }, [pttbDispatch]);
 
   const filteredData = data.filter((item) =>
     // (
@@ -191,8 +96,11 @@ const AbsensiPTTB = () => {
 
     // )
     {
-      if (item.nama) {
-        if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
+      if (item.nama && item.nip) {
+        if (
+          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.nip.toLowerCase().includes(filterText.toLowerCase())
+        ) {
           return true;
         }
       }
@@ -231,21 +139,10 @@ const AbsensiPTTB = () => {
           <CButton
             color="success"
             className="btn btn-sm"
-            onClick={() => goToRiwayat(row.id)}
+            onClick={() => goToRiwayat(row.id_pegawai)}
           >
             Absensi
           </CButton>
-          {/* <CButton
-              color="danger"
-              className="btn btn-sm"
-              onClick={() =>
-                window.confirm(
-                  `Anda yakin ingin hapus data dengan id : ${row.id}`
-                )
-              }
-            >
-              <CIcon content={cilTrash} color="white" />
-            </CButton> */}
         </div>
       ),
     },
@@ -276,7 +173,13 @@ const AbsensiPTTB = () => {
         />
 
         <CPopover content="Cetak Rekapan Absensi Pegawai">
-          <CButton utton type="button" color="info" className="ml-2">
+          <CButton
+            utton
+            type="button"
+            color="info"
+            className="ml-2"
+            onClick={() => printRekapAbsensiByStatusPegawai("pttb")}
+          >
             <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
             <CIcon content={cilPrint} />
           </CButton>
@@ -296,27 +199,51 @@ const AbsensiPTTB = () => {
           <h3>Absensi Pegawai Tidak Tetap Bulanan (PTTB)</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
-          </CButton> */}
-
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            highlightOnHover
-            expandableRows
-            expandOnRowClicked
-            expandableRowsComponent={<ExpandableComponent />}
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows
+              highlightOnHover
+              expandOnRowClicked
+              expandableRowsComponent={<ExpandableComponent />}
+            />
+          ) : loading ? (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          )}
         </CCardBody>
       </CCard>
     </>

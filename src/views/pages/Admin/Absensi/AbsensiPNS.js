@@ -15,9 +15,10 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import ExpandableComponent from "./ExpandableComponent";
 import { GlobalContext } from "src/context/Provider";
-import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
+// import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
 import { LoadAnimationBlue } from "src/assets";
 import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFile/printAbsensi";
+import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
 // const TambahAbsen = React.lazy(() => import("./TambahAbsen"));
 
 const TextField = styled.input`
@@ -79,13 +80,13 @@ const AbsensiPNS = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const { pegawaiState, pegawaiDispatch } = useContext(GlobalContext);
-  const { data, loading } = pegawaiState;
+  const { pnsState, pnsDispatch } = useContext(GlobalContext);
+  const { data, loading } = pnsState;
 
   useEffect(() => {
     // Get All Pegawai
-    getAllPegawai(pegawaiDispatch);
-  }, [pegawaiDispatch]);
+    getPNS(pnsDispatch);
+  }, [pnsDispatch]);
 
   // const data = [
   //   {

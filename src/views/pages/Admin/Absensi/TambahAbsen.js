@@ -29,46 +29,53 @@ const TambahAbsen = ({
   const [keterangan, setKeterangan] = useState("");
   const [namaHari, setNamaHari] = useState("");
   const [loading, setLoading] = useState(false);
-  const getNamaHari = useCallback(() => {
-    let hari = "";
-    if (data) {
-      hari = format(
-        new Date(data.filterYear, data.filterMonth, data.tgl),
-        "EEEEEE"
-      );
-    } else {
-      hari = format(new Date(), "EEEEEE");
-    }
+  const getNamaHari = useCallback(
+    ($tgl = null) => {
+      let hari = "";
+      if (data) {
+        hari = format(
+          new Date(data.filterYear, data.filterMonth, data.tgl),
+          "EEEEEE"
+        );
+      } else {
+        hari = format(new Date(), "EEEEEE");
+      }
 
-    switch (hari) {
-      case "Su":
-        hari = "minggu";
-        break;
-      case "Mo":
-        hari = "senin";
-        break;
-      case "Tu":
-        hari = "selasa";
-        break;
-      case "We":
-        hari = "rabu";
-        break;
-      case "Th":
-        hari = "kamis";
-        break;
-      case "Fr":
-        hari = "jumat";
-        break;
-      case "Sa":
-        hari = "sabtu";
-        break;
+      if ($tgl) {
+        hari = format(new Date($tgl), "EEEEEE");
+      }
 
-      default:
-        break;
-    }
+      switch (hari) {
+        case "Su":
+          hari = "minggu";
+          break;
+        case "Mo":
+          hari = "senin";
+          break;
+        case "Tu":
+          hari = "selasa";
+          break;
+        case "We":
+          hari = "rabu";
+          break;
+        case "Th":
+          hari = "kamis";
+          break;
+        case "Fr":
+          hari = "jumat";
+          break;
+        case "Sa":
+          hari = "sabtu";
+          break;
 
-    return hari;
-  }, [data]);
+        default:
+          break;
+      }
+
+      return hari;
+    },
+    [data]
+  );
 
   useEffect(() => {
     let tgl_absen = null;
@@ -92,6 +99,10 @@ const TambahAbsen = ({
       setNamaHari(getNamaHari());
     }
   }, [data, getNamaHari]);
+
+  useEffect(() => {
+    setNamaHari(getNamaHari(tglAbsen));
+  }, [tglAbsen]);
 
   // Handle kosongkan input keterangan ketika tombol close modal diklik
   const handleCloseModal = () => {
@@ -194,6 +205,7 @@ const TambahAbsen = ({
                   required
                   value={namaHari || ""}
                   onChange={(e) => setNamaHari(e.target.value)}
+                  disabled
                 >
                   <option value="">-- Pilih Hari --</option>
                   <option value="senin">Senin</option>

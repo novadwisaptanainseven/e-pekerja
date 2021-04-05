@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -30,6 +30,11 @@ import { format } from "date-fns";
 import TambahAbsen from "./TambahAbsen";
 import EditAbsen from "./EditAbsensi";
 import styled from "styled-components";
+import { GlobalContext } from "src/context/Provider";
+import { getAllRekapAbsensiPerTahun } from "src/context/actions/Absensi/getAllRekapAbsensiPerTahun";
+import { LoadAnimationBlue } from "src/assets";
+import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFile/printAbsensi";
+import { printRekapAbsensiByIdPegawai } from "src/context/actions/DownloadFile/printAbsensiByIdPegawai";
 
 const TextField = styled.input`
   height: 37px;
@@ -89,9 +94,10 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
 const RekapAbsensi = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const [modalTambah, setModalTambah] = useState(false);
-  const [dataTahun, setDataTahun] = useState(null);
+  const [dataTahun, setDataTahun] = useState(new Date().getFullYear());
   const [collapse2, setCollapse2] = useState(false);
+  const { rekapAbsensiState, rekapAbsensiDispatch } = useContext(GlobalContext);
+  const { data, loading } = rekapAbsensiState;
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -104,57 +110,10 @@ const RekapAbsensi = () => {
     endDate: null,
   });
 
-  const [modalEdit, setModalEdit] = useState({
-    modal: false,
-    id: null,
-  });
-
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nama: "Nova Dwi Sapta",
-      jabatan: "Programmer",
-      hadir: 10,
-      izin: 2,
-      sakit: 1,
-      cuti: 0,
-      tanpa_keterangan: 2,
-    },
-    {
-      no: 2,
-      id: 2,
-      nama: "Ikwal Ramadhani",
-      jabatan: "IT Support",
-      hadir: 10,
-      izin: 2,
-      sakit: 1,
-      cuti: 0,
-      tanpa_keterangan: 2,
-    },
-    {
-      no: 3,
-      id: 3,
-      nama: "Iqbal Wahyudi",
-      jabatan: "Programmer",
-      hadir: 10,
-      izin: 2,
-      sakit: 1,
-      cuti: 0,
-      tanpa_keterangan: 2,
-    },
-    {
-      no: 4,
-      id: 4,
-      nama: "Ir. H. Dadang",
-      jabatan: "Programmer",
-      hadir: 10,
-      izin: 2,
-      sakit: 1,
-      cuti: 0,
-      tanpa_keterangan: 2,
-    },
-  ];
+  useEffect(() => {
+    // Get rekap absensi per tahun
+    getAllRekapAbsensiPerTahun(rekapAbsensiDispatch, dataTahun);
+  }, [rekapAbsensiDispatch, dataTahun]);
 
   const filteredData = data.filter((item) => {
     if (item.nama) {
@@ -185,35 +144,35 @@ const RekapAbsensi = () => {
       selector: "hadir",
       sortable: true,
       wrap: true,
-      // maxWidth: "150px",
+      maxWidth: "80px",
     },
     {
       name: "Izin",
       selector: "izin",
       sortable: true,
       wrap: true,
-      // maxWidth: "150px",
+      maxWidth: "80px",
     },
     {
       name: "Sakit",
       selector: "sakit",
       sortable: true,
       wrap: true,
-      // maxWidth: "150px",
+      maxWidth: "80px",
     },
     {
       name: "Cuti",
       selector: "cuti",
       sortable: true,
       wrap: true,
-      // maxWidth: "150px",
+      maxWidth: "80px",
     },
     {
       name: "Tanpa Keterangan",
       selector: "tanpa_keterangan",
       sortable: true,
       wrap: true,
-      // maxWidth: "150px",
+      maxWidth: "200px",
     },
     {
       maxWidth: "180px",
@@ -221,7 +180,11 @@ const RekapAbsensi = () => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton color="warning" className="text-white mr-1">
+          <CButton
+            color="warning"
+            className="text-white mr-1"
+            onClick={() => printRekapAbsensiByIdPegawai(row.id_pegawai)}
+          >
             Cetak <CIcon content={cilPrint} />
           </CButton>
         </div>
@@ -238,6 +201,10 @@ const RekapAbsensi = () => {
   };
 
   const SubHeaderComponentMemo = React.useMemo(() => {
+    const cetakRekapAbsensi = () => {
+      printRekapAbsensiByStatusPegawai("semua", dataTahun);
+    };
+
     const handleClear = () => {
       if (filterText) {
         setResetPaginationToggle(!resetPaginationToggle);
@@ -253,14 +220,19 @@ const RekapAbsensi = () => {
           filterText={filterText}
         />
         <CPopover content="Cetak Rekapan Absensi Pegawai">
-          <CButton type="button" color="info" className="ml-2">
+          <CButton
+            type="button"
+            color="info"
+            className="ml-2"
+            onClick={() => cetakRekapAbsensi()}
+          >
             <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
             <CIcon content={cilPrint} />
           </CButton>
         </CPopover>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, dataTahun]);
 
   const handleDateChange = (item) => {
     setState([item.selection]);
@@ -315,11 +287,6 @@ const RekapAbsensi = () => {
     console.log(dataTahun);
   };
 
-  // Tombol untuk menampilkan data berdasarkan filter Tahun
-  const handleOnTampilkanDataTanggal = () => {
-    console.log(formattedDate);
-  };
-
   return (
     <>
       <CCard>
@@ -327,47 +294,9 @@ const RekapAbsensi = () => {
           <div className="title mb-2">
             <h3>Rekap Absensi Pegawai</h3>
           </div>
-          {/* <CButton
-            color="warning"
-            className="text-white"
-            style={{ height: "40px", width: "100px" }}
-            onClick={goBackToParent}
-          >
-            Kembali
-          </CButton> */}
         </CCardHeader>
         <CCardBody>
           <CRow>
-            <CCol md="6">
-              <CCard className="shadow">
-                <CCardHeader className="bg-dark">
-                  <h5 className="mb-0">Filter berdasarkan Tanggal</h5>
-                </CCardHeader>
-                <CCollapse show={collapse2}>
-                  <CCardBody className="text-center">
-                    <p>Atur range tanggal untuk menampilkan data absensi</p>
-                    <Kalender />
-                    <CButton
-                      type="button"
-                      color="primary"
-                      className="float-right mb-3"
-                      onClick={handleOnTampilkanDataTanggal}
-                    >
-                      Tampilkan Data
-                    </CButton>
-                  </CCardBody>
-                </CCollapse>
-                <CCardFooter>
-                  <CButton
-                    type="button"
-                    color="secondary"
-                    onClick={() => setCollapse2(!collapse2)}
-                  >
-                    {!collapse2 ? "Klik untuk melihat" : "Tutup"}
-                  </CButton>
-                </CCardFooter>
-              </CCard>
-            </CCol>
             <CCol md="6">
               <CCard className="shadow">
                 <CCardHeader className="bg-dark">
@@ -391,14 +320,20 @@ const RekapAbsensi = () => {
                           ))}
                         </CSelect>
                       </CFormGroup>
-                      <CButton
-                        type="button"
-                        color="primary"
-                        className="float-right mb-3"
-                        onClick={handleOnTampilkanDataTahun}
-                      >
-                        Tampilkan Data
-                      </CButton>
+                      {loading && (
+                        <div>
+                          <CRow>
+                            <CCol className="text-center">
+                              <img
+                                className="mt-4 ml-3"
+                                width={30}
+                                src={LoadAnimationBlue}
+                                alt="load-animation"
+                              />
+                            </CCol>
+                          </CRow>
+                        </div>
+                      )}
                     </CForm>
                   </CCardBody>
                 </CCollapse>
@@ -415,82 +350,35 @@ const RekapAbsensi = () => {
             </CCol>
           </CRow>
 
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            highlightOnHover
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          ) : (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          )}
         </CCardBody>
       </CCard>
-
-      {/* Modal Tambah */}
-      <CModal
-        show={modalTambah}
-        onClose={() => setModalTambah(!modalTambah)}
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Tambah Absensi Pegawai</CModalTitle>
-        </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahAbsen />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
-      </CModal>
-
-      {/* Modal Edit Cuti */}
-      <CModal
-        show={modalEdit.modal}
-        onClose={() => {
-          setModalEdit({
-            ...modalEdit,
-            modal: !modalEdit.modal,
-            id: null,
-          });
-        }}
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Edit Absensi Pegawai</CModalTitle>
-        </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <EditAbsen id={modalEdit.id} />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalEdit(!modalEdit.modal)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
-      </CModal>
     </>
   );
 };

@@ -7,9 +7,6 @@ import {
   CModal,
   CModalHeader,
   CModalTitle,
-  CForm,
-  CModalBody,
-  CModalFooter,
   CBadge,
   CRow,
   CCol,
@@ -35,6 +32,10 @@ import { getRekapAbsensiPerTahun } from "src/context/actions/Absensi/getRekapAbs
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { deleteAbsensi } from "src/context/actions/Absensi/deleteAbsensi";
+import capitalizeFirst from "src/helpers/capitalizeFirst";
+import { printAbsensiByFilterTanggal } from "src/context/actions/DownloadFile/printAbsensiByFilterTanggal";
+import { printRekapAbsensiByIdPegawai } from "src/context/actions/DownloadFile/printAbsensiByIdPegawai";
+import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 
 const MySwal = withReactContent(swal2);
 
@@ -48,6 +49,7 @@ const RiwayatAbsensi = ({ match }) => {
   const [rekap, setRekap] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const [pegawai, setPegawai] = useState("");
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -70,6 +72,8 @@ const RiwayatAbsensi = ({ match }) => {
   };
 
   useEffect(() => {
+    // Get Pegawai by ID
+    getPNSById(params.id, setPegawai);
     // Get riwayat absensi
     getRiwayatAbsensiPegawai(params.id, setLoading, setData, formattedDate);
     // Get Rekap Absensi
@@ -100,6 +104,9 @@ const RiwayatAbsensi = ({ match }) => {
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
+      cell: (row) => {
+        return <div>{capitalizeFirst(row.hari)}</div>;
+      },
     },
     {
       name: "Absen",
@@ -237,8 +244,26 @@ const RiwayatAbsensi = ({ match }) => {
             Tambah Absen
           </CButton>
           <div className="d-flex">
+            <CPopover content="Cetak Riwayat Absensi Pegawai">
+              <CButton
+                type="button"
+                color="info"
+                className="ml-2"
+                onClick={() =>
+                  printAbsensiByFilterTanggal(params.id, formattedDate)
+                }
+              >
+                <span className="my-text-button">Cetak Riwayat Absensi</span>{" "}
+                <CIcon content={cilPrint} />
+              </CButton>
+            </CPopover>
             <CPopover content="Cetak Rekapan Absensi Pegawai">
-              <CButton type="button" color="info" className="ml-2">
+              <CButton
+                type="button"
+                color="info"
+                className="ml-2"
+                onClick={() => printRekapAbsensiByIdPegawai(params.id)}
+              >
                 <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
                 <CIcon content={cilPrint} />
               </CButton>
@@ -317,7 +342,7 @@ const RiwayatAbsensi = ({ match }) => {
         <CCardHeader className="d-flex justify-content-between my-card-header">
           <div className="title mb-2">
             <h3>Riwayat Absensi Pegawai</h3>
-            <h5 className="font-weight-normal">Nova Dwi Sapta Nain Seven</h5>
+            <h5 className="font-weight-normal">{pegawai.nama}</h5>
           </div>
           <CButton
             color="warning"
@@ -467,7 +492,7 @@ const RiwayatAbsensi = ({ match }) => {
           setLoadingRiwayatAbsen={setLoading}
           setLoadingRekapAbsensi={setLoading2}
           formattedDateRiwayatAbsen={formattedDate}
-         />
+        />
       </CModal>
     </>
   );
