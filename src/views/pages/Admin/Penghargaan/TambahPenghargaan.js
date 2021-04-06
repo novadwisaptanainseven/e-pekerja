@@ -36,11 +36,32 @@ const TambahPenghargaan = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState();
+  const [touchedSelect, setTouchedSelect] = useState(false);
 
   useEffect(() => {
     // Get Sub Bidang
     getSelectPNS(setPegawai);
   }, []);
+
+  // useEffect(() => {
+  //   if (pegawai.length > 0) {
+  //     console.log(pegawai);
+  //   }
+  // }, [pegawai]);
+
+  const getDataOptions = (pegawai) => {
+    let options = [];
+
+    pegawai.forEach((item) => {
+      options.push({
+        value: item.id_pegawai,
+        label: item.nama,
+      });
+    });
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(pegawai), [pegawai]);
 
   // Menangani preview input gambar setelah dipilih
   const handleSelectedFile = useCallback(() => {
@@ -149,6 +170,14 @@ const TambahPenghargaan = () => {
     // insertPenghargaan(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
+  const customStyles = {
+    control: (provided, state) => ({
+      // none of react-select's styles are passed to <Control />
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
+  };
+
   return (
     <>
       <CCard>
@@ -205,23 +234,28 @@ const TambahPenghargaan = () => {
                       ))}
                     </CSelect> */}
                     <Select
+                      styles={customStyles}
                       name="id_pegawai"
                       id="id_pegawai"
                       onChange={(opt) => {
+                        console.log("render");
+                        setTouchedSelect(false);
                         setFieldValue("id_pegawai", opt ? opt.value : "");
                       }}
+                      onFocus={() => setTouchedSelect(true)}
                       placeholder="-- Pilih Pegawai --"
                       isSearchable
                       isClearable
-                      options={[
-                        { value: "1", label: "Nova Dwi Sapta Nain Seven" },
-                        { value: "2", label: "Ikwal Ramadhani" },
-                        { value: "3", label: "Iqbal Wahyudi" },
-                      ]}
+                      options={optionsData}
                     />
 
-                    {!values.id_pegawai && (
-                      <div className="text-danger">hello</div>
+                    {!values.id_pegawai && touchedSelect && (
+                      <div
+                        className="text-danger mt-1"
+                        style={{ fontSize: "0.8em" }}
+                      >
+                        Nama penerima harus diisi
+                      </div>
                     )}
                   </CCol>
                 </CFormGroup>
@@ -348,6 +382,7 @@ const TambahPenghargaan = () => {
                   type="submit"
                   className="mr-1"
                   disabled={loading ? true : false}
+                  onClick={() => setTouchedSelect(true)}
                 >
                   Simpan
                 </CButton>
