@@ -15,7 +15,6 @@ Halaman Admin
 
 14. Perbaiki alur pensiun. Jika pegawai telah pensiun atau pindah maka ubah status kerja pegawai di tabel pegawai. Lalu tampilkan data pegawai yang status kerjanya aktif
 15. Hilangan tombol delete di histori KGB
-16. Tambahkan range tanggal untuk tombol cetak rekap pegawai di menu absensi
 17. Perbaiki tata letak tombol cetak riwayat pegawai, pindahkan ke bagian date picker
 18. Hilangkan lama hari di bagian tambah cuti
 

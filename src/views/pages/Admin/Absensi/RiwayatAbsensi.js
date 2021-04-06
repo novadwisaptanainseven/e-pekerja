@@ -243,32 +243,7 @@ const RiwayatAbsensi = ({ match }) => {
           >
             Tambah Absen
           </CButton>
-          <div className="d-flex">
-            <CPopover content="Cetak Riwayat Absensi Pegawai">
-              <CButton
-                type="button"
-                color="info"
-                className="ml-2"
-                onClick={() =>
-                  printAbsensiByFilterTanggal(params.id, formattedDate)
-                }
-              >
-                <span className="my-text-button">Cetak Riwayat Absensi</span>{" "}
-                <CIcon content={cilPrint} />
-              </CButton>
-            </CPopover>
-            <CPopover content="Cetak Rekapan Absensi Pegawai">
-              <CButton
-                type="button"
-                color="info"
-                className="ml-2"
-                onClick={() => printRekapAbsensiByIdPegawai(params.id)}
-              >
-                <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
-                <CIcon content={cilPrint} />
-              </CButton>
-            </CPopover>
-          </div>
+          <div className="d-flex"></div>
         </div>
       </>
     );
@@ -365,7 +340,7 @@ const RiwayatAbsensi = ({ match }) => {
                     <InformasiComponent />
                   </CCardBody>
                 </CCollapse>
-                <CCardFooter>
+                <CCardFooter className="d-flex justify-content-between">
                   <CButton
                     type="button"
                     color="secondary"
@@ -373,6 +348,19 @@ const RiwayatAbsensi = ({ match }) => {
                   >
                     {!collapse ? "Klik untuk melihat" : "Tutup"}
                   </CButton>
+                  <CPopover content="Cetak Rekapan Absensi Pegawai">
+                    <CButton
+                      type="button"
+                      color="info"
+                      className="ml-2"
+                      onClick={() => printRekapAbsensiByIdPegawai(params.id)}
+                    >
+                      <span className="my-text-button">
+                        Cetak Rekapan Absensi
+                      </span>{" "}
+                      <CIcon content={cilPrint} />
+                    </CButton>
+                  </CPopover>
                 </CCardFooter>
               </CCard>
             </CCol>
@@ -387,28 +375,46 @@ const RiwayatAbsensi = ({ match }) => {
                     <Kalender />
                   </CCardBody>
                 </CCollapse>
-                <CCardFooter>
-                  <CButton
-                    type="button"
-                    color="secondary"
-                    className="mr-2"
-                    onClick={() => setCollapse2(!collapse2)}
-                  >
-                    {!collapse2 ? "Klik untuk melihat" : "Tutup"}
-                  </CButton>
-                  <CButton
-                    type="button"
-                    color="danger"
-                    onClick={() =>
-                      setFormattedDate({
-                        ...formattedDate,
-                        startDate: "",
-                        endDate: "",
-                      })
-                    }
-                  >
-                    Reset
-                  </CButton>
+                <CCardFooter className="d-flex justify-content-between">
+                  <div>
+                    <CButton
+                      type="button"
+                      color="secondary"
+                      className="mr-2"
+                      onClick={() => setCollapse2(!collapse2)}
+                    >
+                      {!collapse2 ? "Klik untuk melihat" : "Tutup"}
+                    </CButton>
+                    <CButton
+                      type="button"
+                      color="danger"
+                      onClick={() =>
+                        setFormattedDate({
+                          ...formattedDate,
+                          startDate: "",
+                          endDate: "",
+                        })
+                      }
+                    >
+                      Reset
+                    </CButton>
+                  </div>
+
+                  <CPopover content="Cetak Riwayat Absensi Pegawai">
+                    <CButton
+                      type="button"
+                      color="info"
+                      className="ml-2"
+                      onClick={() =>
+                        printAbsensiByFilterTanggal(params.id, formattedDate)
+                      }
+                    >
+                      <span className="my-text-button">
+                        Cetak Riwayat Absensi
+                      </span>{" "}
+                      <CIcon content={cilPrint} />
+                    </CButton>
+                  </CPopover>
                 </CCardFooter>
               </CCard>
             </CCol>

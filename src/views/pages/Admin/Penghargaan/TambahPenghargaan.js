@@ -16,6 +16,7 @@ import {
 import { Formik } from "formik";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import Select from "react-select";
 import { getSelectPNS } from "src/context/actions/Pegawai/PNS/getSelectPNS";
 import { insertPenghargaan } from "src/context/actions/Penghargaan/insertPengharaan";
 import swal2 from "sweetalert2";
@@ -145,7 +146,7 @@ const TambahPenghargaan = () => {
       console.log(pair);
     }
 
-    insertPenghargaan(formData, setLoading, showAlertSuccess, showAlertError);
+    // insertPenghargaan(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
   return (
@@ -183,7 +184,7 @@ const TambahPenghargaan = () => {
                     <CLabel>Nama penerima</CLabel>
                   </CCol>
                   <CCol>
-                    <CSelect
+                    {/* <CSelect
                       custom
                       name="id_pegawai"
                       id="id_pegawai"
@@ -202,11 +203,25 @@ const TambahPenghargaan = () => {
                           {item.nama}
                         </option>
                       ))}
-                    </CSelect>
-                    {errors.id_pegawai && touched.id_pegawai && (
-                      <div className="invalid-feedback">
-                        {errors.id_pegawai}
-                      </div>
+                    </CSelect> */}
+                    <Select
+                      name="id_pegawai"
+                      id="id_pegawai"
+                      onChange={(opt) => {
+                        setFieldValue("id_pegawai", opt ? opt.value : "");
+                      }}
+                      placeholder="-- Pilih Pegawai --"
+                      isSearchable
+                      isClearable
+                      options={[
+                        { value: "1", label: "Nova Dwi Sapta Nain Seven" },
+                        { value: "2", label: "Ikwal Ramadhani" },
+                        { value: "3", label: "Iqbal Wahyudi" },
+                      ]}
+                    />
+
+                    {!values.id_pegawai && (
+                      <div className="text-danger">hello</div>
                     )}
                   </CCol>
                 </CFormGroup>

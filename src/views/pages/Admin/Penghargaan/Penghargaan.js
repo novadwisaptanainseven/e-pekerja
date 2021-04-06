@@ -7,18 +7,24 @@ import {
   CButtonGroup,
   CRow,
   CCol,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
-import { SampleFotoPegawai } from "src/assets";
+import { LoadAnimationBlue, SampleFotoPegawai } from "src/assets";
 import { GlobalContext } from "src/context/Provider";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { getPenghargaan } from "src/context/actions/Penghargaan/getPenghargaan";
 import { deletePenghargaan } from "src/context/actions/Penghargaan/deletePenghargaan";
+import { format } from "date-fns";
+import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
 
 const MySwal = withReactContent(swal2);
 
@@ -81,6 +87,10 @@ const Penghargaan = () => {
   const history = useHistory();
   const { penghargaanState, penghargaanDispatch } = useContext(GlobalContext);
   const { data } = penghargaanState;
+  const [previewImage, setPreviewImage] = useState({
+    modal: false,
+    image: null,
+  });
 
   useEffect(() => {
     getPenghargaan(penghargaanDispatch);
@@ -89,51 +99,6 @@ const Penghargaan = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
-  // const data = [
-  //   {
-  //     no: 1,
-  //     id: 1,
-  //     nip: "19651127 199301 1 001",
-  //     nama: "Ir. H. Dadang Airlangga N, MMT",
-  //     nama_penghargaan: "Penghargaan 1",
-  //     pemberi: "Walikota Samarinda",
-  //     tgl_penghargaan: "10-12-2021",
-  //     dokumentasi: "foto",
-  //   },
-  //   {
-  //     no: 2,
-  //     id: 2,
-  //     nip: "19640315 199203 1 014",
-  //     nama: "H. Akhmad Husein, ST, MT",
-  //     nama_penghargaan: "Penghargaan 2",
-  //     pemberi: "Walikota Samarinda",
-  //     tgl_penghargaan: "10-12-2021",
-  //     dokumentasi: "foto",
-  //   },
-  //   {
-  //     no: 3,
-  //     id: 3,
-  //     nip: "19660425 199312 1 001",
-  //     nama: "Joko Karyono, ST, MT",
-  //     nama_penghargaan: "Penghargaan 3",
-  //     pemberi: "Walikota Samarinda",
-  //     tgl_penghargaan: "10-12-2021",
-  //     dokumentasi: "file",
-  //   },
-  //   {
-  //     no: 4,
-  //     id: 4,
-  //     nip: "19660425 199312 1 001",
-  //     nama: "Joko Karyono, ST, MT",
-  //     nama_penghargaan: "Penghargaan 4",
-  //     pemberi: "Walikota Samarinda",
-  //     tgl_penghargaan: "10-12-2021",
-  //     dokumentasi: "file",
-  //   },
-  // ];
-
-  // Menangani tombol hapus
-
   const columns = [
     {
       name: "No",
@@ -141,12 +106,12 @@ const Penghargaan = () => {
       sortable: true,
       width: "50px",
     },
-    {
-      name: "NIP",
-      selector: "nip",
-      sortable: true,
-      wrap: true,
-    },
+    // {
+    //   name: "NIP",
+    //   selector: "nip",
+    //   sortable: true,
+    //   wrap: true,
+    // },
     {
       name: "Nama",
       selector: "nama",
@@ -225,15 +190,15 @@ const Penghargaan = () => {
   }, [filterText, resetPaginationToggle]);
 
   const goToTambah = (id) => {
-    history.push(`/epekerja/admin/penghargaan-tambah`);
+    history.push(`/epekerja/admin/penghargaan/tambah`);
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/admin/penghargaan-edit/${id}`);
+    history.push(`/epekerja/admin/penghargaan/edit/${id}`);
   };
 
   const goToDetail = (id) => {
-    history.push(`/epekerja/admin/penghargaan-detail/${id}`);
+    history.push(`/epekerja/admin/penghargaan/detail/${id}`);
   };
 
   // hapus data
@@ -272,38 +237,66 @@ const Penghargaan = () => {
     return false;
   });
 
-  const ExpandableComponent = ({ data }) => (
-    <>
-      <div style={{ padding: "10px 63px" }}>
-        <CRow className="mb-1">
-          <CCol md="3">
-            <strong>Pemberi</strong>
-          </CCol>
-          <CCol>{data.pemberi}</CCol>
-        </CRow>
-        <CRow className="mb-1">
-          <CCol md="3">
-            <strong>Tgl. Penghargaan</strong>
-          </CCol>
-          <CCol>{data.tgl_penghargaan}</CCol>
-        </CRow>
-        <CRow className="mb-1">
-          <CCol md="3">
-            <strong>Dokumentasi</strong>
-          </CCol>
-          <CCol>
-            {data.dokumentasi === "foto" ? (
-              <img width={200} src={SampleFotoPegawai} alt="foto-penghargaan" />
-            ) : (
-              <a target="blank" href={data.dokumentasi}>
-                Klik untuk melihat file
-              </a>
-            )}
-          </CCol>
-        </CRow>
-      </div>
-    </>
-  );
+  // Menangani preview gambar
+  const handlePreviewImage = (dokumentasi) => {
+    setPreviewImage({
+      ...previewImage,
+      modal: !previewImage.modal,
+      image: dokumentasi,
+    });
+  };
+
+  const ExpandableComponent = ({ data }) => {
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = data.dokumentasi.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
+
+    return (
+      <>
+        <div style={{ padding: "10px 63px" }}>
+          <CRow className="mb-1">
+            <CCol md="3">
+              <strong>Pemberi</strong>
+            </CCol>
+            <CCol>{data.pemberi}</CCol>
+          </CRow>
+          <CRow className="mb-1">
+            <CCol md="3">
+              <strong>Tgl. Penghargaan</strong>
+            </CCol>
+            <CCol>{format(new Date(data.tgl_penghargaan), "dd/MM/yyyy")}</CCol>
+          </CRow>
+          <CRow className="mb-1">
+            <CCol md="3">
+              <strong>Dokumentasi</strong>
+            </CCol>
+            <CCol>
+              {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+                <img
+                  width={200}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handlePreviewImage(data.dokumentasi)}
+                  src={getDokPenghargaan(data.dokumentasi)}
+                  alt="dokumentasi-penghargaan"
+                />
+              ) : (
+                <a
+                  href={getDokPenghargaan(data.dokumentasi)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {filename}
+                </a>
+              )}
+            </CCol>
+          </CRow>
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
@@ -316,25 +309,66 @@ const Penghargaan = () => {
             Tambah Penghargaan
           </CButton>
 
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows={true}
-            expandableRowsComponent={<ExpandableComponent />}
-            expandOnRowClicked
-            highlightOnHover
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows={true}
+              expandableRowsComponent={<ExpandableComponent />}
+              expandOnRowClicked
+              highlightOnHover
+            />
+          ) : (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          )}
         </CCardBody>
       </CCard>
+
+      {/* Modal Preview Image */}
+      <CModal
+        show={previewImage.modal}
+        onClose={() =>
+          setPreviewImage({
+            ...previewImage,
+            modal: !previewImage.modal,
+            image: null,
+          })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Preview</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {previewImage.image && (
+            <img
+              style={{ width: "100%" }}
+              src={getDokPenghargaan(previewImage.image)}
+              alt="dokumentasi-penghargaan"
+            />
+          )}
+        </CModalBody>
+      </CModal>
     </>
   );
 };

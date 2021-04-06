@@ -43,6 +43,7 @@ const TambahPensiun = () => {
               </CCol>
               <CCol>
                 <Select
+                  
                   name="nama"
                   id="nama"
                   isSearchable

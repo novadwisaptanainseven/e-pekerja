@@ -514,19 +514,22 @@ const routes = [
     exact: true,
   },
   {
-    path: "/epekerja/admin/penghargaan-tambah",
+    path: "/epekerja/admin/penghargaan/tambah",
     name: "Tambah Penghargaan",
     component: TambahPenghargaan,
+    exact: true,
   },
   {
-    path: "/epekerja/admin/penghargaan-edit/:id",
+    path: "/epekerja/admin/penghargaan/edit/:id",
     name: "Edit Penghargaan",
-    component: EditPenghargaan,
+    component: EditPenghargaan, 
+    exact: true,
   },
   {
-    path: "/epekerja/admin/penghargaan-detail/:id",
+    path: "/epekerja/admin/penghargaan/detail/:id",
     name: "Detail Penghargaan",
     component: DetailPenghargaan,
+    exact: true,
   },
 
   // Pensiun

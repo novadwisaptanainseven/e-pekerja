@@ -35,6 +35,8 @@ import { getAllRekapAbsensiPerTahun } from "src/context/actions/Absensi/getAllRe
 import { LoadAnimationBlue } from "src/assets";
 import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFile/printAbsensi";
 import { printRekapAbsensiByIdPegawai } from "src/context/actions/DownloadFile/printAbsensiByIdPegawai";
+import { getAllRekapAbsensiByDate } from "src/context/actions/Absensi/getAllRekapAbsensiByDate";
+import { printRekapAbsensiByDate } from "src/context/actions/DownloadFile/printAbsensiByDate";
 
 const TextField = styled.input`
   height: 37px;
@@ -91,6 +93,21 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
+// Komponen Kalender
+const Kalender = ({ handleDateChange, state }) => {
+  return (
+    <>
+      <DateRange
+        editableDateInputs={true}
+        onChange={(item) => handleDateChange(item)}
+        moveRangeOnFirstSelection={false}
+        ranges={state}
+      />
+    </>
+  );
+};
+const MemoizeKalender = React.memo(Kalender);
+
 const RekapAbsensi = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -106,14 +123,27 @@ const RekapAbsensi = () => {
     },
   ]);
   const [formattedDate, setFormattedDate] = useState({
-    startDate: null,
-    endDate: null,
+    startDate: "",
+    endDate: "",
   });
 
   useEffect(() => {
     // Get rekap absensi per tahun
-    getAllRekapAbsensiPerTahun(rekapAbsensiDispatch, dataTahun);
+    if (dataTahun) {
+      getAllRekapAbsensiPerTahun(rekapAbsensiDispatch, dataTahun);
+      setFormattedDate({
+        startDate: "",
+        endDate: "",
+      });
+    }
   }, [rekapAbsensiDispatch, dataTahun]);
+
+  useEffect(() => {
+    if (formattedDate.startDate && formattedDate.endDate) {
+      getAllRekapAbsensiByDate(rekapAbsensiDispatch, formattedDate);
+      setDataTahun("");
+    }
+  }, [formattedDate]);
 
   const filteredData = data.filter((item) => {
     if (item.nama) {
@@ -219,7 +249,7 @@ const RekapAbsensi = () => {
           onClear={handleClear}
           filterText={filterText}
         />
-        <CPopover content="Cetak Rekapan Absensi Pegawai">
+        {/* <CPopover content="Cetak Rekapan Absensi Pegawai">
           <CButton
             type="button"
             color="info"
@@ -229,39 +259,28 @@ const RekapAbsensi = () => {
             <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
             <CIcon content={cilPrint} />
           </CButton>
-        </CPopover>
+        </CPopover> */}
       </>
     );
-  }, [filterText, resetPaginationToggle, dataTahun]);
+  }, [filterText, resetPaginationToggle]);
 
-  const handleDateChange = (item) => {
-    setState([item.selection]);
-    let timestampStartDate = Date.parse(item.selection.startDate);
-    let timestampEndDate = Date.parse(item.selection.endDate);
+  const handleDateChange = React.useCallback(
+    (item) => {
+      setState([item.selection]);
+      let timestampStartDate = Date.parse(item.selection.startDate);
+      let timestampEndDate = Date.parse(item.selection.endDate);
 
-    let startDate = format(timestampStartDate, "Y-MM-dd");
-    let endDate = format(timestampEndDate, "Y-MM-dd");
+      let startDate = format(timestampStartDate, "Y-MM-dd");
+      let endDate = format(timestampEndDate, "Y-MM-dd");
 
-    setFormattedDate({
-      ...formattedDate,
-      startDate: startDate,
-      endDate: endDate,
-    });
-    console.log(formattedDate);
-  };
-
-  const Kalender = () => {
-    return (
-      <>
-        <DateRange
-          editableDateInputs={true}
-          onChange={(item) => handleDateChange(item)}
-          moveRangeOnFirstSelection={false}
-          ranges={state}
-        />
-      </>
-    );
-  };
+      setFormattedDate({
+        ...formattedDate,
+        startDate: startDate,
+        endDate: endDate,
+      });
+    },
+    [formattedDate]
+  );
 
   // Mencetak option - option dari select filter tahun
   const filterTahun = () => {
@@ -337,7 +356,7 @@ const RekapAbsensi = () => {
                     </CForm>
                   </CCardBody>
                 </CCollapse>
-                <CCardFooter>
+                <CCardFooter className="d-flex justify-content-between">
                   <CButton
                     type="button"
                     color="secondary"
@@ -345,6 +364,74 @@ const RekapAbsensi = () => {
                   >
                     {!collapse2 ? "Klik untuk melihat" : "Tutup"}
                   </CButton>
+                  <CPopover content="Cetak Rekapan Absensi Pegawai Berdasarkan Tahun">
+                    <CButton
+                      type="button"
+                      color="info"
+                      className="ml-2"
+                      onClick={() =>
+                        printRekapAbsensiByStatusPegawai("semua", dataTahun)
+                      }
+                    >
+                      <span className="my-text-button">
+                        Cetak Rekapan Absensi
+                      </span>{" "}
+                      <CIcon content={cilPrint} />
+                    </CButton>
+                  </CPopover>
+                </CCardFooter>
+              </CCard>
+            </CCol>
+            <CCol md="6">
+              <CCard className="shadow">
+                <CCardHeader className="bg-dark">
+                  <h5 className="mb-0">Filter berdasarkan tanggal</h5>
+                </CCardHeader>
+                <CCollapse show={collapse2}>
+                  <CCardBody>
+                    <MemoizeKalender
+                      state={state}
+                      handleDateChange={handleDateChange}
+                    />
+                    {loading && (
+                      <div>
+                        <CRow>
+                          <CCol className="text-center">
+                            <img
+                              className="mt-4 ml-3"
+                              width={30}
+                              src={LoadAnimationBlue}
+                              alt="load-animation"
+                            />
+                          </CCol>
+                        </CRow>
+                      </div>
+                    )}
+                  </CCardBody>
+                </CCollapse>
+                <CCardFooter className="d-flex justify-content-between">
+                  <CButton
+                    type="button"
+                    color="secondary"
+                    onClick={() => setCollapse2(!collapse2)}
+                  >
+                    {!collapse2 ? "Klik untuk melihat" : "Tutup"}
+                  </CButton>
+                  <CPopover content="Cetak Rekapan Absensi Pegawai Berdasarkan Filter Tanggal">
+                    <CButton
+                      type="button"
+                      color="info"
+                      className="ml-2"
+                      onClick={() =>
+                        printRekapAbsensiByDate("semua", formattedDate)
+                      }
+                    >
+                      <span className="my-text-button">
+                        Cetak Rekapan Absensi
+                      </span>{" "}
+                      <CIcon content={cilPrint} />
+                    </CButton>
+                  </CPopover>
                 </CCardFooter>
               </CCard>
             </CCol>
