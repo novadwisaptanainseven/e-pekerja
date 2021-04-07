@@ -28,7 +28,7 @@ const pensiunReducer = (state, action) => {
     case CLEAN_UP:
       return {
         ...state,
-        data: null,
+        data: [],
       };
 
     default:

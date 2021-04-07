@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 import {
   CCard,
   CCardHeader,
@@ -6,12 +10,22 @@ import {
   CButton,
   CButtonGroup,
   CBadge,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { GlobalContext } from "src/context/Provider";
+import { getPensiun } from "src/context/actions/Pensiun.js/getPensiun";
+import { format } from "date-fns";
+import { LoadAnimationBlue } from "src/assets";
+import { deletePensiun } from "src/context/actions/Pensiun.js/deletePensiun";
+import { batalkanPensiun } from "src/context/actions/Pensiun.js/batalkanPensiun";
+
+const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -72,55 +86,22 @@ const Pensiun = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { pensiunState, pensiunDispatch } = useContext(GlobalContext);
+  const { data, loading } = pensiunState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip: "19651127 199301 1 001",
-      nama: "Ir. H. Dadang Airlangga N, MMT",
-      tgl_pensiun: "2021-02-10",
-      status_pensiun: 0,
-      keterangan: "Mencapai umur ke 65 tahun",
-    },
-    {
-      no: 2,
-      id: 2,
-      nip: "19640315 199203 1 014",
-      nama: "H. Akhmad Husein, ST, MT",
-      tgl_pensiun: "2021-02-03",
-      status_pensiun: 0,
-      keterangan: "Memutuskan berhenti PNS",
-    },
-    {
-      no: 3,
-      id: 3,
-      nip: "19660425 199312 1 001",
-      nama: "Cukimaianto",
-      tgl_pensiun: "2021-02-02",
-      status_pensiun: 0,
-      keterangan: "Meninggal",
-    },
-  ];
+  useEffect(() => {
+    // Get all pensiun
+    getPensiun(pensiunDispatch);
+  }, [pensiunDispatch]);
 
-  const filteredData = data.filter((item) =>
-    // (
-    //   item.nama && item.sub_bidang &&
-    //   item.nama.toLowerCase().includes(filterText.toLowerCase())
-
-    // )
-    {
-      if (item.nama && item.nip) {
-        if (
-          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.nip.toLowerCase().includes(filterText.toLowerCase())
-        ) {
-          return true;
-        }
+  const filteredData = data.filter((item) => {
+    if (item.nama) {
+      if (item.nama.toLowerCase().includes(filterText.toLowerCase())) {
+        return true;
       }
-      return false;
     }
-  );
+    return false;
+  });
 
   const columns = [
     {
@@ -130,11 +111,18 @@ const Pensiun = () => {
       width: "50px",
     },
     {
-      name: "NIP",
+      name: "NIP/NIK",
       selector: "nip",
       sortable: true,
       wrap: true,
       // maxWidth: "200px",
+      cell: (row) => {
+        if (row.nip) {
+          return row.nip;
+        } else {
+          return row.nik;
+        }
+      },
     },
     {
       name: "Nama",
@@ -149,6 +137,7 @@ const Pensiun = () => {
       sortable: true,
       wrap: true,
       // maxWidth: "100px",
+      cell: (row) => format(new Date(row.tgl_pensiun), "dd/MM/yyyy"),
     },
     {
       name: "Status",
@@ -158,7 +147,6 @@ const Pensiun = () => {
       cell: (row) => {
         let currentTimestamp = Date.parse(new Date());
         let tglPensiunTimestamp = Date.parse(new Date(row.tgl_pensiun));
-        console.log(tglPensiunTimestamp);
         if (currentTimestamp < tglPensiunTimestamp) {
           return (
             <>
@@ -186,32 +174,37 @@ const Pensiun = () => {
       width: "250px",
     },
     {
-      maxWidth: "150px",
+      // maxWidth: "150px",
       name: "Action",
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
           <CButtonGroup>
             <CButton
+              color="dark"
+              className="btn btn-sm"
+              onClick={() => handleBatalkanPensiun(row.id_pensiun)}
+            >
+              Batalkan Pensiun
+            </CButton>
+            <CButton
               color="info"
               className="btn btn-sm"
-              onClick={() => goToDetail(row.id)}
+              onClick={() => goToDetail(row.id_pensiun)}
             >
               <CIcon content={cilInfo} color="white" />
             </CButton>
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
+              onClick={() => goToEdit(row.id_pensiun)}
             >
               <CIcon content={cilPen} color="white" />
             </CButton>
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() =>
-                window.confirm("Anda yakin ingin menghapus data ini ?")
-              }
+              onClick={() => handleDelete(row.id_pensiun)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -253,15 +246,63 @@ const Pensiun = () => {
   }, [filterText, resetPaginationToggle]);
 
   const goToTambah = (id) => {
-    history.push(`/epekerja/admin/pensiun-tambah`);
+    history.push(`/epekerja/admin/pensiun/tambah`);
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/admin/pensiun-edit/${id}`);
+    history.push(`/epekerja/admin/pensiun/edit/${id}`);
   };
 
   const goToDetail = (id) => {
-    history.push(`/epekerja/admin/pensiun-detail/${id}`);
+    history.push(`/epekerja/admin/pensiun/detail/${id}`);
+  };
+
+  // hapus data
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Delete pesan
+        deletePensiun(id, pensiunDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
+  };
+
+  // Konfirmasi batalkan status pensiun
+  const handleBatalkanPensiun = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin membatalkan pensiun untuk pegawai ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Batalkan pensiun
+        batalkanPensiun(id, pensiunDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Sukses",
+          text: "Pensiun Berhasil Dibatalkan",
+        });
+      }
+    });
   };
 
   return (
@@ -275,20 +316,48 @@ const Pensiun = () => {
             Tambah Pensiun
           </CButton>
 
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            highlightOnHover
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          ) : loading ? (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              highlightOnHover
+            />
+          )}
         </CCardBody>
       </CCard>
     </>

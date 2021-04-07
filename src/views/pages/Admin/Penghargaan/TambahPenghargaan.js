@@ -9,15 +9,14 @@ import {
   CFormGroup,
   CFormText,
   CInput,
-  CInputFile,
   CLabel,
-  CSelect,
 } from "@coreui/react";
 import { Formik } from "formik";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
-import { getSelectPNS } from "src/context/actions/Pegawai/PNS/getSelectPNS";
+import { LoadAnimationWhite } from "src/assets";
+import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
 import { insertPenghargaan } from "src/context/actions/Penghargaan/insertPengharaan";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -39,15 +38,9 @@ const TambahPenghargaan = () => {
   const [touchedSelect, setTouchedSelect] = useState(false);
 
   useEffect(() => {
-    // Get Sub Bidang
-    getSelectPNS(setPegawai);
+    // Get Select Pegawai
+    getSelectPegawai(setPegawai);
   }, []);
-
-  // useEffect(() => {
-  //   if (pegawai.length > 0) {
-  //     console.log(pegawai);
-  //   }
-  // }, [pegawai]);
 
   const getDataOptions = (pegawai) => {
     let options = [];
@@ -167,7 +160,7 @@ const TambahPenghargaan = () => {
       console.log(pair);
     }
 
-    // insertPenghargaan(formData, setLoading, showAlertSuccess, showAlertError);
+    insertPenghargaan(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
   const customStyles = {
@@ -238,7 +231,6 @@ const TambahPenghargaan = () => {
                       name="id_pegawai"
                       id="id_pegawai"
                       onChange={(opt) => {
-                        console.log("render");
                         setTouchedSelect(false);
                         setFieldValue("id_pegawai", opt ? opt.value : "");
                       }}
@@ -248,7 +240,6 @@ const TambahPenghargaan = () => {
                       isClearable
                       options={optionsData}
                     />
-
                     {!values.id_pegawai && touchedSelect && (
                       <div
                         className="text-danger mt-1"
@@ -341,10 +332,11 @@ const TambahPenghargaan = () => {
                     </CLabel>
                   </CCol>
                   <CCol>
-                    <CInputFile
+                    <CInput
+                      type="file"
                       name="dokumentasi"
                       id="dokumentasi"
-                      custom
+                      // custom
                       onChange={(e) => {
                         onSelectFile(e);
                         setFieldValue("dokumentasi", e.target.files[0]);
@@ -361,13 +353,7 @@ const TambahPenghargaan = () => {
                         {errors.dokumentasi}
                       </div>
                     )}
-                    <CLabel
-                      style={{ width: "353px", left: 15 }}
-                      htmlFor="dokumentasi"
-                      variant="custom-file"
-                    >
-                      Pilih Foto
-                    </CLabel>
+
                     {preview && <p className="mt-1">{preview}</p>}
                     <CFormText className="help-block">
                       File harus bertipe pdf, jpg, jpeg, atau png dengan ukuran
@@ -382,12 +368,21 @@ const TambahPenghargaan = () => {
                   type="submit"
                   className="mr-1"
                   disabled={loading ? true : false}
-                  onClick={() => setTouchedSelect(true)}
+                  onClick={() => {
+                    !values.id_pegawai
+                      ? setTouchedSelect(true)
+                      : setTouchedSelect(false);
+                  }}
                 >
-                  Simpan
-                </CButton>
-                <CButton color="danger" type="reset" className="mr-1">
-                  Reset
+                  {loading ? (
+                    <img
+                      width={21}
+                      src={LoadAnimationWhite}
+                      alt="load-animation"
+                    />
+                  ) : (
+                    "Simpan"
+                  )}
                 </CButton>
               </CCardFooter>
             </CForm>

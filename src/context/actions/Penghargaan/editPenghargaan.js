@@ -10,7 +10,11 @@ export const editPenghargaan = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/penghargaan/${id}`, values)
+    .post(`admin/penghargaan/${id}`, values, {
+      header: {
+        "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
+      },
+    })
     .then((res) => {
       console.log(res.data);
       setLoading(false);

@@ -522,7 +522,7 @@ const routes = [
   {
     path: "/epekerja/admin/penghargaan/edit/:id",
     name: "Edit Penghargaan",
-    component: EditPenghargaan, 
+    component: EditPenghargaan,
     exact: true,
   },
   {
@@ -540,17 +540,17 @@ const routes = [
     exact: true,
   },
   {
-    path: "/epekerja/admin/pensiun-tambah",
+    path: "/epekerja/admin/pensiun/tambah",
     name: "Tambah Pensiun",
     component: TambahPensiun,
   },
   {
-    path: "/epekerja/admin/pensiun-edit/:id",
+    path: "/epekerja/admin/pensiun/edit/:id",
     name: "Edit Pensiun",
     component: EditPensiun,
   },
   {
-    path: "/epekerja/admin/pensiun-detail/:id",
+    path: "/epekerja/admin/pensiun/detail/:id",
     name: "Detail Pensiun",
     component: DetailPensiun,
   },

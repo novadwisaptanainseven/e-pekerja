@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CCard,
   CCardBody,
@@ -10,20 +10,49 @@ import {
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
+import { getPensiunById } from "src/context/actions/Pensiun.js/getPensiunById";
+import { format } from "date-fns";
+import { getImage } from "src/context/actions/DownloadFile";
 
 const DetailPenghargaan = ({ match }) => {
   const params = match.params;
   const history = useHistory();
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    // Get pensiun by id
+    getPensiunById(params.id, setData);
+  }, [params]);
 
   const goBackToParent = () => {
     history.goBack();
+  };
+
+  // Menangani Komponen Status Pensiun
+  const StatusPensiun = ({ tglPensiun }) => {
+    let currentTimestamp = Date.parse(new Date());
+    let tglPensiunTimestamp = Date.parse(new Date(tglPensiun));
+
+    return (
+      <>
+        {currentTimestamp < tglPensiunTimestamp ? (
+          <CBadge color="primary" shape="pill" className="px-2 py-2">
+            Akan Pensiun
+          </CBadge>
+        ) : (
+          <CBadge color="dark" shape="pill" className="px-2 py-2">
+            Pensiun
+          </CBadge>
+        )}
+      </>
+    );
   };
 
   return (
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Detail Pensiun : {params.id}</h3>
+          <h3>Detail Pensiun: </h3>
           <CButton
             type="button"
             color="warning"
@@ -41,28 +70,48 @@ const DetailPenghargaan = ({ match }) => {
             <table className="table table-striped table-borderless">
               <tbody>
                 <tr>
-                  <th>NIP</th>
-                  <td>19651127 199301 1 001</td>
+                  <th>NIP/NIK</th>
+                  <td>{data.nip ? data.nip : data.nik}</td>
                 </tr>
                 <tr>
-                  <th>Nama Penerima</th>
-                  <td>Ir. H. Dadang Airlangga N, MMT</td>
+                  <th>Nama</th>
+                  <td>{data ? data.nama : "Loading..."}</td>
                 </tr>
                 <tr>
                   <th>Tanggal Pensiun</th>
-                  <td>2021-02-10</td>
+                  <td>
+                    {data
+                      ? format(new Date(data.tgl_pensiun), "dd/MM/yyyy")
+                      : "Loading..."}
+                  </td>
                 </tr>
                 <tr>
                   <th>Status Pensiun</th>
                   <td>
-                    <CBadge color="primary" shape="pill" className="px-2 py-2">
-                      Akan Pensiun
-                    </CBadge>
+                    {data ? (
+                      <StatusPensiun tglPensiun={data.tgl_pensiun} />
+                    ) : (
+                      "Loading..."
+                    )}
                   </td>
                 </tr>
                 <tr>
                   <th>Keterangan</th>
-                  <td>Mencapai umur ke 65 tahun</td>
+                  <td>{data ? data.keterangan : "Loading..."}</td>
+                </tr>
+                <tr>
+                  <th>Foto Pegawai</th>
+                  <td>
+                    {data ? (
+                      <img
+                        width={200}
+                        src={getImage(data.foto)}
+                        alt="foto-pegawai"
+                      />
+                    ) : (
+                      "Loading..."
+                    )}
+                  </td>
                 </tr>
               </tbody>
             </table>

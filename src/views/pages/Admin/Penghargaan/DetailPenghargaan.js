@@ -1,27 +1,60 @@
-import React from "react";
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CForm,
-  CButton,
-} from "@coreui/react";
+import React, { useEffect, useState } from "react";
+import { CCard, CCardBody, CCardHeader, CForm, CButton } from "@coreui/react";
 import { useHistory } from "react-router-dom";
 import { SampleFotoPegawai } from "src/assets";
+import { getPenghargaanById } from "src/context/actions/Penghargaan/getPenghargaanById";
+import { format } from "date-fns";
+import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
 
 const DetailPenghargaan = ({ match }) => {
   const params = match.params;
   const history = useHistory();
+  const [data, setData] = useState("");
 
   const goBackToParent = () => {
     history.goBack();
+  };
+
+  useEffect(() => {
+    // Get penghargaan by ID
+    getPenghargaanById(params.id, setData);
+  }, [params]);
+
+  // Menangani Preview Dokumentasi
+  const PreviewDokumentasi = ({ dokumentasi }) => {
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = dokumentasi.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
+
+    return (
+      <>
+        {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+          <img
+            src={getDokPenghargaan(dokumentasi)}
+            alt="dokumentasi-penghargaan"
+            style={{ width: "100%" }}
+          />
+        ) : (
+          <a
+            href={getDokPenghargaan(dokumentasi)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {filename}
+          </a>
+        )}
+      </>
+    );
   };
 
   return (
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Detail Penghargaan : {params.id}</h3>
+          <h3>Detail Penghargaan</h3>
           <CButton
             type="button"
             color="warning"
@@ -35,37 +68,37 @@ const DetailPenghargaan = ({ match }) => {
           <CCardBody>
             <table className="table table-striped table-borderless">
               <tbody>
-                <tr>
-                  <th>NIP</th>
-                  <td>19651127 199301 1 001</td>
-                </tr>
+                {/* <tr>
+                  <th>NIP / NIK</th>
+                  <td>{data ? data.nip : "Loading..."}</td>
+                </tr> */}
                 <tr>
                   <th>Nama Penerima</th>
-                  <td>Ir. H. Dadang Airlangga N, MMT</td>
+                  <td>{data ? data.nama : "Loading..."}</td>
                 </tr>
                 <tr>
                   <th>Nama Penghargaan</th>
-                  <td>Penghargaan 1</td>
+                  <td>{data ? data.nama_penghargaan : "Loading..."}</td>
                 </tr>
                 <tr>
                   <th>Pemberi</th>
-                  <td>Walikota Samarinda</td>
+                  <td>{data ? data.pemberi : "Loading..."}</td>
                 </tr>
                 <tr>
                   <th>Tgl. Penghargaan</th>
-                  <td>10-12-2021</td>
+                  <td>
+                    {data
+                      ? format(new Date(data.tgl_penghargaan), "dd/MM/yyyy")
+                      : "Loading..."}
+                  </td>
                 </tr>
                 <tr>
                   <th>Dokumentasi</th>
                   <td>
-                    {params.id === "1" ? (
-                      <img
-                        src={SampleFotoPegawai}
-                        width={200}
-                        alt="foto-penghargaan"
-                      />
+                    {data ? (
+                      <PreviewDokumentasi dokumentasi={data.dokumentasi} />
                     ) : (
-                      <a href=".">dokumentasi_penghargaan.pdf</a>
+                      "Loading..."
                     )}
                   </td>
                 </tr>

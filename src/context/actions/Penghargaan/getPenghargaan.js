@@ -13,7 +13,7 @@ export const getPenghargaan = (dispatch) => {
         type: SUCCESS,
         payload: res.data.data,
       });
-      console.log("res : ", res.data);
+      console.log(res.data);
     })
     .catch((err) => {
       dispatch({

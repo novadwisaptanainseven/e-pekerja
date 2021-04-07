@@ -16,8 +16,8 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
-import { LoadAnimationBlue, SampleFotoPegawai } from "src/assets";
+import { cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { LoadAnimationBlue } from "src/assets";
 import { GlobalContext } from "src/context/Provider";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -182,9 +182,9 @@ const Penghargaan = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        {/* <CButton type="button" color="info" className="ml-2">
           Cetak <CIcon content={cilPrint} />
-        </CButton>
+        </CButton> */}
       </>
     );
   }, [filterText, resetPaginationToggle]);
@@ -215,7 +215,7 @@ const Penghargaan = () => {
     }).then((res) => {
       if (res.isConfirmed) {
         // Delete pesan
-        deletePenghargaan(id, [penghargaanDispatch]);
+        deletePenghargaan(id, penghargaanDispatch);
         MySwal.fire({
           icon: "success",
           title: "Terhapus",
