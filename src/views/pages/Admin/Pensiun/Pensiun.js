@@ -24,6 +24,7 @@ import { format } from "date-fns";
 import { LoadAnimationBlue } from "src/assets";
 import { deletePensiun } from "src/context/actions/Pensiun.js/deletePensiun";
 import { batalkanPensiun } from "src/context/actions/Pensiun.js/batalkanPensiun";
+import printPensiunPegawai from "src/context/actions/DownloadFile/printPensiunPegawai";
 
 const MySwal = withReactContent(swal2);
 
@@ -238,7 +239,12 @@ const Pensiun = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={printPensiunPegawai}
+        >
           Cetak <CIcon content={cilPrint} />
         </CButton>
       </>

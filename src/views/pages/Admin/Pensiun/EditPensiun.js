@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import * as Yup from "yup";
+
 import {
   CFormGroup,
   CInput,
@@ -11,15 +16,111 @@ import {
   CCardHeader,
   CButton,
   CForm,
+  CRow,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
+import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
+import { getPensiunById } from "src/context/actions/Pensiun.js/getPensiunById";
+import { Formik } from "formik";
+import Select from "react-select";
+import { LoadAnimationBlue, LoadAnimationWhite } from "src/assets";
+import { editPensiun } from "src/context/actions/Pensiun.js/editPensiun";
+
+const MySwal = withReactContent(swal2);
 
 const EditPensiun = ({ match }) => {
   const params = match.params;
   const history = useHistory();
+  const [pegawai, setPegawai] = useState([]);
+  const [pensiun, setPensiun] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [touchedSelect, setTouchedSelect] = useState(false);
 
   const goBackToParent = () => {
     history.goBack();
+  };
+
+  useEffect(() => {
+    // Get select pegawai
+    getSelectPegawai(setPegawai);
+    // Get pensiun by ID
+    getPensiunById(params.id, setPensiun);
+  }, [params]);
+
+  const getDataOptions = (pegawai) => {
+    let options = [];
+
+    pegawai.forEach((item) => {
+      options.push({
+        value: item.id_pegawai,
+        label: item.nama,
+      });
+    });
+
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(pegawai), [pegawai]);
+
+  // Inisialisasi state formik
+  const initState = {
+    id_pegawai: pensiun ? pensiun.id_pegawai : "",
+    tgl_pensiun: pensiun ? pensiun.tgl_pensiun : "",
+    keterangan: pensiun ? pensiun.keterangan : "",
+  };
+
+  // Fungsi untuk menampilkan alert success Edit data
+  const showAlertSuccess = () => {
+    MySwal.fire({
+      icon: "success",
+      title: "Edit Data Berhasil",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then((res) => {
+      history.push("/epekerja/admin/pensiun");
+    });
+  };
+
+  // Fungsi untuk menampilkan alert error Edit data
+  const showAlertError = (message) => {
+    let err_message = "";
+
+    for (const key in message) {
+      err_message += `${message[key]}, `;
+    }
+
+    MySwal.fire({
+      icon: "error",
+      title: "Edit Data Gagal",
+      text: err_message,
+    }).then((result) => {
+      setLoading(false);
+    });
+  };
+
+  // Setting validasi form menggunakan YUP & FORMIK
+  const validationSchema = Yup.object().shape({
+    id_pegawai: Yup.string().required("Pegawai harus diisi"),
+    tgl_pensiun: Yup.string().required("Tanggal pensiun harus diisi"),
+    keterangan: Yup.string().required("Keterangan / alasan harus diisi"),
+  });
+
+  const handleFormSubmit = (values) => {
+    editPensiun(
+      params.id,
+      values,
+      setLoading,
+      showAlertSuccess,
+      showAlertError
+    );
+  };
+
+  // Custom styling for react select
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
@@ -36,58 +137,151 @@ const EditPensiun = ({ match }) => {
             Kembali
           </CButton>
         </CCardHeader>
-        <CForm>
-          <CCardBody>
-            <CFormGroup row>
-              <CCol md="2">
-                <CLabel>Nama Pegawai</CLabel>
+        {!pensiun ? (
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="my-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
               </CCol>
-              <CCol>
-                <CSelect custom name="nama" id="nama">
-                  <option value="">-- Pilih Pegawai --</option>
-                  <option value="1">Nova Dwi Sapta (02312321312321)</option>
-                  <option value="2">Ikwal Ramadhani (02312321312321)</option>
-                  <option value="3">Iqbal Wahyudi (02312321312321)</option>
-                </CSelect>
-              </CCol>
-            </CFormGroup>
+            </CRow>
+          </div>
+        ) : (
+          <Formik
+            initialValues={initState}
+            validationSchema={validationSchema}
+            enableReinitialize={true}
+            onSubmit={(values) => handleFormSubmit(values)}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+            }) => (
+              <CForm onSubmit={handleSubmit}>
+                <CCardBody>
+                  {/* <CFormGroup row>
+                  <CCol md="2">
+                    <CLabel>Nama Pegawai</CLabel>
+                  </CCol>
+                  <CCol>
+                    <Select
+                      styles={customStyles}
+                      name="id_pegawai"
+                      id="id_pegawai"
+                      onChange={(opt) => {
+                        setTouchedSelect(false);
+                        setFieldValue("id_pegawai", opt ? opt.value : "");
+                      }}
+                      onFocus={() => setTouchedSelect(true)}
+                      placeholder="-- Pilih Pegawai --"
+                      isSearchable
+                      isClearable
+                      options={optionsData}
+                      defaultValue={{
+                        value: pensiun ? pensiun.id_pegawai : "",
+                        label: pensiun ? pensiun.nama : "",
+                      }}
+                    />
+                    {!values.id_pegawai && touchedSelect && (
+                      <div
+                        className="text-danger mt-1"
+                        style={{ fontSize: "0.8em" }}
+                      >
+                        Nama penerima harus diisi
+                      </div>
+                    )}
+                  </CCol>
+                </CFormGroup> */}
 
-            <CFormGroup row>
-              <CCol md="2">
-                <CLabel>Tgl. Pensiun</CLabel>
-              </CCol>
-              <CCol>
-                <CInput
-                  type="date"
-                  name="tgl_pensiun"
-                  id="tgl_pensiun"
-                  placeholder="Masukkan tgl. pensiun"
-                />
-              </CCol>
-            </CFormGroup>
-            <CFormGroup row>
-              <CCol md="2">
-                <CLabel>Keterangan</CLabel>
-              </CCol>
-              <CCol>
-                <CInput
-                  type="text"
-                  name="keterangan"
-                  id="keterangan"
-                  placeholder="Masukkan keterangan / alasan pensiun"
-                />
-              </CCol>
-            </CFormGroup>
-          </CCardBody>
-          <CCardFooter>
-            <CButton color="primary" type="submit" className="mr-1">
-              Simpan
-            </CButton>
-            <CButton color="danger" type="reset" className="mr-1">
-              Reset
-            </CButton>
-          </CCardFooter>
-        </CForm>
+                  <CFormGroup row>
+                    <CCol md="2">
+                      <CLabel>Tgl. Pensiun</CLabel>
+                    </CCol>
+                    <CCol>
+                      <CInput
+                        type="date"
+                        name="tgl_pensiun"
+                        id="tgl_pensiun"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.tgl_pensiun || ""}
+                        placeholder="Masukkan tgl. pensiun"
+                        className={
+                          errors.tgl_pensiun && touched.tgl_pensiun
+                            ? "is-invalid"
+                            : null
+                        }
+                      />
+                      {errors.tgl_pensiun && touched.tgl_pensiun && (
+                        <div className="invalid-feedback">
+                          {errors.tgl_pensiun}
+                        </div>
+                      )}
+                    </CCol>
+                  </CFormGroup>
+                  <CFormGroup row>
+                    <CCol md="2">
+                      <CLabel>Keterangan</CLabel>
+                    </CCol>
+                    <CCol>
+                      <CInput
+                        type="text"
+                        name="keterangan"
+                        id="keterangan"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.keterangan || ""}
+                        placeholder="Masukkan keterangan / alasan pensiun"
+                        className={
+                          errors.keterangan && touched.keterangan
+                            ? "is-invalid"
+                            : null
+                        }
+                      />
+                      {errors.keterangan && touched.keterangan && (
+                        <div className="invalid-feedback">
+                          {errors.keterangan}
+                        </div>
+                      )}
+                    </CCol>
+                  </CFormGroup>
+                </CCardBody>
+                <CCardFooter>
+                  <CButton
+                    color="primary"
+                    type="submit"
+                    className="mr-1"
+                    disabled={loading ? true : false}
+                    onClick={() => {
+                      !values.id_pegawai
+                        ? setTouchedSelect(true)
+                        : setTouchedSelect(false);
+                    }}
+                  >
+                    {loading ? (
+                      <img
+                        width={21}
+                        src={LoadAnimationWhite}
+                        alt="load-animation"
+                      />
+                    ) : (
+                      "Simpan"
+                    )}
+                  </CButton>
+                </CCardFooter>
+              </CForm>
+            )}
+          </Formik>
+        )}
       </CCard>
     </>
   );

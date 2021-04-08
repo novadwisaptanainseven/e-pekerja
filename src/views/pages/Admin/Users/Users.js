@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -14,6 +14,9 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilInfo, cilPen } from "@coreui/icons";
 import { SampleFotoPegawai } from "src/assets";
+import { GlobalContext } from "src/context/Provider";
+import { getUser } from "src/context/actions/User/getUser";
+import { getImage } from "src/context/actions/DownloadFile";
 
 const TextField = styled.input`
   height: 37px;
@@ -74,34 +77,13 @@ const Users = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { usersState, usersDispatch } = useContext(GlobalContext);
+  const { data, loading } = usersState;
 
-  const data = [
-    {
-      no: 1,
-      id: 1,
-      nip_nik: "19651127 199301 1 001",
-      nama: "Nova Dwi Sapta Nain Seven",
-      username: "novadwisapta",
-      level: 1,
-    },
-    {
-      no: 2,
-      id: 2,
-      nip_nik: "19640315 199203 1 014",
-      nama: "H. Akhmad Husein, ST, MT",
-      username: "akhmadhusein",
-      level: 2,
-    },
-    {
-      no: 3,
-      id: 3,
-      nip_nik: "19660425 199312 1 001",
-      nama: "Ikwal Ramadhani",
-      tgl_pensiun: "2021-02-02",
-      username: "ikwalramadhani",
-      level: 2,
-    },
-  ];
+  useEffect(() => {
+    // Get users
+    getUser(usersDispatch);
+  }, [usersDispatch]);
 
   const filteredData = data.filter((item) =>
     // (
@@ -110,11 +92,10 @@ const Users = () => {
 
     // )
     {
-      if (item.nama && item.nip_nik && item.username) {
+      if (item.name && item.username) {
         if (
-          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.username.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.nip_nik.toLowerCase().includes(filterText.toLowerCase())
+          item.name.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.username.toLowerCase().includes(filterText.toLowerCase())
         ) {
           return true;
         }
@@ -130,16 +111,16 @@ const Users = () => {
       sortable: true,
       width: "50px",
     },
-    {
-      name: "NIP / NIK",
-      selector: "nip_nik",
-      sortable: true,
-      wrap: true,
-      // maxWidth: "200px",
-    },
+    // {
+    //   name: "NIP / NIK",
+    //   selector: "nip_nik",
+    //   sortable: true,
+    //   wrap: true,
+    //   // maxWidth: "200px",
+    // },
     {
       name: "Nama",
-      selector: "nama",
+      selector: "name",
       sortable: true,
       // maxWidth: "200px",
       wrap: true,
@@ -175,7 +156,9 @@ const Users = () => {
             <CButton
               color="info"
               className="btn btn-sm"
-              onClick={row.id === 1 ? () => goToAkun() : () => goToDetail(row.id)}
+              onClick={
+                row.id === 1 ? () => goToAkun() : () => goToDetail(row.id)
+              }
             >
               <CIcon content={cilInfo} color="white" />
             </CButton>
@@ -260,7 +243,7 @@ const Users = () => {
               <img
                 className="img-thumbnail"
                 width={100}
-                src={SampleFotoPegawai}
+                src={getImage(data.foto_profil)}
                 alt="foto-profil"
               />
             </CCol>
@@ -280,24 +263,27 @@ const Users = () => {
           {/* <CButton type="button" color="primary" onClick={goToTambah}>
             Tambah Pensiun
           </CButton> */}
-
-          <DataTable
-            columns={columns}
-            data={filteredData}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-            pagination
-            // paginationRowsPerPageOptions={[5, 10, 15]}
-            // paginationPerPage={5}
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={SubHeaderComponentMemo}
-            expandableRows
-            expandOnRowClicked
-            expandableRowsComponent={<ExpandableComponent />}
-            highlightOnHover
-          />
+          {data.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+              // paginationRowsPerPageOptions={[5, 10, 15]}
+              // paginationPerPage={5}
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
+              expandableRows
+              expandOnRowClicked
+              expandableRowsComponent={<ExpandableComponent />}
+              highlightOnHover
+            />
+          ) : (
+            loading
+          )}
         </CCardBody>
       </CCard>
     </>
