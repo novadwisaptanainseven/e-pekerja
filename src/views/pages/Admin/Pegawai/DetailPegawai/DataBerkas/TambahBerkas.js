@@ -39,7 +39,7 @@ const TambahBerkas = ({ id, modal, setModal, berkas }) => {
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      setModal(!modal);
+      setModal(false);
       history.push(`/epekerja/admin/pegawai-detail/${id}`);
     });
   };
@@ -179,9 +179,7 @@ const TambahBerkas = ({ id, modal, setModal, berkas }) => {
                     }
                   />
                   {errors.keterangan && touched.keterangan && (
-                    <div className="invalid-feedback">
-                      {errors.keterangan}
-                    </div>
+                    <div className="invalid-feedback">{errors.keterangan}</div>
                   )}
                 </CCol>
               </CFormGroup>

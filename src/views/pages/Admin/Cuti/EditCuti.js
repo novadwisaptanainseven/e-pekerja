@@ -39,9 +39,7 @@ const MySwal = withReactContent(swal2);
 const EditCuti = ({ modalEdit, setModalEdit, id_pegawai }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [tglSelesaiCuti, setTglSelesaiCuti] = useState(
-    data ? data.tgl_selesai : ""
-  );
+  const [tglSelesaiCuti, setTglSelesaiCuti] = useState("");
   const [data, setData] = useState("");
   const [inputVal, setInputVal] = useState({
     satuan: "",
@@ -59,18 +57,18 @@ const EditCuti = ({ modalEdit, setModalEdit, id_pegawai }) => {
     return () => {
       setData(null);
     };
-  }, [modalEdit]);
+  }, [modalEdit, id_pegawai]);
 
   useEffect(() => {
     if (data) {
-      setInputVal({
-        ...inputVal,
+      setInputVal((prevValue) => ({
+        ...prevValue,
         satuan: splitLamaCuti(data.lama_cuti, "satuan"),
         tgl_selesai: data.tgl_selesai,
         tgl_mulai: data.tgl_mulai,
         lama_cuti: splitLamaCuti(data.lama_cuti, "angka"),
         keterangan: data.keterangan,
-      });
+      }));
     }
   }, [data]);
 
@@ -330,7 +328,6 @@ const EditCuti = ({ modalEdit, setModalEdit, id_pegawai }) => {
                     name="keterangan"
                     id="keterangan"
                     placeholder="Masukkan keterangan / alasan cuti"
-                    onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.keterangan}
                     disabled={!values.tgl_mulai ? true : false}

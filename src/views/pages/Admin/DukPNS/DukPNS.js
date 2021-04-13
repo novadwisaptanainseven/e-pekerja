@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 import { LoadAnimationBlue } from "src/assets";
 
@@ -22,8 +20,6 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint, cilInfo } from "@coreui/icons";
 import { getDUK } from "src/context/actions/DUK/getDUK";
 import printDUK from "src/context/actions/DownloadFile/printDUK";
-
-const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;

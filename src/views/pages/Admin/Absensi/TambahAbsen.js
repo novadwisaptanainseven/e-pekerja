@@ -102,7 +102,7 @@ const TambahAbsen = ({
 
   useEffect(() => {
     setNamaHari(getNamaHari(tglAbsen));
-  }, [tglAbsen]);
+  }, [tglAbsen, getNamaHari]);
 
   // Handle kosongkan input keterangan ketika tombol close modal diklik
   const handleCloseModal = () => {

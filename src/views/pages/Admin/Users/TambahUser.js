@@ -278,7 +278,6 @@ const TambahUser = () => {
                 <CButton
                   type="submit"
                   color="primary"
-                  type="submit"
                   className="mr-1"
                   disabled={loading ? true : false}
                 >

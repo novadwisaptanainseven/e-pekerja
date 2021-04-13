@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CCard, CCardBody, CCardHeader, CForm, CButton } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-import { SampleFotoPegawai } from "src/assets";
 import { getPenghargaanById } from "src/context/actions/Penghargaan/getPenghargaanById";
 import { format } from "date-fns";
 import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";

@@ -13,7 +13,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilInfo, cilPen } from "@coreui/icons";
-import { LoadAnimationBlue, SampleFotoPegawai } from "src/assets";
+import { LoadAnimationBlue } from "src/assets";
 import { GlobalContext } from "src/context/Provider";
 import { getUser } from "src/context/actions/User/getUser";
 import { getImage } from "src/context/actions/DownloadFile";

@@ -1,35 +1,21 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import {
-  CRow,
-  CCol,
-} from "@coreui/react";
+import { CRow, CCol } from "@coreui/react";
+import { GlobalContext } from "src/context/Provider";
+import { getRiwayatKerja } from "src/context/actions/UserPage/DataKepegawaian/getRiwayatKerja";
+import { LoadAnimationBlue } from "src/assets";
+import { format } from "date-fns";
 
-const DataKeluarga = () => {
-//   const [modalTambah, setModalTambah] = useState(false);
-//   const [modalEdit, setModalEdit] = useState({
-//     modal: false,
-//     id: null,
-//   });
+const RiwayatKerja = () => {
+  const { riwayatKerjaState, riwayatKerjaDispatch } = useContext(GlobalContext);
+  const { data, loading } = riwayatKerjaState;
 
-  const data = [
-    {
-      id: 1,
-      kantor: "Dinas PUPR",
-      jabatan: "Kepala Dinas",
-      tgl_masuk: "21-01-2021",
-      tgl_keluar: "15-05-2021",
-      keterangan: "Mutasi",
-    },
-    {
-      id: 2,
-      kantor: "Dinas Komunikasi dan Informatika",
-      jabatan: "Programmer",
-      tgl_masuk: "21-01-2021",
-      tgl_keluar: "15-05-2021",
-      keterangan: "Mencari Pengalaman Baru",
-    },
-  ];
+  useEffect(() => {
+    if (!data.length > 0) {
+      // Get data riwayat kerja
+      getRiwayatKerja(riwayatKerjaDispatch);
+    }
+  }, [data, riwayatKerjaDispatch]);
 
   const columns = [
     {
@@ -49,55 +35,17 @@ const DataKeluarga = () => {
       selector: "tgl_masuk",
       wrap: true,
       sortable: true,
+      cell: (row) => <div>{format(new Date(row.tgl_masuk), "dd/MM/yyyy")}</div>,
     },
     {
       name: "Tgl. Keluar Kerja",
       selector: "tgl_keluar",
       wrap: true,
       sortable: true,
+      cell: (row) => (
+        <div>{format(new Date(row.tgl_keluar), "dd/MM/yyyy")}</div>
+      ),
     },
-    // {
-    //   name: "Keterangan",
-    //   selector: "keterangan",
-    //   wrap: true,
-    //   sortable: true,
-    // },
-    // {
-    //   name: "Aksi",
-    //   selector: "aksi",
-    //   wrap: true,
-    //   maxWidth: "150px",
-    //   cell: (row) => (
-    //     <>
-    //       <CButtonGroup>
-    //         <CButton
-    //           color="success"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             setModalEdit({
-    //               ...modalEdit,
-    //               modal: !modalEdit.modal,
-    //               id: row.id,
-    //             })
-    //           }
-    //         >
-    //           <CIcon content={cilPen} color="white" />
-    //         </CButton>
-    //         <CButton
-    //           color="danger"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             window.confirm(
-    //               `Anda yakin ingin hapus data dengan id : ${row.id}`
-    //             )
-    //           }
-    //         >
-    //           <CIcon content={cilTrash} color="white" />
-    //         </CButton>
-    //       </CButtonGroup>
-    //     </>
-    //   ),
-    // },
   ];
 
   const customStyles = {
@@ -124,32 +72,43 @@ const DataKeluarga = () => {
   return (
     <>
       <div className="my-3">
-        {/* <div className="button-control mb-2">
-          <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Tambah Data
-          </CButton>
-          <CButton type="button" color="info">
-            Cetak <CIcon content={cilPrint} />
-          </CButton>
-        </div> */}
-        <DataTable
-          columns={columns}
-          data={data}
-          noHeader
-          responsive={true}
-          customStyles={customStyles}
-          expandableRows
-          expandableRowsComponent={<ExpandableComponent />}
-          expandOnRowClicked
-          highlightOnHover
-        />
+        {data.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+            expandableRows
+            expandableRowsComponent={<ExpandableComponent />}
+            expandOnRowClicked
+            highlightOnHover
+          />
+        ) : loading ? (
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+          />
+        )}
       </div>
     </>
   );
 };
 
-export default DataKeluarga;
+export default RiwayatKerja;

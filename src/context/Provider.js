@@ -206,6 +206,8 @@ export const GlobalProvider = ({ children }) => {
         penghargaanUserDispatch,
         berkasState,
         berkasDispatch,
+        riwayatKerjaState,
+        riwayatKerjaDispatch,
       }}
     >
       {children}

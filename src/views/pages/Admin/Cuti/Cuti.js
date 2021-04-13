@@ -21,7 +21,6 @@ import DaftarPegawaiCuti from "./DaftarPegawaiCuti";
 import { GlobalContext } from "src/context/Provider";
 import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
 import { LoadAnimationBlue } from "src/assets";
-import { getPegawaiCuti } from "src/context/actions/Cuti/getPegawaiCuti";
 
 const TextField = styled.input`
   height: 37px;

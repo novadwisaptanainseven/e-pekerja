@@ -2,6 +2,7 @@ import React from "react";
 import { CRow, CCol, CCard, CCardHeader, CCardBody } from "@coreui/react";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
+import formatTanggal from "src/helpers/formatTanggal";
 
 const DataDiriPNS = ({ data }) => {
   return (
@@ -30,8 +31,7 @@ const DataDiriPNS = ({ data }) => {
                 <tr>
                   <th>TTL</th>
                   <td>{`${data.tempat_lahir}, ${
-                    data.tgl_lahir &&
-                    format(new Date(data.tgl_lahir), "d MMMM Y")
+                    data.tgl_lahir && formatTanggal(data.tgl_lahir)
                   }`}</td>
                 </tr>
                 <tr>
@@ -83,20 +83,21 @@ const DataDiriPNS = ({ data }) => {
                   <th>TMT. Golongan</th>
                   <td>{`${
                     data.tgl_lahir &&
-                    format(new Date(data.tmt_golongan), "d-M-Y")
+                    format(new Date(data.tmt_golongan), "dd/MM/yyyy")
                   }`}</td>
                 </tr>
                 <tr>
                   <th>TMT. CPNS</th>
                   <td>{`${
-                    data.tgl_lahir && format(new Date(data.tmt_cpns), "d-M-Y")
+                    data.tgl_lahir &&
+                    format(new Date(data.tmt_cpns), "dd/MM/yyyy")
                   }`}</td>
                 </tr>
                 <tr>
                   <th>TMT. jabatan</th>
                   <td>{`${
                     data.tgl_lahir &&
-                    format(new Date(data.tmt_jabatan), "d-M-Y")
+                    format(new Date(data.tmt_jabatan), "dd/MM/yyyy")
                   }`}</td>
                 </tr>
                 <tr>

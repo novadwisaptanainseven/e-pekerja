@@ -26,7 +26,6 @@ import {
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
 import { getPTTBById } from "src/context/actions/Pegawai/PTTB/getPTTBById";
-import { getSelectSubBidang } from "src/context/actions/MasterData/SubBidang/getSelectSubBidang";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { getImage } from "src/context/actions/DownloadFile";
@@ -51,10 +50,6 @@ const EditPTTB = ({ match }) => {
     history.goBack();
   };
 
-  const previewGajiDefault = () => {
-    convertToCurrency(data.gaji_pokok);
-  };
-
   useEffect(() => {
     // Get PTTB by ID
     getPTTBById(params.id, setData);
@@ -68,7 +63,7 @@ const EditPTTB = ({ match }) => {
 
   useEffect(() => {
     if (data) {
-      previewGajiDefault();
+      convertToCurrency(data.gaji_pokok);
     }
   }, [data]);
 

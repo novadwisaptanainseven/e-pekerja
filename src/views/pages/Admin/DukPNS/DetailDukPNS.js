@@ -7,7 +7,7 @@ import {
   CCardBody,
   CButton,
 } from "@coreui/react";
-import { LoadAnimationBlue, SampleFotoPegawai } from "src/assets";
+import { LoadAnimationBlue } from "src/assets";
 import { useHistory } from "react-router-dom";
 import { getDUKById } from "src/context/actions/DUK/getDUKById";
 import { format } from "date-fns";

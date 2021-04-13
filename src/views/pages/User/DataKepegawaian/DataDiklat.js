@@ -1,29 +1,32 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { CRow, CCol } from "@coreui/react";
-import { SampleIjazah } from "src/assets";
+import {
+  CRow,
+  CCol,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+} from "@coreui/react";
+import { GlobalContext } from "src/context/Provider";
+import { getDiklat } from "src/context/actions/UserPage/DataKepegawaian/getDiklat";
+import getDokDiklat from "src/context/actions/DownloadFile/getDokDiklat";
+import { LoadAnimationBlue } from "src/assets";
 
 const DataDiklat = () => {
-  const data = [
-    {
-      id: 1,
-      nama_diklat: "Adumla",
-      jenis_diklat: "Jenis Diklat",
-      penyelenggara: "Penyelenggara",
-      tahun_diklat: "1997",
-      jml_jam: "500",
-      dokumentasi: "dokumentasi_diklat.jpg",
-    },
-    {
-      id: 2,
-      nama_diklat: "Diklatpim Tk. III",
-      jenis_diklat: "Jenis Diklat",
-      penyelenggara: "Penyelenggara",
-      tahun_diklat: "2003",
-      jml_jam: "360",
-      dokumentasi: "dokumentasi_diklat.pdf",
-    },
-  ];
+  const { diklatState, diklatDispatch } = useContext(GlobalContext);
+  const { data, loading } = diklatState;
+  const [previewImage, setPreviewImage] = useState({
+    modal: false,
+    image: null,
+  });
+
+  useEffect(() => {
+    if (!data.length > 0) {
+      // Get all diklat
+      getDiklat(diklatDispatch);
+    }
+  }, [data, diklatDispatch]);
 
   const columns = [
     {
@@ -54,7 +57,7 @@ const DataDiklat = () => {
     },
     {
       name: "Jumlah Jam",
-      selector: "jml_jam",
+      selector: "jumlah_jam",
       wrap: true,
       sortable: true,
     },
@@ -68,10 +71,23 @@ const DataDiklat = () => {
     },
   };
 
+  // Menangani preview gambar
+  const handlePreviewImage = (dokumentasi) => {
+    setPreviewImage({
+      ...previewImage,
+      modal: !previewImage.modal,
+      image: dokumentasi,
+    });
+  };
+
   // Expandable Component
   const ExpandableComponent = ({ data }) => {
-    let ext_file = data.dokumentasi.split(".");
-    let ext_status = ext_file[ext_file.length - 1];
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = data.dokumentasi.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
 
     return (
       <>
@@ -81,10 +97,22 @@ const DataDiklat = () => {
               <strong>Dokumentasi</strong>
             </CCol>
             <CCol>
-              {ext_status === "jpg" ? (
-                <img width={200} src={SampleIjazah} alt={data.dokumentasi} />
+              {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+                <img
+                  width={200}
+                  src={getDokDiklat(data.dokumentasi)}
+                  alt="dokumentasi-diklat"
+                  onClick={() => handlePreviewImage(data.dokumentasi)}
+                  style={{ cursor: "pointer" }}
+                />
               ) : (
-                <a href=".">{data.dokumentasi}</a>
+                <a
+                  href={getDokDiklat(data.dokumentasi)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {filename}
+                </a>
               )}
             </CCol>
           </CRow>
@@ -96,18 +124,67 @@ const DataDiklat = () => {
   return (
     <>
       <div className="my-3">
-        <DataTable
-          columns={columns}
-          data={data}
-          noHeader
-          responsive={true}
-          customStyles={customStyles}
-          expandableRows
-          expandableRowsComponent={<ExpandableComponent />}
-          expandOnRowClicked
-          highlightOnHover
-        />
+        {data.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+            expandableRows
+            expandableRowsComponent={<ExpandableComponent />}
+            expandOnRowClicked
+            highlightOnHover
+          />
+        ) : loading ? (
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+          />
+        )}
       </div>
+
+      {/* Modal Preview Image */}
+      <CModal
+        show={previewImage.modal}
+        onClose={() =>
+          setPreviewImage({
+            ...previewImage,
+            modal: !previewImage.modal,
+            image: null,
+          })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Preview</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {previewImage.image && (
+            <img
+              style={{ width: "100%" }}
+              src={getDokDiklat(previewImage.image)}
+              alt="dokumentasi-diklat"
+            />
+          )}
+        </CModalBody>
+      </CModal>
     </>
   );
 };

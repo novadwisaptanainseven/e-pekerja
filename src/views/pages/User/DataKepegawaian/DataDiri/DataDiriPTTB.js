@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CRow, CCol, CCard, CCardHeader, CCardBody } from "@coreui/react";
 import { LoadAnimationBlue } from "src/assets";
-import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
-import { getPTTBById } from "src/context/actions/Pegawai/PTTB/getPTTBById";
+import formatTanggal from "src/helpers/formatTanggal";
 
 const DataDiriPTTB = ({ data }) => {
   return (
@@ -35,8 +34,7 @@ const DataDiriPTTB = ({ data }) => {
                     <tr>
                       <th>TTL</th>
                       <td>{`${data.tempat_lahir}, ${
-                        data.tgl_lahir &&
-                        format(new Date(data.tgl_lahir), "d MMMM Y")
+                        data.tgl_lahir && formatTanggal(data.tgl_lahir)
                       }`}</td>
                     </tr>
                     <tr>
@@ -66,13 +64,13 @@ const DataDiriPTTB = ({ data }) => {
                     <tr>
                       <th>Tgl. Penetapan SK</th>
                       <td>
-                        {format(new Date(data.tgl_penetapan_sk), "dd/MM/Y")}
+                        {format(new Date(data.tgl_penetapan_sk), "dd/MM/yyyy")}
                       </td>
                     </tr>
                     <tr>
                       <th>Tgl. Mulai Tugas</th>
                       <td>
-                        {format(new Date(data.tgl_mulai_tugas), "d/MM/Y")}
+                        {format(new Date(data.tgl_mulai_tugas), "d/MM/yyyy")}
                       </td>
                     </tr>
                     <tr>

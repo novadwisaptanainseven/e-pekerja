@@ -46,10 +46,6 @@ const EditPTTH = ({ match }) => {
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
 
-  const previewGajiDefault = () => {
-    convertToCurrency(data.gaji_pokok);
-  };
-
   const goBackToParent = () => {
     history.goBack();
   };
@@ -67,7 +63,7 @@ const EditPTTH = ({ match }) => {
 
   useEffect(() => {
     if (data) {
-      previewGajiDefault();
+      convertToCurrency(data.gaji_pokok);
     }
   }, [data]);
 

@@ -295,7 +295,6 @@ const TambahCuti = ({ modalTambah, setModalTambah, id_pegawai }) => {
                     name="keterangan"
                     id="keterangan"
                     placeholder="Masukkan keterangan / alasan cuti"
-                    onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.keterangan}
                     disabled={!values.tgl_mulai ? true : false}

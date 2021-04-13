@@ -12,6 +12,7 @@ import {
 import { GlobalContext } from "src/context/Provider";
 import { getPendidikan } from "src/context/actions/UserPage/DataKepegawaian/getPendidikan";
 import { getIjazah } from "src/context/actions/DownloadFile";
+import { LoadAnimationBlue } from "src/assets";
 
 const DataPendidikan = () => {
   const { pendidikanState, pendidikanDispatch } = useContext(GlobalContext);
@@ -124,17 +125,40 @@ const DataPendidikan = () => {
   return (
     <>
       <div className="my-3">
-        <DataTable
-          columns={columns}
-          data={data}
-          noHeader
-          responsive={true}
-          customStyles={customStyles}
-          expandableRows
-          expandOnRowClicked
-          expandableRowsComponent={<ExpandableComponent />}
-          highlightOnHover
-        />
+        {data.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+            expandableRows
+            expandableRowsComponent={<ExpandableComponent />}
+            expandOnRowClicked
+            highlightOnHover
+          />
+        ) : loading ? (
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+          />
+        )}
       </div>
 
       {/* Modal Preview Image */}

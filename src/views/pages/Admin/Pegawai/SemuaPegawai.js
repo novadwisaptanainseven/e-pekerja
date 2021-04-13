@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 import { LoadAnimationBlue } from "src/assets";
 
@@ -21,8 +19,6 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
-
-const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -216,57 +212,11 @@ const SemuaPegawai = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  // const goToTambah = () => {
-  //   history.push("/epekerja/admin/pegawai-tambah");
-  // };
-
-  const goToEditPNS = (id) => {
-    history.push(`/epekerja/admin/pegawai-edit/${id}`);
-  };
-  const goToEditPTTH = (id) => {
-    history.push(`/epekerja/admin/pegawai/ptth-edit/${id}`);
-  };
-  const goToEditPTTB = (id) => {
-    history.push(`/epekerja/admin/pegawai/pttb-edit/${id}`);
-  };
-
   const goToDetail = (id) => {
     history.push(`/epekerja/admin/pegawai-detail/${id}`);
   };
 
-  // Menangani tombol hapus
-  // const handleDelete = (id) => {
-  //   MySwal.fire({
-  //     icon: "warning",
-  //     title: "Anda yakin ingin menghapus data ini ?",
-  //     text: "Jika yakin, klik YA",
-  //     showConfirmButton: true,
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "YA",
-  //   }).then((res) => {
-  //     if (res.isConfirmed) {
-  //       // Memanggil method deletePNS untuk menghapus data PNS
-  //       deletePNS(id, pnsDispatch);
-  //       MySwal.fire({
-  //         icon: "success",
-  //         title: "Terhapus",
-  //         text: "Data berhasil dihapus",
-  //       });
-  //     }
-  //   });
-  // };
-
   const ExpandableComponent = ({ data }) => {
-    // let status_pegawai = "";
-    // if (data.status_pegawai === 1) {
-    //   status_pegawai = "PNS";
-    // } else if (data.status_pegawai === 2) {
-    //   status_pegawai = "PTTH";
-    // } else if (data.status_pegawai === 3) {
-    //   status_pegawai = "PTTB";
-    // }
     return (
       <>
         <div style={{ padding: "10px 63px" }}>

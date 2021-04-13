@@ -9,7 +9,6 @@ import {
   CInput,
   CLabel,
   CCol,
-  CSelect,
   CCard,
   CCardBody,
   CCardFooter,
@@ -19,10 +18,8 @@ import {
   CRow,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
 import { getPensiunById } from "src/context/actions/Pensiun.js/getPensiunById";
 import { Formik } from "formik";
-import Select from "react-select";
 import { LoadAnimationBlue, LoadAnimationWhite } from "src/assets";
 import { editPensiun } from "src/context/actions/Pensiun.js/editPensiun";
 
@@ -31,36 +28,17 @@ const MySwal = withReactContent(swal2);
 const EditPensiun = ({ match }) => {
   const params = match.params;
   const history = useHistory();
-  const [pegawai, setPegawai] = useState([]);
   const [pensiun, setPensiun] = useState("");
   const [loading, setLoading] = useState(false);
-  const [touchedSelect, setTouchedSelect] = useState(false);
 
   const goBackToParent = () => {
     history.goBack();
   };
 
   useEffect(() => {
-    // Get select pegawai
-    getSelectPegawai(setPegawai);
     // Get pensiun by ID
     getPensiunById(params.id, setPensiun);
   }, [params]);
-
-  const getDataOptions = (pegawai) => {
-    let options = [];
-
-    pegawai.forEach((item) => {
-      options.push({
-        value: item.id_pegawai,
-        label: item.nama,
-      });
-    });
-
-    return options;
-  };
-
-  const optionsData = React.useMemo(() => getDataOptions(pegawai), [pegawai]);
 
   // Inisialisasi state formik
   const initState = {
@@ -113,14 +91,6 @@ const EditPensiun = ({ match }) => {
       showAlertSuccess,
       showAlertError
     );
-  };
-
-  // Custom styling for react select
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      border: !touchedSelect ? provided.border : "1px solid #e55353",
-    }),
   };
 
   return (
@@ -261,11 +231,6 @@ const EditPensiun = ({ match }) => {
                     type="submit"
                     className="mr-1"
                     disabled={loading ? true : false}
-                    onClick={() => {
-                      !values.id_pegawai
-                        ? setTouchedSelect(true)
-                        : setTouchedSelect(false);
-                    }}
                   >
                     {loading ? (
                       <img

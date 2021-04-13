@@ -7,12 +7,10 @@ import { LoadAnimationBlue } from "src/assets";
 
 import {
   CButton,
-  CForm,
   CModal,
   CModalHeader,
   CModalTitle,
   CModalBody,
-  CModalFooter,
   CRow,
   CCol,
 } from "@coreui/react";
@@ -181,28 +179,6 @@ const DataBerkas = ({ id }) => {
               customStyles={customStyles}
             />
           </div>
-
-          {/* Modal Tambah */}
-          <CModal
-            show={modalTambah}
-            onClose={() => setModalTambah(!modalTambah)}
-            size="lg"
-          >
-            <CModalHeader closeButton>
-              <CModalTitle>Tambah Data</CModalTitle>
-            </CModalHeader>
-
-            <TambahBerkas
-              id={id}
-              modal={modalTambah}
-              setModal={setModalTambah}
-              berkas={{
-                setLoading: setLoading,
-                data: data,
-                setData: setData,
-              }}
-            />
-          </CModal>
         </>
       )}
 
@@ -222,6 +198,28 @@ const DataBerkas = ({ id }) => {
           </div>
         </>
       )}
+
+      {/* Modal Tambah */}
+      <CModal
+        show={modalTambah}
+        onClose={() => setModalTambah(!modalTambah)}
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Tambah Data</CModalTitle>
+        </CModalHeader>
+
+        <TambahBerkas
+          id={id}
+          modal={modalTambah}
+          setModal={setModalTambah}
+          berkas={{
+            setLoading: setLoading,
+            data: data,
+            setData: setData,
+          }}
+        />
+      </CModal>
 
       {/* Modal Preview Image */}
       <CModal

@@ -20,7 +20,6 @@ import { LoadAnimationBlue, LoadAnimationWhite } from "src/assets";
 import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
 import { editPenghargaan } from "src/context/actions/Penghargaan/editPenghargaan";
 import { getPenghargaanById } from "src/context/actions/Penghargaan/getPenghargaanById";
-import { insertPenghargaan } from "src/context/actions/Penghargaan/insertPengharaan";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";

@@ -41,7 +41,7 @@ const EditKGB = ({ id_pegawai, id_kgb, modalEdit, setModalEdit }) => {
 
   useEffect(() => {
     if (data) {
-      previewGajiDefault();
+      convertToCurrency(data.gaji_pokok_baru);
     }
   }, [data]);
 
@@ -52,11 +52,6 @@ const EditKGB = ({ id_pegawai, id_kgb, modalEdit, setModalEdit }) => {
     tmt_kenaikan_gaji: data ? data.tmt_kenaikan_gaji : "",
     kenaikan_gaji_yad: data ? data.kenaikan_gaji_yad : "",
     peraturan: data ? data.peraturan : "",
-  };
-
-  // Menampilkan keterangan gaji dalam bentuk currency ketika aplikasi pertama kali dirender
-  const previewGajiDefault = () => {
-    convertToCurrency(data.gaji_pokok_baru);
   };
 
   // Mengubah format gaji dari number ke currency

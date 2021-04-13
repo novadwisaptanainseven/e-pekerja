@@ -1,23 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CRow, CCol, CCard, CCardHeader, CCardBody } from "@coreui/react";
 import { LoadAnimationBlue } from "src/assets";
-import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
-import { getPTTHById } from "src/context/actions/Pegawai/PTTH/getPTTHById";
 
 const DataDiriPTTH = ({ data }) => {
-  // const [data, setData] = useState("");
-
-  // useEffect(() => {
-  //   // Get PNS By ID
-  //   getPTTHById(id, setData);
-
-  //   return () => {
-  //     setData(null);
-  //   };
-  // }, [id]);
-
   return (
     <>
       {data ? (

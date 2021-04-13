@@ -7,7 +7,7 @@ import {
   CCardBody,
   CButton,
 } from "@coreui/react";
-import { LoadAnimationBlue, SampleFotoPegawai } from "src/assets";
+import { LoadAnimationBlue } from "src/assets";
 import { useHistory } from "react-router-dom";
 import { getMasaKerjaById } from "src/context/actions/MasaKerja/getMasaKerjaById";
 import { format } from "date-fns";

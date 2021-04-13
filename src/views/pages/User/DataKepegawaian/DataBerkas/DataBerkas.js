@@ -1,47 +1,83 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import {
   CButton,
-  CForm,
   CModal,
   CModalHeader,
   CModalTitle,
   CModalBody,
-  CModalFooter,
+  CRow,
+  CCol,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilTrash } from "@coreui/icons";
 import TambahBerkas from "./TambahBerkas";
+import { GlobalContext } from "src/context/Provider";
+import { getBerkas } from "src/context/actions/UserPage/DataKepegawaian/getBerkas";
+import getFileBerkas from "src/context/actions/DownloadFile/getFileBerkas";
+import { format } from "date-fns";
+import { LoadAnimationBlue } from "src/assets";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { deleteBerkas } from "src/context/actions/UserPage/DataKepegawaian/deleteBerkas";
+
+const MySwal = withReactContent(swal2);
 
 const DataBerkas = () => {
   const [modalTambah, setModalTambah] = useState(false);
+  const { berkasState, berkasDispatch } = useContext(GlobalContext);
+  const { data, loading } = berkasState;
+  const [previewImage, setPreviewImage] = useState({
+    modal: false,
+    image: null,
+  });
 
-  const data = [
-    {
-      id: 1,
-      nama_berkas: "Surat Kontrak",
-      jenis_berkas: "Dokumen",
-      tgl_upload: "10 Januari 2021",
-      keterangan:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo, nihil?",
-    },
-    {
-      id: 2,
-      nama_berkas: "Foto 3x4.jpg",
-      jenis_berkas: "Foto",
-      tgl_upload: "15 Januari 2021",
-      keterangan:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, quam.",
-    },
-  ];
+  useEffect(() => {
+    if (!data.length > 0) {
+      // Get data berkas
+      getBerkas(berkasDispatch);
+    }
+  }, [data, berkasDispatch]);
 
   const columns = [
     {
-      name: "Nama Berkas",
+      name: "Berkas",
       selector: "nama_berkas",
       wrap: true,
       sortable: true,
       maxWidth: "250px",
+      cell: (row) => {
+        const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+        let arr_file = row.nama_berkas.split("/");
+        let filename = arr_file[arr_file.length - 1];
+        let ext_file = filename.split(".");
+        let ext_file2 = ext_file[ext_file.length - 1];
+
+        return (
+          <>
+            {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+              <img
+                width={100}
+                src={getFileBerkas(row.nama_berkas)}
+                alt={filename}
+                onClick={() => handlePreviewImage(row.nama_berkas)}
+                style={{ cursor: "pointer" }}
+                className="img-thumbnail m-3"
+              />
+            ) : (
+              <a
+                href={getFileBerkas(row.nama_berkas)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {filename}
+              </a>
+            )}
+          </>
+        );
+      },
     },
     {
       name: "Tgl. Upload",
@@ -49,6 +85,9 @@ const DataBerkas = () => {
       wrap: true,
       sortable: true,
       maxWidth: "150px",
+      cell: (row) => (
+        <div>{format(new Date(row.tgl_upload), "dd/MM/yyyy")}</div>
+      ),
     },
     {
       name: "Keterangan",
@@ -67,11 +106,7 @@ const DataBerkas = () => {
           <CButton
             color="danger"
             className="btn btn-sm"
-            onClick={() =>
-              window.confirm(
-                `Anda yakin ingin hapus data dengan id : ${row.id}`
-              )
-            }
+            onClick={() => handleDelete(row.id_berkas)}
           >
             <CIcon content={cilTrash} color="white" />
           </CButton>
@@ -88,39 +123,81 @@ const DataBerkas = () => {
     },
   };
 
+  // Menangani preview gambar
+  const handlePreviewImage = (dokumentasi) => {
+    setPreviewImage({
+      ...previewImage,
+      modal: !previewImage.modal,
+      image: dokumentasi,
+    });
+  };
+
+  // Menangani tombol hapus
+  const handleDelete = (id_berkas) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method delete Berkas untuk menghapus data Berkas
+        deleteBerkas(id_berkas, berkasDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
+  };
+
   return (
     <>
       <div className="my-3">
-        {/* <div className="button-control">
-          <div className="form-upload">
-            <CForm>
-              <CFormGroup row>
-                <CCol className="pr-0">
-                  <CInput type="file" name="berkas" id="berkas" />
-                </CCol>
-                <CCol className="pl-0 ml-2">
-                  <CButton className="form-upload-button" color="primary">
-                    Upload
-                  </CButton>
-                </CCol>
-              </CFormGroup>
-            </CForm>
+        {data.length > 0 ? (
+          <>
+            <CButton
+              type="button"
+              color="primary"
+              onClick={() => setModalTambah(!modalTambah)}
+            >
+              Tambah Berkas
+            </CButton>
+            <DataTable
+              columns={columns}
+              data={data}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
+          </>
+        ) : loading ? (
+          <div>
+            <CRow>
+              <CCol className="text-center">
+                <img
+                  className="mt-4 ml-3"
+                  width={30}
+                  src={LoadAnimationBlue}
+                  alt="load-animation"
+                />
+              </CCol>
+            </CRow>
           </div>
-        </div> */}
-        <CButton
-          type="button"
-          color="primary"
-          onClick={() => setModalTambah(!modalTambah)}
-        >
-          Tambah Berkas
-        </CButton>
-        <DataTable
-          columns={columns}
-          data={data}
-          noHeader
-          responsive={true}
-          customStyles={customStyles}
-        />
+        ) : (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+          />
+        )}
       </div>
 
       {/* Modal Tambah */}
@@ -132,23 +209,38 @@ const DataBerkas = () => {
         <CModalHeader closeButton>
           <CModalTitle>Tambah Data</CModalTitle>
         </CModalHeader>
-        <CForm>
-          <CModalBody>
-            <TambahBerkas />
-          </CModalBody>
-          <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
-            <CButton
-              type="button"
-              color="secondary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Batal
-            </CButton>
-          </CModalFooter>
-        </CForm>
+
+        <TambahBerkas
+          modal={modalTambah}
+          setModal={setModalTambah}
+          dispatch={berkasDispatch}
+        />
+      </CModal>
+
+      {/* Modal Preview Image */}
+      <CModal
+        show={previewImage.modal}
+        onClose={() =>
+          setPreviewImage({
+            ...previewImage,
+            modal: !previewImage.modal,
+            image: null,
+          })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Preview</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {previewImage.image && (
+            <img
+              style={{ width: "100%" }}
+              src={getFileBerkas(previewImage.image)}
+              alt="dokumentasi-penghargaan"
+            />
+          )}
+        </CModalBody>
       </CModal>
     </>
   );

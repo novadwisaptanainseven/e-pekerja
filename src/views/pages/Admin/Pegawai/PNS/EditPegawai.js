@@ -54,10 +54,6 @@ const EditPegawai = ({ match }) => {
     history.goBack();
   };
 
-  const previewGajiDefault = () => {
-    convertToCurrency(pns.gaji_pokok);
-  };
-
   useEffect(() => {
     // Get PNS By ID
     getPNSById(params.id, setPNS);
@@ -75,7 +71,7 @@ const EditPegawai = ({ match }) => {
 
   useEffect(() => {
     if (pns) {
-      previewGajiDefault();
+      convertToCurrency(pns.gaji_pokok);
     }
   }, [pns]);
 

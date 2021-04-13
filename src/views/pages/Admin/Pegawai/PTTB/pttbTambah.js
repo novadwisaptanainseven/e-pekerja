@@ -25,7 +25,6 @@ import {
   CFormText,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-import { getSelectSubBidang } from "src/context/actions/MasterData/SubBidang/getSelectSubBidang";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { insertPTTB } from "src/context/actions/Pegawai/PTTB/insertPTTB";

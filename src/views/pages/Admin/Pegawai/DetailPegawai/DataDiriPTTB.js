@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CRow, CCol, CCard, CCardHeader, CCardBody } from "@coreui/react";
 import { LoadAnimationBlue } from "src/assets";
-import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
-import { getPTTBById } from "src/context/actions/Pegawai/PTTB/getPTTBById";
 
 const DataDiriPTTB = ({ data }) => {
   return (
