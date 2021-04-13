@@ -1,3 +1,5 @@
+import { cibTreehouse } from "@coreui/icons";
+import { roundToNearestMinutes } from "date-fns";
 import React from "react";
 
 // Import Dashboard
@@ -196,6 +198,9 @@ const DetailPensiun = React.lazy(() =>
 
 // Users
 const Users = React.lazy(() => import("./views/pages/Admin/Users/Users"));
+const TambahUser = React.lazy(() =>
+  import("./views/pages/Admin/Users/TambahUser")
+);
 const UserDetail = React.lazy(() =>
   import("./views/pages/Admin/Users/UserDetail")
 );
@@ -563,9 +568,16 @@ const routes = [
     exact: true,
   },
   {
-    path: "/epekerja/admin/user-detail/:id",
+    path: "/epekerja/admin/users/tambah",
+    name: "Tambah User",
+    component: TambahUser,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/users/detail/:id",
     name: "Detail User",
     component: UserDetail,
+    exact: true,
   },
 
   // Akun
@@ -576,14 +588,16 @@ const routes = [
     exact: true,
   },
   {
-    path: "/epekerja/admin/akun-edit/:id",
+    path: "/epekerja/admin/akun/edit/:id",
     name: "Edit Akun",
     component: EditAkun,
+    exact: true,
   },
   {
-    path: "/epekerja/admin/akun-edit-password/:id",
+    path: "/epekerja/admin/akun/edit-password/:id",
     name: "Edit Password",
     component: EditPassword,
+    exact: true,
   },
 ];
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   CCard,
   CCardBody,
@@ -10,20 +10,51 @@ import {
 import CIcon from "@coreui/icons-react";
 
 import { CChartPie } from "@coreui/react-chartjs";
-import { SampleFotoPegawai } from "src/assets";
-import { cilGroup } from "@coreui/icons";
+import { cilGroup, cilMoney } from "@coreui/icons";
+import { GlobalContext } from "src/context/Provider";
+import { getImage } from "src/context/actions/DownloadFile";
+import { getDashboardInformation } from "src/context/actions/UserPage/Dashboard/getDashboardInformation";
 
 const Dashboard = () => {
+  const { userState, dashboardState, dashboardDispatch } = useContext(
+    GlobalContext
+  );
+  const { data } = userState;
+  const { data: dataDashboard } = dashboardState;
+  const [absen, setAbsen] = useState({
+    totHadir: 0,
+    totIzin: 0,
+    totSakit: 0,
+    totCuti: 0,
+    totTK: 0,
+  });
+
+  useEffect(() => {
+    // Get dashboard information
+    if (!dataDashboard) {
+      getDashboardInformation(dashboardDispatch);
+    } else {
+      // Set Absen
+      setAbsen({
+        totHadir: dataDashboard.hadir,
+        totIzin: dataDashboard.izin,
+        totSakit: dataDashboard.sakit,
+        totCuti: dataDashboard.cuti,
+        totTK: dataDashboard.tanpa_keterangan,
+      });
+    }
+  }, [dataDashboard, dashboardDispatch]);
+
   return (
     <>
-      <h1>Selamat Datang User di E-Pekerja</h1>
+      <h1>Selamat Datang {data && data.name} di E-Pekerja</h1>
       <hr />
       <CRow>
         <CCol xs="12" sm="4" lg="4">
           <img
             className="img-thumbnail mb-4"
             width={400}
-            src={SampleFotoPegawai}
+            src={data ? getImage(data.foto_profil) : ""}
             alt="foto-pegawai"
           />
         </CCol>
@@ -32,7 +63,11 @@ const Dashboard = () => {
             <CCol>
               <CWidgetIcon
                 text="Jumlah Keluarga"
-                header="5"
+                header={
+                  dataDashboard
+                    ? dataDashboard.total_keluarga.toString()
+                    : "..."
+                }
                 color="primary"
                 iconPadding={false}
               >
@@ -41,8 +76,25 @@ const Dashboard = () => {
             </CCol>
             <CCol>
               <CWidgetIcon
+                text="Gaji Pokok"
+                header={
+                  dataDashboard
+                    ? dataDashboard.gaji_pokok.toLocaleString("id", {
+                        style: "currency",
+                        currency: "IDR",
+                      })
+                    : "..."
+                }
+                color="success"
+                iconPadding={false}
+              >
+                <CIcon width={24} content={cilMoney} />
+              </CWidgetIcon>
+            </CCol>
+            <CCol>
+              <CWidgetIcon
                 text="Status Pegawai"
-                header="PTTH"
+                header={dataDashboard ? dataDashboard.status_pegawai : "..."}
                 color="info"
                 iconPadding={false}
               >
@@ -65,7 +117,13 @@ const Dashboard = () => {
                           "#00D8FF",
                           "#636f83",
                         ],
-                        data: [120, 20, 10, 5, 3],
+                        data: [
+                          absen.totHadir,
+                          absen.totIzin,
+                          absen.totSakit,
+                          absen.totCuti,
+                          absen.totTK,
+                        ],
                       },
                     ]}
                     labels={[

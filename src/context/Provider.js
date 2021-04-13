@@ -124,6 +124,31 @@ export const GlobalProvider = ({ children }) => {
   // Users
   const [usersState, usersDispatch] = useReducer(reducer, initState);
 
+  // Context untuk halaman front end user
+  // Data Diri
+  const [dataDiriState, dataDiriDispatch] = useReducer(
+    reducer,
+    initStateDefault
+  );
+  // Keluarga
+  const [keluargaState, keluargaDispatch] = useReducer(reducer, initState);
+  // Pendidikan
+  const [pendidikanState, pendidikanDispatch] = useReducer(reducer, initState);
+  // Diklat
+  const [diklatState, diklatDispatch] = useReducer(reducer, initState);
+  // Penghargaan
+  const [penghargaanUserState, penghargaanUserDispatch] = useReducer(
+    reducer,
+    initState
+  );
+  // Berkas
+  const [berkasState, berkasDispatch] = useReducer(reducer, initState);
+  // Riwayat Kerja
+  const [riwayatKerjaState, riwayatKerjaDispatch] = useReducer(
+    reducer,
+    initState
+  );
+
   return (
     <GlobalContext.Provider
       value={{
@@ -169,6 +194,18 @@ export const GlobalProvider = ({ children }) => {
         penghargaanDispatch,
         usersState,
         usersDispatch,
+        dataDiriState,
+        dataDiriDispatch,
+        keluargaState,
+        keluargaDispatch,
+        pendidikanState,
+        pendidikanDispatch,
+        diklatState,
+        diklatDispatch,
+        penghargaanUserState,
+        penghargaanUserDispatch,
+        berkasState,
+        berkasDispatch,
       }}
     >
       {children}

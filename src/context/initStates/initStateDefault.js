@@ -1,6 +1,6 @@
 const initStateDefault = {
   loading: false,
-  data: null,
+  data: "",
   error: null,
 };
 

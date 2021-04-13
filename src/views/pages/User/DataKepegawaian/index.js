@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   CCard,
   CCardHeader,
@@ -10,15 +10,27 @@ import {
   CTabPane,
   CNavLink,
 } from "@coreui/react";
-import DataDiri from "./DataDiri";
+import DataDiri from "./DataDiri/DataDiri";
 import DataKeluarga from "./DataKeluarga";
 import DataPendidikan from "./DataPendidikan";
 import DataDiklat from "./DataDiklat";
 import RiwayatKerja from "./RiwayatKerja";
 import DataBerkas from "./DataBerkas/DataBerkas";
 import Penghargaan from "./Penghargaan/Penghargaan";
+import { GlobalContext } from "src/context/Provider";
+import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDataDiri";
 
 const DetailPegawai = () => {
+  const { dataDiriState, dataDiriDispatch } = useContext(GlobalContext);
+  const { data } = dataDiriState;
+
+  useEffect(() => {
+    if (!data) {
+      // Get data diri
+      getDataDiri(dataDiriDispatch);
+    }
+  }, [dataDiriDispatch, data]);
+
   return (
     <>
       <CCard>
@@ -52,7 +64,7 @@ const DetailPegawai = () => {
             </CNav>
             <CTabContent>
               <CTabPane>
-                <DataDiri />
+                <DataDiri data={data} />
               </CTabPane>
               <CTabPane>
                 <DataKeluarga />

@@ -13,7 +13,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilInfo, cilPen } from "@coreui/icons";
-import { SampleFotoPegawai } from "src/assets";
+import { LoadAnimationBlue, SampleFotoPegawai } from "src/assets";
 import { GlobalContext } from "src/context/Provider";
 import { getUser } from "src/context/actions/User/getUser";
 import { getImage } from "src/context/actions/DownloadFile";
@@ -157,19 +157,24 @@ const Users = () => {
               color="info"
               className="btn btn-sm"
               onClick={
-                row.id === 1 ? () => goToAkun() : () => goToDetail(row.id)
+                parseInt(sessionStorage.id_user) === row.id
+                  ? () => goToAkun()
+                  : () => goToDetail(row.id)
               }
             >
               <CIcon content={cilInfo} color="white" />
             </CButton>
-            <CButton
-              disabled={row.level !== 1 ? true : false}
-              color="success"
-              className="btn btn-sm"
-              onClick={() => goToEdit(row.id)}
-            >
-              <CIcon content={cilPen} color="white" />
-            </CButton>
+            {parseInt(sessionStorage.id_user) === row.id && (
+              <CButton
+                disabled={row.level !== 1 ? true : false}
+                color="success"
+                className="btn btn-sm"
+                onClick={() => goToEdit(row.id)}
+              >
+                <CIcon content={cilPen} color="white" />
+              </CButton>
+            )}
+
             {/* <CButton
               color="danger"
               className="btn btn-sm"
@@ -221,14 +226,17 @@ const Users = () => {
   // };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/admin/pensiun-edit/${id}`);
+    history.push(`/epekerja/admin/akun/edit/${id}`);
   };
   const goToAkun = () => {
     history.push(`/epekerja/admin/akun`);
   };
+  const goToTambah = () => {
+    history.push(`/epekerja/admin/users/tambah`);
+  };
 
   const goToDetail = (id) => {
-    history.push(`/epekerja/admin/user-detail/${id}`);
+    history.push(`/epekerja/admin/users/detail/${id}`);
   };
 
   const ExpandableComponent = ({ data }) => {
@@ -260,9 +268,9 @@ const Users = () => {
           <h3>Data Users</h3>
         </CCardHeader>
         <CCardBody>
-          {/* <CButton type="button" color="primary" onClick={goToTambah}>
-            Tambah Pensiun
-          </CButton> */}
+          <CButton type="button" color="primary" onClick={goToTambah}>
+            Tambah Administrator
+          </CButton>
           {data.length > 0 ? (
             <DataTable
               columns={columns}
@@ -281,8 +289,28 @@ const Users = () => {
               expandableRowsComponent={<ExpandableComponent />}
               highlightOnHover
             />
+          ) : loading ? (
+            <div>
+              <CRow>
+                <CCol className="text-center">
+                  <img
+                    className="mt-4 ml-3"
+                    width={30}
+                    src={LoadAnimationBlue}
+                    alt="load-animation"
+                  />
+                </CCol>
+              </CRow>
+            </div>
           ) : (
-            loading
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+              pagination
+            />
           )}
         </CCardBody>
       </CCard>

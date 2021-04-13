@@ -5,7 +5,8 @@ export const editUser = (
   values,
   setLoading,
   showAlertSuccess,
-  showAlertError
+  showAlertError,
+  userDispatch
 ) => {
   setLoading(true);
 
@@ -17,6 +18,10 @@ export const editUser = (
     })
     .then((res) => {
       console.log(res.data);
+      userDispatch({
+        type: "SAVE_USER",
+        payload: res.data.edited_data,
+      });
       setLoading(false);
       showAlertSuccess();
     })

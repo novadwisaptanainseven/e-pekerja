@@ -6,7 +6,10 @@ export const cekUser = (setCurrentUser, userDispatch) => {
     .then((res) => {
       console.log(res.data.user);
       setCurrentUser(res.data.user);
-      userDispatch(res.data.user);
+      userDispatch({
+        type: "SAVE_USER",
+        payload: res.data.user,
+      });
     })
     .catch((err) => {
       //   console.log(err.response.data);

@@ -1,8 +1,9 @@
 import React from "react";
 import { CRow, CCol, CCard, CCardHeader, CCardBody } from "@coreui/react";
-import { SampleFotoPegawai } from "src/assets";
+import { format } from "date-fns";
+import { getImage } from "src/context/actions/DownloadFile";
 
-const DataDiri = () => {
+const DataDiriPNS = ({ data }) => {
   return (
     <>
       <div className="my-3">
@@ -12,98 +13,118 @@ const DataDiri = () => {
               <tbody>
                 <tr>
                   <th>NIP</th>
-                  <td>2312321321</td>
+                  <td>{data.nip}</td>
                 </tr>
                 <tr>
                   <th>Nama</th>
-                  <td>Nova Dwi Sapta Nain Seven</td>
+                  <td>{data.nama}</td>
                 </tr>
                 <tr>
                   <th>Agama</th>
-                  <td>Islam</td>
+                  <td>{data.agama}</td>
                 </tr>
                 <tr>
                   <th>Jenis Kelamin</th>
-                  <td>Laki - Laki</td>
+                  <td>{data.jenis_kelamin}</td>
                 </tr>
                 <tr>
                   <th>TTL</th>
-                  <td>Tanjung Redeb, 27 November 1997</td>
+                  <td>{`${data.tempat_lahir}, ${
+                    data.tgl_lahir &&
+                    format(new Date(data.tgl_lahir), "d MMMM Y")
+                  }`}</td>
                 </tr>
                 <tr>
                   <th>Alamat</th>
-                  <td>
-                    Jalan Slamet Riyadi Lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit. Magni, repellendus!
-                  </td>
+                  <td>{data.alamat}</td>
                 </tr>
                 <tr>
                   <th>No. HP</th>
-                  <td>0812312312</td>
+                  <td>{data.no_hp}</td>
                 </tr>
                 <tr>
                   <th>Jabatan</th>
-                  <td>Kepala Dinas</td>
+                  <td>{data.jabatan}</td>
                 </tr>
                 <tr>
                   <th>Bidang</th>
-                  <td>Permukiman</td>
+                  <td>{data.bidang}</td>
                 </tr>
-                <tr>
-                  <th>Sub Bidang</th>
-                  <td>Pembinaan Permukiman</td>
-                </tr>
+
                 <tr>
                   <th>Pangkat / Golongan</th>
-                  <td>Pembina Utama Muda / IVc</td>
+                  <td>
+                    {data.ket_golongan} / {data.golongan}
+                  </td>
                 </tr>
                 <tr>
                   <th>Eselon</th>
-                  <td>IIc</td>
+                  <td>{data.eselon}</td>
                 </tr>
                 <tr>
                   <th>Status Pegawai</th>
-                  <td>PNS</td>
+                  <td>
+                    {data.ket_status_pegawai} ({data.status_pegawai})
+                  </td>
                 </tr>
                 <tr>
                   <th>Karpeg</th>
-                  <td>829382121</td>
+                  <td>{data.karpeg}</td>
                 </tr>
                 <tr>
                   <th>BPJS</th>
-                  <td>83219321</td>
+                  <td>{data.bpjs}</td>
                 </tr>
                 <tr>
                   <th>NPWP</th>
-                  <td>89238213</td>
+                  <td>{data.npwp}</td>
                 </tr>
                 <tr>
                   <th>TMT. Golongan</th>
-                  <td>10-10-2021</td>
+                  <td>{`${
+                    data.tgl_lahir &&
+                    format(new Date(data.tmt_golongan), "d-M-Y")
+                  }`}</td>
                 </tr>
                 <tr>
                   <th>TMT. CPNS</th>
-                  <td>10-10-2021</td>
+                  <td>{`${
+                    data.tgl_lahir && format(new Date(data.tmt_cpns), "d-M-Y")
+                  }`}</td>
                 </tr>
                 <tr>
                   <th>TMT. jabatan</th>
-                  <td>10-10-2021</td>
+                  <td>{`${
+                    data.tgl_lahir &&
+                    format(new Date(data.tmt_jabatan), "d-M-Y")
+                  }`}</td>
                 </tr>
                 <tr>
                   <th>Masa Kerja Jabatan</th>
-                  <td>2 tahun 4 bulan</td>
+                  <td>{data.mk_jabatan}</td>
                 </tr>
                 <tr>
                   <th>Masa Kerja Sebelum CPNS</th>
-                  <td>2 tahun 4 bulan</td>
+                  <td>{data.mk_sebelum_cpns}</td>
                 </tr>
                 <tr>
                   <th>Masa Kerja Golongan</th>
-                  <td>2 tahun 4 bulan</td>
+                  <td>{data.mk_golongan}</td>
                 </tr>
                 <tr>
                   <th>Masa Kerja Seluruhnya</th>
-                  <td>2 tahun 4 bulan</td>
+                  <td>{data.mk_seluruhnya}</td>
+                </tr>
+                <tr>
+                  <th>Gaji Pokok</th>
+                  <td>
+                    {data
+                      ? data.gaji_pokok.toLocaleString("id", {
+                          style: "currency",
+                          currency: "IDR",
+                        })
+                      : 0}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -114,7 +135,11 @@ const DataDiri = () => {
                 <h4 className="font-weight-normal mb-0">Foto Pegawai</h4>
               </CCardHeader>
               <CCardBody>
-                <img width="100%" src={SampleFotoPegawai} alt="foto-pegawai" />
+                <img
+                  width="100%"
+                  src={data ? getImage(data.foto) : ""}
+                  alt="foto-pegawai"
+                />
               </CCardBody>
             </CCard>
           </CCol>
@@ -124,4 +149,4 @@ const DataDiri = () => {
   );
 };
 
-export default DataDiri;
+export default DataDiriPNS;

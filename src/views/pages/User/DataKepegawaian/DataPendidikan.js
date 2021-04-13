@@ -1,28 +1,31 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { CRow, CCol } from "@coreui/react";
+import {
+  CRow,
+  CCol,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+} from "@coreui/react";
 
-import { SampleIjazah } from "src/assets";
+import { GlobalContext } from "src/context/Provider";
+import { getPendidikan } from "src/context/actions/UserPage/DataKepegawaian/getPendidikan";
+import { getIjazah } from "src/context/actions/DownloadFile";
 
 const DataPendidikan = () => {
-  const data = [
-    {
-      id: 1,
-      nama_akademi: "Politeknik Negeri Samarinda",
-      jurusan: "Teknologi Informasi",
-      jenjang: "D4/S1",
-      tahun_lulus: "2020",
-      no_ijazah: "12-AD-IA-39",
-    },
-    {
-      id: 2,
-      nama_akademi: "Universitas Mulawarman",
-      jurusan: "Ilmu Komputer",
-      jenjang: "S1",
-      tahun_lulus: "2020",
-      no_ijazah: "12-AD-IA-39",
-    },
-  ];
+  const { pendidikanState, pendidikanDispatch } = useContext(GlobalContext);
+  const { data, loading } = pendidikanState;
+  const [previewImage, setPreviewImage] = useState({
+    modal: false,
+    image: null,
+  });
+
+  useEffect(() => {
+    if (!data.length > 0) {
+      getPendidikan(pendidikanDispatch);
+    }
+  }, [data, pendidikanDispatch]);
 
   const columns = [
     {
@@ -57,43 +60,6 @@ const DataPendidikan = () => {
       wrap: true,
       sortable: true,
     },
-
-    // {
-    //   name: "Aksi",
-    //   selector: "aksi",
-    //   wrap: true,
-    //   maxWidth: "100px",
-    //   cell: (row) => (
-    //     <>
-    //       <CButtonGroup>
-    //         <CButton
-    //           color="success"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             setModalEdit({
-    //               ...modalEdit,
-    //               modal: !modalEdit.modal,
-    //               id: row.id,
-    //             })
-    //           }
-    //         >
-    //           <CIcon content={cilPen} color="white" />
-    //         </CButton>
-    //         <CButton
-    //           color="danger"
-    //           className="btn btn-sm"
-    //           onClick={() =>
-    //             window.confirm(
-    //               `Anda yakin ingin hapus data dengan id : ${row.id}`
-    //             )
-    //           }
-    //         >
-    //           <CIcon content={cilTrash} color="white" />
-    //         </CButton>
-    //       </CButtonGroup>
-    //     </>
-    //   ),
-    // },
   ];
 
   const customStyles = {
@@ -104,41 +70,60 @@ const DataPendidikan = () => {
     },
   };
 
-  const ExpandableComponent = ({ data }) => (
-    <>
-      <div style={{ padding: "10px 63px" }}>
-        <CRow>
-          <CCol md="3">
-            <strong>Foto / Scan Ijazah</strong>
-          </CCol>
-          <CCol>
-            <img
-              className="img-thumbnail"
-              width={200}
-              src={SampleIjazah}
-              alt="foto-ijazah"
-            />
-          </CCol>
-        </CRow>
-      </div>
-    </>
-  );
+  // Expandable Component
+  const ExpandableComponent = ({ data }) => {
+    const EXT_IMAGE = ["jpg", "jpeg", "png"];
+
+    let arr_file = data.foto_ijazah.split("/");
+    let filename = arr_file[arr_file.length - 1];
+    let ext_file = filename.split(".");
+    let ext_file2 = ext_file[ext_file.length - 1];
+
+    return (
+      <>
+        <div style={{ padding: "10px 63px" }}>
+          <CRow>
+            <CCol md="2">
+              <strong>File Ijazah</strong>
+            </CCol>
+            <CCol>
+              {EXT_IMAGE.includes(ext_file2) ? (
+                <img
+                  width={200}
+                  src={getIjazah(data.foto_ijazah)}
+                  alt="foto-ijazah"
+                  onClick={() => handlePreviewImage(data.foto_ijazah)}
+                  style={{ cursor: "pointer" }}
+                />
+              ) : (
+                <a
+                  href={getIjazah(data.foto_ijazah)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {filename}
+                </a>
+              )}
+            </CCol>
+          </CRow>
+        </div>
+      </>
+    );
+  };
+
+  // Menangani preview gambar
+  const handlePreviewImage = (foto_ijazah) => {
+    // window.open(getIjazah(foto_ijazah), "blank");
+    setPreviewImage({
+      ...previewImage,
+      modal: !previewImage.modal,
+      image: foto_ijazah,
+    });
+  };
 
   return (
     <>
       <div className="my-3">
-        {/* <div className="button-control mb-2">
-          <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Tambah Data
-          </CButton>
-          <CButton type="button" color="info">
-            Cetak <CIcon content={cilPrint} />
-          </CButton>
-        </div> */}
         <DataTable
           columns={columns}
           data={data}
@@ -151,6 +136,32 @@ const DataPendidikan = () => {
           highlightOnHover
         />
       </div>
+
+      {/* Modal Preview Image */}
+      <CModal
+        show={previewImage.modal}
+        onClose={() =>
+          setPreviewImage({
+            ...previewImage,
+            modal: !previewImage.modal,
+            image: null,
+          })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Preview</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {previewImage.image && (
+            <img
+              style={{ width: "100%" }}
+              src={getIjazah(previewImage.image)}
+              alt="foto-ijazah"
+            />
+          )}
+        </CModalBody>
+      </CModal>
     </>
   );
 };

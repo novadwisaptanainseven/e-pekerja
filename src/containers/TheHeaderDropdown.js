@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CDropdown,
   CDropdownItem,
@@ -12,15 +12,17 @@ import withReactContent from "sweetalert2-react-content";
 import { logout } from "src/context/actions/Auth/logout";
 import { cekUser } from "src/context/actions/Auth/cekUser";
 import { getImage } from "src/context/actions/DownloadFile";
+import { GlobalContext } from "src/context/Provider";
 
 const MySwal = withReactContent(Swal);
 
 const TheHeaderDropdown = () => {
   const [currentUser, setCurrentUser] = useState(null);
+  const { userDispatch } = useContext(GlobalContext);
 
   useEffect(() => {
-    cekUser(setCurrentUser);
-  }, []);
+    cekUser(setCurrentUser, userDispatch);
+  }, [userDispatch]);
 
   const handleLogout = () => {
     MySwal.fire({

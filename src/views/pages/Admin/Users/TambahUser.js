@@ -1,44 +1,43 @@
-import React, { useState, useEffect, useContext } from "react";
-
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
 
 import {
+  CButton,
   CCard,
-  CCardHeader,
   CCardBody,
+  CCardFooter,
+  CCardHeader,
+  CForm,
   CRow,
   CCol,
   CFormGroup,
   CLabel,
   CInput,
-  CButton,
-  CCardFooter,
-  CForm,
   CFormText,
 } from "@coreui/react";
-import { useHistory } from "react-router-dom";
-import { GlobalContext } from "src/context/Provider";
-import { getImage } from "src/context/actions/DownloadFile";
+import React, { useCallback, useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { Formik } from "formik";
+import { insertUser } from "src/context/actions/User/insertUser";
 import { LoadAnimationWhite } from "src/assets";
-import { editUser } from "src/context/actions/User/editUser";
 
 const MySwal = withReactContent(swal2);
 
-const EditAkun = ({ match }) => {
-  const params = match.params;
+const TambahUser = () => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
-  const { userState, userDispatch } = useContext(GlobalContext);
-  const { data } = userState;
 
-  useEffect(() => {
+  const goBackToParent = () => {
+    history.goBack();
+  };
+
+  // Menangani preview input gambar setelah dipilih
+  const handleSelectedFile = useCallback(() => {
     if (!selectedFile) {
-      setPreview(data ? getImage(data.foto_profil) : "");
+      setPreview(null);
       return;
     }
 
@@ -46,8 +45,14 @@ const EditAkun = ({ match }) => {
     setPreview(objectUrl);
 
     // Free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile, data]);
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [selectedFile]);
+
+  useEffect(() => {
+    handleSelectedFile();
+  }, [handleSelectedFile]);
 
   const onSelectFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -58,27 +63,23 @@ const EditAkun = ({ match }) => {
     setSelectedFile(e.target.files[0]);
   };
 
-  const goBackToParent = () => {
-    history.goBack();
-  };
-
   // Inisialisasi State Formik
   const initState = {
-    name: data ? data.name : "",
-    username: data ? data.username : "",
-    password: data ? data.password : "",
+    name: "",
+    username: "",
+    password: "",
     foto_profil: undefined,
   };
 
-  // Fungsi untuk menampilkan alert success edit data
+  // Fungsi untuk menampilkan alert success tambah data
   const showAlertSuccess = () => {
     MySwal.fire({
       icon: "success",
-      title: "Edit Akun Berhasil",
+      title: "Tambah Data Berhasil",
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      history.push("/epekerja/admin/akun");
+      history.push("/epekerja/admin/users");
     });
   };
 
@@ -92,7 +93,7 @@ const EditAkun = ({ match }) => {
 
     MySwal.fire({
       icon: "error",
-      title: "Edit Akun Gagal",
+      title: "Tambah Data Gagal",
       text: err_message,
     }).then((result) => {
       setLoading(false);
@@ -109,22 +110,18 @@ const EditAkun = ({ match }) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Nama harus diisi"),
     username: Yup.string().required("Username harus diisi"),
+    password: Yup.string().required("Password harus diisi"),
     foto_profil: Yup.mixed()
-      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
-        if (value) {
-          return value && value.size <= FOTO_PROFIL_SIZE;
-        }
-        return true;
-      })
+      .required("File belum dipilih")
+      .test(
+        "size",
+        "Kapasitas file maksimal 2 mb",
+        (value) => value && value.size <= FOTO_PROFIL_SIZE
+      )
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, dan png",
-        (value) => {
-          if (value) {
-            return value && FOTO_PROFIL_SUPPORTED_FORMATS.includes(value.type);
-          }
-          return true;
-        }
+        (value) => value && FOTO_PROFIL_SUPPORTED_FORMATS.includes(value.type)
       ),
   });
 
@@ -133,30 +130,24 @@ const EditAkun = ({ match }) => {
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("username", values.username);
-    if (values.foto_profil) {
-      formData.append("foto_profil", values.foto_profil);
-    }
+    formData.append("password", values.password);
+    formData.append("level", 1);
+    formData.append("foto_profil", values.foto_profil);
 
     for (var pair of formData.entries()) {
       console.log(pair);
     }
 
-    editUser(
-      params.id,
-      formData,
-      setLoading,
-      showAlertSuccess,
-      showAlertError,
-      userDispatch
-    );
+    insertUser(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
   return (
-    <div>
+    <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Edit Akun</h3>
+          <h3>Tambah Administrator</h3>
           <CButton
+            type="button"
             color="warning"
             className="text-white"
             onClick={goBackToParent}
@@ -166,7 +157,6 @@ const EditAkun = ({ match }) => {
         </CCardHeader>
         <Formik
           initialValues={initState}
-          enableReinitialize={true}
           validationSchema={validationSchema}
           onSubmit={(values) => handleFormSubmit(values)}
         >
@@ -223,7 +213,28 @@ const EditAkun = ({ match }) => {
                         </div>
                       )}
                     </CFormGroup>
-
+                    <CFormGroup>
+                      <CLabel>Password</CLabel>
+                      <CInput
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Masukkan password"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.password || ""}
+                        className={
+                          errors.password && touched.password
+                            ? "is-invalid"
+                            : null
+                        }
+                      />
+                      {errors.password && touched.password && (
+                        <div className="invalid-feedback">
+                          {errors.password}
+                        </div>
+                      )}
+                    </CFormGroup>
                     <CFormGroup>
                       <CLabel>Foto Profil</CLabel>
                       <CInput
@@ -286,8 +297,8 @@ const EditAkun = ({ match }) => {
           )}
         </Formik>
       </CCard>
-    </div>
+    </>
   );
 };
 
-export default EditAkun;
+export default TambahUser;

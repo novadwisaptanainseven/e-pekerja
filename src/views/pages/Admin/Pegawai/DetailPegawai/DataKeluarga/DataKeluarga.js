@@ -22,6 +22,7 @@ import { getKeluarga } from "src/context/actions/Pegawai/Keluarga/getKeluarga";
 import { deleteKeluarga } from "src/context/actions/Pegawai/Keluarga/deleteKeluarga";
 import { format } from "date-fns";
 import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import formatTanggal from "src/helpers/formatTanggal";
 
 const MySwal = withReactContent(swal2);
 
@@ -65,11 +66,7 @@ const DataKeluarga = ({ id }) => {
       sortable: true,
       cell: (row) => (
         <>
-          <div>
-            {`${row.tempat_lahir}, ${
-              row.tgl_lahir && format(new Date(row.tgl_lahir), "d-M-Y")
-            }`}
-          </div>
+          <div>{`${row.tempat_lahir}, ${formatTanggal(row.tgl_lahir)}`}</div>
         </>
       ),
     },
