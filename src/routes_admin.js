@@ -116,6 +116,9 @@ const EditPTTB = React.lazy(() =>
 const SemuaPegawai = React.lazy(() =>
   import("./views/pages/Admin/Pegawai/SemuaPegawai")
 );
+const RekapPegawai = React.lazy(() =>
+  import("./views/pages/Admin/Pegawai/RekapPegawai")
+);
 
 // DUK PNS
 const DataDukPNS = React.lazy(() =>
@@ -402,6 +405,11 @@ const routes = [
     path: "/epekerja/admin/pegawai/semua-pegawai",
     name: "Semua Pegawai",
     component: SemuaPegawai,
+  },
+  {
+    path: "/epekerja/admin/pegawai/rekap-pegawai",
+    name: "Rekapitulasi Pegawai",
+    component: RekapPegawai,
   },
 
   // DUK PNS

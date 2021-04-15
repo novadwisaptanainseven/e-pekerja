@@ -164,9 +164,9 @@ const KGB = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        {/* <CButton type="button" color="info" className="ml-2">
           Cetak <CIcon content={cilPrint} />
-        </CButton>
+        </CButton> */}
       </>
     );
   }, [filterText, resetPaginationToggle]);

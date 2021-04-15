@@ -94,6 +94,12 @@ export const GlobalProvider = ({ children }) => {
   // Semua Pegawai
   const [pegawaiState, pegawaiDispatch] = useReducer(pegawaiReducer, initState);
 
+  // Rekap Pegawai
+  const [rekapPegawaiState, rekapPegawaiDispatch] = useReducer(
+    reducer,
+    initStateDefault
+  );
+
   // Masa Kerja
   const [masaKerjaState, masaKerjaDispatch] = useReducer(reducer, initState);
 
@@ -208,6 +214,8 @@ export const GlobalProvider = ({ children }) => {
         berkasDispatch,
         riwayatKerjaState,
         riwayatKerjaDispatch,
+        rekapPegawaiState,
+        rekapPegawaiDispatch,
       }}
     >
       {children}

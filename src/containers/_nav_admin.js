@@ -88,6 +88,11 @@ const _nav_admin = [
         name: "Semua Pegawai",
         to: "/epekerja/admin/pegawai/semua-pegawai",
       },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Rekapitulasi Pegawai",
+        to: "/epekerja/admin/pegawai/rekap-pegawai",
+      },
     ],
   },
   {
