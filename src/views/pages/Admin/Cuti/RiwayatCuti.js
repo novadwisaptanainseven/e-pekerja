@@ -27,6 +27,7 @@ import { getCuti } from "src/context/actions/Cuti/getCuti";
 import { deleteCuti } from "src/context/actions/Cuti/deleteCuti";
 import { format } from "date-fns";
 import { LoadAnimationBlue } from "src/assets";
+import printRiwayatCuti from "src/context/actions/DownloadFile/printRiwayatCuti";
 
 const MySwal = withReactContent(swal2);
 
@@ -240,7 +241,12 @@ const RiwayatCuti = ({ match }) => {
             Tambah Cuti Baru
           </CButton>
           <div className="d-flex">
-            <CButton type="button" color="info" className="ml-2">
+            <CButton
+              type="button"
+              color="info"
+              className="ml-2"
+              onClick={() => printRiwayatCuti(params.id)}
+            >
               Cetak <CIcon content={cilPrint} />
             </CButton>
           </div>

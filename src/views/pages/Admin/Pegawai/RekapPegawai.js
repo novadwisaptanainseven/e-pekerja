@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 
 import {
   CCard,
@@ -13,6 +13,7 @@ import { getRekapPegawai } from "src/context/actions/Pegawai/PNS/getRekapPegawai
 import { LoadAnimationBlue } from "src/assets";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
+import printRekapPegawai from "src/context/actions/DownloadFile/printRekapPegawai";
 
 const RekapPegawai = () => {
   const { rekapPegawaiState, rekapPegawaiDispatch } = useContext(GlobalContext);
@@ -60,7 +61,11 @@ const RekapPegawai = () => {
           ) : (
             <>
               <div className="d-flex justify-content-end">
-                <CButton color="info" className="mb-3">
+                <CButton
+                  color="info"
+                  className="mb-3"
+                  onClick={printRekapPegawai}
+                >
                   Cetak <CIcon content={cilPrint} />
                 </CButton>
               </div>

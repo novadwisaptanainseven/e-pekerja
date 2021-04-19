@@ -1,7 +1,15 @@
-import { CButton, CCard, CCardBody, CCardHeader } from "@coreui/react";
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+} from "@coreui/react";
 import React, { useContext, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
+import { LoadAnimationBlue } from "src/assets";
 import { deleteStatusPegawai } from "src/context/actions/StatusPegawai/deleteStatusPegawai";
 import { getStatusPegawai } from "src/context/actions/StatusPegawai/getStatusPegawai";
 import { GlobalContext } from "src/context/Provider";
@@ -115,14 +123,30 @@ const StatusPegawai = () => {
           <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
             Tambah Data
           </CButton>
-
-          <DataTable
-            columns={columns}
-            data={data}
-            noHeader
-            responsive={true}
-            customStyles={customStyles}
-          />
+          {data ? (
+            <DataTable
+              columns={columns}
+              data={data}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
+          ) : (
+            <>
+              <div>
+                <CRow>
+                  <CCol className="text-center">
+                    <img
+                      className="mt-4 ml-3"
+                      width={30}
+                      src={LoadAnimationBlue}
+                      alt="load-animation"
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+            </>
+          )}
         </CCardBody>
       </CCard>
     </>

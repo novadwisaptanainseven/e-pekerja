@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -11,6 +11,7 @@ import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 
 import swal2 from "sweetalert2";
+import styled from "styled-components";
 import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 import { getJabatan } from "src/context/actions/MasterData/Jabatan/getJabatan";
@@ -18,8 +19,64 @@ import { deleteJabatan } from "src/context/actions/MasterData/Jabatan/deleteJaba
 import { LoadAnimationBlue } from "src/assets";
 const MySwal = withReactContent(swal2);
 
+const TextField = styled.input`
+  height: 37px;
+  width: 200px;
+  border-radius: 3px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 1px solid #e5e5e5;
+  padding: 0 32px 0 16px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const ClearButton = styled.button`
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  height: 37px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3e5973;
+  border: none;
+  color: white;
+  padding: 0 10px;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #283c4f;
+  }
+`;
+
+// Handle filter pencarian
+const FilterComponent = ({ filterText, onFilter, onClear }) => (
+  <>
+    <TextField
+      id="search"
+      type="text"
+      placeholder="Cari jabatan"
+      aria-label="Search Input"
+      value={filterText}
+      onChange={onFilter}
+    />
+    <ClearButton type="button" onClick={onClear}>
+      Reset
+    </ClearButton>
+  </>
+);
+
 const Jabatan = () => {
+  const [filterText, setFilterText] = useState("");
   const history = useHistory();
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { jabatanState, jabatanDispatch } = useContext(GlobalContext);
   const { data } = jabatanState;
 
@@ -27,6 +84,15 @@ const Jabatan = () => {
     // Get data jabatan
     getJabatan(jabatanDispatch);
   }, [jabatanDispatch]);
+
+  const filteredData = data.filter((item) => {
+    if (item.nama_jabatan) {
+      if (item.nama_jabatan.toLowerCase().includes(filterText.toLowerCase())) {
+        return true;
+      }
+    }
+    return false;
+  });
 
   const columns = [
     {
@@ -106,6 +172,25 @@ const Jabatan = () => {
     });
   };
 
+  const SubHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText("");
+      }
+    };
+
+    return (
+      <>
+        <FilterComponent
+          onFilter={(e) => setFilterText(e.target.value)}
+          onClear={handleClear}
+          filterText={filterText}
+        />
+      </>
+    );
+  }, [filterText, resetPaginationToggle]);
+
   return (
     <>
       <CCard>
@@ -120,10 +205,13 @@ const Jabatan = () => {
           {data.length > 0 ? (
             <DataTable
               columns={columns}
-              data={data}
+              data={filteredData}
               noHeader
               responsive={true}
               customStyles={customStyles}
+              pagination
+              subHeader
+              subHeaderComponent={SubHeaderComponentMemo}
             />
           ) : (
             <>
