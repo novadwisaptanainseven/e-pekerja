@@ -11,11 +11,9 @@ const RiwayatKerja = () => {
   const { data, loading } = riwayatKerjaState;
 
   useEffect(() => {
-    if (!data.length > 0) {
-      // Get data riwayat kerja
-      getRiwayatKerja(riwayatKerjaDispatch);
-    }
-  }, [data, riwayatKerjaDispatch]);
+    // Get data riwayat kerja
+    getRiwayatKerja(riwayatKerjaDispatch);
+  }, [riwayatKerjaDispatch]);
 
   const columns = [
     {

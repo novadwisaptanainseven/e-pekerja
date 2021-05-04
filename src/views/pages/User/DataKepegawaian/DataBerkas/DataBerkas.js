@@ -34,11 +34,9 @@ const DataBerkas = () => {
   });
 
   useEffect(() => {
-    if (!data.length > 0) {
-      // Get data berkas
-      getBerkas(berkasDispatch);
-    }
-  }, [data, berkasDispatch]);
+    // Get data berkas
+    getBerkas(berkasDispatch);
+  }, [berkasDispatch]);
 
   const columns = [
     {
@@ -159,15 +157,15 @@ const DataBerkas = () => {
   return (
     <>
       <div className="my-3">
+        <CButton
+          type="button"
+          color="primary"
+          onClick={() => setModalTambah(!modalTambah)}
+        >
+          Tambah Berkas
+        </CButton>
         {data.length > 0 ? (
           <>
-            <CButton
-              type="button"
-              color="primary"
-              onClick={() => setModalTambah(!modalTambah)}
-            >
-              Tambah Berkas
-            </CButton>
             <DataTable
               columns={columns}
               data={data}

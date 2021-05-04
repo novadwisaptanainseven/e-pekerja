@@ -22,11 +22,8 @@ const DataDiklat = () => {
   });
 
   useEffect(() => {
-    if (!data.length > 0) {
-      // Get all diklat
-      getDiklat(diklatDispatch);
-    }
-  }, [data, diklatDispatch]);
+    getDiklat(diklatDispatch);
+  }, [diklatDispatch]);
 
   const columns = [
     {
