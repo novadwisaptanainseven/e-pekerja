@@ -18,6 +18,7 @@ import { getMasaKerja } from "src/context/actions/MasaKerja/getMasaKerja";
 import { format } from "date-fns";
 import { LoadAnimationBlue } from "src/assets";
 import printMasaKerja from "src/context/actions/DownloadFile/printMasaKerja";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const TextField = styled.input`
   height: 37px;
@@ -181,7 +182,16 @@ const MasaKerja = () => {
           className="ml-2"
           onClick={printMasaKerja}
         >
-          Cetak <CIcon content={cilPrint} />
+          PDF <CIcon content={cilPrint} />
+        </CButton>
+
+        <CButton
+          type="button"
+          color="success"
+          className="ml-2"
+          onClick={() => exportExcel('masa-kerja')}
+        >
+          Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );

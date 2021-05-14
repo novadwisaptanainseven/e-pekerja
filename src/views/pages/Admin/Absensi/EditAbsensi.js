@@ -24,12 +24,12 @@ const EditAbsen = ({
   setLoadingRekapAbsensi,
   formattedDateRiwayatAbsen,
 }) => {
-  const [tglAbsen, setTglAbsen] = useState(data ? data.tglAbsen : "");
-  const [absen, setAbsen] = useState(data ? data.absen : "");
+  const [data, setData] = useState("");
   const [keterangan, setKeterangan] = useState("");
   const [namaHari, setNamaHari] = useState(data ? data.namaHari : "");
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState("");
+  const [absen, setAbsen] = useState(data ? data.absen : "");
+  const [tglAbsen, setTglAbsen] = useState(data ? data.tglAbsen : "");
 
   const getNamaHari = useCallback(($tgl = null) => {
     let hari = "";
@@ -95,7 +95,7 @@ const EditAbsen = ({
 
   useEffect(() => {
     setNamaHari(getNamaHari(tglAbsen));
-  }, [tglAbsen]);
+  }, [tglAbsen, getNamaHari]);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();

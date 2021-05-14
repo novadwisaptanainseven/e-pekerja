@@ -23,6 +23,7 @@ import { getPTTB } from "src/context/actions/Pegawai/PTTB/getPTTB";
 import { deletePTTB } from "src/context/actions/Pegawai/PTTB/deletePTTB";
 import { format } from "date-fns";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -202,7 +203,16 @@ const DataPTTB = () => {
           className="ml-2"
           onClick={() => printDaftarPegawai("pttb")}
         >
-          Cetak <CIcon content={cilPrint} />
+          PDF <CIcon content={cilPrint} />
+        </CButton>
+
+        <CButton
+          type="button"
+          color="success"
+          className="ml-2"
+          onClick={() => exportExcel("pttb")}
+        >
+          Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );

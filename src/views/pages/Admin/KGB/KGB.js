@@ -9,8 +9,6 @@ import {
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
-import CIcon from "@coreui/icons-react";
-import { cilPrint } from "@coreui/icons";
 import { useHistory } from "react-router-dom";
 import { GlobalContext } from "src/context/Provider";
 import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";

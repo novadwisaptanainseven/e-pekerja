@@ -14,6 +14,7 @@ import { LoadAnimationBlue } from "src/assets";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import printRekapPegawai from "src/context/actions/DownloadFile/printRekapPegawai";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const RekapPegawai = () => {
   const { rekapPegawaiState, rekapPegawaiDispatch } = useContext(GlobalContext);
@@ -63,10 +64,17 @@ const RekapPegawai = () => {
               <div className="d-flex justify-content-end">
                 <CButton
                   color="info"
-                  className="mb-3"
+                  className="mb-3 mr-2"
                   onClick={printRekapPegawai}
                 >
-                  Cetak <CIcon content={cilPrint} />
+                  PDF <CIcon content={cilPrint} />
+                </CButton>
+                <CButton
+                  color="success"
+                  className="mb-3"
+                  onClick={() => exportExcel("rekap-pegawai")}
+                >
+                  Excel <CIcon content={cilPrint} />
                 </CButton>
               </div>
               <CCard>

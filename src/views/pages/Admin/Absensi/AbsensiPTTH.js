@@ -15,7 +15,6 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import ExpandableComponent from "./ExpandableComponent";
 import { GlobalContext } from "src/context/Provider";
-import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
 import { LoadAnimationBlue } from "src/assets";
 import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFile/printAbsensi";
 import { getPTTH } from "src/context/actions/Pegawai/PTTH/getPTTH";

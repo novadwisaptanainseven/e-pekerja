@@ -1,15 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
   CCardBody,
   CButton,
-  CModal,
-  CModalHeader,
-  CModalTitle,
   CForm,
-  CModalBody,
-  CModalFooter,
   CRow,
   CCol,
   CCollapse,
@@ -27,8 +22,6 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
-import TambahAbsen from "./TambahAbsen";
-import EditAbsen from "./EditAbsensi";
 import styled from "styled-components";
 import { GlobalContext } from "src/context/Provider";
 import { getAllRekapAbsensiPerTahun } from "src/context/actions/Absensi/getAllRekapAbsensiPerTahun";
@@ -143,7 +136,7 @@ const RekapAbsensi = () => {
       getAllRekapAbsensiByDate(rekapAbsensiDispatch, formattedDate);
       setDataTahun("");
     }
-  }, [formattedDate]);
+  }, [formattedDate, rekapAbsensiDispatch]);
 
   const filteredData = data.filter((item) => {
     if (item.nama) {
@@ -231,9 +224,9 @@ const RekapAbsensi = () => {
   };
 
   const SubHeaderComponentMemo = React.useMemo(() => {
-    const cetakRekapAbsensi = () => {
-      printRekapAbsensiByStatusPegawai("semua", dataTahun);
-    };
+    // const cetakRekapAbsensi = () => {
+    //   printRekapAbsensiByStatusPegawai("semua", dataTahun);
+    // };
 
     const handleClear = () => {
       if (filterText) {
@@ -302,9 +295,9 @@ const RekapAbsensi = () => {
   };
 
   // Tombol untuk menampilkan data berdasarkan filter Tahun
-  const handleOnTampilkanDataTahun = () => {
-    console.log(dataTahun);
-  };
+  // const handleOnTampilkanDataTahun = () => {
+  //   console.log(dataTahun);
+  // };
 
   return (
     <>

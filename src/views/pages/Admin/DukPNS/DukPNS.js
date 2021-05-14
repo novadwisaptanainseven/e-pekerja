@@ -20,6 +20,7 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint, cilInfo } from "@coreui/icons";
 import { getDUK } from "src/context/actions/DUK/getDUK";
 import printDUK from "src/context/actions/DownloadFile/printDUK";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const TextField = styled.input`
   height: 37px;
@@ -195,7 +196,15 @@ const DukPNS = () => {
         />
 
         <CButton type="button" color="info" className="ml-2" onClick={printDUK}>
-          Cetak <CIcon content={cilPrint} />
+          PDF <CIcon content={cilPrint} />
+        </CButton>
+        <CButton
+          type="button"
+          color="success"
+          className="ml-2"
+          onClick={() => exportExcel("duk")}
+        >
+          Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );

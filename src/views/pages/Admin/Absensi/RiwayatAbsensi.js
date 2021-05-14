@@ -71,6 +71,8 @@ const RiwayatAbsensi = ({ match }) => {
     history.goBack();
   };
 
+  console.log(loading2);
+
   useEffect(() => {
     // Get Pegawai by ID
     getPNSById(params.id, setPegawai);

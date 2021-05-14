@@ -22,6 +22,7 @@ import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
 import { deletePNS } from "src/context/actions/Pegawai/PNS/deletePNS";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -203,7 +204,16 @@ const Pegawai = () => {
           className="ml-2"
           onClick={() => printDaftarPegawai("pns")}
         >
-          Cetak <CIcon content={cilPrint} />
+          PDF <CIcon content={cilPrint} />
+        </CButton>
+
+        <CButton
+          type="button"
+          color="success"
+          className="ml-2"
+          onClick={() => exportExcel("pns")}
+        >
+          Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );

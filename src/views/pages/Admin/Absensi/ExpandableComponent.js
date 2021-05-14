@@ -13,7 +13,7 @@ import {
   CFormGroup,
   CModalTitle,
 } from "@coreui/react";
-import { format, setDay } from "date-fns";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { getAbsensiByPegawai } from "src/context/actions/Absensi/getAbsensiByPegawai";
 import TambahAbsen from "./TambahAbsen";
@@ -34,6 +34,7 @@ const ExpandableComponent = ({ data }) => {
   const [absen, setAbsen] = useState([]);
   const [dayAbsen, setDayAbsen] = useState([]);
   const [loading, setLoading] = useState(false);
+  console.log(loading);
   let increment = 0;
   // State untuk mentrigger komponen absen agar terupdate setelah proses tambah/update absen berhasil
   const [triggerUpdateData, setTriggerUpdateData] = useState(true);
@@ -166,15 +167,15 @@ const ExpandableComponent = ({ data }) => {
             {days.length > 0 &&
               days.map((item, index) => {
                 // Get filter tanggal
-                let filter_tgl = format(
-                  new Date(filterYear, filterMonth, 1),
-                  "yyyy-MM"
-                );
+                // let filter_tgl = format(
+                //   new Date(filterYear, filterMonth, 1),
+                //   "yyyy-MM"
+                // );
 
                 // Get tgl absen ketika modal muncul
-                let data_tgl = absen[index]
-                  ? format(new Date(absen[index].tgl_absen), "yyyy-MM")
-                  : null;
+                // let data_tgl = absen[index]
+                //   ? format(new Date(absen[index].tgl_absen), "yyyy-MM")
+                //   : null;
 
                 let id_absensi = "";
                 let data_keterangan = "";

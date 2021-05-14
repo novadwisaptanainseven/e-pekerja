@@ -8,7 +8,6 @@ import {
   CModalTitle,
   CForm,
   CModalBody,
-  CModalFooter,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import CIcon from "@coreui/icons-react";

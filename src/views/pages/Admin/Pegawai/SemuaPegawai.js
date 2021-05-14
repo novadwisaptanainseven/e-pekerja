@@ -19,6 +19,7 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const TextField = styled.input`
   height: 37px;
@@ -206,7 +207,16 @@ const SemuaPegawai = () => {
           className="ml-2"
           onClick={() => printDaftarPegawai("semua-pegawai")}
         >
-          Cetak <CIcon content={cilPrint} />
+          PDF <CIcon content={cilPrint} />
+        </CButton>
+
+        <CButton
+          type="button"
+          color="success"
+          className="ml-2"
+          onClick={() => exportExcel("semua-pegawai")}
+        >
+          Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );
