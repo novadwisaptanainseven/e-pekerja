@@ -28,6 +28,7 @@ import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 import printKGBPegawai from "src/context/actions/DownloadFile/printKGBPegawai";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -268,7 +269,15 @@ const DaftarKGB = ({ match }) => {
               className="ml-2"
               onClick={() => printKGBPegawai(params.id)}
             >
-              Cetak <CIcon content={cilPrint} />
+              PDF <CIcon content={cilPrint} />
+            </CButton>
+            <CButton
+              type="button"
+              color="success"
+              className="ml-2"
+              onClick={() => exportExcel(`kgb-pegawai/` + params.id)}
+            >
+              Excel <CIcon content={cilPrint} />
             </CButton>
           </div>
         </div>

@@ -19,6 +19,7 @@ import { GlobalContext } from "src/context/Provider";
 import { LoadAnimationBlue } from "src/assets";
 import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFile/printAbsensi";
 import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 // const TambahAbsen = React.lazy(() => import("./TambahAbsen"));
 
 const TextField = styled.input`
@@ -291,6 +292,18 @@ const AbsensiPNS = () => {
             onClick={() => printRekapAbsensiByStatusPegawai("pns")}
           >
             <span className="my-text-button">Cetak Rekapan Absensi</span>{" "}
+            <CIcon content={cilPrint} />
+          </CButton>
+        </CPopover>
+        <CPopover content="Export Rekap Absensi ke Excel">
+          <CButton
+            utton
+            type="button"
+            color="success"
+            className="ml-2"
+            onClick={() => exportExcel("absensi-pegawai/pns")}
+          >
+            <span className="my-text-button">Excel</span>{" "}
             <CIcon content={cilPrint} />
           </CButton>
         </CPopover>

@@ -36,6 +36,7 @@ import capitalizeFirst from "src/helpers/capitalizeFirst";
 import { printAbsensiByFilterTanggal } from "src/context/actions/DownloadFile/printAbsensiByFilterTanggal";
 import { printRekapAbsensiByIdPegawai } from "src/context/actions/DownloadFile/printAbsensiByIdPegawai";
 import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -350,19 +351,34 @@ const RiwayatAbsensi = ({ match }) => {
                   >
                     {!collapse ? "Klik untuk melihat" : "Tutup"}
                   </CButton>
-                  <CPopover content="Cetak Rekapan Absensi Pegawai">
-                    <CButton
-                      type="button"
-                      color="info"
-                      className="ml-2"
-                      onClick={() => printRekapAbsensiByIdPegawai(params.id)}
-                    >
-                      <span className="my-text-button">
-                        Cetak Rekapan Absensi
-                      </span>{" "}
-                      <CIcon content={cilPrint} />
-                    </CButton>
-                  </CPopover>
+                  <div>
+                    <CPopover content="Cetak Rekapan Absensi Pegawai">
+                      <CButton
+                        type="button"
+                        color="info"
+                        className="ml-2"
+                        onClick={() => printRekapAbsensiByIdPegawai(params.id)}
+                      >
+                        <span className="my-text-button">
+                          Cetak Rekapan Absensi
+                        </span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                    <CPopover content="Export Rekapan Absensi Pegawai ke Excel">
+                      <CButton
+                        type="button"
+                        color="success"
+                        className="ml-2"
+                        onClick={() =>
+                          exportExcel("absensi-per-tahun/" + params.id)
+                        }
+                      >
+                        <span className="my-text-button">Excel</span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                  </div>
                 </CCardFooter>
               </CCard>
             </CCol>

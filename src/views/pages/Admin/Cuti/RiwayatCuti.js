@@ -28,6 +28,7 @@ import { deleteCuti } from "src/context/actions/Cuti/deleteCuti";
 import { format } from "date-fns";
 import { LoadAnimationBlue } from "src/assets";
 import printRiwayatCuti from "src/context/actions/DownloadFile/printRiwayatCuti";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -247,7 +248,15 @@ const RiwayatCuti = ({ match }) => {
               className="ml-2"
               onClick={() => printRiwayatCuti(params.id)}
             >
-              Cetak <CIcon content={cilPrint} />
+              PDF <CIcon content={cilPrint} />
+            </CButton>
+            <CButton
+              type="button"
+              color="success"
+              className="ml-2"
+              onClick={() => exportExcel("cuti-pegawai/" + params.id)}
+            >
+              Excel <CIcon content={cilPrint} />
             </CButton>
           </div>
         </div>
