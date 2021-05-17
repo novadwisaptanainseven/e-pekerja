@@ -25,6 +25,7 @@ import { LoadAnimationBlue } from "src/assets";
 import { deletePensiun } from "src/context/actions/Pensiun.js/deletePensiun";
 import { batalkanPensiun } from "src/context/actions/Pensiun.js/batalkanPensiun";
 import printPensiunPegawai from "src/context/actions/DownloadFile/printPensiunPegawai";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -145,6 +146,7 @@ const Pensiun = () => {
       selector: "status_pensiun",
       sortable: true,
       wrap: true,
+      // maxWidth: "100px",
       cell: (row) => {
         let currentTimestamp = Date.parse(new Date());
         let tglPensiunTimestamp = Date.parse(new Date(row.tgl_pensiun));
@@ -180,14 +182,7 @@ const Pensiun = () => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButtonGroup>
-            <CButton
-              color="dark"
-              className="btn btn-sm"
-              onClick={() => handleBatalkanPensiun(row.id_pensiun)}
-            >
-              Batalkan Pensiun
-            </CButton>
+          <CButtonGroup className="mb-1">
             <CButton
               color="info"
               className="btn btn-sm"
@@ -210,6 +205,13 @@ const Pensiun = () => {
               <CIcon content={cilTrash} color="white" />
             </CButton>
           </CButtonGroup>
+          <CButton
+            color="dark"
+            className="btn btn-sm mb-1"
+            onClick={() => handleBatalkanPensiun(row.id_pensiun)}
+          >
+            Batalkan Pensiun
+          </CButton>
         </div>
       ),
     },
@@ -245,7 +247,16 @@ const Pensiun = () => {
           className="ml-2"
           onClick={printPensiunPegawai}
         >
-          Cetak <CIcon content={cilPrint} />
+          PDF <CIcon content={cilPrint} />
+        </CButton>
+
+        <CButton
+          type="button"
+          color="success"
+          className="ml-2"
+          onClick={() => exportExcel("pensiun-pegawai")}
+        >
+          Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );

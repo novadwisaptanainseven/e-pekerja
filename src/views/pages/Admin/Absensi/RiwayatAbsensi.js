@@ -418,21 +418,38 @@ const RiwayatAbsensi = ({ match }) => {
                     </CButton>
                   </div>
 
-                  <CPopover content="Cetak Riwayat Absensi Pegawai">
-                    <CButton
-                      type="button"
-                      color="info"
-                      className="ml-2"
-                      onClick={() =>
-                        printAbsensiByFilterTanggal(params.id, formattedDate)
-                      }
-                    >
-                      <span className="my-text-button">
-                        Cetak Riwayat Absensi
-                      </span>{" "}
-                      <CIcon content={cilPrint} />
-                    </CButton>
-                  </CPopover>
+                  <div>
+                    <CPopover content="Cetak Riwayat Absensi Pegawai">
+                      <CButton
+                        type="button"
+                        color="info"
+                        className="ml-2"
+                        onClick={() =>
+                          printAbsensiByFilterTanggal(params.id, formattedDate)
+                        }
+                      >
+                        <span className="my-text-button">PDF</span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                    <CPopover content="Export Rekapan Absensi Berdasarkan Filter Tanggal ke Excel">
+                      <CButton
+                        type="button"
+                        color="success"
+                        className="ml-2"
+                        onClick={() =>
+                          exportExcel(
+                            "absensi-filter-tanggal/" + params.id,
+                            formattedDate,
+                            "filter_tanggal"
+                          )
+                        }
+                      >
+                        <span className="my-text-button">Excel</span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                  </div>
                 </CCardFooter>
               </CCard>
             </CCol>

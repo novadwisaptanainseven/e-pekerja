@@ -23,6 +23,7 @@ import { getPendidikan } from "src/context/actions/Pegawai/Pendidikan/getPendidi
 import { deletePendidikan } from "src/context/actions/Pegawai/Pendidikan/deletePendidikan";
 import { getIjazah } from "src/context/actions/DownloadFile";
 import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -210,13 +211,25 @@ const DataPendidikan = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton
-                type="button"
-                color="info"
-                onClick={() => printLaporan(id, "pendidikan")}
-              >
-                Cetak <CIcon content={cilPrint} />
-              </CButton>
+              <div>
+                <CButton
+                  type="button"
+                  color="info"
+                  onClick={() => printLaporan(id, "pendidikan")}
+                >
+                  Cetak <CIcon content={cilPrint} />
+                </CButton>
+                <CButton
+                  type="button"
+                  className="ml-2"
+                  color="success"
+                  onClick={() =>
+                    exportExcel("laporan-pegawai/" + id + "/pendidikan")
+                  }
+                >
+                  Excel <CIcon content={cilPrint} />
+                </CButton>
+              </div>
             </div>
             <DataTable
               columns={columns}

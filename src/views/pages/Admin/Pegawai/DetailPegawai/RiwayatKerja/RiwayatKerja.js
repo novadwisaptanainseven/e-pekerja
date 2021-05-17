@@ -22,6 +22,7 @@ import { deleteRiwayatKerja } from "src/context/actions/Pegawai/RiwayatKerja/del
 import { getRiwayatKerja } from "src/context/actions/Pegawai/RiwayatKerja/getRiwayatKerja";
 import { format } from "date-fns/esm";
 import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -168,13 +169,25 @@ const DataRiwayatKerja = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton
-                type="button"
-                color="info"
-                onClick={() => printLaporan(id, "riwayat-kerja")}
-              >
-                Cetak <CIcon content={cilPrint} />
-              </CButton>
+              <div>
+                <CButton
+                  type="button"
+                  color="info"
+                  onClick={() => printLaporan(id, "riwayat-kerja")}
+                >
+                  Cetak <CIcon content={cilPrint} />
+                </CButton>
+                <CButton
+                  type="button"
+                  className="ml-2"
+                  color="success"
+                  onClick={() =>
+                    exportExcel("laporan-pegawai/" + id + "/riwayat-kerja")
+                  }
+                >
+                  Excel <CIcon content={cilPrint} />
+                </CButton>
+              </div>
             </div>
             <DataTable
               columns={columns}

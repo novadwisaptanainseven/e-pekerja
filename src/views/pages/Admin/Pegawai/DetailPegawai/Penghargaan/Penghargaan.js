@@ -27,6 +27,7 @@ import { format } from "date-fns/esm";
 import { deletePenghargaan } from "src/context/actions/Pegawai/Penghargaan/deletePenghargaan";
 import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
 import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -215,13 +216,23 @@ const Penghargaan = ({ id }) => {
             >
               Tambah Penghargaan
             </CButton>
-            <CButton
-              type="button"
-              color="info"
-              onClick={() => printLaporan(id, "penghargaan")}
-            >
-              Cetak <CIcon content={cilPrint} />
-            </CButton>
+            <div>
+              <CButton
+                type="button"
+                color="info"
+                onClick={() => printLaporan(id, "penghargaan")}
+              >
+                Cetak <CIcon content={cilPrint} />
+              </CButton>
+              <CButton
+                type="button"
+                className="ml-2"
+                color="success"
+                onClick={() => exportExcel("laporan-pegawai/" + id + "/penghargaan")}
+              >
+                Excel <CIcon content={cilPrint} />
+              </CButton>
+            </div>
           </div>
 
           <DataTable

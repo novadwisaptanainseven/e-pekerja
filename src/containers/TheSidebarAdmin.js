@@ -25,7 +25,7 @@ const TheSidebarAdmin = () => {
       show={show}
       onShowChange={(val) => dispatch({ type: "set", sidebarShow: val })}
     >
-      <CSidebarBrand className="d-md-down-none" to="/">
+      <CSidebarBrand className="d-md-down-none" to="/epekerja/admin">
         {/* <CIcon
           className="c-sidebar-brand-full"
           name="logo-negative"
@@ -36,7 +36,12 @@ const TheSidebarAdmin = () => {
           name="sygnet"
           height={35}
         /> */}
-        <img src={LogoKotaSamarinda} alt="logo-pemkot-smd" width={35} className="mr-2" />
+        <img
+          src={LogoKotaSamarinda}
+          alt="logo-pemkot-smd"
+          width={35}
+          className="mr-2"
+        />
         <h2>E-Pekerja</h2>
       </CSidebarBrand>
       <CSidebarNav>

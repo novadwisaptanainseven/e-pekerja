@@ -23,6 +23,7 @@ import { getDiklat } from "src/context/actions/Pegawai/Diklat/getDiklat";
 import { deleteDiklat } from "src/context/actions/Pegawai/Diklat/deleteDiklat";
 import getDokDiklat from "src/context/actions/DownloadFile/getDokDiklat";
 import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -209,13 +210,25 @@ const DataDiklat = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton
-                type="button"
-                color="info"
-                onClick={() => printLaporan(id, "diklat")}
-              >
-                Cetak <CIcon content={cilPrint} />
-              </CButton>
+              <div>
+                <CButton
+                  type="button"
+                  color="info"
+                  onClick={() => printLaporan(id, "diklat")}
+                >
+                  Cetak <CIcon content={cilPrint} />
+                </CButton>
+                <CButton
+                  type="button"
+                  className="ml-2"
+                  color="success"
+                  onClick={() =>
+                    exportExcel("laporan-pegawai/" + id + "/diklat")
+                  }
+                >
+                  Excel <CIcon content={cilPrint} />
+                </CButton>
+              </div>
             </div>
             <DataTable
               columns={columns}

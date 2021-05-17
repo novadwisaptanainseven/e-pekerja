@@ -22,6 +22,7 @@ import { getKeluarga } from "src/context/actions/Pegawai/Keluarga/getKeluarga";
 import { deleteKeluarga } from "src/context/actions/Pegawai/Keluarga/deleteKeluarga";
 import printLaporan from "src/context/actions/DownloadFile/printLaporan";
 import formatTanggal from "src/helpers/formatTanggal";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -186,13 +187,23 @@ const DataKeluarga = ({ id }) => {
               >
                 Tambah Data
               </CButton>
-              <CButton
-                type="button"
-                color="info"
-                onClick={() => printLaporan(id, "keluarga")}
-              >
-                Cetak <CIcon content={cilPrint} />
-              </CButton>
+              <div>
+                <CButton
+                  type="button"
+                  color="info"
+                  onClick={() => printLaporan(id, "keluarga")}
+                >
+                  PDF <CIcon content={cilPrint} />
+                </CButton>
+                <CButton
+                  type="button"
+                  className="ml-2"
+                  color="success"
+                  onClick={() => exportExcel("laporan-pegawai/" + id + "/keluarga")}
+                >
+                  Excel <CIcon content={cilPrint} />
+                </CButton>
+              </div>
             </div>
             <DataTable
               columns={columns}

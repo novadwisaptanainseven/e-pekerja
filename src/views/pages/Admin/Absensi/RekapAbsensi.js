@@ -30,6 +30,7 @@ import { printRekapAbsensiByStatusPegawai } from "src/context/actions/DownloadFi
 import { printRekapAbsensiByIdPegawai } from "src/context/actions/DownloadFile/printAbsensiByIdPegawai";
 import { getAllRekapAbsensiByDate } from "src/context/actions/Absensi/getAllRekapAbsensiByDate";
 import { printRekapAbsensiByDate } from "src/context/actions/DownloadFile/printAbsensiByDate";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const TextField = styled.input`
   height: 37px;
@@ -206,9 +207,18 @@ const RekapAbsensi = () => {
           <CButton
             color="warning"
             className="text-white mr-1"
+            size="sm"
             onClick={() => printRekapAbsensiByIdPegawai(row.id_pegawai)}
           >
-            Cetak <CIcon content={cilPrint} />
+            PDF <CIcon content={cilPrint} />
+          </CButton>
+          <CButton
+            color="success"
+            className="text-white"
+            size="sm"
+            onClick={() => exportExcel("absensi-per-tahun/" + row.id_pegawai)}
+          >
+            Excel <CIcon content={cilPrint} />
           </CButton>
         </div>
       ),
@@ -357,21 +367,40 @@ const RekapAbsensi = () => {
                   >
                     {!collapse2 ? "Klik untuk melihat" : "Tutup"}
                   </CButton>
-                  <CPopover content="Cetak Rekapan Absensi Pegawai Berdasarkan Tahun">
-                    <CButton
-                      type="button"
-                      color="info"
-                      className="ml-2"
-                      onClick={() =>
-                        printRekapAbsensiByStatusPegawai("semua", dataTahun)
-                      }
-                    >
-                      <span className="my-text-button">
-                        Cetak Rekapan Absensi
-                      </span>{" "}
-                      <CIcon content={cilPrint} />
-                    </CButton>
-                  </CPopover>
+                  <div>
+                    <CPopover content="Cetak Rekapan Absensi Pegawai Berdasarkan Tahun">
+                      <CButton
+                        type="button"
+                        color="info"
+                        className="ml-2"
+                        onClick={() =>
+                          printRekapAbsensiByStatusPegawai("semua", dataTahun)
+                        }
+                      >
+                        <span className="my-text-button">
+                          Cetak Rekapan Absensi
+                        </span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                    <CPopover content="Export Rekapan Absensi Pegawai ke Excel">
+                      <CButton
+                        type="button"
+                        color="success"
+                        className="ml-2"
+                        onClick={() =>
+                          exportExcel(
+                            "rekap-absensi-semua-pegawai/tahun",
+                            dataTahun,
+                            "filter_tahun"
+                          )
+                        }
+                      >
+                        <span className="my-text-button">Excel</span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                  </div>
                 </CCardFooter>
               </CCard>
             </CCol>
@@ -410,21 +439,40 @@ const RekapAbsensi = () => {
                   >
                     {!collapse2 ? "Klik untuk melihat" : "Tutup"}
                   </CButton>
-                  <CPopover content="Cetak Rekapan Absensi Pegawai Berdasarkan Filter Tanggal">
-                    <CButton
-                      type="button"
-                      color="info"
-                      className="ml-2"
-                      onClick={() =>
-                        printRekapAbsensiByDate("semua", formattedDate)
-                      }
-                    >
-                      <span className="my-text-button">
-                        Cetak Rekapan Absensi
-                      </span>{" "}
-                      <CIcon content={cilPrint} />
-                    </CButton>
-                  </CPopover>
+                  <div>
+                    <CPopover content="Cetak Rekapan Absensi Pegawai Berdasarkan Filter Tanggal">
+                      <CButton
+                        type="button"
+                        color="info"
+                        className="ml-2"
+                        onClick={() =>
+                          printRekapAbsensiByDate("semua", formattedDate)
+                        }
+                      >
+                        <span className="my-text-button">
+                          Cetak Rekapan Absensi
+                        </span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                    <CPopover content="Export Rekapan Absensi Pegawai ke Excel">
+                      <CButton
+                        type="button"
+                        color="success"
+                        className="ml-2"
+                        onClick={() =>
+                          exportExcel(
+                            "rekap-absensi-semua-pegawai/tanggal",
+                            formattedDate,
+                            "filter_tanggal"
+                          )
+                        }
+                      >
+                        <span className="my-text-button">Excel</span>{" "}
+                        <CIcon content={cilPrint} />
+                      </CButton>
+                    </CPopover>
+                  </div>
                 </CCardFooter>
               </CCard>
             </CCol>
