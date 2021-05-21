@@ -12,3 +12,4 @@ export const deleteAgama = (id, dispatch) => {
       console.log(err.response.data);
     });
 };
+
