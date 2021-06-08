@@ -257,7 +257,7 @@ const DukPNS = () => {
                   href="."
                   onClick={(e) => {
                     e.preventDefault();
-                    goToEdit(data.id);
+                    goToEdit(data.id_duk);
                   }}
                 >
                   Klik Disini

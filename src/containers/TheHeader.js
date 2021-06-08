@@ -8,12 +8,13 @@ import {
   CSubheader,
   CBreadcrumbRouter,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+// import CIcon from "@coreui/icons-react";
 
 // routes config
 import routes from "../routes_admin";
 
 import { TheHeaderDropdown } from "./index";
+import { LogoKotaSamarinda } from "src/assets";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,14 @@ const TheHeader = () => {
         onClick={toggleSidebar}
       />
       <CHeaderBrand className="mx-auto d-lg-none" to="/">
-        <CIcon name="logo" height="48" alt="Logo" />
+        {/* <CIcon name="logo" height="48" alt="Logo" /> */}
+        <img
+          src={LogoKotaSamarinda}
+          alt="logo-pemkot-smd"
+          width={35}
+          className="mr-2"
+        />
+        <h2>E-Pekerja</h2>
       </CHeaderBrand>
 
       <CHeaderNav className="d-md-down-none mr-auto">

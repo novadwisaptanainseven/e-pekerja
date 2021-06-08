@@ -228,7 +228,9 @@ const Penghargaan = ({ id }) => {
                 type="button"
                 className="ml-2"
                 color="success"
-                onClick={() => exportExcel("laporan-pegawai/" + id + "/penghargaan")}
+                onClick={() =>
+                  exportExcel("laporan-pegawai/" + id + "/penghargaan")
+                }
               >
                 Excel <CIcon content={cilPrint} />
               </CButton>
@@ -336,9 +338,6 @@ const Penghargaan = ({ id }) => {
             <DetailPenghargaan idPegawai={id} idPenghargaan={modalDetail.id} />
           </CModalBody>
           <CModalFooter>
-            <CButton type="submit" color="primary">
-              Simpan
-            </CButton>{" "}
             <CButton
               type="button"
               color="secondary"

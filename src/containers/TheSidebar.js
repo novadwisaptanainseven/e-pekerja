@@ -12,10 +12,11 @@ import {
   CSidebarNavItem,
 } from "@coreui/react";
 
-import CIcon from "@coreui/icons-react";
+// import CIcon from "@coreui/icons-react";
 
 // sidebar nav config
 import navigation from "./_nav";
+import { LogoKotaSamarinda } from "src/assets";
 
 const TheSidebar = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const TheSidebar = () => {
       onShowChange={(val) => dispatch({ type: "set", sidebarShow: val })}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
-        <CIcon
+        {/* <CIcon
           className="c-sidebar-brand-full"
           name="logo-negative"
           height={35}
@@ -36,7 +37,14 @@ const TheSidebar = () => {
           className="c-sidebar-brand-minimized"
           name="sygnet"
           height={35}
+        /> */}
+         <img
+          src={LogoKotaSamarinda}
+          alt="logo-pemkot-smd"
+          width={35}
+          className="mr-2"
         />
+        <h2>E-Pekerja</h2>
       </CSidebarBrand>
       <CSidebarNav>
         <CCreateElement

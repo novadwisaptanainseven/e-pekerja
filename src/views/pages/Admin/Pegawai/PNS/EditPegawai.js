@@ -925,13 +925,10 @@ const EditPegawai = ({ match }) => {
                         "Simpan"
                       )}
                     </CButton>
-                    <CButton color="danger" type="reset" className="mr-1">
-                      Reset
-                    </CButton>
                   </CCardFooter>
                 </CForm>
               )}
-            </Formik>
+            </Formik> 
           </>
         ) : (
           <>

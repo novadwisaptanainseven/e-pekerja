@@ -63,7 +63,11 @@ const DataPendidikan = ({ id }) => {
       selector: "jenjang",
       wrap: true,
       sortable: true,
-      // maxWidth: "100px",
+      cell: (row) => (
+        <div>
+          {row.jenjang.toUpperCase()}
+        </div>
+      )
     },
     {
       name: "Tahun Lulus",
