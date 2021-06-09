@@ -148,6 +148,8 @@ const TambahPegawai = () => {
     tmt_cpns: "",
     tmt_jabatan: "",
     no_hp: "",
+    email: "",
+    no_ktp: "",
     gaji_pokok: "",
     foto: undefined,
     mk_jabatan: "",
@@ -225,6 +227,10 @@ const TambahPegawai = () => {
     tmt_cpns: Yup.string().required("TMT. CPNS harus diisi!"),
     tmt_jabatan: Yup.string().required("TMT. Jabatan harus diisi!"),
     no_hp: Yup.string().required("No. HP harus diisi!"),
+    email: Yup.string()
+      .email("Email tidak valid")
+      .required("No. HP harus diisi!"),
+    no_ktp: Yup.string().required("No. KTP harus diisi!"),
     gaji_pokok: Yup.number()
       .typeError("Gaji pokok harus berupa bilangan")
       .integer("Gaji pokok harus berupa bilangan")
@@ -287,6 +293,8 @@ const TambahPegawai = () => {
     formData.append("tmt_cpns", values.tmt_cpns);
     formData.append("tmt_jabatan", values.tmt_jabatan);
     formData.append("no_hp", values.no_hp);
+    formData.append("email", values.email);
+    formData.append("no_ktp", values.no_ktp);
     formData.append("gaji_pokok", values.gaji_pokok);
     formData.append("foto", values.foto);
     formData.append("mk_jabatan", values.mk_jabatan);
@@ -855,6 +863,54 @@ const TambahPegawai = () => {
                         />
                         {errors.no_hp && touched.no_hp && (
                           <div className="invalid-feedback">{errors.no_hp}</div>
+                        )}
+                      </CCol>
+                    </CFormGroup>
+                    <CFormGroup row>
+                      <CCol>
+                        <CLabel>Email</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
+                        <CInput
+                          type="text"
+                          name="email"
+                          id="email"
+                          placeholder="Masukkan email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.email}
+                          className={
+                            errors.email && touched.email ? "is-invalid" : null
+                          }
+                        />
+                        {errors.email && touched.email && (
+                          <div className="invalid-feedback">{errors.email}</div>
+                        )}
+                      </CCol>
+                    </CFormGroup>
+                    <CFormGroup row>
+                      <CCol>
+                        <CLabel>No. KTP</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
+                        <CInput
+                          type="text"
+                          name="no_ktp"
+                          id="no_ktp"
+                          placeholder="Masukkan no. hp"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.no_ktp}
+                          className={
+                            errors.no_ktp && touched.no_ktp
+                              ? "is-invalid"
+                              : null
+                          }
+                        />
+                        {errors.no_ktp && touched.no_ktp && (
+                          <div className="invalid-feedback">
+                            {errors.no_ktp}
+                          </div>
                         )}
                       </CCol>
                     </CFormGroup>

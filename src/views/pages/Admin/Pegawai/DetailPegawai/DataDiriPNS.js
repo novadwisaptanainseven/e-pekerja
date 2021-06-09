@@ -43,6 +43,14 @@ const DataDiriPNS = ({ data }) => {
                   <td>{data.no_hp}</td>
                 </tr>
                 <tr>
+                  <th>Email</th>
+                  <td>{data.email}</td>
+                </tr>
+                <tr>
+                  <th>No. KTP</th>
+                  <td>{data.no_ktp}</td>
+                </tr>
+                <tr>
                   <th>Jabatan</th>
                   <td>{data.jabatan}</td>
                 </tr>
