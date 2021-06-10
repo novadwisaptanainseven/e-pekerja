@@ -18,7 +18,7 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint } from "@coreui/icons";
 import { getPTTH } from "src/context/actions/Pegawai/PTTH/getPTTH";
 import { deletePTTH } from "src/context/actions/Pegawai/PTTH/deletePTTH";
 import { format } from "date-fns";
@@ -145,21 +145,7 @@ const DataPTTH = () => {
               className="btn btn-sm"
               onClick={() => goToDetail(row.id_pegawai)}
             >
-              Kelengkapan
-            </CButton>
-            <CButton
-              color="success"
-              className="btn btn-sm"
-              onClick={() => goToEdit(row.id_pegawai)}
-            >
-              <CIcon content={cilPen} color="white" />
-            </CButton>
-            <CButton
-              color="danger"
-              className="btn btn-sm"
-              onClick={() => handleDelete(row.id_pegawai)}
-            >
-              <CIcon content={cilTrash} color="white" />
+              Pembaruan SK
             </CButton>
           </CButtonGroup>
         </div>
@@ -221,7 +207,7 @@ const DataPTTH = () => {
   };
 
   const goToDetail = (id) => {
-    history.push(`/epekerja/admin/pegawai-detail/${id}`);
+    history.push(`/epekerja/admin/pembaruan-sk/ptth/${id}`);
   };
 
   // Menangani tombol hapus
@@ -283,13 +269,9 @@ const DataPTTH = () => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data Pegawai Tidak Tetap Harian (PTTH)</h3>
+          <h3>Pembaruan SK (PTTH)</h3>
         </CCardHeader>
         <CCardBody>
-          <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
-          </CButton>
-
           {data.length > 0 ? (
             <DataTable
               columns={columns}

@@ -1,4 +1,3 @@
-
 import React from "react";
 
 // Import Dashboard
@@ -117,6 +116,20 @@ const SemuaPegawai = React.lazy(() =>
 );
 const RekapPegawai = React.lazy(() =>
   import("./views/pages/Admin/Pegawai/RekapPegawai")
+);
+
+// Pembaruan SK
+const PembaruanSK_PTTH = React.lazy(() =>
+  import("./views/pages/Admin/PembaruanSK/PTTH/ptth")
+);
+const PembaruanSK_PTTH_Riwayat = React.lazy(() =>
+  import("./views/pages/Admin/PembaruanSK/PTTH/RiwayatSK")
+);
+const PembaruanSK_PTTB = React.lazy(() =>
+  import("./views/pages/Admin/PembaruanSK/PTTB/pttb")
+);
+const PembaruanSK_PTTB_Riwayat = React.lazy(() =>
+  import("./views/pages/Admin/PembaruanSK/PTTB/RiwayatSK")
 );
 
 // DUK PNS
@@ -409,6 +422,32 @@ const routes = [
     path: "/epekerja/admin/pegawai/rekap-pegawai",
     name: "Rekapitulasi Pegawai",
     component: RekapPegawai,
+  },
+
+  // Pembaruan SK Pegawai
+  {
+    path: "/epekerja/admin/pembaruan-sk/ptth",
+    name: "Pembaruan SK PTTH",
+    component: PembaruanSK_PTTH,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/pembaruan-sk/ptth/:id",
+    name: "Riwayat SK",
+    component: PembaruanSK_PTTH_Riwayat,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/pembaruan-sk/pttb",
+    name: "Pembaruan SK PTTB",
+    component: PembaruanSK_PTTB,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/pembaruan-sk/pttb/:id",
+    name: "Riwayat SK",
+    component: PembaruanSK_PTTB_Riwayat,
+    exact: true,
   },
 
   // DUK PNS

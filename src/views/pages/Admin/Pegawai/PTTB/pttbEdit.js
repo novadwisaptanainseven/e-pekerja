@@ -124,6 +124,8 @@ const EditPTTB = ({ match }) => {
     bpjs: data ? data.bpjs : "",
     npwp: data ? data.npwp : "",
     no_hp: data ? data.no_hp : "",
+    email: data ? data.email : "",
+    no_ktp: data ? data.no_ktp : "",
     gaji_pokok: data ? data.gaji_pokok : "",
     foto: undefined,
   };
@@ -181,13 +183,17 @@ const EditPTTB = ({ match }) => {
     tgl_lahir: Yup.string().required("Tgl lahir harus diisi!"),
     alamat: Yup.string().required("Alamat harus diisi!"),
     jenis_kelamin: Yup.string().required("Jenis kelamin harus diisi!"),
-    // bpjs: Yup.string().required("BPJS harus diisi!"),
-    // npwp: Yup.string().required("NPWP harus diisi!"),
+    bpjs: Yup.string().required("BPJS harus diisi!"),
+    npwp: Yup.string().required("NPWP harus diisi!"),
+    no_hp: Yup.string().required("No HP harus diisi!"),
+    no_ktp: Yup.string().required("No. KTP harus diisi!"),
+    email: Yup.string()
+      .email("Email tidak valid")
+      .required("No. email harus diisi!"),
     gaji_pokok: Yup.number()
       .typeError("Gaji pokok harus berupa bilangan")
       .integer("Gaji pokok harus berupa bilangan")
       .required("Gaji pokok harus diisi!"),
-    no_hp: Yup.string().required("No HP harus diisi!"),
     foto: Yup.mixed()
       .test("size", "Kapasitas file maksimal 2 mb", (value) => {
         if (value) {
@@ -230,6 +236,8 @@ const EditPTTB = ({ match }) => {
     formData.append("npwp", values.npwp);
     formData.append("gaji_pokok", values.gaji_pokok);
     formData.append("no_hp", values.no_hp);
+    formData.append("email", values.email);
+    formData.append("no_ktp", values.no_ktp);
     if (values.foto) {
       formData.append("foto", values.foto);
     }
@@ -797,6 +805,60 @@ const EditPTTB = ({ match }) => {
                             {errors.no_hp && touched.no_hp && (
                               <div className="invalid-feedback">
                                 {errors.no_hp}
+                              </div>
+                            )}
+                          </CCol>
+                        </CFormGroup>
+
+                        <CFormGroup row>
+                          <CCol>
+                            <CLabel>Email</CLabel>
+                          </CCol>
+                          <CCol md="9" sm="12">
+                            <CInput
+                              type="text"
+                              name="email"
+                              id="email"
+                              placeholder="Masukkan no. hp"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.email}
+                              className={
+                                errors.email && touched.email
+                                  ? "is-invalid"
+                                  : null
+                              }
+                            />
+                            {errors.email && touched.email && (
+                              <div className="invalid-feedback">
+                                {errors.email}
+                              </div>
+                            )}
+                          </CCol>
+                        </CFormGroup>
+
+                        <CFormGroup row>
+                          <CCol>
+                            <CLabel>No. KTP</CLabel>
+                          </CCol>
+                          <CCol md="9" sm="12">
+                            <CInput
+                              type="text"
+                              name="no_ktp"
+                              id="no_ktp"
+                              placeholder="Masukkan no. hp"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.no_ktp}
+                              className={
+                                errors.no_ktp && touched.no_ktp
+                                  ? "is-invalid"
+                                  : null
+                              }
+                            />
+                            {errors.no_ktp && touched.no_ktp && (
+                              <div className="invalid-feedback">
+                                {errors.no_ktp}
                               </div>
                             )}
                           </CCol>

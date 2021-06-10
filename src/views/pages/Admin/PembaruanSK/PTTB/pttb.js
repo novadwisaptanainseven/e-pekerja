@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -19,8 +19,8 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
-import { getPTTH } from "src/context/actions/Pegawai/PTTH/getPTTH";
-import { deletePTTH } from "src/context/actions/Pegawai/PTTH/deletePTTH";
+import { getPTTB } from "src/context/actions/Pegawai/PTTB/getPTTB";
+import { deletePTTB } from "src/context/actions/Pegawai/PTTB/deletePTTB";
 import { format } from "date-fns";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
@@ -71,7 +71,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
     <TextField
       id="search"
       type="text"
-      placeholder="Cari pegawai PTTH"
+      placeholder="Cari pegawai PTTB"
       aria-label="Search Input"
       value={filterText}
       onChange={onFilter}
@@ -82,29 +82,36 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
   </>
 );
 
-const DataPTTH = () => {
+const DataPTTB = () => {
   const history = useHistory();
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const { ptthState, ptthDispatch } = useContext(GlobalContext);
-  const { data } = ptthState;
+  const { pttbState, pttbDispatch } = useContext(GlobalContext);
+  const { data } = pttbState;
 
   useEffect(() => {
-    // Get data PTTH
-    getPTTH(ptthDispatch);
-  }, [ptthDispatch]);
+    // Get data PTTB
+    getPTTB(pttbDispatch);
+  }, [pttbDispatch]);
 
-  const filteredData = data.filter((item) => {
-    if (item.nama && item.jabatan) {
-      if (
-        item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.jabatan.toLowerCase().includes(filterText.toLowerCase())
-      ) {
-        return true;
+  const filteredData = data.filter((item) =>
+    // (
+    //   item.nama && item.sub_bidang &&
+    //   item.nama.toLowerCase().includes(filterText.toLowerCase())
+
+    // )
+    {
+      if (item.nama && item.jabatan) {
+        if (
+          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.jabatan.toLowerCase().includes(filterText.toLowerCase())
+        ) {
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  });
+  );
 
   const columns = [
     {
@@ -132,7 +139,6 @@ const DataPTTH = () => {
       sortable: true,
       wrap: true,
     },
-
     {
       // maxWidth: "150px",
       name: "Action",
@@ -145,21 +151,7 @@ const DataPTTH = () => {
               className="btn btn-sm"
               onClick={() => goToDetail(row.id_pegawai)}
             >
-              Kelengkapan
-            </CButton>
-            <CButton
-              color="success"
-              className="btn btn-sm"
-              onClick={() => goToEdit(row.id_pegawai)}
-            >
-              <CIcon content={cilPen} color="white" />
-            </CButton>
-            <CButton
-              color="danger"
-              className="btn btn-sm"
-              onClick={() => handleDelete(row.id_pegawai)}
-            >
-              <CIcon content={cilTrash} color="white" />
+              Pembaruan SK
             </CButton>
           </CButtonGroup>
         </div>
@@ -195,7 +187,7 @@ const DataPTTH = () => {
           type="button"
           color="info"
           className="ml-2"
-          onClick={() => printDaftarPegawai("ptth")}
+          onClick={() => printDaftarPegawai("pttb")}
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -204,7 +196,7 @@ const DataPTTH = () => {
           type="button"
           color="success"
           className="ml-2"
-          onClick={() => exportExcel("ptth")}
+          onClick={() => exportExcel("pttb")}
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
@@ -213,15 +205,15 @@ const DataPTTH = () => {
   }, [filterText, resetPaginationToggle]);
 
   const goToTambah = () => {
-    history.push("/epekerja/admin/pegawai/ptth-tambah");
+    history.push("/epekerja/admin/pegawai/pttb-tambah");
   };
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/admin/pegawai/ptth-edit/${id}`);
+    history.push(`/epekerja/admin/pegawai/pttb-edit/${id}`);
   };
 
   const goToDetail = (id) => {
-    history.push(`/epekerja/admin/pegawai-detail/${id}`);
+    history.push(`/epekerja/admin/pembaruan-sk/pttb/${id}`);
   };
 
   // Menangani tombol hapus
@@ -237,8 +229,8 @@ const DataPTTH = () => {
       confirmButtonText: "YA",
     }).then((res) => {
       if (res.isConfirmed) {
-        // Memanggil method deletePTTH untuk menghapus data PTTH
-        deletePTTH(id, ptthDispatch);
+        // Memanggil method deletePTTB untuk menghapus data PTTB
+        deletePTTB(id, pttbDispatch);
         MySwal.fire({
           icon: "success",
           title: "Terhapus",
@@ -253,9 +245,9 @@ const DataPTTH = () => {
       <div style={{ padding: "10px 63px" }}>
         <CRow className="mb-1">
           <CCol md="2">
-            <strong>NIK</strong>
+            <strong>NIP</strong>
           </CCol>
-          <CCol>{data.nik}</CCol>
+          <CCol>{data.nip}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="2">
@@ -275,6 +267,18 @@ const DataPTTH = () => {
           </CCol>
           <CCol>{format(new Date(data.tgl_mulai_tugas), "dd/MM/y")}</CCol>
         </CRow>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>Kontrak Ke</strong>
+          </CCol>
+          <CCol>{data.kontrak_ke}</CCol>
+        </CRow>
+        <CRow className="mb-1">
+          <CCol md="2">
+            <strong>Masa Kerja</strong>
+          </CCol>
+          <CCol>{data.masa_kerja}</CCol>
+        </CRow>
       </div>
     </>
   );
@@ -283,13 +287,9 @@ const DataPTTH = () => {
     <>
       <CCard>
         <CCardHeader>
-          <h3>Data Pegawai Tidak Tetap Harian (PTTH)</h3>
+          <h3>Pembaruan SK (PTTB)</h3>
         </CCardHeader>
         <CCardBody>
-          <CButton color="primary" className="btn btn-md" onClick={goToTambah}>
-            Tambah Data
-          </CButton>
-
           {data.length > 0 ? (
             <DataTable
               columns={columns}
@@ -304,8 +304,8 @@ const DataPTTH = () => {
               subHeader
               subHeaderComponent={SubHeaderComponentMemo}
               expandableRows
-              highlightOnHover
               expandOnRowClicked
+              highlightOnHover
               expandableRowsComponent={<ExpandableComponent />}
             />
           ) : (
@@ -330,4 +330,4 @@ const DataPTTH = () => {
   );
 };
 
-export default DataPTTH;
+export default DataPTTB;

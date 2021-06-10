@@ -96,6 +96,24 @@ const _nav_admin = [
     ],
   },
   {
+    _tag: "CSidebarNavDropdown",
+    name: "Pembaruan SK Pegawai",
+    to: "/epekerja/admin/pembaruan-sk",
+    icon: <CIcon content={cilGroup} customClasses="c-sidebar-nav-icon" />,
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "PTTH",
+        to: "/epekerja/admin/pembaruan-sk/ptth",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "PTTB",
+        to: "/epekerja/admin/pembaruan-sk/pttb",
+      },
+    ],
+  },
+  {
     _tag: "CSidebarNavItem",
     name: "DUK Pegawai Negeri Sipil",
     to: "/epekerja/admin/duk",

@@ -137,6 +137,8 @@ const TambahPTTB = () => {
     bpjs: "",
     npwp: "",
     no_hp: "",
+    email: "",
+    no_ktp: "",
     foto: undefined,
     nama_akademi: "",
     jurusan: "",
@@ -210,9 +212,13 @@ const TambahPTTB = () => {
     tempat_lahir: Yup.string().required("Tempat lahir harus diisi!"),
     alamat: Yup.string().required("Alamat harus diisi!"),
     jenis_kelamin: Yup.string().required("Jenis kelamin harus diisi!"),
-    // bpjs: Yup.string().required("BPJS harus diisi!"),
-    // npwp: Yup.string().required("NPWP harus diisi!"),
+    bpjs: Yup.string().required("BPJS harus diisi!"),
+    npwp: Yup.string().required("NPWP harus diisi!"),
     no_hp: Yup.string().required("No. HP harus diisi!"),
+    no_ktp: Yup.string().required("No. KTP harus diisi!"),
+    email: Yup.string()
+      .email("Email tidak valid")
+      .required("No. email harus diisi!"),
     nama_akademi: Yup.string().required("Nama akademi harus diisi!"),
     jurusan: Yup.string().required("Jurusan harus diisi!"),
     tahun_lulus: Yup.string().required("Tahun lulus harus diisi!"),
@@ -274,6 +280,8 @@ const TambahPTTB = () => {
     formData.append("bpjs", values.bpjs);
     formData.append("npwp", values.npwp);
     formData.append("no_hp", values.no_hp);
+    formData.append("email", values.email);
+    formData.append("no_ktp", values.no_ktp);
     formData.append("foto", values.foto);
     formData.append("nama_akademi", values.nama_akademi);
     formData.append("jurusan", values.jurusan);
@@ -764,9 +772,9 @@ const TambahPTTB = () => {
                         {errors.bpjs && touched.bpjs && (
                           <div className="invalid-feedback">{errors.bpjs}</div>
                         )}
-                        <CFormText className="help-block">
+                        {/* <CFormText className="help-block">
                           Boleh tidak diisi
-                        </CFormText>
+                        </CFormText> */}
                       </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -789,9 +797,9 @@ const TambahPTTB = () => {
                         {errors.npwp && touched.npwp && (
                           <div className="invalid-feedback">{errors.npwp}</div>
                         )}
-                        <CFormText className="help-block">
+                        {/* <CFormText className="help-block">
                           Boleh tidak diisi
-                        </CFormText>
+                        </CFormText> */}
                       </CCol>
                     </CFormGroup>
                   </CCol>
@@ -815,6 +823,55 @@ const TambahPTTB = () => {
                         />
                         {errors.no_hp && touched.no_hp && (
                           <div className="invalid-feedback">{errors.no_hp}</div>
+                        )}
+                      </CCol>
+                    </CFormGroup>
+                    <CFormGroup row>
+                      <CCol>
+                        <CLabel>Email</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
+                        <CInput
+                          type="text"
+                          name="email"
+                          id="email"
+                          placeholder="Masukkan no. hp"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.email}
+                          className={
+                            errors.email && touched.email ? "is-invalid" : null
+                          }
+                        />
+                        {errors.email && touched.email && (
+                          <div className="invalid-feedback">{errors.email}</div>
+                        )}
+                      </CCol>
+                    </CFormGroup>
+
+                    <CFormGroup row>
+                      <CCol>
+                        <CLabel>No. KTP</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
+                        <CInput
+                          type="text"
+                          name="no_ktp"
+                          id="no_ktp"
+                          placeholder="Masukkan no. hp"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.no_ktp}
+                          className={
+                            errors.no_ktp && touched.no_ktp
+                              ? "is-invalid"
+                              : null
+                          }
+                        />
+                        {errors.no_ktp && touched.no_ktp && (
+                          <div className="invalid-feedback">
+                            {errors.no_ktp}
+                          </div>
                         )}
                       </CCol>
                     </CFormGroup>
@@ -1087,7 +1144,6 @@ const TambahPTTB = () => {
                     "Simpan"
                   )}
                 </CButton>
-               
               </CCardFooter>
             </CForm>
           )}

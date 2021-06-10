@@ -134,7 +134,7 @@ const DataPTTB = () => {
       wrap: true,
     },
     {
-      name: "Tugas",
+      name: "Tugas Pokok",
       selector: "jabatan",
       sortable: true,
       wrap: true,
