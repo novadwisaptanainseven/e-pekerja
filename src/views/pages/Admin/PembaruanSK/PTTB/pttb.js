@@ -68,7 +68,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
     <TextField
       id="search"
       type="text"
-      placeholder="Cari pegawai PTTH"
+      placeholder="Cari pegawai PTTB"
       aria-label="Search Input"
       value={filterText}
       onChange={onFilter}
@@ -92,15 +92,15 @@ const DataPTTB = () => {
   }, [pttbDispatch]);
 
   const filteredData = data.filter((item) => {
-    if (item.nama && item.jabatan) {
-      if (
-        item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.jabatan.toLowerCase().includes(filterText.toLowerCase())
-      ) {
-        return true;
-      }
+    if (
+      item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.nip.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.jabatan.toLowerCase().includes(filterText.toLowerCase())
+    ) {
+      return true;
+    } else {
+      return false;
     }
-    return false;
   });
 
   const columns = [
@@ -204,9 +204,9 @@ const DataPTTB = () => {
       <div style={{ padding: "10px 63px" }}>
         <CRow className="mb-1">
           <CCol md="2">
-            <strong>NIK</strong>
+            <strong>NIPTTB</strong>
           </CCol>
-          <CCol>{data.nik}</CCol>
+          <CCol>{data.nip}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="2">

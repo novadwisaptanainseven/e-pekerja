@@ -99,7 +99,7 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
 
     MySwal.fire({
       icon: "error",
-      title: "Tambah Data Gagal",
+      title: "SK Gagal Diperbarui",
       text: err_message,
     }).then((result) => {
       setLoading(false);

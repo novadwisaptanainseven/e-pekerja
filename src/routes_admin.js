@@ -153,6 +153,9 @@ const DetailMasaKerja = React.lazy(() =>
 const EditMasaKerja = React.lazy(() =>
   import("./views/pages/Admin/MasaKerja/EditMasaKerja")
 );
+const RiwayatMasaKerja = React.lazy(() =>
+  import("./views/pages/Admin/MasaKerja/RiwayatMasaKerja")
+);
 
 // Kenaikan Gaji Berkala
 const KGB = React.lazy(() => import("./views/pages/Admin/KGB/KGB"));
@@ -472,16 +475,25 @@ const routes = [
     path: "/epekerja/admin/masa-kerja",
     name: "Daftar Pegawai Negeri Sipil Berdasarkan Masa Kerja",
     component: DataMasaKerja,
+    exact: true,
   },
   {
     path: "/epekerja/admin/masa-kerja-detail/:id",
     name: "Detail Masa Kerja Pegawai",
     component: DetailMasaKerja,
+    exact: true,
   },
   {
     path: "/epekerja/admin/masa-kerja-edit/:id",
     name: "Edit Masa Kerja Pegawai",
     component: EditMasaKerja,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/masa-kerja/pegawai/:id",
+    name: "Riwayat Masa Kerja Pegawai",
+    component: RiwayatMasaKerja,
+    exact: true,
   },
 
   // Kenaikan Gaji Berkala

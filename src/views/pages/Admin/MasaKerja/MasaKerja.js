@@ -142,7 +142,7 @@ const MasaKerja = () => {
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToEdit(row.id_masa_kerja)}
+              onClick={() => goToRiwayat(row.id_pegawai)}
             >
               Perbarui
             </CButton>
@@ -189,7 +189,7 @@ const MasaKerja = () => {
           type="button"
           color="success"
           className="ml-2"
-          onClick={() => exportExcel('masa-kerja')}
+          onClick={() => exportExcel("masa-kerja")}
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
@@ -197,8 +197,8 @@ const MasaKerja = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToEdit = (id) => {
-    history.push(`/epekerja/admin/masa-kerja-edit/${id}`);
+  const goToRiwayat = (id) => {
+    history.push(`/epekerja/admin/masa-kerja/pegawai/${id}`);
   };
 
   const goToDetail = (id) => {

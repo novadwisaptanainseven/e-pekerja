@@ -36,7 +36,7 @@ import printSK from "src/context/actions/DownloadFile/printSK";
 
 const MySwal = withReactContent(swal2);
 
-const RiwayatSK = ({ match }) => {
+const RiwayatMasaKerja = ({ match }) => {
   const params = match.params;
   const [modalTambah, setModalTambah] = useState(false);
   const [data, setData] = useState([]);
@@ -278,7 +278,7 @@ const RiwayatSK = ({ match }) => {
       <CCard>
         <CCardHeader className="d-flex justify-content-between my-card-header">
           <div className="title mb-2">
-            <h3>Pembaruan SK Pegawai</h3>
+            <h3>Pembaruan Masa Kerja Pegawai</h3>
             <h5 className="font-weight-normal">{pegawai.nama}</h5>
           </div>
           <CButton
@@ -298,7 +298,9 @@ const RiwayatSK = ({ match }) => {
           >
             Perbarui SK
           </CButton>
-          <h3 className="font-weight-normal text-center">Riwayat SK Pegawai</h3>
+          <h3 className="font-weight-normal text-center">
+            Riwayat Masa Kerja Pegawai
+          </h3>
           {data.length > 0 ? (
             <DataTable
               columns={columns}
@@ -415,4 +417,4 @@ const RiwayatSK = ({ match }) => {
   );
 };
 
-export default RiwayatSK;
+export default RiwayatMasaKerja;
