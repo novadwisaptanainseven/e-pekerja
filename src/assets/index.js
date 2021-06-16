@@ -6,6 +6,7 @@ import BGProfil from "./img/herringbone.png";
 import LoadAnimationBlue from "./img/load_animation_blue.gif";
 import LoadAnimationWhite from "./img/load_animation_white.gif";
 import LogoKotaSamarinda from "./img/logo-kota-samarinda.png";
+import IconExcel from "./img/icon-excel.png";
 
 export {
   SampleAvatar,
@@ -16,4 +17,5 @@ export {
   LoadAnimationBlue,
   LoadAnimationWhite,
   LogoKotaSamarinda,
+  IconExcel,
 };

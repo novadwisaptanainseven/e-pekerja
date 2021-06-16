@@ -13,7 +13,6 @@ import {
   CModalTitle,
   CRow,
   CCol,
-  CBadge,
   CButtonGroup,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";

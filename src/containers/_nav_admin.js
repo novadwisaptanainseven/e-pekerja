@@ -3,11 +3,9 @@ import CIcon from "@coreui/icons-react";
 import {
   cilBriefcase,
   cilGroup,
-  cilBadge,
   cilAvTimer,
   cilMoney,
   cilEnvelopeClosed,
-  cilShortText,
   cilStar,
   cilUser,
 } from "@coreui/icons";
@@ -113,12 +111,12 @@ const _nav_admin = [
       },
     ],
   },
-  {
-    _tag: "CSidebarNavItem",
-    name: "DUK Pegawai Negeri Sipil",
-    to: "/epekerja/admin/duk",
-    icon: <CIcon content={cilBadge} customClasses="c-sidebar-nav-icon" />,
-  },
+  // {
+  //   _tag: "CSidebarNavItem",
+  //   name: "DUK Pegawai Negeri Sipil",
+  //   to: "/epekerja/admin/duk",
+  //   icon: <CIcon content={cilBadge} customClasses="c-sidebar-nav-icon" />,
+  // },
   {
     _tag: "CSidebarNavItem",
     name: "Masa Kerja Pegawai",
@@ -139,34 +137,34 @@ const _nav_admin = [
       <CIcon content={cilEnvelopeClosed} customClasses="c-sidebar-nav-icon" />
     ),
   },
-  {
-    _tag: "CSidebarNavDropdown",
-    name: "Absensi Pegawai",
-    to: "/epekerja/admin/absensi",
-    icon: <CIcon content={cilShortText} customClasses="c-sidebar-nav-icon" />,
-    _children: [
-      {
-        _tag: "CSidebarNavItem",
-        name: "Absensi PNS",
-        to: "/epekerja/admin/absensi/pns",
-      },
-      {
-        _tag: "CSidebarNavItem",
-        name: "Absensi PTTH",
-        to: "/epekerja/admin/absensi/ptth",
-      },
-      {
-        _tag: "CSidebarNavItem",
-        name: "Absensi PTTB",
-        to: "/epekerja/admin/absensi/pttb",
-      },
-      {
-        _tag: "CSidebarNavItem",
-        name: "Rekap Absensi",
-        to: "/epekerja/admin/absensi/rekap-absensi",
-      },
-    ],
-  },
+  // {
+  //   _tag: "CSidebarNavDropdown",
+  //   name: "Absensi Pegawai",
+  //   to: "/epekerja/admin/absensi",
+  //   icon: <CIcon content={cilShortText} customClasses="c-sidebar-nav-icon" />,
+  //   _children: [
+  //     {
+  //       _tag: "CSidebarNavItem",
+  //       name: "Absensi PNS",
+  //       to: "/epekerja/admin/absensi/pns",
+  //     },
+  //     {
+  //       _tag: "CSidebarNavItem",
+  //       name: "Absensi PTTH",
+  //       to: "/epekerja/admin/absensi/ptth",
+  //     },
+  //     {
+  //       _tag: "CSidebarNavItem",
+  //       name: "Absensi PTTB",
+  //       to: "/epekerja/admin/absensi/pttb",
+  //     },
+  //     {
+  //       _tag: "CSidebarNavItem",
+  //       name: "Rekap Absensi",
+  //       to: "/epekerja/admin/absensi/rekap-absensi",
+  //     },
+  //   ],
+  // },
   {
     _tag: "CSidebarNavItem",
     name: "Penghargaan",

@@ -21,7 +21,6 @@ import Select from "react-select";
 
 import { useHistory } from "react-router";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
-import { insertPembaruanSK } from "src/context/actions/PembaruanSK/insertPembaruanSK";
 import { getRiwayatSKById } from "src/context/actions/PembaruanSK/getRiwayatSKById";
 import { editRiwayatSK } from "src/context/actions/PembaruanSK/editRiwayatSK";
 
@@ -415,7 +414,6 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
                 <CButton
                   type="submit"
                   color="primary"
-                  onClick={() => handleFormSubmit(values)}
                   disabled={loading ? true : false}
                   onClick={() => {
                     !values.tugas

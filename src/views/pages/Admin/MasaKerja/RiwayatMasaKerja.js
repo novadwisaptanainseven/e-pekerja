@@ -13,26 +13,23 @@ import {
   CModalTitle,
   CRow,
   CCol,
-  CBadge,
   CButtonGroup,
+  CAlert,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 // import styled from "styled-components";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilPrint, cilInfo, cilUser } from "@coreui/icons";
+import { cilTrash, cilPrint, cilUser } from "@coreui/icons";
 import { useHistory } from "react-router-dom";
 import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
-import PerbaruiSK from "./PerbaruiSK";
-import { getRiwayatSK } from "src/context/actions/PembaruanSK/getRiwayatSK";
-import getSK from "src/context/actions/DownloadFile/getSK";
-import EditSK from "./EditSK";
+import PerbaruiMasaKerja from "./PerbaruiMasaKerja";
 import DetailSK from "./DetailSK";
-import getFilename from "src/helpers/getFilename";
-import { deleteRiwayatSK } from "src/context/actions/PembaruanSK/deleteRiwayatSK";
-import printSK from "src/context/actions/DownloadFile/printSK";
+import { getRiwayatMasaKerja } from "src/context/actions/MasaKerja/getRiwayatMasaKerja";
+import { deleteRiwayatMasaKerja } from "src/context/actions/MasaKerja/deleteRiwayatMasaKerja";
+import printRiwayatMK from "src/context/actions/DownloadFile/printRiwayatMK";
 
 const MySwal = withReactContent(swal2);
 
@@ -43,11 +40,9 @@ const RiwayatMasaKerja = ({ match }) => {
   const [pegawai, setPegawai] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const [alertSuccess, setAlertSuccess] = useState(false);
+  const [alertSuccessDelete, setAlertSuccessDelete] = useState(false);
 
-  const [modalEdit, setModalEdit] = useState({
-    modal: false,
-    id: null,
-  });
   const [modalDetail, setModalDetail] = useState({
     modal: false,
     id: null,
@@ -71,44 +66,42 @@ const RiwayatMasaKerja = ({ match }) => {
     };
   }, [params]);
 
-  // Get Riwayat SK
+  // Get Riwayat Masa Kerja
   useEffect(() => {
-    getRiwayatSK(params.id, setLoading, setData);
+    getRiwayatMasaKerja(params.id, setLoading, setData);
   }, [params]);
 
   const columns = [
     {
-      name: "No. SK",
-      selector: "no_sk",
+      name: "Tgl. Pembaruan",
+      selector: "tanggal",
       sortable: true,
-      // maxWidth: "200px",
+      wrap: true,
+      cell: (row) => <div>{format(new Date(row.tanggal), "dd/MM/y")}</div>,
+    },
+    {
+      name: "MK. Golongan",
+      selector: "mk_golongan",
+      sortable: true,
       wrap: true,
     },
     {
-      name: "Penetap SK",
-      selector: "penetap_sk",
+      name: "MK. Jabatan",
+      selector: "mk_jabatan",
       sortable: true,
       wrap: true,
-      // maxWidth: "150px",
     },
     {
-      name: "Tgl. Penetapan SK",
-      selector: "tgl_penetapan_sk",
+      name: "MK. Sebelum CPNS",
+      selector: "mk_sebelum_cpns",
       sortable: true,
       wrap: true,
-      // maxWidth: "150px",
-      cell: (row) => (
-        <div>{format(new Date(row.tgl_penetapan_sk), "dd/MM/y")}</div>
-      ),
     },
     {
-      name: "Tgl. Mulai Tugas",
-      selector: "tgl_mulai_tugas",
+      name: "MK. Seluruhnya",
+      selector: "mk_seluruhnya",
       sortable: true,
       wrap: true,
-      cell: (row) => (
-        <div>{format(new Date(row.tgl_mulai_tugas), "dd/MM/y")}</div>
-      ),
     },
     {
       // maxWidth: "150px",
@@ -119,37 +112,9 @@ const RiwayatMasaKerja = ({ match }) => {
           <div data-tag="allowRowEvents">
             <CButtonGroup>
               <CButton
-                color="info"
-                size="sm"
-                onClick={() => {
-                  setModalDetail({
-                    ...modalDetail,
-                    modal: !modalDetail.modal,
-                    id: row.id_riwayat_sk,
-                  });
-                }}
-                className="text-white"
-              >
-                <CIcon content={cilInfo} />
-              </CButton>
-              <CButton
-                color="warning"
-                size="sm"
-                onClick={() => {
-                  setModalEdit({
-                    ...modalEdit,
-                    modal: !modalEdit.modal,
-                    id: row.id_riwayat_sk,
-                  });
-                }}
-                className="text-white"
-              >
-                <CIcon content={cilPen} />
-              </CButton>
-              <CButton
                 color="danger"
                 size="sm"
-                onClick={() => handleDelete(row.id_riwayat_sk)}
+                onClick={() => handleDelete(row.id_riwayat_mk)}
               >
                 <CIcon content={cilTrash} />
               </CButton>
@@ -163,13 +128,13 @@ const RiwayatMasaKerja = ({ match }) => {
   const customStyles = {
     headCells: {
       style: {
-        fontSize: "1.15em",
+        fontSize: "1em",
       },
     },
   };
 
   // Menangani tombol hapus
-  const handleDelete = (id_riwayat_sk) => {
+  const handleDelete = (id_riwayat_mk) => {
     MySwal.fire({
       icon: "warning",
       title: "Anda yakin ingin menghapus data ini ?",
@@ -181,7 +146,13 @@ const RiwayatMasaKerja = ({ match }) => {
       confirmButtonText: "YA",
     }).then((res) => {
       if (res.isConfirmed) {
-        deleteRiwayatSK(params.id, id_riwayat_sk, setLoading, setData);
+        deleteRiwayatMasaKerja(
+          params.id,
+          id_riwayat_mk,
+          setLoading,
+          setData,
+          setAlertSuccessDelete
+        );
         MySwal.fire({
           icon: "success",
           title: "Terhapus",
@@ -206,7 +177,7 @@ const RiwayatMasaKerja = ({ match }) => {
           type="button"
           color="info"
           className="ml-2"
-          onClick={() => printSK(params.id)}
+          onClick={() => printRiwayatMK(params.id)}
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -214,62 +185,11 @@ const RiwayatMasaKerja = ({ match }) => {
           type="button"
           color="success"
           className="ml-2"
-          onClick={() => exportExcel(`riwayat-sk/` + params.id)}
+          onClick={() => exportExcel(`riwayat-mk/${params.id}`)}
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
       </>
-    );
-  };
-
-  // Expandable Component
-  const ExpandableComponent = ({ data }) => {
-    return (
-      <div style={{ padding: "10px 63px" }}>
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>Gaji Pokok</strong>
-          </CCol>
-          <CCol>
-            {data.gaji_pokok.toLocaleString("id", {
-              style: "currency",
-              currency: "IDR",
-            })}
-          </CCol>
-        </CRow>
-
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>Tugas</strong>
-          </CCol>
-          <CCol>{data.nama_jabatan}</CCol>
-        </CRow>
-
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>Kontrak Ke</strong>
-          </CCol>
-          <CCol>{data.kontrak_ke}</CCol>
-        </CRow>
-
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>Masa Kerja</strong>
-          </CCol>
-          <CCol>{data.masa_kerja}</CCol>
-        </CRow>
-
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>File SK</strong>
-          </CCol>
-          <CCol>
-            <a href={getSK(data.file)} target="_blank" rel="noreferrer">
-              {getFilename(data.file)}
-            </a>
-          </CCol>
-        </CRow>
-      </div>
     );
   };
 
@@ -291,12 +211,42 @@ const RiwayatMasaKerja = ({ match }) => {
           </CButton>
         </CCardHeader>
         <CCardBody>
+          {/* Alert Success Perbarui Masa Kerja */}
+          <CAlert
+            show={alertSuccess}
+            color="success"
+            closeButton
+            onShowChange={(show) => setAlertSuccess(show)}
+          >
+            Masa Kerja berhasil diperbarui. Silahkan cek di{" "}
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                goToDetailPegawai(params.id);
+              }}
+            >
+              Detail Pegawai
+            </a>
+          </CAlert>
+          {/* End of Alert Success Perbarui Masa Kerja */}
+
+          {/* Alert Success Delete Riwayat Masa Kerja */}
+          <CAlert
+            show={alertSuccessDelete}
+            color="success"
+            closeButton
+            onShowChange={(show) => setAlertSuccessDelete(show)}
+          >
+            Riwayat Masa Kerja berhasil dihapus.
+          </CAlert>
+          {/* End of Alert Success Delete Riwayat Masa Kerja */}
           <CButton
             color="primary"
             className="btn btn-md"
             onClick={() => setModalTambah(!modalTambah)}
           >
-            Perbarui SK
+            Perbarui Masa Kerja
           </CButton>
           <h3 className="font-weight-normal text-center">
             Riwayat Masa Kerja Pegawai
@@ -308,13 +258,8 @@ const RiwayatMasaKerja = ({ match }) => {
               responsive={true}
               customStyles={customStyles}
               pagination
-              // paginationResetDefaultPage={resetPaginationToggle}
               subHeader
               subHeaderComponent={<SubHeaderComponentMemo />}
-              highlightOnHover
-              expandableRows
-              expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
             />
           ) : loading ? (
             <div>
@@ -337,13 +282,8 @@ const RiwayatMasaKerja = ({ match }) => {
               responsive={true}
               customStyles={customStyles}
               pagination
-              // paginationResetDefaultPage={resetPaginationToggle}
               subHeader
               subHeaderComponent={<SubHeaderComponentMemo />}
-              highlightOnHover
-              expandableRows
-              expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
             />
           )}
         </CCardBody>
@@ -356,37 +296,14 @@ const RiwayatMasaKerja = ({ match }) => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Perbarui SK</CModalTitle>
+          <CModalTitle>Perbarui Masa Kerja</CModalTitle>
         </CModalHeader>
 
-        <PerbaruiSK
+        <PerbaruiMasaKerja
           modalTambah={modalTambah}
           setModalTambah={setModalTambah}
           id_pegawai={params.id}
-        />
-      </CModal>
-
-      {/* Modal Edit Riwayat SK */}
-      <CModal
-        show={modalEdit.modal}
-        onClose={() => {
-          setModalEdit({
-            ...modalEdit,
-            modal: !modalEdit.modal,
-            id: null,
-          });
-        }}
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Edit Riwayat SK</CModalTitle>
-        </CModalHeader>
-
-        <EditSK
-          id_riwayat_sk={modalEdit.id}
-          id_pegawai={params.id}
-          modalEdit={modalEdit}
-          setModalEdit={setModalEdit}
+          setAlertSuccess={setAlertSuccess}
         />
       </CModal>
 

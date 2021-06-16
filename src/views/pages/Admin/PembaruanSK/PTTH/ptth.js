@@ -1,7 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 import { LoadAnimationBlue } from "src/assets";
 
@@ -20,12 +17,9 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import { getPTTH } from "src/context/actions/Pegawai/PTTH/getPTTH";
-import { deletePTTH } from "src/context/actions/Pegawai/PTTH/deletePTTH";
 import { format } from "date-fns";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
-
-const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -198,40 +192,8 @@ const DataPTTH = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  const goToTambah = () => {
-    history.push("/epekerja/admin/pegawai/ptth-tambah");
-  };
-
-  const goToEdit = (id) => {
-    history.push(`/epekerja/admin/pegawai/ptth-edit/${id}`);
-  };
-
   const goToDetail = (id) => {
     history.push(`/epekerja/admin/pembaruan-sk/ptth/${id}`);
-  };
-
-  // Menangani tombol hapus
-  const handleDelete = (id) => {
-    MySwal.fire({
-      icon: "warning",
-      title: "Anda yakin ingin menghapus data ini ?",
-      text: "Jika yakin, klik YA",
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "YA",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        // Memanggil method deletePTTH untuk menghapus data PTTH
-        deletePTTH(id, ptthDispatch);
-        MySwal.fire({
-          icon: "success",
-          title: "Terhapus",
-          text: "Data berhasil dihapus",
-        });
-      }
-    });
   };
 
   const ExpandableComponent = ({ data }) => (

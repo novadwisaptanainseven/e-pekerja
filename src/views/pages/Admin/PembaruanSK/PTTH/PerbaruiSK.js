@@ -15,7 +15,6 @@ import {
   CModalFooter,
   CForm,
   CButton,
-  CRow,
 } from "@coreui/react";
 import Select from "react-select";
 
@@ -378,7 +377,6 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
               <CButton
                 type="submit"
                 color="primary"
-                onClick={() => handleFormSubmit(values)}
                 disabled={loading ? true : false}
                 onClick={() => {
                   !values.tugas

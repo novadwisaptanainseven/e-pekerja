@@ -7,6 +7,7 @@ import {
   CButtonGroup,
   CRow,
   CCol,
+  CAlert,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import styled from "styled-components";
@@ -19,6 +20,7 @@ import { format } from "date-fns";
 import { LoadAnimationBlue } from "src/assets";
 import printMasaKerja from "src/context/actions/DownloadFile/printMasaKerja";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
+import ModalSimpanRiwayat from "./ModalSimpanRiwayat";
 
 const TextField = styled.input`
   height: 37px;
@@ -81,6 +83,8 @@ const MasaKerja = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { masaKerjaState, masaKerjaDispatch } = useContext(GlobalContext);
   const { data, loading } = masaKerjaState;
+  const [modalSimpanRiwayat, setModalSimpanRiwayat] = useState(false);
+  const [alertSuccess, setAlertSuccess] = useState(false);
 
   useEffect(() => {
     // Get all masa kerja
@@ -178,6 +182,15 @@ const MasaKerja = () => {
 
         <CButton
           type="button"
+          color="secondary"
+          className="ml-2"
+          onClick={() => history.push("/epekerja/admin/masa-kerja/riwayat")}
+        >
+          Riwayat Pegawai Berdasarkan Masa Kerja
+        </CButton>
+
+        <CButton
+          type="button"
           color="info"
           className="ml-2"
           onClick={printMasaKerja}
@@ -195,10 +208,14 @@ const MasaKerja = () => {
         </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, history]);
 
   const goToRiwayat = (id) => {
     history.push(`/epekerja/admin/masa-kerja/pegawai/${id}`);
+  };
+
+  const goToRiwayatMasaKerjaFile = () => {
+    history.push(`/epekerja/admin/masa-kerja/riwayat`);
   };
 
   const goToDetail = (id) => {
@@ -261,6 +278,33 @@ const MasaKerja = () => {
           <h3>Masa Kerja Pegawai Negeri Sipil</h3>
         </CCardHeader>
         <CCardBody>
+          {/* Alert Success Perbarui Masa Kerja */}
+          <CAlert
+            show={alertSuccess}
+            color="success"
+            closeButton
+            onShowChange={(show) => setAlertSuccess(show)}
+          >
+            Berhasil menyimpan riwayat masa kerja pegawai. Silahkan cek di{" "}
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                goToRiwayatMasaKerjaFile();
+              }}
+            >
+              Riwayat Pegawai Berdasarkan Masa Kerja
+            </a>
+          </CAlert>
+          {/* End of Alert Success Perbarui Masa Kerja */}
+          <CButton
+            type="button"
+            color="primary"
+            className="ml-2"
+            onClick={() => setModalSimpanRiwayat(true)}
+          >
+            Simpan ke Riwayat
+          </CButton>
           {data.length > 0 ? (
             <DataTable
               columns={columns}
@@ -309,6 +353,14 @@ const MasaKerja = () => {
           )}
         </CCardBody>
       </CCard>
+
+      {/* Modal Simpan Riwayat */}
+      <ModalSimpanRiwayat
+        modal={modalSimpanRiwayat}
+        setModal={setModalSimpanRiwayat}
+        setAlertSuccess={setAlertSuccess}
+      />
+      {/* End of Modal Simpan Riwayat */}
     </>
   );
 };

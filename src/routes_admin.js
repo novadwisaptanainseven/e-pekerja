@@ -156,6 +156,9 @@ const EditMasaKerja = React.lazy(() =>
 const RiwayatMasaKerja = React.lazy(() =>
   import("./views/pages/Admin/MasaKerja/RiwayatMasaKerja")
 );
+const RiwayatMasaKerjaFile = React.lazy(() =>
+  import("./views/pages/Admin/MasaKerja/RiwayatMasaKerjaFile")
+);
 
 // Kenaikan Gaji Berkala
 const KGB = React.lazy(() => import("./views/pages/Admin/KGB/KGB"));
@@ -493,6 +496,12 @@ const routes = [
     path: "/epekerja/admin/masa-kerja/pegawai/:id",
     name: "Riwayat Masa Kerja Pegawai",
     component: RiwayatMasaKerja,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/masa-kerja/riwayat",
+    name: "Riwayat Pegawai Berdasarkan Masa Kerja",
+    component: RiwayatMasaKerjaFile,
     exact: true,
   },
 

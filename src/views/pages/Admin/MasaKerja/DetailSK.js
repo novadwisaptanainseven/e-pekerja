@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { LoadAnimationBlue } from "src/assets";
 
 import { CCol, CModalBody, CModalFooter, CButton, CRow } from "@coreui/react";
 
-import { useHistory } from "react-router";
 import { getRiwayatSKById } from "src/context/actions/PembaruanSK/getRiwayatSKById";
 import { format } from "date-fns";
 import getSK from "src/context/actions/DownloadFile/getSK";
 import getFilename from "src/helpers/getFilename";
-
-const MySwal = withReactContent(swal2);
 
 const DetailSK = ({
   modalDetail,

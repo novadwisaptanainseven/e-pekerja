@@ -1,7 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { GlobalContext } from "src/context/Provider";
 import { LoadAnimationBlue } from "src/assets";
 
