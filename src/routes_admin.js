@@ -163,6 +163,7 @@ const RiwayatMasaKerjaFile = React.lazy(() =>
 // Kenaikan Gaji Berkala
 const KGB = React.lazy(() => import("./views/pages/Admin/KGB/KGB"));
 const DaftarKGB = React.lazy(() => import("./views/pages/Admin/KGB/DaftarKGB"));
+const KGBPegawai = React.lazy(() => import("./views/pages/Admin/KGB/KGBPegawai"));
 
 // Cuti Pegawai
 const Cuti = React.lazy(() => import("./views/pages/Admin/Cuti/Cuti"));
@@ -516,6 +517,12 @@ const routes = [
     path: "/epekerja/admin/kgb/:id/daftar",
     name: "Daftar Kenaikan Gaji Berkala",
     component: DaftarKGB,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/kgb/semua-kgb",
+    name: "Semua Kenaikan Gaji Berkala Pegawai",
+    component: KGBPegawai,
     exact: true,
   },
 

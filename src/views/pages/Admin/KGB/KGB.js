@@ -154,6 +154,11 @@ const KGB = () => {
       }
     };
 
+    // Direct page to Semua KGB Pegawai
+    const goToKGBPegawai = () => {
+      history.push(`/epekerja/admin/kgb/semua-kgb`);
+    };
+
     return (
       <>
         <FilterComponent
@@ -162,12 +167,17 @@ const KGB = () => {
           filterText={filterText}
         />
 
-        {/* <CButton type="button" color="info" className="ml-2">
-          Cetak <CIcon content={cilPrint} />
-        </CButton> */}
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={goToKGBPegawai}
+        >
+          Cek Semua KGB Pegawai
+        </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, history]);
 
   const goToDaftarKGB = (id) => {
     history.push(`/epekerja/admin/kgb/${id}/daftar`);

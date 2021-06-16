@@ -20,6 +20,8 @@ import getRiwayatMKExcel from "src/context/actions/DownloadFile/getRiwayatMKExce
 import { deleteRiwayatMKFile } from "src/context/actions/MasaKerja/deleteRiwayatMKFile";
 import { getRiwayatMKFile } from "src/context/actions/MasaKerja/getRiwayatMKFile";
 import { getRiwayatMKFileByDate } from "src/context/actions/MasaKerja/getRiwayatMKFileByDate";
+import SelectOptionBulan from "src/reusable/SelectOptionBulan";
+import SelectOptionTahun from "src/reusable/SelectOptionTahun";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -64,55 +66,6 @@ const RiwayatMasaKerjaFile = () => {
     });
   };
 
-  // Component Option Select Bulan
-  const SelectOptionBulan = () => {
-    let bulanOptions = [
-      "Januari",
-      "Februari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Agustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
-    ];
-    return (
-      <>
-        {bulanOptions.map((item, index) => (
-          <option key={index} value={index + 1}>
-            {item}
-          </option>
-        ))}
-      </>
-    );
-  };
-
-  // Component Option Select Tahun
-  const SelectOptionTahun = () => {
-    let curYear = new Date().getFullYear();
-    let bottomLimitYear = 2018;
-
-    let tahunOptions = [];
-
-    for (let i = bottomLimitYear; i <= curYear; i++) {
-      tahunOptions.push(i);
-    }
-
-    return (
-      <>
-        {tahunOptions.map((item, index) => (
-          <option key={index} value={item}>
-            {item}
-          </option>
-        ))}
-      </>
-    );
-  };
-
   // Handle tombol pencarian file
   const handleTombolCari = () => {
     getRiwayatMKFileByDate(setLoading, setData, inputCari);
@@ -120,8 +73,8 @@ const RiwayatMasaKerjaFile = () => {
 
   // Handle tombol reset
   const handleTombolReset = () => {
-    getRiwayatMKFile(setLoading, setData)
-  }
+    getRiwayatMKFile(setLoading, setData);
+  };
 
   return (
     <div>

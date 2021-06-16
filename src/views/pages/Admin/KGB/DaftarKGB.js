@@ -69,7 +69,7 @@ const DaftarKGB = ({ match }) => {
       selector: "no",
       sortable: true,
       wrap: true,
-      width: "50px",
+      width: "100px",
     },
     {
       name: "TMT. Kenaikan Gaji",
@@ -220,7 +220,7 @@ const DaftarKGB = ({ match }) => {
   const customStyles = {
     headCells: {
       style: {
-        fontSize: "1.15em",
+        fontSize: "1em",
       },
     },
   };
