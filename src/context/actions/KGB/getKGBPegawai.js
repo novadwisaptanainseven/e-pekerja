@@ -1,9 +1,10 @@
 import axiosInstance from "src/helpers/axios";
 
-export const getKGBTerbaru = (id_pegawai, setData, setLoading) => {
+export const getKGBPegawai = (setLoading, setData) => {
   setLoading(true);
+
   axiosInstance
-    .get(`admin/pegawai/${id_pegawai}/kgb-terbaru`)
+    .get(`admin/pegawai/kgb`)
     .then((res) => {
       console.log(res.data);
       setData(res.data.data);

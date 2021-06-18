@@ -260,7 +260,7 @@ const DaftarKGB = ({ match }) => {
             className="btn btn-md"
             onClick={() => setModalTambah(!modalTambah)}
           >
-            Tambah KGB
+            Perbarui Gaji
           </CButton>
           <div className="d-flex">
             <CButton
@@ -280,6 +280,11 @@ const DaftarKGB = ({ match }) => {
               Excel <CIcon content={cilPrint} />
             </CButton>
           </div>
+        </div>
+        <div className="mx-auto">
+          <h3 className="font-weight-normal text-center">
+            Riwayat KGB Pegawai
+          </h3>
         </div>
       </>
     );
@@ -380,7 +385,7 @@ const DaftarKGB = ({ match }) => {
         size="lg"
       >
         <CModalHeader closeButton>
-          <CModalTitle>Tambah Kenaikan Gaji Berkala</CModalTitle>
+          <CModalTitle>Perbarui Gaji</CModalTitle>
         </CModalHeader>
 
         <TambahKGB

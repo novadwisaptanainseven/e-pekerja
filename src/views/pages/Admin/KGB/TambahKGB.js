@@ -28,11 +28,12 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
   const [loading, setLoading] = useState(false);
   const [kgbTerbaru, setKgbTerbaru] = useState("");
   const [formatGaji, setFormatGaji] = useState("");
+  const [formatGaji2, setFormatGaji2] = useState("");
 
   useEffect(() => {
     if (modalTambah) {
       // Get KGB Terbaru
-      getKGBTerbaru(id_pegawai, setKgbTerbaru);
+      getKGBTerbaru(id_pegawai, setKgbTerbaru, setLoading);
     }
   }, [id_pegawai, modalTambah]);
 
@@ -46,7 +47,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
   };
 
   // Mengubah format gaji dari number ke currency
-  const convertToCurrency = (gaji) => {
+  const convertToCurrency = (gaji, setFormatGaji) => {
     let formattedGaji = parseInt(gaji).toLocaleString("id", {
       style: "currency",
       currency: "IDR",
@@ -63,7 +64,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
   const showAlertSuccess = () => {
     MySwal.fire({
       icon: "success",
-      title: "Tambah Data Berhasil",
+      title: "Berhasil Melakukan Kenaikan Gaji",
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
@@ -82,7 +83,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
 
     MySwal.fire({
       icon: "error",
-      title: "Tambah Data Gagal",
+      title: "Gagal Melakukan Kenaikan Gaji",
       text: err_message,
     }).then((result) => {
       setLoading(false);
@@ -91,7 +92,10 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
 
   // Setting validasi form menggunakan YUP & FORMIK
   const validationSchema = Yup.object().shape({
-    gaji_pokok_lama: Yup.string().required("Gaji pokok lama harus diisi!"),
+    gaji_pokok_lama: Yup.number()
+      .typeError("Gaji pokok baru harus berupa bilangan")
+      .integer()
+      .required("Gaji pokok lama harus diisi!"),
     gaji_pokok_baru: Yup.number()
       .typeError("Gaji pokok baru harus berupa bilangan")
       .integer()
@@ -131,7 +135,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
 
   return (
     <>
-      {kgbTerbaru ? (
+      {!loading ? (
         <Formik
           initialValues={initState}
           validationSchema={validationSchema}
@@ -154,12 +158,15 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
                   </CCol>
                   <CCol>
                     <CInput
-                      readOnly
+                      readOnly={kgbTerbaru ? true : false}
                       type="text"
                       name="gaji_pokok_lama"
                       id="gaji_pokok_lama"
                       placeholder="Masukkan gaji pokok lama"
                       onChange={handleChange}
+                      onKeyUp={(e) =>
+                        convertToCurrency(e.target.value, setFormatGaji2)
+                      }
                       onBlur={handleBlur}
                       value={values.gaji_pokok_lama}
                       className={
@@ -168,17 +175,21 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
                           : null
                       }
                     />
+                    {!kgbTerbaru ? (
+                      <div className="mt-1">{formatGaji2}</div>
+                    ) : (
+                      <div className="mt-1">
+                        {values.gaji_pokok_lama.toLocaleString("id", {
+                          style: "currency",
+                          currency: "IDR",
+                        })}
+                      </div>
+                    )}
                     {errors.gaji_pokok_lama && touched.gaji_pokok_lama && (
                       <div className="invalid-feedback">
                         {errors.gaji_pokok_lama}
                       </div>
                     )}
-                    <div className="mt-1">
-                      {values.gaji_pokok_lama.toLocaleString("id", {
-                        style: "currency",
-                        currency: "IDR",
-                      })}
-                    </div>
                   </CCol>
                 </CFormGroup>
                 <CFormGroup row>
@@ -193,7 +204,9 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
                       placeholder="Masukkan gaji pokok baru"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      onKeyUp={(e) => convertToCurrency(e.target.value)}
+                      onKeyUp={(e) =>
+                        convertToCurrency(e.target.value, setFormatGaji)
+                      }
                       value={values.gaji_pokok_baru}
                       className={
                         errors.gaji_pokok_baru && touched.gaji_pokok_baru
