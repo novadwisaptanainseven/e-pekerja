@@ -37,6 +37,10 @@ const KGBPegawai = () => {
     modal: false,
     status: "",
   });
+  const [paramsFilter, setParamsFilter] = useState({
+    bulan: "",
+    tahun: "",
+  });
 
   // Get KGB Pegawai
   useEffect(() => {
@@ -265,6 +269,18 @@ const KGBPegawai = () => {
     </>
   );
 
+  // Handle reset filter pencarian
+  const handleResetFilter = () => {
+    getKGBPegawai(setLoading, setData);
+  };
+
+  // Handle filter pencarian
+  const handleFilterCari = (e) => {
+    e.preventDefault();
+
+    getKGBPegawai(setLoading, setData, paramsFilter);
+  };
+
   return (
     <>
       <CCard>
@@ -288,13 +304,22 @@ const KGBPegawai = () => {
                 <CCardHeader className="bg-dark">
                   <h5 className="mb-0">Filter Pencarian</h5>
                 </CCardHeader>
-                <CCardBody>
-                  <CForm>
+                <CForm>
+                  <CCardBody>
                     <CRow>
                       <CCol>
                         <CFormGroup>
                           <CLabel>Bulan</CLabel>
-                          <CSelect name="bulan">
+                          <CSelect
+                            required
+                            name="bulan"
+                            onChange={(e) =>
+                              setParamsFilter({
+                                ...paramsFilter,
+                                [e.target.name]: e.target.value,
+                              })
+                            }
+                          >
                             <option value="">-- Pilih Bulan --</option>
                             <SelectOptionBulan />
                           </CSelect>
@@ -304,9 +329,16 @@ const KGBPegawai = () => {
                         <CFormGroup>
                           <CLabel>Tahun</CLabel>
                           <CInput
+                            required
                             type="number"
                             name="tahun"
                             placeholder={`Masukkan Tahun, exp: ${new Date().getFullYear()}`}
+                            onChange={(e) =>
+                              setParamsFilter({
+                                ...paramsFilter,
+                                [e.target.name]: e.target.value,
+                              })
+                            }
                           />
                           {/* <CSelect name="tahun">
                             <option value="">-- Tahun --</option>
@@ -325,19 +357,64 @@ const KGBPegawai = () => {
                         </CFormGroup>
                       </CCol> */}
                     </CRow>
-                  </CForm>
-                </CCardBody>
-                <CCardFooter className="text-right">
-                  <CButton color="primary">Cari</CButton>
-                </CCardFooter>
+                  </CCardBody>
+                  <CCardFooter className="text-right">
+                    <CButton
+                      type="submit"
+                      color="primary"
+                      className="mr-2"
+                      onClick={(e) => handleFilterCari(e)}
+                      disabled={
+                        paramsFilter.bulan && paramsFilter.tahun ? false : true
+                      }
+                    >
+                      Cari
+                    </CButton>
+                    <CButton color="warning" onClick={handleResetFilter}>
+                      Reset
+                    </CButton>
+                  </CCardFooter>
+                </CForm>
               </CCard>
             </CCol>
             <CCol>
               <CAlert color="info">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum
-                temporibus ex obcaecati doloremque fuga atque, cumque adipisci
-                aliquid porro sequi facilis minima commodi sunt perferendis
-                excepturi quisquam corrupti quod aut?
+                <h4>Keterangan Status KGB</h4>
+                <hr />
+                <table>
+                  <tr>
+                    <th valign="top" width="150px">
+                      Sedang Berjalan
+                    </th>
+                    <th valign="top" width="30px">
+                      {" "}
+                      :{" "}
+                    </th>
+                    <td>Pegawai tersebut gajinya telah diperbarui</td>
+                  </tr>
+                  <tr>
+                    <th valign="top">Akan Naik Gaji</th>
+                    <th valign="top" width="30px">
+                      {" "}
+                      :{" "}
+                    </th>
+                    <td>
+                      Pegawai tersebut akan mengalami kenaikan gaji pada tanggal
+                      yang sudah ditentukan
+                    </td>
+                  </tr>
+                  <tr>
+                    <th valign="top">Perbarui Gaji</th>
+                    <th valign="top" width="30px">
+                      {" "}
+                      :{" "}
+                    </th>
+                    <td>
+                      Pegawai tersebut telah berada di rentang tanggal kenaikan
+                      gaji berkala, sehingga bisa dilakukan kenaikan gaji
+                    </td>
+                  </tr>
+                </table>
               </CAlert>
             </CCol>
           </CRow>
