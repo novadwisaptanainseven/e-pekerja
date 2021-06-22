@@ -21,6 +21,8 @@ import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { LoadAnimationBlue } from "src/assets";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
+import printKGBSemuaPegawai from "src/context/actions/DownloadFile/printKGBSemuaPegawai";
 import { getKGBPegawai } from "src/context/actions/KGB/getKGBPegawai";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
 import SelectOptionBulan from "src/reusable/SelectOptionBulan";
@@ -218,15 +220,29 @@ const KGBPegawai = () => {
           filterText={filterText}
         />
 
-        <CButton type="button" color="info" className="ml-2">
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={() => printKGBSemuaPegawai(paramsFilter)}
+        >
           PDF <CIcon content={cilPrint} />
         </CButton>
-        <CButton type="button" color="success" className="ml-2">
+        <CButton
+          type="button"
+          color="success"
+          className="ml-2"
+          onClick={() =>
+            exportExcel(
+              `kgb-pegawai2/export?bulan=${paramsFilter.bulan}&tahun=${paramsFilter.tahun}`
+            )
+          }
+        >
           Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, paramsFilter]);
 
   const ExpandableComponent = ({ data }) => (
     <>
