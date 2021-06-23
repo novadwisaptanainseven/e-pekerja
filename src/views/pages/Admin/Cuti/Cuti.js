@@ -146,6 +146,10 @@ const Cuti = () => {
   };
 
   const SubHeaderComponentMemo = React.useMemo(() => {
+    const goToCutiPegawai = () => {
+      history.push(`/epekerja/admin/cuti/cuti-pegawai`);
+    };
+
     const handleClear = () => {
       if (filterText) {
         setResetPaginationToggle(!resetPaginationToggle);
@@ -160,6 +164,16 @@ const Cuti = () => {
           onClear={handleClear}
           filterText={filterText}
         />
+
+        <CButton
+          type="button"
+          color="info"
+          className="ml-2"
+          onClick={goToCutiPegawai}
+        >
+          <span className="my-text-button">Cek Semua Cuti Pegawai</span>{" "}
+          <CIcon content={cilGroup} />
+        </CButton>
 
         <CPopover content="Untuk melihat daftar pegawai yang sedang cuti">
           <CButton
@@ -178,7 +192,7 @@ const Cuti = () => {
         </CButton> */}
       </>
     );
-  }, [filterText, resetPaginationToggle, modalCuti]);
+  }, [filterText, resetPaginationToggle, modalCuti, history]);
 
   const goToRiwayatCuti = (id) => {
     history.push(`/epekerja/admin/cuti/riwayat/${id}`);

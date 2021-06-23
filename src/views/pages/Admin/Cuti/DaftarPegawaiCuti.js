@@ -78,8 +78,8 @@ const DaftarPegawaiCuti = () => {
                 <table className="table table-striped">
                   <tbody>
                     <tr>
-                      <th style={{ width: "130px" }}>Lama Cuti</th>
-                      <td>{item.lama_cuti}</td>
+                      <th style={{ width: "130px" }}>Jenis Cuti</th>
+                      <td>{item.jenis_cuti}</td>
                     </tr>
                     <tr>
                       <th>Tgl. Mulai Cuti</th>

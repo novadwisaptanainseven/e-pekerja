@@ -163,7 +163,9 @@ const RiwayatMasaKerjaFile = React.lazy(() =>
 // Kenaikan Gaji Berkala
 const KGB = React.lazy(() => import("./views/pages/Admin/KGB/KGB"));
 const DaftarKGB = React.lazy(() => import("./views/pages/Admin/KGB/DaftarKGB"));
-const KGBPegawai = React.lazy(() => import("./views/pages/Admin/KGB/KGBPegawai"));
+const KGBPegawai = React.lazy(() =>
+  import("./views/pages/Admin/KGB/KGBPegawai")
+);
 
 // Cuti Pegawai
 const Cuti = React.lazy(() => import("./views/pages/Admin/Cuti/Cuti"));
@@ -173,6 +175,9 @@ const TambahCuti = React.lazy(() =>
 const EditCuti = React.lazy(() => import("./views/pages/Admin/Cuti/EditCuti"));
 const RiwayatCuti = React.lazy(() =>
   import("./views/pages/Admin/Cuti/RiwayatCuti")
+);
+const CutiPegawai = React.lazy(() =>
+  import("./views/pages/Admin/Cuti/CutiPegawai")
 );
 
 // Absensi Pegawai
@@ -517,6 +522,7 @@ const routes = [
     path: "/epekerja/admin/kgb/:id/daftar",
     name: "Daftar Kenaikan Gaji Berkala",
     component: DaftarKGB,
+
     exact: true,
   },
   {
@@ -549,6 +555,12 @@ const routes = [
     path: "/epekerja/admin/cuti/riwayat/:id",
     name: "Riwayat Cuti Pegawai",
     component: RiwayatCuti,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/cuti/cuti-pegawai",
+    name: "Semua Cuti Pegawai",
+    component: CutiPegawai,
     exact: true,
   },
 

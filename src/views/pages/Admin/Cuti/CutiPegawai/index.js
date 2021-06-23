@@ -2,192 +2,202 @@ import { cilPrint } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import {
   CCard,
-  CCardBody,
-  CCardHeader,
   CButton,
-  CRow,
-  CCol,
-  CForm,
-  CFormGroup,
-  CLabel,
-  CSelect,
+  CCardHeader,
+  CCardBody,
   CCardFooter,
-  CAlert,
   CInput,
+  CLabel,
+  CFormGroup,
+  CCol,
+  CRow,
+  CSelect,
+  CForm,
+  CAlert,
   CBadge,
 } from "@coreui/react";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { LoadAnimationBlue } from "src/assets";
-import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
-import printKGBSemuaPegawai from "src/context/actions/DownloadFile/printKGBSemuaPegawai";
-import { getKGBPegawai } from "src/context/actions/KGB/getKGBPegawai";
+import { getPegawaiStatusCuti } from "src/context/actions/Cuti/getPegawaiStatusCuti ";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
 import SelectOptionBulan from "src/reusable/SelectOptionBulan";
 import ModalKirimWa from "./ModalKirimWa";
 
-const KGBPegawai = () => {
+const CutiPegawai = () => {
   const history = useHistory();
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [filterText, setFilterText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const [modalKirimWa, setModalKirimWa] = useState({
-    data: null,
-    modal: false,
-    status: "",
-  });
   const [paramsFilter, setParamsFilter] = useState({
     bulan: "",
     tahun: "",
   });
+  const [modalKirimWa, setModalKirimWa] = useState({
+    data: null,
+    modal: false,
+  });
 
-  // Get KGB Pegawai
+  // Get Pegawai Status Cuti
   useEffect(() => {
-    getKGBPegawai(setLoading, setData);
+    getPegawaiStatusCuti(setLoading, setData);
   }, []);
 
   const goBackToParent = () => {
-    history.goBack();
+    history.push(`/epekerja/admin/cuti`);
   };
 
-  const goToDaftarKGB = (id) => {
-    history.push(`/epekerja/admin/kgb/${id}/daftar`);
+  const goToRiwayatCuti = (id) => {
+    history.push(`/epekerja/admin/cuti/riwayat/${id}`);
   };
 
-  const filteredData = data.filter(
-    (item) =>
-      item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.nip.toLowerCase().includes(filterText.toLowerCase())
-  );
+  const filteredData = data.filter((item) => {
+    if (item.nik) {
+      if (
+        item.nik.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.nama.toLowerCase().includes(filterText.toLowerCase())
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (
+        item.nip.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.nama.toLowerCase().includes(filterText.toLowerCase())
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  });
+
+  // const dummyData = [
+  //   {
+  //     nip: "1234567",
+  //     nama: "Nova Dwi Sapta",
+  //     status_cuti: "sedang-cuti",
+  //     pemberitahuan: "",
+  //     tgl_mulai_cuti: "2021-10-08",
+  //     tgl_selesai_cuti: "2021-10-08",
+  //     jenis_cuti: "Cuti Tahunan",
+  //     keterangan: "Lorem ipsum dolor sit amet",
+  //   },
+  // ];
 
   // Columns Datatable
   const columns = [
-    // {
-    //   name: "No",
-    //   selector: "no",
-    //   sortable: true,
-    //   wrap: true,
-    //   width: "80px",
-    // },
     {
-      name: "NIP",
-      selector: "nip",
-      sortable: true,
-      wrap: true,
-    },
-    {
-      name: "Nama",
+      name: "Nama/NIP/NIPTTB/NIK",
       selector: "nama",
       sortable: true,
       wrap: true,
-    },
-    {
-      name: "Status KGB",
-      selector: "status_kgb",
-      sortable: true,
       cell: (row) => {
         return (
           <div>
-            <div>
-              {row.status_kgb === "sedang-berjalan" && (
-                <CBadge className="py-2 px-3" color="success" shape="pill">
-                  Sedang Berjalan
-                </CBadge>
-              )}
-              {row.status_kgb === "akan-naik-gaji" && (
-                <CBadge className="py-2 px-3" color="info" shape="pill">
-                  Akan Naik Gaji
-                </CBadge>
-              )}
-              {row.status_kgb === "naik-gaji" && (
-                <CBadge className="py-2 px-3" color="primary" shape="pill">
-                  Naik Gaji
-                </CBadge>
-              )}
-            </div>
+            {row.nama} <br />
+            {row.id_status_pegawai === 2 ? row.nik : row.nip}
+          </div>
+        );
+      },
+    },
+    {
+      name: "Status Cuti",
+      selector: "status_cuti",
+      sortable: true,
+      wrap: true,
+      cell: (row) => {
+        return (
+          <div>
+            {row.status_cuti === "sedang-cuti" && (
+              <CBadge className="py-2 px-3" color="success" shape="pill">
+                Sedang Cuti
+              </CBadge>
+            )}
+            {row.status_cuti === "akan-cuti" && (
+              <CBadge className="py-2 px-3" color="info" shape="pill">
+                Akan Cuti
+              </CBadge>
+            )}
+            {row.status_cuti === "masa-cuti-hampir-selesai" && (
+              <CBadge className="py-2 px-3" color="warning" shape="pill">
+                Cuti Akan Berakhir
+              </CBadge>
+            )}
+            {row.status_cuti === "masa-cuti-selesai" && (
+              <CBadge className="py-2 px-3" color="dark" shape="pill">
+                Masa Cuti Selesai
+              </CBadge>
+            )}
           </div>
         );
       },
     },
     {
       name: "Pemberitahuan",
+      width: "450px",
       wrap: true,
-      width: "350px",
       cell: (row) => {
         return (
           <div>
-            <div>
-              {row.status_kgb === "akan-naik-gaji" && (
-                <span className="text-info font-weight-bold">
-                  Pegawai ini akan naik gaji pada tanggal{" "}
-                  {format(new Date(row.kenaikan_gaji_yad), "dd/MM/y")}
-                </span>
-              )}
-              {row.status_kgb === "naik-gaji" && (
-                <span className="text-primary font-weight-bold">
-                  Pegawai ini sudah bisa dilakukan kenaikan gaji
-                </span>
-              )}
-              {row.status_kgb === "sedang-berjalan" && (
-                <span className="text-success font-weight-bold">
-                  Pegawai ini telah diperbarui gajinya
-                </span>
-              )}
-            </div>
+            {row.status_cuti === "akan-cuti" && (
+              <span className="text-info font-weight-bold">
+                Pegawai ini akan cuti dari tanggal{" "}
+                {format(new Date(row.tgl_mulai), "dd/MM/y")} s/d{" "}
+                {format(new Date(row.tgl_selesai), "dd/MM/y")}
+              </span>
+            )}
+            {row.status_cuti === "sedang-cuti" && (
+              <span className="text-success font-weight-bold">
+                Pegawai ini sedang cuti sampai tanggal{" "}
+                {format(new Date(row.tgl_selesai), "dd/MM/y")}
+              </span>
+            )}
+            {row.status_cuti === "masa-cuti-hampir-selesai" && (
+              <span className="text-warning font-weight-bold">
+                Masa cuti pegawai ini akan berakhir pada tanggal{" "}
+                {format(new Date(row.tgl_selesai), "dd/MM/y")}
+              </span>
+            )}
+            {row.status_cuti === "masa-cuti-selesai" && (
+              <span className="text-dark font-weight-bold">
+                Masa cuti pegawai ini telah berakhir
+              </span>
+            )}
           </div>
         );
       },
     },
     {
-      name: "Action",
-      sortable: true,
+      name: "Aksi",
+      wrap: true,
       cell: (row) => {
         return (
           <div data-tag="allowRowEvents" className="my-1">
-            {row.status_kgb === "akan-naik-gaji" && (
-              <CButton
-                className="mr-1"
-                color="success"
-                onClick={() =>
-                  setModalKirimWa({
-                    ...modalKirimWa,
-                    data: row,
-                    modal: true,
-                  })
-                }
-              >
-                Kirim (WA)
-              </CButton>
-            )}
-            {row.status_kgb === "naik-gaji" && (
-              <>
-                <CButton
-                  className="mr-1 mb-1"
-                  color="info"
-                  onClick={() => goToDaftarKGB(row.id_pegawai)}
-                >
-                  Perbarui Gaji
-                </CButton>{" "}
-              </>
-            )}
-            {row.status_kgb === "sedang-berjalan" && (
-              <CButton
-                className="mr-1"
-                color="success"
-                onClick={() =>
-                  setModalKirimWa({
-                    ...modalKirimWa,
-                    data: row,
-                    modal: true,
-                  })
-                }
-              >
-                Kirim (WA)
-              </CButton>
-            )}
+            <CButton
+              className="mb-1"
+              color="success"
+              onClick={() =>
+                setModalKirimWa({
+                  ...modalKirimWa,
+                  data: row,
+                  modal: true,
+                })
+              }
+            >
+              Kirim (WA)
+            </CButton>
+            <br />
+            <CButton
+              color="info"
+              onClick={() => goToRiwayatCuti(row.id_pegawai)}
+            >
+              Riwayat Cuti
+            </CButton>
           </div>
         );
       },
@@ -203,7 +213,7 @@ const KGBPegawai = () => {
     },
   };
 
-  const SubHeaderComponentMemo = React.useMemo(() => {
+  const SubHeaderComponentMemo = useMemo(() => {
     const handleClear = () => {
       if (filterText) {
         setResetPaginationToggle(!resetPaginationToggle);
@@ -223,7 +233,7 @@ const KGBPegawai = () => {
           type="button"
           color="info"
           className="ml-2"
-          onClick={() => printKGBSemuaPegawai(paramsFilter)}
+          // onClick={() => printKGBSemuaPegawai(paramsFilter)}
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -231,54 +241,44 @@ const KGBPegawai = () => {
           type="button"
           color="success"
           className="ml-2"
-          onClick={() =>
-            exportExcel(
-              `kgb-pegawai2/export?bulan=${paramsFilter.bulan}&tahun=${paramsFilter.tahun}`
-            )
-          }
+          // onClick={() =>
+          //   exportExcel(
+          //     `kgb-pegawai2/export?bulan=${paramsFilter.bulan}&tahun=${paramsFilter.tahun}`
+          //   )
+          // }
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle, paramsFilter]);
+  }, [filterText, resetPaginationToggle]);
 
   const ExpandableComponent = ({ data }) => (
     <>
       <div style={{ padding: "10px 63px" }}>
         <CRow className="mb-1">
           <CCol md="3">
-            <strong>TMT. Kenaikan Gaji</strong>
+            <strong>Jenis Cuti</strong>
           </CCol>
-          <CCol>{format(new Date(data.tmt_kenaikan_gaji), "dd/MM/y")}</CCol>
+          <CCol>{data.jenis_cuti}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="3">
-            <strong>Gaji Pokok Lama</strong>
+            <strong>Tgl. Mulai Cuti</strong>
           </CCol>
-          <CCol>
-            {data.gaji_pokok_lama.toLocaleString("id", {
-              style: "currency",
-              currency: "IDR",
-            })}
-          </CCol>
+          <CCol>{format(new Date(data.tgl_mulai), "dd/MM/yyyy")}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="3">
-            <strong>Gaji Pokok Baru</strong>
+            <strong>Tgl. Selesai Cuti</strong>
           </CCol>
-          <CCol>
-            {data.gaji_pokok_baru.toLocaleString("id", {
-              style: "currency",
-              currency: "IDR",
-            })}
-          </CCol>
+          <CCol>{format(new Date(data.tgl_selesai), "dd/MM/yyyy")}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="3">
-            <strong>Kenaikan Gaji YAD</strong>
+            <strong>Keterangan</strong>
           </CCol>
-          <CCol>{format(new Date(data.kenaikan_gaji_yad), "dd/MM/y")}</CCol>
+          <CCol>{data.keterangan}</CCol>
         </CRow>
       </div>
     </>
@@ -286,14 +286,14 @@ const KGBPegawai = () => {
 
   // Handle reset filter pencarian
   const handleResetFilter = () => {
-    getKGBPegawai(setLoading, setData);
+    getPegawaiStatusCuti(setLoading, setData);
   };
 
   // Handle filter pencarian
   const handleFilterCari = (e) => {
     e.preventDefault();
 
-    getKGBPegawai(setLoading, setData, paramsFilter);
+    getPegawaiStatusCuti(setLoading, setData, paramsFilter);
   };
 
   return (
@@ -301,7 +301,7 @@ const KGBPegawai = () => {
       <CCard>
         <CCardHeader className="d-flex justify-content-between my-card-header">
           <div className="title mb-2">
-            <h3>Semua Kenaikan Gaji Berkala Pegawai</h3>
+            <h3>Semua Cuti Pegawai</h3>
           </div>
           <CButton
             color="warning"
@@ -355,22 +355,8 @@ const KGBPegawai = () => {
                               })
                             }
                           />
-                          {/* <CSelect name="tahun">
-                            <option value="">-- Tahun --</option>
-                            <SelectOptionTahun />
-                          </CSelect> */}
                         </CFormGroup>
                       </CCol>
-                      {/* <CCol>
-                        <CFormGroup>
-                          <CLabel>Status KGB</CLabel>
-                          <CSelect name="status">
-                            <option value="">-- Status --</option>
-                            <option value="kgb-aktif">Sedang Berjalan</option>
-                            <option value="kgb-akan">Akan Naik Gaji</option>
-                          </CSelect>
-                        </CFormGroup>
-                      </CCol> */}
                     </CRow>
                   </CCardBody>
                   <CCardFooter className="text-right">
@@ -394,40 +380,37 @@ const KGBPegawai = () => {
             </CCol>
             <CCol>
               <CAlert color="info">
-                <h4>Keterangan Status KGB</h4>
+                <h4>Keterangan Status Cuti</h4>
                 <hr />
                 <table>
                   <tr>
                     <th valign="top" width="150px">
-                      Sedang Berjalan
+                      Sedang Cuti
                     </th>
                     <th valign="top" width="30px">
                       {" "}
                       :{" "}
                     </th>
-                    <td>Pegawai tersebut gajinya telah diperbarui</td>
+                    <td>Pegawai tersebut sedang dalam masa cuti</td>
                   </tr>
                   <tr>
-                    <th valign="top">Akan Naik Gaji</th>
+                    <th valign="top">Akan Cuti</th>
                     <th valign="top" width="30px">
                       {" "}
                       :{" "}
                     </th>
                     <td>
-                      Pegawai tersebut akan mengalami kenaikan gaji pada tanggal
-                      yang sudah ditentukan
+                      Pegawai tersebut akan cuti pada tanggal yang telah
+                      ditentukan
                     </td>
                   </tr>
                   <tr>
-                    <th valign="top">Perbarui Gaji</th>
+                    <th valign="top">Masa Cuti Selesai</th>
                     <th valign="top" width="30px">
                       {" "}
                       :{" "}
                     </th>
-                    <td>
-                      Pegawai tersebut telah berada di rentang tanggal kenaikan
-                      gaji berkala, sehingga bisa dilakukan kenaikan gaji
-                    </td>
+                    <td>Masa cuti pegawai tersebut telah habis</td>
                   </tr>
                 </table>
               </CAlert>
@@ -474,4 +457,4 @@ const KGBPegawai = () => {
   );
 };
 
-export default KGBPegawai;
+export default CutiPegawai;

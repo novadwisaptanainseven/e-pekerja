@@ -46,7 +46,7 @@ const RiwayatCuti = ({ match }) => {
   });
 
   const goBackToParent = () => {
-    history.goBack();
+    history.push(`/epekerja/admin/cuti`);
   };
 
   useEffect(() => {
@@ -72,8 +72,8 @@ const RiwayatCuti = ({ match }) => {
       width: "50px",
     },
     {
-      name: "Lama Cuti",
-      selector: "lama_cuti",
+      name: "Jenis Cuti",
+      selector: "jenis_cuti",
       sortable: true,
       maxWidth: "150px",
       wrap: true,
@@ -163,13 +163,13 @@ const RiwayatCuti = ({ match }) => {
         }
         return (
           <div data-tag="allowRowEvents">
-            <CButton
+            {/* <CButton
               className="mr-1"
               color="info"
               disabled={status === "cuti-selesai" ? true : false}
             >
               <CIcon content={cilPrint} />
-            </CButton>
+            </CButton> */}
             <CButton
               color="warning"
               onClick={() => {
