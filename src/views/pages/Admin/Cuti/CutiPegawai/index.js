@@ -22,6 +22,8 @@ import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { LoadAnimationBlue } from "src/assets";
 import { getPegawaiStatusCuti } from "src/context/actions/Cuti/getPegawaiStatusCuti ";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
+import printPegawaiStatusCuti from "src/context/actions/DownloadFile/printPegawaiStatusCuti";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
 import SelectOptionBulan from "src/reusable/SelectOptionBulan";
 import ModalKirimWa from "./ModalKirimWa";
@@ -233,7 +235,7 @@ const CutiPegawai = () => {
           type="button"
           color="info"
           className="ml-2"
-          // onClick={() => printKGBSemuaPegawai(paramsFilter)}
+          onClick={() => printPegawaiStatusCuti(paramsFilter)}
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -241,17 +243,19 @@ const CutiPegawai = () => {
           type="button"
           color="success"
           className="ml-2"
-          // onClick={() =>
-          //   exportExcel(
-          //     `kgb-pegawai2/export?bulan=${paramsFilter.bulan}&tahun=${paramsFilter.tahun}`
-          //   )
-          // }
+          onClick={() =>
+            exportExcel(
+              `pegawai-status-cuti`,
+              paramsFilter,
+              "filter_bulan_tahun"
+            )
+          }
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, paramsFilter]);
 
   const ExpandableComponent = ({ data }) => (
     <>

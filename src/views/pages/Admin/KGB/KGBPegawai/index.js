@@ -107,6 +107,11 @@ const KGBPegawai = () => {
                   Naik Gaji
                 </CBadge>
               )}
+              {row.status_kgb === "akan-naik-gaji-2" && (
+                <CBadge className="py-2 px-3" color="warning" shape="pill">
+                  Akan Naik Gaji
+                </CBadge>
+              )}
             </div>
           </div>
         );
@@ -136,6 +141,13 @@ const KGBPegawai = () => {
                   Pegawai ini telah diperbarui gajinya
                 </span>
               )}
+              {row.status_kgb === "akan-naik-gaji-2" && (
+                <span className="text-warning font-weight-bold">
+                  Pegawai ini dalam waktu dekat akan mengalami kenaikan gaji yaitu
+                  pada tanggal{" "}
+                  {format(new Date(row.kenaikan_gaji_yad), "dd/MM/y")}
+                </span>
+              )}
             </div>
           </div>
         );
@@ -147,7 +159,9 @@ const KGBPegawai = () => {
       cell: (row) => {
         return (
           <div data-tag="allowRowEvents" className="my-1">
-            {row.status_kgb === "akan-naik-gaji" && (
+            {(row.status_kgb === "akan-naik-gaji" ||
+              row.status_kgb === "akan-naik-gaji-2" ||
+              row.status_kgb === "sedang-berjalan") && (
               <CButton
                 className="mr-1"
                 color="success"
@@ -172,21 +186,6 @@ const KGBPegawai = () => {
                   Perbarui Gaji
                 </CButton>{" "}
               </>
-            )}
-            {row.status_kgb === "sedang-berjalan" && (
-              <CButton
-                className="mr-1"
-                color="success"
-                onClick={() =>
-                  setModalKirimWa({
-                    ...modalKirimWa,
-                    data: row,
-                    modal: true,
-                  })
-                }
-              >
-                Kirim (WA)
-              </CButton>
             )}
           </div>
         );
@@ -232,9 +231,7 @@ const KGBPegawai = () => {
           color="success"
           className="ml-2"
           onClick={() =>
-            exportExcel(
-              `kgb-pegawai2/export?bulan=${paramsFilter.bulan}&tahun=${paramsFilter.tahun}`
-            )
+            exportExcel(`kgb-pegawai2`, paramsFilter, "filter_bulan_tahun")
           }
         >
           Excel <CIcon content={cilPrint} />

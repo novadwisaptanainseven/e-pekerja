@@ -46,7 +46,7 @@ const DaftarKGB = ({ match }) => {
   });
 
   const goBackToParent = () => {
-    history.goBack();
+    history.push(`/epekerja/admin/kgb`);
   };
 
   useEffect(() => {

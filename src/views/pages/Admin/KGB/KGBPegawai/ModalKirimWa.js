@@ -23,7 +23,7 @@ const ModalKirimWa = ({ modal, setModal }) => {
       if (modal.data.status_kgb === "akan-naik-gaji") {
         strIsiPesan = `Kepada Yth. Bpk ${
           modal.data.nama
-        } akan mengalami kenaikan gaji sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
+        }, akan mengalami kenaikan gaji sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
           "id",
           {
             style: "currency",
@@ -36,7 +36,7 @@ const ModalKirimWa = ({ modal, setModal }) => {
       } else if (modal.data.status_kgb === "sedang-berjalan") {
         strIsiPesan = `Kepada Yth. Bpk ${
           modal.data.nama
-        } gaji Anda telah diperbarui sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
+        }, gaji Anda telah diperbarui sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
           "id",
           {
             style: "currency",
@@ -44,6 +44,19 @@ const ModalKirimWa = ({ modal, setModal }) => {
           }
         )} pada tanggal ${format(
           new Date(modal.data.tmt_kenaikan_gaji),
+          "dd/MM/y"
+        )}. Terimakasih`;
+      } else if (modal.data.status_kgb === "akan-naik-gaji-2") {
+        strIsiPesan = `Kepada Yth. Bpk ${
+          modal.data.nama
+        }, dalam waktu dekat Anda akan mengalami kenaikan gaji sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
+          "id",
+          {
+            style: "currency",
+            currency: "IDR",
+          }
+        )} pada tanggal ${format(
+          new Date(modal.data.kenaikan_gaji_yad),
           "dd/MM/y"
         )}. Terimakasih`;
       }
