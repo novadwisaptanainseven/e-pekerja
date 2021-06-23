@@ -172,6 +172,7 @@ const TambahBerkas = ({ id, modal, setModal, berkas }) => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.keterangan}
+                    placeholder="Masukkan keterangan"
                     className={
                       errors.keterangan && touched.keterangan
                         ? "is-invalid"

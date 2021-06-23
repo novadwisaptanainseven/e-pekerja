@@ -142,6 +142,7 @@ const EditDataKeluarga = ({
           handleChange,
           handleBlur,
           handleSubmit,
+          handleReset,
         }) => (
           <CForm onSubmit={handleSubmit}>
             <CModalBody>
@@ -340,6 +341,7 @@ const EditDataKeluarga = ({
                   value={values.telepon}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="Masukkan no. telepon"
                   className={
                     errors.telepon && touched.telepon ? "is-invalid" : null
                   }

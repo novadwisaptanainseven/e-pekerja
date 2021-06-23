@@ -20,32 +20,22 @@ const ModalKirimWa = ({ modal, setModal }) => {
   useEffect(() => {
     let strIsiPesan = "";
     if (modal.data) {
-      if (modal.data.status_cuti === "akan-cuti") {
+      let currentTimestamp = Date.parse(new Date());
+      let tglPensiunTimestamp = Date.parse(new Date(modal.data.tgl_pensiun));
+      if (currentTimestamp < tglPensiunTimestamp) {
         strIsiPesan = `Kepada Yth. ${
           modal.data.nama
-        }, Anda akan cuti mulai tanggal ${format(
-          new Date(modal.data.tgl_mulai),
+        }, Anda akan pensiun pada tanggal ${format(
+          new Date(modal.data.tgl_pensiun),
           "dd/MM/y"
-        )} s/d ${format(
-          new Date(modal.data.tgl_selesai),
-          "dd/MM/y"
-        )} dengan jenis cuti ${modal.data.jenis_cuti}. Terimakasih`;
-      } else if (modal.data.status_cuti === "sedang-cuti") {
+        )} dengan keterangan ${modal.data.keterangan}. Terimakasih`;
+      } else {
         strIsiPesan = `Kepada Yth. ${
           modal.data.nama
-        }, Anda sedang cuti sampai tanggal ${format(
-          new Date(modal.data.tgl_selesai),
+        }, Anda telah dipensiunkan di tanggal ${format(
+          new Date(modal.data.tgl_pensiun),
           "dd/MM/y"
-        )}. Terimakasih`;
-      } else if (modal.data.status_cuti === "masa-cuti-hampir-selesai") {
-        strIsiPesan = `Kepada Yth. ${
-          modal.data.nama
-        }, Masa cuti Anda akan segera berakhir pada tanggal ${format(
-          new Date(modal.data.tgl_selesai),
-          "dd/MM/y"
-        )}. Terimakasih`;
-      } else if (modal.data.status_cuti === "masa-cuti-selesai") {
-        strIsiPesan = `Kepada Yth. ${modal.data.nama}, Masa cuti Anda sudah berakhir. Terimakasih`;
+        )} dengan keterangan ${modal.data.keterangan}. Terimakasih`;
       }
 
       setIsiPesan(strIsiPesan);

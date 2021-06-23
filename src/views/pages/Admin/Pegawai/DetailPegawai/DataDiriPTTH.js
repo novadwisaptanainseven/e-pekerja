@@ -1,15 +1,36 @@
 import React from "react";
-import { CRow, CCol, CCard, CCardHeader, CCardBody } from "@coreui/react";
+import {
+  CRow,
+  CCol,
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+} from "@coreui/react";
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
+import { useHistory } from "react-router-dom";
 
 const DataDiriPTTH = ({ data }) => {
+  const history = useHistory();
+
+  const goToEdit = (id) => {
+    history.push(`/epekerja/admin/pegawai/ptth-edit/${id}`);
+  };
+
   return (
     <>
       {data ? (
         <>
           <div className="my-3">
+            <CButton
+              color="success"
+              className="mb-2"
+              onClick={() => goToEdit(data.id_pegawai)}
+            >
+              Edit Data
+            </CButton>
             <CRow>
               <CCol md="8">
                 <table className="table table-sm table-striped">

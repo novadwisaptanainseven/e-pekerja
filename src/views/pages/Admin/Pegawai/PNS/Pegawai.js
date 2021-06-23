@@ -100,16 +100,16 @@ const Pegawai = () => {
 
     // )
     {
-      if (item.nama && item.bidang && item.jabatan) {
-        if (
-          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.jabatan.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.bidang.toLowerCase().includes(filterText.toLowerCase())
-        ) {
-          return true;
-        }
+      if (
+        item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.nip.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.jabatan.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.bidang.toLowerCase().includes(filterText.toLowerCase())
+      ) {
+        return true;
+      } else {
+        return false;
       }
-      return false;
     }
   );
 

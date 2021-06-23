@@ -897,7 +897,7 @@ const TambahPegawai = () => {
                           type="text"
                           name="no_ktp"
                           id="no_ktp"
-                          placeholder="Masukkan no. hp"
+                          placeholder="Masukkan no. ktp"
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={values.no_ktp}

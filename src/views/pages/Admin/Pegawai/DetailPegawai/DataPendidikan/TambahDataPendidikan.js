@@ -141,6 +141,7 @@ const TambahDataPendidikan = ({
           handleBlur,
           handleSubmit,
           setFieldValue,
+          handleReset,
         }) => (
           <CForm onSubmit={handleSubmit}>
             <CModalBody>
@@ -293,7 +294,10 @@ const TambahDataPendidikan = ({
               <CButton
                 type="button"
                 color="secondary"
-                onClick={() => setModalTambah(!modalTambah)}
+                onClick={() => {
+                  handleReset();
+                  setModalTambah(!modalTambah);
+                }}
               >
                 Batal
               </CButton>

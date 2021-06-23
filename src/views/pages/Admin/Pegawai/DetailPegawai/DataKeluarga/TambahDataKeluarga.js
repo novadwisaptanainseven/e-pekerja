@@ -138,6 +138,7 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
           handleChange,
           handleBlur,
           handleSubmit,
+          handleReset,
         }) => (
           <CForm onSubmit={handleSubmit}>
             <CModalBody>
@@ -330,6 +331,7 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
                   value={values.telepon}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="Masukkan no. telepon"
                   className={
                     errors.telepon && touched.telepon ? "is-invalid" : null
                   }
@@ -377,7 +379,10 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
               <CButton
                 type="button"
                 color="secondary"
-                onClick={() => setModalTambah(!modalTambah)}
+                onClick={() => {
+                  handleReset();
+                  setModalTambah(!modalTambah);
+                }}
               >
                 Batal
               </CButton>

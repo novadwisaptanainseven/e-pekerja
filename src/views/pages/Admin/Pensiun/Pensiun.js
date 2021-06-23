@@ -17,15 +17,17 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilPrint, cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { cilPrint, cilInfo, cilPen, cilSend } from "@coreui/icons";
 import { GlobalContext } from "src/context/Provider";
 import { getPensiun } from "src/context/actions/Pensiun.js/getPensiun";
 import { format } from "date-fns";
 import { LoadAnimationBlue } from "src/assets";
-import { deletePensiun } from "src/context/actions/Pensiun.js/deletePensiun";
+// import { deletePensiun } from "src/context/actions/Pensiun.js/deletePensiun";
 import { batalkanPensiun } from "src/context/actions/Pensiun.js/batalkanPensiun";
 import printPensiunPegawai from "src/context/actions/DownloadFile/printPensiunPegawai";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
+import FilterPencarianTanggal from "src/reusable/FilterPencarianTanggal";
+import ModalKirimWa from "./ModalKirimWa";
 
 const MySwal = withReactContent(swal2);
 
@@ -90,6 +92,14 @@ const Pensiun = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { pensiunState, pensiunDispatch } = useContext(GlobalContext);
   const { data, loading } = pensiunState;
+  const [paramsFilter, setParamsFilter] = useState({
+    bulan: "",
+    tahun: "",
+  });
+  const [modalKirimWa, setModalKirimWa] = useState({
+    data: null,
+    modal: false,
+  });
 
   useEffect(() => {
     // Get all pensiun
@@ -181,7 +191,7 @@ const Pensiun = () => {
       name: "Action",
       sortable: true,
       cell: (row) => (
-        <div data-tag="allowRowEvents">
+        <div data-tag="allowRowEvents" className="my-1">
           <CButtonGroup className="mb-1">
             <CButton
               color="info"
@@ -198,16 +208,22 @@ const Pensiun = () => {
               <CIcon content={cilPen} color="white" />
             </CButton>
             <CButton
-              color="danger"
+              color="warning"
               className="btn btn-sm"
-              onClick={() => handleDelete(row.id_pensiun)}
+              onClick={() =>
+                setModalKirimWa({
+                  ...modalKirimWa,
+                  data: row,
+                  modal: true,
+                })
+              }
             >
-              <CIcon content={cilTrash} color="white" />
+              <CIcon content={cilSend} color="white" />
             </CButton>
           </CButtonGroup>
           <CButton
             color="dark"
-            className="btn btn-sm mb-1"
+            className="btn btn-sm"
             onClick={() => handleBatalkanPensiun(row.id_pensiun)}
           >
             Batalkan Pensiun
@@ -233,38 +249,54 @@ const Pensiun = () => {
       }
     };
 
+    const goToTambah = (id) => {
+      history.push(`/epekerja/admin/pensiun/tambah`);
+    };
+
     return (
       <>
-        <FilterComponent
-          onFilter={(e) => setFilterText(e.target.value)}
-          onClear={handleClear}
-          filterText={filterText}
-        />
-
-        <CButton
-          type="button"
-          color="info"
-          className="ml-2"
-          onClick={printPensiunPegawai}
+        <div
+          className="d-flex justify-content-between"
+          style={{ width: "100%" }}
         >
-          PDF <CIcon content={cilPrint} />
-        </CButton>
+          <CButton type="button" color="primary" onClick={goToTambah}>
+            Tambah Pensiun
+          </CButton>
+          <div className="d-flex">
+            <FilterComponent
+              onFilter={(e) => setFilterText(e.target.value)}
+              onClear={handleClear}
+              filterText={filterText}
+            />
 
-        <CButton
-          type="button"
-          color="success"
-          className="ml-2"
-          onClick={() => exportExcel("pensiun-pegawai")}
-        >
-          Excel <CIcon content={cilPrint} />
-        </CButton>
+            <CButton
+              type="button"
+              color="info"
+              className="ml-2"
+              onClick={() => printPensiunPegawai(paramsFilter)}
+            >
+              PDF <CIcon content={cilPrint} />
+            </CButton>
+
+            <CButton
+              type="button"
+              color="success"
+              className="ml-2"
+              onClick={() =>
+                exportExcel(
+                  "pensiun-pegawai",
+                  paramsFilter,
+                  "filter_bulan_tahun"
+                )
+              }
+            >
+              Excel <CIcon content={cilPrint} />
+            </CButton>
+          </div>
+        </div>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
-
-  const goToTambah = (id) => {
-    history.push(`/epekerja/admin/pensiun/tambah`);
-  };
+  }, [filterText, resetPaginationToggle, history, paramsFilter]);
 
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/pensiun/edit/${id}`);
@@ -275,28 +307,28 @@ const Pensiun = () => {
   };
 
   // hapus data
-  const handleDelete = (id) => {
-    MySwal.fire({
-      icon: "warning",
-      title: "Anda yakin ingin menghapus data ini ?",
-      text: "Jika yakin, klik YA",
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "YA",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        // Delete pesan
-        deletePensiun(id, pensiunDispatch);
-        MySwal.fire({
-          icon: "success",
-          title: "Terhapus",
-          text: "Data berhasil dihapus",
-        });
-      }
-    });
-  };
+  // const handleDelete = (id) => {
+  //   MySwal.fire({
+  //     icon: "warning",
+  //     title: "Anda yakin ingin menghapus data ini ?",
+  //     text: "Jika yakin, klik YA",
+  //     showConfirmButton: true,
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "YA",
+  //   }).then((res) => {
+  //     if (res.isConfirmed) {
+  //       // Delete pesan
+  //       deletePensiun(id, pensiunDispatch);
+  //       MySwal.fire({
+  //         icon: "success",
+  //         title: "Terhapus",
+  //         text: "Data berhasil dihapus",
+  //       });
+  //     }
+  //   });
+  // };
 
   // Konfirmasi batalkan status pensiun
   const handleBatalkanPensiun = (id) => {
@@ -322,6 +354,18 @@ const Pensiun = () => {
     });
   };
 
+  // Handle reset filter pencarian
+  const handleResetFilter = () => {
+    getPensiun(pensiunDispatch);
+  };
+
+  // Handle filter pencarian
+  const handleFilterCari = (e) => {
+    e.preventDefault();
+
+    getPensiun(pensiunDispatch, paramsFilter);
+  };
+
   return (
     <>
       <CCard>
@@ -329,10 +373,12 @@ const Pensiun = () => {
           <h3>Data Pensiun</h3>
         </CCardHeader>
         <CCardBody>
-          <CButton type="button" color="primary" onClick={goToTambah}>
-            Tambah Pensiun
-          </CButton>
-
+          <FilterPencarianTanggal
+            paramsFilter={paramsFilter}
+            setParamsFilter={setParamsFilter}
+            handleResetFilter={handleResetFilter}
+            handleFilterCari={handleFilterCari}
+          />
           {data.length > 0 ? (
             <DataTable
               columns={columns}
@@ -377,6 +423,9 @@ const Pensiun = () => {
           )}
         </CCardBody>
       </CCard>
+
+      {/* Modal Kirim WA */}
+      <ModalKirimWa modal={modalKirimWa} setModal={setModalKirimWa} />
     </>
   );
 };
