@@ -152,14 +152,10 @@ const TambahPegawai = () => {
     no_ktp: "",
     gaji_pokok: "",
     foto: undefined,
-    mk_jabatan_tahun: "",
-    mk_jabatan_bulan: "",
-    mk_sebelum_cpns_tahun: "",
-    mk_sebelum_cpns_bulan: "",
-    mk_golongan_tuhan: "",
-    mk_golongan_bulan: "",
-    mk_seluruhnya_tahun: "",
-    mk_seluruhnya_bulan: "",
+    mk_jabatan: "",
+    mk_sebelum_cpns: "",
+    mk_golongan: "",
+    mk_seluruhnya: "",
     nama_akademi: "",
     jurusan: "",
     tahun_lulus: "",
@@ -251,14 +247,12 @@ const TambahPegawai = () => {
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, dan png",
         (value) => value && FOTO_PEGAWAI_SUPPORTED_FORMATS.includes(value.type)
       ),
-    mk_jabatan_tahun: Yup.string().required("Tahun harus diisi!"),
-    mk_jabatan_bulan: Yup.string().required("Bulan harus diisi!"),
-    mk_sebelum_cpns_tahun: Yup.string().required("Tahun harus diisi!"),
-    mk_sebelum_cpns_bulan: Yup.string().required("Bulan harus diisi!"),
-    mk_golongan_tahun: Yup.string().required("Tahun harus diisi!"),
-    mk_golongan_bulan: Yup.string().required("Bulan harus diisi!"),
-    mk_seluruhnya_tahun: Yup.string().required("Tahun harus diisi!"),
-    mk_seluruhnya_bulan: Yup.string().required("Bulan harus diisi!"),
+    mk_jabatan: Yup.string().required("Masa kerja jabatan harus diisi!"),
+    mk_sebelum_cpns: Yup.string().required(
+      "Masa kerja sebelum CPNS harus diisi!"
+    ),
+    mk_golongan: Yup.string().required("Masa kerja golongan harus diisi!"),
+    mk_seluruhnya: Yup.string().required("Masa kerja seluruhnya harus diisi!"),
     nama_akademi: Yup.string().required("Nama akademi harus diisi!"),
     jurusan: Yup.string().required("Jurusan harus diisi!"),
     tahun_lulus: Yup.string().required("Tahun lulus harus diisi!"),
@@ -281,56 +275,42 @@ const TambahPegawai = () => {
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
+    formData.append("nip", values.nip);
+    formData.append("nama", values.nama);
+    formData.append("id_jabatan", values.id_jabatan);
+    formData.append("id_bidang", values.id_bidang);
+    formData.append("id_golongan", values.id_golongan);
+    formData.append("id_eselon", values.id_eselon);
+    formData.append("id_agama", values.id_agama);
+    formData.append("tempat_lahir", values.tempat_lahir);
+    formData.append("tgl_lahir", values.tgl_lahir);
+    formData.append("alamat", values.alamat);
+    formData.append("jenis_kelamin", values.jenis_kelamin);
+    formData.append("karpeg", values.karpeg);
+    formData.append("bpjs", values.bpjs);
+    formData.append("npwp", values.npwp);
+    formData.append("tmt_golongan", values.tmt_golongan);
+    formData.append("tmt_cpns", values.tmt_cpns);
+    formData.append("tmt_jabatan", values.tmt_jabatan);
+    formData.append("no_hp", values.no_hp);
+    formData.append("email", values.email);
+    formData.append("no_ktp", values.no_ktp);
+    formData.append("gaji_pokok", values.gaji_pokok);
+    formData.append("foto", values.foto);
+    formData.append("mk_jabatan", values.mk_jabatan);
+    formData.append("mk_sebelum_cpns", values.mk_sebelum_cpns);
+    formData.append("mk_golongan", values.mk_golongan);
+    formData.append("mk_seluruhnya", values.mk_seluruhnya);
+    formData.append("nama_akademi", values.nama_akademi);
+    formData.append("jurusan", values.jurusan);
+    formData.append("tahun_lulus", values.tahun_lulus);
+    formData.append("jenjang", values.jenjang);
+    formData.append("no_ijazah", values.no_ijazah);
+    formData.append("foto_ijazah", values.foto_ijazah);
 
-    const mk_golongan = `${values.mk_golongan_tahun} Tahun ${values.mk_golongan_bulan} Bulan`;
-    const mk_jabatan = `${values.mk_jabatan_tahun} Tahun ${values.mk_jabatan_bulan} Bulan`;
-    const mk_sebelum_cpns = `${values.mk_sebelum_cpns_tahun} Tahun ${values.mk_sebelum_cpns_bulan} Bulan`;
-    const mk_seluruhnya = `${values.mk_seluruhnya_tahun} Tahun ${values.mk_seluruhnya_bulan} Bulan`;
-
-    for (const item in values) {
-      formData.append(item, values[item]);
-    }
-    formData.append("mk_golongan", mk_golongan);
-    formData.append("mk_jabatan", mk_jabatan);
-    formData.append("mk_sebelum_cpns", mk_sebelum_cpns);
-    formData.append("mk_seluruhnya", mk_seluruhnya);
-
-    // formData.append("nip", values.nip);
-    // formData.append("nama", values.nama);
-    // formData.append("id_jabatan", values.id_jabatan);
-    // formData.append("id_bidang", values.id_bidang);
-    // formData.append("id_golongan", values.id_golongan);
-    // formData.append("id_eselon", values.id_eselon);
-    // formData.append("id_agama", values.id_agama);
-    // formData.append("tempat_lahir", values.tempat_lahir);
-    // formData.append("tgl_lahir", values.tgl_lahir);
-    // formData.append("alamat", values.alamat);
-    // formData.append("jenis_kelamin", values.jenis_kelamin);
-    // formData.append("karpeg", values.karpeg);
-    // formData.append("bpjs", values.bpjs);
-    // formData.append("npwp", values.npwp);
-    // formData.append("tmt_golongan", values.tmt_golongan);
-    // formData.append("tmt_cpns", values.tmt_cpns);
-    // formData.append("tmt_jabatan", values.tmt_jabatan);
-    // formData.append("no_hp", values.no_hp);
-    // formData.append("email", values.email);
-    // formData.append("no_ktp", values.no_ktp);
-    // formData.append("gaji_pokok", values.gaji_pokok);
-    // formData.append("foto", values.foto);
-    // formData.append("mk_jabatan", values.mk_jabatan);
-    // formData.append("mk_sebelum_cpns", values.mk_sebelum_cpns);
-    // formData.append("mk_golongan", values.mk_golongan);
-    // formData.append("mk_seluruhnya", values.mk_seluruhnya);
-    // formData.append("nama_akademi", values.nama_akademi);
-    // formData.append("jurusan", values.jurusan);
-    // formData.append("tahun_lulus", values.tahun_lulus);
-    // formData.append("jenjang", values.jenjang);
-    // formData.append("no_ijazah", values.no_ijazah);
-    // formData.append("foto_ijazah", values.foto_ijazah);
-
-    for (var pair of formData.entries()) {
-      console.log(pair);
-    }
+    // for (var pair of formData.entries()) {
+    //   console.log(pair);
+    // }
 
     // Memanggil method Insert PNS untuk menambah data PNS ke database
     insertPNS(formData, setLoading, showAlertSuccess, showAlertError);
@@ -1006,213 +986,107 @@ const TambahPegawai = () => {
                     <h4 style={{ fontWeight: "normal" }}>Masa Kerja Pegawai</h4>
                     <hr />
                     <CFormGroup row>
-                      <CCol md="3">
-                        <CLabel>Masa Kerja Golongan</CLabel>
-                      </CCol>
                       <CCol>
+                        <CLabel>MK Jabatan</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
                         <CInput
-                          type="number"
-                          name="mk_golongan_tahun"
-                          id="mk_golongan_tahun"
-                          placeholder="Tahun"
+                          type="text"
+                          name="mk_jabatan"
+                          id="mk_jabatan"
+                          placeholder="Masukkan masa kerja jabatan"
+                          value={values.mk_jabatan}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.mk_golongan_tahun || ""}
                           className={
-                            errors.mk_golongan_tahun &&
-                            touched.mk_golongan_tahun
+                            errors.mk_jabatan && touched.mk_jabatan
                               ? "is-invalid"
                               : null
                           }
                         />
-                        {errors.mk_golongan_tahun &&
-                          touched.mk_golongan_tahun && (
-                            <div className="invalid-feedback">
-                              {errors.mk_golongan_tahun}
-                            </div>
-                          )}
-                        <CFormText>Tahun</CFormText>
-                      </CCol>
-                      <CCol>
-                        <CInput
-                          type="number"
-                          name="mk_golongan_bulan"
-                          id="mk_golongan_bulan"
-                          placeholder="Bulan"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.mk_golongan_bulan || ""}
-                          className={
-                            errors.mk_golongan_bulan &&
-                            touched.mk_golongan_bulan
-                              ? "is-invalid"
-                              : null
-                          }
-                        />
-                        {errors.mk_golongan_bulan &&
-                          touched.mk_golongan_bulan && (
-                            <div className="invalid-feedback">
-                              {errors.mk_golongan_bulan}
-                            </div>
-                          )}
-                        <CFormText>Bulan</CFormText>
+                        {errors.mk_jabatan && touched.mk_jabatan && (
+                          <div className="invalid-feedback">
+                            {errors.mk_jabatan}
+                          </div>
+                        )}
                       </CCol>
                     </CFormGroup>
                     <CFormGroup row>
-                      <CCol md="3">
-                        <CLabel>Masa Kerja Jabatan</CLabel>
-                      </CCol>
                       <CCol>
+                        <CLabel>MK Sebelum CPNS</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
                         <CInput
-                          type="number"
-                          name="mk_jabatan_tahun"
-                          id="mk_jabatan_tahun"
-                          placeholder="Tahun"
+                          type="text"
+                          name="mk_sebelum_cpns"
+                          id="mk_sebelum_cpns"
+                          placeholder="Masukkan masa kerja sebelum cpns"
+                          value={values.mk_sebelum_cpns}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.mk_jabatan_tahun || ""}
                           className={
-                            errors.mk_jabatan_tahun && touched.mk_jabatan_tahun
+                            errors.mk_sebelum_cpns && touched.mk_sebelum_cpns
                               ? "is-invalid"
                               : null
                           }
                         />
-                        {errors.mk_jabatan_tahun &&
-                          touched.mk_jabatan_tahun && (
-                            <div className="invalid-feedback">
-                              {errors.mk_jabatan_tahun}
-                            </div>
-                          )}
-                        <CFormText>Tahun</CFormText>
-                      </CCol>
-                      <CCol>
-                        <CInput
-                          type="number"
-                          name="mk_jabatan_bulan"
-                          id="mk_jabatan_bulan"
-                          placeholder="Bulan"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.mk_jabatan_bulan || ""}
-                          className={
-                            errors.mk_jabatan_bulan && touched.mk_jabatan_bulan
-                              ? "is-invalid"
-                              : null
-                          }
-                        />
-                        {errors.mk_jabatan_bulan &&
-                          touched.mk_jabatan_bulan && (
-                            <div className="invalid-feedback">
-                              {errors.mk_jabatan_bulan}
-                            </div>
-                          )}
-                        <CFormText>Bulan</CFormText>
+                        {errors.mk_sebelum_cpns && touched.mk_sebelum_cpns && (
+                          <div className="invalid-feedback">
+                            {errors.mk_sebelum_cpns}
+                          </div>
+                        )}
                       </CCol>
                     </CFormGroup>
                     <CFormGroup row>
-                      <CCol md="3">
-                        <CLabel>Masa Kerja Sebelum CPNS</CLabel>
-                      </CCol>
                       <CCol>
+                        <CLabel>MK Golongan</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
                         <CInput
-                          type="number"
-                          name="mk_sebelum_cpns_tahun"
-                          id="mk_sebelum_cpns_tahun"
-                          placeholder="Tahun"
+                          type="text"
+                          name="mk_golongan"
+                          id="mk_golongan"
+                          placeholder="Masukkan masa kerja golongan"
+                          value={values.mk_golongan}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.mk_sebelum_cpns_tahun || ""}
                           className={
-                            errors.mk_sebelum_cpns_tahun &&
-                            touched.mk_sebelum_cpns_tahun
+                            errors.mk_golongan && touched.mk_golongan
                               ? "is-invalid"
                               : null
                           }
                         />
-                        {errors.mk_sebelum_cpns_tahun &&
-                          touched.mk_sebelum_cpns_tahun && (
-                            <div className="invalid-feedback">
-                              {errors.mk_sebelum_cpns_tahun}
-                            </div>
-                          )}
-                        <CFormText>Tahun</CFormText>
-                      </CCol>
-                      <CCol>
-                        <CInput
-                          type="number"
-                          name="mk_sebelum_cpns_bulan"
-                          id="mk_sebelum_cpns_bulan"
-                          placeholder="Bulan"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.mk_sebelum_cpns_bulan || ""}
-                          className={
-                            errors.mk_sebelum_cpns_bulan &&
-                            touched.mk_sebelum_cpns_bulan
-                              ? "is-invalid"
-                              : null
-                          }
-                        />
-                        {errors.mk_sebelum_cpns_bulan &&
-                          touched.mk_sebelum_cpns_bulan && (
-                            <div className="invalid-feedback">
-                              {errors.mk_sebelum_cpns_bulan}
-                            </div>
-                          )}
-                        <CFormText>Bulan</CFormText>
+                        {errors.mk_golongan && touched.mk_golongan && (
+                          <div className="invalid-feedback">
+                            {errors.mk_golongan}
+                          </div>
+                        )}
                       </CCol>
                     </CFormGroup>
                     <CFormGroup row>
-                      <CCol md="3">
-                        <CLabel>Masa Kerja Seluruhnya</CLabel>
-                      </CCol>
                       <CCol>
+                        <CLabel>MK Seluruhnya</CLabel>
+                      </CCol>
+                      <CCol md="9" sm="12">
                         <CInput
-                          type="number"
-                          name="mk_seluruhnya_tahun"
-                          id="mk_seluruhnya_tahun"
-                          placeholder="Tahun"
+                          type="text"
+                          name="mk_seluruhnya"
+                          id="mk_seluruhnya"
+                          placeholder="Masukkan masa kerja seluruhnya"
+                          value={values.mk_seluruhnya}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.mk_seluruhnya_tahun || ""}
                           className={
-                            errors.mk_seluruhnya_tahun &&
-                            touched.mk_seluruhnya_tahun
+                            errors.mk_seluruhnya && touched.mk_seluruhnya
                               ? "is-invalid"
                               : null
                           }
                         />
-                        {errors.mk_seluruhnya_tahun &&
-                          touched.mk_seluruhnya_tahun && (
-                            <div className="invalid-feedback">
-                              {errors.mk_seluruhnya_tahun}
-                            </div>
-                          )}
-                        <CFormText>Tahun</CFormText>
-                      </CCol>
-                      <CCol>
-                        <CInput
-                          type="number"
-                          name="mk_seluruhnya_bulan"
-                          id="mk_seluruhnya_bulan"
-                          placeholder="Bulan"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.mk_seluruhnya_bulan || ""}
-                          className={
-                            errors.mk_seluruhnya_bulan &&
-                            touched.mk_seluruhnya_bulan
-                              ? "is-invalid"
-                              : null
-                          }
-                        />
-                        {errors.mk_seluruhnya_bulan &&
-                          touched.mk_seluruhnya_bulan && (
-                            <div className="invalid-feedback">
-                              {errors.mk_seluruhnya_bulan}
-                            </div>
-                          )}
-                        <CFormText>Bulan</CFormText>
+                        {errors.mk_seluruhnya && touched.mk_seluruhnya && (
+                          <div className="invalid-feedback">
+                            {errors.mk_seluruhnya}
+                          </div>
+                        )}
                       </CCol>
                     </CFormGroup>
                     <h4 style={{ fontWeight: "normal" }}>

@@ -64,7 +64,7 @@ const TambahRiwayatKerja = ({ id, modal, setModal, riwayatKerja }) => {
   });
 
   // Menangani value dari form submit
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values, { resetForm }) => {
     console.log(values);
 
     const formData = new FormData();
@@ -88,6 +88,8 @@ const TambahRiwayatKerja = ({ id, modal, setModal, riwayatKerja }) => {
       riwayatKerja.setLoadingRiwayatKerja,
       riwayatKerja.setData
     );
+
+    resetForm({});
   };
 
   return (
@@ -95,7 +97,7 @@ const TambahRiwayatKerja = ({ id, modal, setModal, riwayatKerja }) => {
       <Formik
         initialValues={initState}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={handleFormSubmit}
       >
         {({
           values,

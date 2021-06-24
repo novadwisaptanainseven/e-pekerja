@@ -13,16 +13,22 @@ import { logout } from "src/context/actions/Auth/logout";
 import { cekUser } from "src/context/actions/Auth/cekUser";
 import { getImage } from "src/context/actions/DownloadFile";
 import { GlobalContext } from "src/context/Provider";
+import { useHistory } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
 const TheHeaderDropdown = () => {
+  const history = useHistory();
   const [currentUser, setCurrentUser] = useState(null);
   const { userDispatch } = useContext(GlobalContext);
 
   useEffect(() => {
     cekUser(setCurrentUser, userDispatch);
   }, [userDispatch]);
+
+  const goToAkun = () => {
+    history.push(`/epekerja/admin/akun`);
+  };
 
   const handleLogout = () => {
     MySwal.fire({
@@ -61,10 +67,10 @@ const TheHeaderDropdown = () => {
         <CDropdownItem header tag="div" color="light" className="text-center">
           <strong>Pengaturan</strong>
         </CDropdownItem>
-        {/* <CDropdownItem onClick={goToAkun}>
+        <CDropdownItem onClick={goToAkun}>
           <CIcon name="cil-user" className="mfe-2" />
-          Profil
-        </CDropdownItem> */}
+          Akun Saya
+        </CDropdownItem>
 
         <CDropdownItem onClick={handleLogout}>
           <CIcon name="cil-lock-locked" className="mfe-2" />

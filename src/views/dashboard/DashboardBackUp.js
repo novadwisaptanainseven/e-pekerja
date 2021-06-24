@@ -1,5 +1,9 @@
-import React, { useContext, useEffect} from "react";
-import { CCol, CRow, CWidgetIcon } from "@coreui/react";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  CCol,
+  CRow,
+  CWidgetIcon,
+} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
 // import { CChartPie } from "@coreui/react-chartjs";
@@ -9,15 +13,32 @@ import { getImage } from "src/context/actions/DownloadFile";
 import { getDashboardInformation } from "src/context/actions/UserPage/Dashboard/getDashboardInformation";
 
 const Dashboard = () => {
-  const { userState, dashboardState, dashboardDispatch } =
-    useContext(GlobalContext);
+  const { userState, dashboardState, dashboardDispatch } = useContext(
+    GlobalContext
+  );
   const { data } = userState;
   const { data: dataDashboard } = dashboardState;
+  const [absen, setAbsen] = useState({
+    totHadir: 0,
+    totIzin: 0,
+    totSakit: 0,
+    totCuti: 0,
+    totTK: 0,
+  });
 
   useEffect(() => {
     // Get dashboard information
     if (!dataDashboard) {
       getDashboardInformation(dashboardDispatch);
+    } else {
+      // Set Absen
+      setAbsen({
+        totHadir: dataDashboard.hadir,
+        totIzin: dataDashboard.izin,
+        totSakit: dataDashboard.sakit,
+        totCuti: dataDashboard.cuti,
+        totTK: dataDashboard.tanpa_keterangan,
+      });
     }
   }, [dataDashboard, dashboardDispatch]);
 

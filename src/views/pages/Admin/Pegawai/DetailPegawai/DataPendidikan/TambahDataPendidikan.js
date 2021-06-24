@@ -101,7 +101,7 @@ const TambahDataPendidikan = ({
   });
 
   // Menangani value dari form submit
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values, { resetForm }) => {
     const formData = new FormData();
     formData.append("nama_akademi", values.nama_akademi);
     formData.append("jenjang", values.jenjang);
@@ -124,6 +124,8 @@ const TambahDataPendidikan = ({
       pendidikan.setLoadingPendidikan,
       pendidikan.setData
     );
+
+    resetForm({});
   };
 
   return (
@@ -131,7 +133,7 @@ const TambahDataPendidikan = ({
       <Formik
         initialValues={initState}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={handleFormSubmit}
       >
         {({
           values,
@@ -295,7 +297,6 @@ const TambahDataPendidikan = ({
                 type="button"
                 color="secondary"
                 onClick={() => {
-                  handleReset();
                   setModalTambah(!modalTambah);
                 }}
               >

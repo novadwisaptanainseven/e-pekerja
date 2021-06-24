@@ -95,7 +95,7 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
   });
 
   // Menangani value dari form submit
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values, { resetForm }) => {
     const formData = new FormData();
     formData.append("nik_nip", values.nik_nip);
     formData.append("nama", values.nama);
@@ -122,6 +122,8 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
       keluarga.setLoadingKeluarga,
       keluarga.setData
     );
+
+    resetForm({});
   };
 
   return (
@@ -129,7 +131,7 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
       <Formik
         initialValues={initState}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={handleFormSubmit}
       >
         {({
           values,
@@ -363,7 +365,6 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
               <CButton
                 type="submit"
                 color="primary"
-                // onClick={() => handleFormSubmit(values)}
                 disabled={loading ? true : false}
               >
                 {loading ? (
@@ -380,7 +381,6 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
                 type="button"
                 color="secondary"
                 onClick={() => {
-                  handleReset();
                   setModalTambah(!modalTambah);
                 }}
               >

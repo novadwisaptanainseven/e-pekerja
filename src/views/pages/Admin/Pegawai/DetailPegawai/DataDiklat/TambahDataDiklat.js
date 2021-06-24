@@ -101,7 +101,7 @@ const TambahDataDiklat = ({ id, modalTambah, setModalTambah, diklat }) => {
   });
 
   // Menangani value dari form submit
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values, {resetForm}) => {
     console.log(values);
 
     const formData = new FormData();
@@ -128,6 +128,8 @@ const TambahDataDiklat = ({ id, modalTambah, setModalTambah, diklat }) => {
       diklat.setLoadingDiklat,
       diklat.setData
     );
+
+    resetForm({});
   };
 
   return (
@@ -135,7 +137,7 @@ const TambahDataDiklat = ({ id, modalTambah, setModalTambah, diklat }) => {
       <Formik
         initialValues={initState}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={handleFormSubmit}
       >
         {({
           values,

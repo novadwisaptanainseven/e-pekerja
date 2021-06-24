@@ -97,7 +97,7 @@ const TambahBerkas = ({ id, modal, setModal, berkas }) => {
   });
 
   // Menangani value dari form submit
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values, { resetForm }) => {
     const formData = new FormData();
     formData.append("nama_berkas", values.nama_berkas);
     formData.append("keterangan", values.keterangan);
@@ -116,6 +116,8 @@ const TambahBerkas = ({ id, modal, setModal, berkas }) => {
       berkas.setLoading,
       berkas.setData
     );
+
+    resetForm({});
   };
 
   return (
@@ -123,7 +125,7 @@ const TambahBerkas = ({ id, modal, setModal, berkas }) => {
       <Formik
         initialValues={initState}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={handleFormSubmit}
       >
         {({
           values,
