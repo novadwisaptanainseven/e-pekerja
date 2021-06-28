@@ -7,7 +7,7 @@ const MySwal = withReactContent(Swal);
 
 const TheLayout = () => {
   useEffect(() => {
-    if (!sessionStorage.token) {
+    if (!localStorage.token) {
       MySwal.fire({
         icon: "error",
         title: "Akses Diblok",
@@ -16,7 +16,7 @@ const TheLayout = () => {
         window.location.href = "/epekerja/login";
       });
     } else {
-      if (sessionStorage.level !== "2") {
+      if (localStorage.level !== "2") {
         MySwal.fire({
           icon: "error",
           title: "Akses Diblok",
@@ -30,7 +30,7 @@ const TheLayout = () => {
 
   return (
     <div className="c-app c-default-layout">
-      {sessionStorage.token && sessionStorage.level === "2" && (
+      {localStorage.token && localStorage.level === "2" && (
         <>
           <TheSidebar />
           <div className="c-wrapper">

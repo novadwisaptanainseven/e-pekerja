@@ -160,20 +160,27 @@ const DataDiklat = ({ id }) => {
   const ExpandableComponent = ({ data }) => {
     const EXT_IMAGE = ["jpg", "jpeg", "png"];
 
-    let arr_file = data.dokumentasi.split("/");
-    let filename = arr_file[arr_file.length - 1];
-    let ext_file = filename.split(".");
-    let ext_file2 = ext_file[ext_file.length - 1];
+    const splitFile = (file) => {
+      let arr_file = file.split("/");
+      let filename = arr_file[arr_file.length - 1];
+      let ext_file = filename.split(".");
+      let ext_file2 = ext_file[ext_file.length - 1];
+
+      return { ext: ext_file2, filename: filename };
+    };
+
+    let dokumentasiDisplay = splitFile(data.dokumentasi);
+    let sertifikatDisplay = splitFile(data.sertifikat);
 
     return (
       <>
         <div style={{ padding: "10px 63px" }}>
-          <CRow>
+          <CRow className="mb-2">
             <CCol md="2">
               <strong>Dokumentasi</strong>
             </CCol>
             <CCol>
-              {EXT_IMAGE.includes(ext_file2.toLowerCase()) ? (
+              {EXT_IMAGE.includes(dokumentasiDisplay.ext.toLowerCase()) ? (
                 <img
                   width={200}
                   src={getDokDiklat(data.dokumentasi)}
@@ -187,7 +194,31 @@ const DataDiklat = ({ id }) => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {filename}
+                  {dokumentasiDisplay.filename}
+                </a>
+              )}
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol md="2">
+              <strong>Sertifikat</strong>
+            </CCol>
+            <CCol>
+              {EXT_IMAGE.includes(sertifikatDisplay.ext.toLowerCase()) ? (
+                <img
+                  width={200}
+                  src={getDokDiklat(data.sertifikat)}
+                  alt="sertifikat-diklat"
+                  onClick={() => handlePreviewImage(data.sertifikat)}
+                  style={{ cursor: "pointer" }}
+                />
+              ) : (
+                <a
+                  href={getDokDiklat(data.sertifikat)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {sertifikatDisplay.filename}
                 </a>
               )}
             </CCol>

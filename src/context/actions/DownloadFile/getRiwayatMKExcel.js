@@ -1,5 +1,5 @@
 const getRiwayatMKExcel = (filename) => {
-  return `${sessionStorage.baseURL}masa-kerja/${filename}`;
+  return `${localStorage.baseURL}masa-kerja/${filename}`;
 };
 
 export default getRiwayatMKExcel;

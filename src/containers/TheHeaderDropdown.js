@@ -41,8 +41,8 @@ const TheHeaderDropdown = () => {
       if (result.isConfirmed) {
         Swal.fire("Anda berhasil Logout", "", "success").then((res) => {
           logout();
-          sessionStorage.removeItem("token");
-          sessionStorage.removeItem("level");
+          localStorage.removeItem("token");
+          localStorage.removeItem("level");
           window.location.href = "/epekerja/login";
         });
       }

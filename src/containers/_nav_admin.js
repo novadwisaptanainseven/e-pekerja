@@ -95,7 +95,7 @@ const _nav_admin = [
   },
   {
     _tag: "CSidebarNavDropdown",
-    name: "Pembaruan SK Pegawai",
+    name: "Pembaruan SK Non ASN",
     to: "/epekerja/admin/pembaruan-sk",
     icon: <CIcon content={cilGroup} customClasses="c-sidebar-nav-icon" />,
     _children: [

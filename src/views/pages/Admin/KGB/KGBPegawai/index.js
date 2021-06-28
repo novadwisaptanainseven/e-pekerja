@@ -7,13 +7,7 @@ import {
   CButton,
   CRow,
   CCol,
-  CForm,
-  CFormGroup,
-  CLabel,
-  CSelect,
-  CCardFooter,
   CAlert,
-  CInput,
   CBadge,
 } from "@coreui/react";
 import { format } from "date-fns";
@@ -24,8 +18,8 @@ import { LoadAnimationBlue } from "src/assets";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import printKGBSemuaPegawai from "src/context/actions/DownloadFile/printKGBSemuaPegawai";
 import { getKGBPegawai } from "src/context/actions/KGB/getKGBPegawai";
+import FilterPencarianTanggal from "src/reusable/FilterPencarianTanggal";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
-import SelectOptionBulan from "src/reusable/SelectOptionBulan";
 import ModalKirimWa from "./ModalKirimWa";
 
 const KGBPegawai = () => {
@@ -98,7 +92,7 @@ const KGBPegawai = () => {
                 </CBadge>
               )}
               {row.status_kgb === "akan-naik-gaji" && (
-                <CBadge className="py-2 px-3" color="info" shape="pill">
+                <CBadge className="py-2 px-3" color="danger" shape="pill">
                   Akan Naik Gaji
                 </CBadge>
               )}
@@ -126,7 +120,7 @@ const KGBPegawai = () => {
           <div>
             <div>
               {row.status_kgb === "akan-naik-gaji" && (
-                <span className="text-info font-weight-bold">
+                <span className="text-danger font-weight-bold">
                   Pegawai ini akan naik gaji pada tanggal{" "}
                   {format(new Date(row.kenaikan_gaji_yad), "dd/MM/y")}
                 </span>
@@ -143,8 +137,8 @@ const KGBPegawai = () => {
               )}
               {row.status_kgb === "akan-naik-gaji-2" && (
                 <span className="text-warning font-weight-bold">
-                  Pegawai ini dalam waktu dekat akan mengalami kenaikan gaji yaitu
-                  pada tanggal{" "}
+                  Pegawai ini dalam waktu dekat akan mengalami kenaikan gaji
+                  yaitu pada tanggal{" "}
                   {format(new Date(row.kenaikan_gaji_yad), "dd/MM/y")}
                 </span>
               )}
@@ -312,82 +306,12 @@ const KGBPegawai = () => {
         <CCardBody>
           <CRow>
             <CCol md="6">
-              <CCard>
-                <CCardHeader className="bg-dark">
-                  <h5 className="mb-0">Filter Pencarian</h5>
-                </CCardHeader>
-                <CForm>
-                  <CCardBody>
-                    <CRow>
-                      <CCol>
-                        <CFormGroup>
-                          <CLabel>Bulan</CLabel>
-                          <CSelect
-                            required
-                            name="bulan"
-                            onChange={(e) =>
-                              setParamsFilter({
-                                ...paramsFilter,
-                                [e.target.name]: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="">-- Pilih Bulan --</option>
-                            <SelectOptionBulan />
-                          </CSelect>
-                        </CFormGroup>
-                      </CCol>
-                      <CCol>
-                        <CFormGroup>
-                          <CLabel>Tahun</CLabel>
-                          <CInput
-                            required
-                            type="number"
-                            name="tahun"
-                            placeholder={`Masukkan Tahun, exp: ${new Date().getFullYear()}`}
-                            onChange={(e) =>
-                              setParamsFilter({
-                                ...paramsFilter,
-                                [e.target.name]: e.target.value,
-                              })
-                            }
-                          />
-                          {/* <CSelect name="tahun">
-                            <option value="">-- Tahun --</option>
-                            <SelectOptionTahun />
-                          </CSelect> */}
-                        </CFormGroup>
-                      </CCol>
-                      {/* <CCol>
-                        <CFormGroup>
-                          <CLabel>Status KGB</CLabel>
-                          <CSelect name="status">
-                            <option value="">-- Status --</option>
-                            <option value="kgb-aktif">Sedang Berjalan</option>
-                            <option value="kgb-akan">Akan Naik Gaji</option>
-                          </CSelect>
-                        </CFormGroup>
-                      </CCol> */}
-                    </CRow>
-                  </CCardBody>
-                  <CCardFooter className="text-right">
-                    <CButton
-                      type="submit"
-                      color="primary"
-                      className="mr-2"
-                      onClick={(e) => handleFilterCari(e)}
-                      disabled={
-                        paramsFilter.bulan && paramsFilter.tahun ? false : true
-                      }
-                    >
-                      Cari
-                    </CButton>
-                    <CButton color="warning" onClick={handleResetFilter}>
-                      Reset
-                    </CButton>
-                  </CCardFooter>
-                </CForm>
-              </CCard>
+              <FilterPencarianTanggal
+                paramsFilter={paramsFilter}
+                setParamsFilter={setParamsFilter}
+                handleResetFilter={handleResetFilter}
+                handleFilterCari={handleFilterCari}
+              />
             </CCol>
             <CCol>
               <CAlert color="info">

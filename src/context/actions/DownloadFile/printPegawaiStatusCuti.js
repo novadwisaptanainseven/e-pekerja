@@ -3,7 +3,7 @@ const printPegawaiStatusCuti = (params) => {
   const tahun = params.tahun || "";
 
   window.open(
-    `${sessionStorage.baseURL}print-pegawai-status-cuti?bulan=${bulan}&tahun=${tahun}`,
+    `${localStorage.baseURL}print-pegawai-status-cuti?bulan=${bulan}&tahun=${tahun}`,
     "_blank"
   );
 };

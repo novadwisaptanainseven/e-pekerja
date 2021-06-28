@@ -3,7 +3,7 @@ const printKGBSemuaPegawai = (params) => {
   const tahun = params.tahun || "";
 
   window.open(
-    `${sessionStorage.baseURL}print-kgb?bulan=${bulan}&tahun=${tahun}`,
+    `${localStorage.baseURL}print-kgb?bulan=${bulan}&tahun=${tahun}`,
     "_blank"
   );
 };

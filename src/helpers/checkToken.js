@@ -4,7 +4,7 @@ import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 
 export const checkToken = (history) => {
-  if (sessionStorage.token) {
+  if (localStorage.token) {
     MySwal.fire({
       icon: "error",
       title: "Akses Dilarang",

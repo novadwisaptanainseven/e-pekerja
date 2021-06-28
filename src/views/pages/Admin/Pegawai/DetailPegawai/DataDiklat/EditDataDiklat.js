@@ -50,6 +50,7 @@ const EditDataDiklat = ({
     tahun_diklat: data ? data.tahun_diklat : "",
     jumlah_jam: data ? data.jumlah_jam : "",
     dokumentasi: undefined,
+    sertifikat: undefined,
   };
 
   // Fungsi untuk menampilkan alert success Edit data
@@ -115,6 +116,24 @@ const EditDataDiklat = ({
           return true;
         }
       ),
+    sertifikat: Yup.mixed()
+      // .required("File sertifikat diklat belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) {
+          return value && value.size <= DOKUMENTASI_SIZE;
+        }
+        return true;
+      })
+      .test(
+        "type",
+        "Ekstensi yang diperbolehkan hanya jpg, jpeg, png dan pdf",
+        (value) => {
+          if (value) {
+            return value && DOKUMENTASI_SUPPORTED_FORMATS.includes(value.type);
+          }
+          return true;
+        }
+      ),
   });
 
   // Menangani value dari form submit
@@ -129,6 +148,9 @@ const EditDataDiklat = ({
     formData.append("jumlah_jam", values.jumlah_jam);
     if (values.dokumentasi) {
       formData.append("dokumentasi", values.dokumentasi);
+    }
+    if (values.sertifikat) {
+      formData.append("sertifikat", values.sertifikat);
     }
 
     for (var pair of formData.entries()) {
@@ -288,6 +310,28 @@ const EditDataDiklat = ({
                   <div className="invalid-feedback">{errors.dokumentasi}</div>
                 )}
                 <CFormText>Upload file dokumentasi diklat jika ada</CFormText>
+              </CFormGroup>
+              <CFormGroup>
+                <CLabel htmlFor="sertifikat_diklat">Sertifikat Diklat</CLabel>
+                <CInput
+                  type="file"
+                  id="sertifikat"
+                  placeholder="Masukkan sertifikat diklat"
+                  name="sertifikat"
+                  onChange={(e) =>
+                    setFieldValue("sertifikat", e.target.files[0])
+                  }
+                  onBlur={handleBlur}
+                  className={
+                    errors.sertifikat && touched.sertifikat
+                      ? "is-invalid"
+                      : null
+                  }
+                />
+                {errors.sertifikat && touched.sertifikat && (
+                  <div className="invalid-feedback">{errors.sertifikat}</div>
+                )}
+                <CFormText>Upload file sertifikat diklat jika ada</CFormText>
               </CFormGroup>
             </CModalBody>
             <CModalFooter>

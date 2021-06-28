@@ -13,9 +13,9 @@ export const login = (values, dispatch) => {
   axiosInstance
     .post("login", values)
     .then((res) => {
-      sessionStorage.token = res.data.token;
-      sessionStorage.level = res.data.user.level;
-      sessionStorage.id_user = res.data.user.id;
+      localStorage.token = res.data.token;
+      localStorage.level = res.data.user.level;
+      localStorage.id_user = res.data.user.id;
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data.user,

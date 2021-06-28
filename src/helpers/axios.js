@@ -1,13 +1,13 @@
 import axios from "axios";
 
 const baseURL = "http://127.0.0.1:8000/api/v1/";
-sessionStorage.baseURL = baseURL;
+localStorage.baseURL = baseURL;
 let headers = {};
 
 console.log("Base URL: ", baseURL);
 
-if (sessionStorage.token) {
-  headers.Authorization = `Bearer ${sessionStorage.token}`;
+if (localStorage.token) {
+  headers.Authorization = `Bearer ${localStorage.token}`;
 }
 
 const axiosInstance = axios.create({
@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
       return new Promise((resolve, reject) => {});
     }
     if (error.response.status === 403) {
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
       console.log("Error Status 403 Executed");
       window.location.href = "/epekerja/login";
       return new Promise((resolve, reject) => {

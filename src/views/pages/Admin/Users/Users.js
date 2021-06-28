@@ -157,14 +157,14 @@ const Users = () => {
               color="info"
               className="btn btn-sm"
               onClick={
-                parseInt(sessionStorage.id_user) === row.id
+                parseInt(localStorage.id_user) === row.id
                   ? () => goToAkun()
                   : () => goToDetail(row.id)
               }
             >
               <CIcon content={cilInfo} color="white" />
             </CButton>
-            {parseInt(sessionStorage.id_user) === row.id && (
+            {parseInt(localStorage.id_user) === row.id && (
               <CButton
                 disabled={row.level !== 1 ? true : false}
                 color="success"

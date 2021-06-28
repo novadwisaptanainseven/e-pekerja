@@ -373,12 +373,16 @@ const Pensiun = () => {
           <h3>Data Pensiun</h3>
         </CCardHeader>
         <CCardBody>
-          <FilterPencarianTanggal
-            paramsFilter={paramsFilter}
-            setParamsFilter={setParamsFilter}
-            handleResetFilter={handleResetFilter}
-            handleFilterCari={handleFilterCari}
-          />
+          <CRow>
+            <CCol md="6">
+              <FilterPencarianTanggal
+                paramsFilter={paramsFilter}
+                setParamsFilter={setParamsFilter}
+                handleResetFilter={handleResetFilter}
+                handleFilterCari={handleFilterCari}
+              />
+            </CCol>
+          </CRow>
           {data.length > 0 ? (
             <DataTable
               columns={columns}

@@ -3,7 +3,7 @@ const printPensiunPegawai = (params = null) => {
   const tahun = params.tahun || "";
 
   window.open(
-    `${sessionStorage.baseURL}print-pensiun-pegawai?bulan=${bulan}&tahun=${tahun}`,
+    `${localStorage.baseURL}print-pensiun-pegawai?bulan=${bulan}&tahun=${tahun}`,
     "_blank"
   );
 };

@@ -14,7 +14,7 @@ const MySwal = withReactContent(Swal);
 
 const TheLayoutAdmin = () => {
   useEffect(() => {
-    if (!sessionStorage.token) {
+    if (!localStorage.token) {
       MySwal.fire({
         icon: "error",
         title: "Akses Diblok",
@@ -23,7 +23,7 @@ const TheLayoutAdmin = () => {
         window.location.href = "/epekerja/login";
       });
     } else {
-      if (sessionStorage.level !== "1") {
+      if (localStorage.level !== "1") {
         MySwal.fire({
           icon: "error",
           title: "Akses Diblok",
@@ -37,7 +37,7 @@ const TheLayoutAdmin = () => {
 
   return (
     <div className="c-app c-default-layout">
-      {sessionStorage.token && sessionStorage.level === "1" && (
+      {localStorage.token && localStorage.level === "1" && (
         <>
           <TheSidebarAdmin />
           <div className="c-wrapper">

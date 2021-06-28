@@ -220,7 +220,7 @@ const Pegawai = () => {
   }, [filterText, resetPaginationToggle]);
 
   // const handleCetak = () => {
-  //   window.open(sessionStorage.baseURL + "rekap-pns-pdf");
+  //   window.open(localStorage.baseURL + "rekap-pns-pdf");
   // };
 
   const goToTambah = () => {

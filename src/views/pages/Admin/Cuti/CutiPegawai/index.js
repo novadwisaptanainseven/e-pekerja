@@ -5,14 +5,8 @@ import {
   CButton,
   CCardHeader,
   CCardBody,
-  CCardFooter,
-  CInput,
-  CLabel,
-  CFormGroup,
   CCol,
   CRow,
-  CSelect,
-  CForm,
   CAlert,
   CBadge,
 } from "@coreui/react";
@@ -24,8 +18,8 @@ import { LoadAnimationBlue } from "src/assets";
 import { getPegawaiStatusCuti } from "src/context/actions/Cuti/getPegawaiStatusCuti ";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import printPegawaiStatusCuti from "src/context/actions/DownloadFile/printPegawaiStatusCuti";
+import FilterPencarianTanggal from "src/reusable/FilterPencarianTanggal";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
-import SelectOptionBulan from "src/reusable/SelectOptionBulan";
 import ModalKirimWa from "./ModalKirimWa";
 
 const CutiPegawai = () => {
@@ -319,68 +313,12 @@ const CutiPegawai = () => {
         <CCardBody>
           <CRow>
             <CCol md="6">
-              <CCard>
-                <CCardHeader className="bg-dark">
-                  <h5 className="mb-0">Filter Pencarian</h5>
-                </CCardHeader>
-                <CForm>
-                  <CCardBody>
-                    <CRow>
-                      <CCol>
-                        <CFormGroup>
-                          <CLabel>Bulan</CLabel>
-                          <CSelect
-                            required
-                            name="bulan"
-                            onChange={(e) =>
-                              setParamsFilter({
-                                ...paramsFilter,
-                                [e.target.name]: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="">-- Pilih Bulan --</option>
-                            <SelectOptionBulan />
-                          </CSelect>
-                        </CFormGroup>
-                      </CCol>
-                      <CCol>
-                        <CFormGroup>
-                          <CLabel>Tahun</CLabel>
-                          <CInput
-                            required
-                            type="number"
-                            name="tahun"
-                            placeholder={`Masukkan Tahun, exp: ${new Date().getFullYear()}`}
-                            onChange={(e) =>
-                              setParamsFilter({
-                                ...paramsFilter,
-                                [e.target.name]: e.target.value,
-                              })
-                            }
-                          />
-                        </CFormGroup>
-                      </CCol>
-                    </CRow>
-                  </CCardBody>
-                  <CCardFooter className="text-right">
-                    <CButton
-                      type="submit"
-                      color="primary"
-                      className="mr-2"
-                      onClick={(e) => handleFilterCari(e)}
-                      disabled={
-                        paramsFilter.bulan && paramsFilter.tahun ? false : true
-                      }
-                    >
-                      Cari
-                    </CButton>
-                    <CButton color="warning" onClick={handleResetFilter}>
-                      Reset
-                    </CButton>
-                  </CCardFooter>
-                </CForm>
-              </CCard>
+              <FilterPencarianTanggal
+                paramsFilter={paramsFilter}
+                setParamsFilter={setParamsFilter}
+                handleResetFilter={handleResetFilter}
+                handleFilterCari={handleFilterCari}
+              />
             </CCol>
             <CCol>
               <CAlert color="info">
