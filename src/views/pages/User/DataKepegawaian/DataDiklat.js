@@ -13,7 +13,7 @@ import { getDiklat } from "src/context/actions/UserPage/DataKepegawaian/getDikla
 import getDokDiklat from "src/context/actions/DownloadFile/getDokDiklat";
 import { LoadAnimationBlue } from "src/assets";
 
-const DataDiklat = () => {
+const DataDiklat = ({ dataActive }) => {
   const { diklatState, diklatDispatch } = useContext(GlobalContext);
   const { data, loading } = diklatState;
   const [previewImage, setPreviewImage] = useState({
@@ -22,8 +22,12 @@ const DataDiklat = () => {
   });
 
   useEffect(() => {
-    getDiklat(diklatDispatch);
-  }, [diklatDispatch]);
+    if (!data) {
+      if (dataActive === "diklat") {
+        getDiklat(diklatDispatch);
+      }
+    }
+  }, [diklatDispatch, dataActive, data]);
 
   const columns = [
     {

@@ -24,7 +24,7 @@ import { deleteBerkas } from "src/context/actions/UserPage/DataKepegawaian/delet
 
 const MySwal = withReactContent(swal2);
 
-const DataBerkas = () => {
+const DataBerkas = ({dataActive}) => {
   const [modalTambah, setModalTambah] = useState(false);
   const { berkasState, berkasDispatch } = useContext(GlobalContext);
   const { data, loading } = berkasState;
@@ -34,9 +34,13 @@ const DataBerkas = () => {
   });
 
   useEffect(() => {
-    // Get data berkas
-    getBerkas(berkasDispatch);
-  }, [berkasDispatch]);
+    if (!data) {
+      if (dataActive === "berkas") {
+        // Get data berkas
+        getBerkas(berkasDispatch);
+      }
+    }
+  }, [berkasDispatch, data, dataActive]);
 
   const columns = [
     {

@@ -137,22 +137,28 @@ export const GlobalProvider = ({ children }) => {
     initStateDefault
   );
   // Keluarga
-  const [keluargaState, keluargaDispatch] = useReducer(reducer, initState);
+  const [keluargaState, keluargaDispatch] = useReducer(
+    reducer,
+    initStateDefault
+  );
   // Pendidikan
-  const [pendidikanState, pendidikanDispatch] = useReducer(reducer, initState);
+  const [pendidikanState, pendidikanDispatch] = useReducer(
+    reducer,
+    initStateDefault
+  );
   // Diklat
-  const [diklatState, diklatDispatch] = useReducer(reducer, initState);
+  const [diklatState, diklatDispatch] = useReducer(reducer, initStateDefault);
   // Penghargaan
   const [penghargaanUserState, penghargaanUserDispatch] = useReducer(
     reducer,
-    initState
+    initStateDefault
   );
   // Berkas
-  const [berkasState, berkasDispatch] = useReducer(reducer, initState);
+  const [berkasState, berkasDispatch] = useReducer(reducer, initStateDefault);
   // Riwayat Kerja
   const [riwayatKerjaState, riwayatKerjaDispatch] = useReducer(
     reducer,
-    initState
+    initStateDefault
   );
 
   return (

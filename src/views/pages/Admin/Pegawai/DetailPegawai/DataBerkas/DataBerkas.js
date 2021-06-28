@@ -24,20 +24,24 @@ import { format } from "date-fns";
 
 const MySwal = withReactContent(swal2);
 
-const DataBerkas = ({ id }) => {
+const DataBerkas = ({ id, dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
 
   const [previewImage, setPreviewImage] = useState({
     modal: false,
     image: null,
   });
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get Berkas by Id Pegawai
-    getBerkas(id, setData, setLoading);
-  }, [id]);
+    if (!data) {
+      if (dataActive === "berkas") {
+        // Get Berkas by Id Pegawai
+        getBerkas(id, setData, setLoading);
+      }
+    }
+  }, [id, data, dataActive]);
 
   const columns = [
     {
@@ -173,7 +177,7 @@ const DataBerkas = ({ id }) => {
             </CButton>
             <DataTable
               columns={columns}
-              data={data}
+              data={data || []}
               noHeader
               responsive={true}
               customStyles={customStyles}

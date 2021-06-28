@@ -25,6 +25,7 @@ const DetailPegawai = ({ match }) => {
   const params = match.params;
   const history = useHistory();
   const [data, setData] = useState(null);
+  const [activeTab, setActiveTab] = useState("data-diri");
 
   useEffect(() => {
     // Get Pegawai By Id
@@ -50,51 +51,54 @@ const DetailPegawai = ({ match }) => {
           </CButton>
         </CCardHeader>
         <CCardBody>
-          <CTabs>
+          <CTabs
+            activeTab="data-diri"
+            onActiveTabChange={(tab) => setActiveTab(tab)}
+          >
             <CNav variant="tabs">
               <CNavItem>
-                <CNavLink>Data Diri</CNavLink>
+                <CNavLink data-tab="data-diri">Data Diri</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Keluarga</CNavLink>
+                <CNavLink data-tab="keluarga">Keluarga</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Pendidikan</CNavLink>
+                <CNavLink data-tab="pendidikan">Pendidikan</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Diklat / Pelatihan</CNavLink>
+                <CNavLink data-tab="diklat">Diklat / Pelatihan</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Riwayat Kerja</CNavLink>
+                <CNavLink data-tab="riwayat-kerja">Riwayat Kerja</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Penghargaan</CNavLink>
+                <CNavLink data-tab="penghargaan">Penghargaan</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Berkas</CNavLink>
+                <CNavLink data-tab="berkas">Berkas</CNavLink>
               </CNavItem>
             </CNav>
             <CTabContent>
-              <CTabPane>
-                <DataDiri id={params.id} />
+              <CTabPane data-tab="data-diri">
+                <DataDiri data={data} />
               </CTabPane>
-              <CTabPane>
-                <DataKeluarga id={params.id} />
+              <CTabPane data-tab="keluarga">
+                <DataKeluarga id={params.id} dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <DataPendidikan id={params.id} />
+              <CTabPane data-tab="pendidikan">
+                <DataPendidikan id={params.id} dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <DataDiklat id={params.id} />
+              <CTabPane data-tab="diklat">
+                <DataDiklat id={params.id} dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <RiwayatKerja id={params.id} />
+              <CTabPane data-tab="riwayat-kerja">
+                <RiwayatKerja id={params.id} dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <Penghargaan id={params.id} />
+              <CTabPane data-tab="penghargaan">
+                <Penghargaan id={params.id} dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <DataBerkas id={params.id} />
+              <CTabPane data-tab="berkas">
+                <DataBerkas id={params.id} dataActive={activeTab} />
               </CTabPane>
             </CTabContent>
           </CTabs>

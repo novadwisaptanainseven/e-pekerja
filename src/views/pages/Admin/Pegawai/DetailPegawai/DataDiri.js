@@ -1,38 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { CRow, CCol } from "@coreui/react";
 import { LoadAnimationBlue } from "src/assets";
-import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import DataDiriPNS from "./DataDiriPNS";
 import DataDiriPTTH from "./DataDiriPTTH";
 import { getPTTHById } from "src/context/actions/Pegawai/PTTH/getPTTHById";
 import { getPTTBById } from "src/context/actions/Pegawai/PTTB/getPTTBById";
 import DataDiriPTTB from "./DataDiriPTTB";
 
-const DataDiri = ({ id }) => {
-  const [data, setData] = useState("");
+const DataDiri = ({ data: mainData }) => {
   const [dataPTTH, setDataPTTH] = useState("");
   const [dataPTTB, setDataPTTB] = useState("");
 
   useEffect(() => {
-    // Get PNS By ID
-    getPNSById(id, setData);
-    // Get PTTH By ID
-    getPTTHById(id, setDataPTTH);
-    // Get PTTB By ID
-    getPTTBById(id, setDataPTTB);
-
-    return () => {
-      setData(null);
-    };
-  }, [id]);
+    if (mainData) {
+      if (mainData.id_status_pegawai === 2) {
+        // Get PTTH By ID
+        getPTTHById(mainData.id_pegawai, setDataPTTH);
+      } else if (mainData.id_status_pegawai === 3) {
+        // Get PTTB By ID
+        getPTTBById(mainData.id_pegawai, setDataPTTB);
+      }
+    }
+  }, [mainData]);
 
   return (
     <>
-      {data ? (
+      {mainData ? (
         <>
-          {data.id_status_pegawai === 1 && <DataDiriPNS data={data} />}
-          {data.id_status_pegawai === 2 && <DataDiriPTTH data={dataPTTH} />}
-          {data.id_status_pegawai === 3 && <DataDiriPTTB data={dataPTTB} />}
+          {mainData.id_status_pegawai === 1 && <DataDiriPNS data={mainData} />}
+          {mainData.id_status_pegawai === 2 && <DataDiriPTTH data={dataPTTH} />}
+          {mainData.id_status_pegawai === 3 && <DataDiriPTTB data={dataPTTB} />}
         </>
       ) : (
         <>

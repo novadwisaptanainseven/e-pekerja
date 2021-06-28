@@ -32,9 +32,11 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get Agama
-    getSelectAgama(setAgama);
-  }, []);
+    if (modalTambah) {
+      // Get Agama
+      getSelectAgama(setAgama);
+    }
+  }, [modalTambah]);
 
   // Inisialisasi State Formik
   const initState = {

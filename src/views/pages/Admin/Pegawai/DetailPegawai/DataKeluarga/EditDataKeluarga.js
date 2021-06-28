@@ -44,13 +44,15 @@ const EditDataKeluarga = ({
     if (idKeluarga) {
       getKeluargaById(idPegawai, idKeluarga, setData);
     }
-    // Get Agama
-    getSelectAgama(setAgama);
+    if (modalEdit) {
+      // Get Agama
+      getSelectAgama(setAgama);
+    }
 
     return () => {
       setData(null);
     };
-  }, [idPegawai, idKeluarga]);
+  }, [idPegawai, idKeluarga, modalEdit]);
 
   // Inisialisasi State Formik
   const initState = {

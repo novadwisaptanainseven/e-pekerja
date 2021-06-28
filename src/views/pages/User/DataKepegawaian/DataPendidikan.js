@@ -14,7 +14,7 @@ import { getPendidikan } from "src/context/actions/UserPage/DataKepegawaian/getP
 import { getIjazah } from "src/context/actions/DownloadFile";
 import { LoadAnimationBlue } from "src/assets";
 
-const DataPendidikan = () => {
+const DataPendidikan = ({ dataActive }) => {
   const { pendidikanState, pendidikanDispatch } = useContext(GlobalContext);
   const { data, loading } = pendidikanState;
   const [previewImage, setPreviewImage] = useState({
@@ -23,10 +23,12 @@ const DataPendidikan = () => {
   });
 
   useEffect(() => {
-    if (!data.length > 0) {
-      getPendidikan(pendidikanDispatch);
+    if (!data) {
+      if (dataActive === "pendidikan") {
+        getPendidikan(pendidikanDispatch);
+      }
     }
-  }, [data, pendidikanDispatch]);
+  }, [data, pendidikanDispatch, dataActive]);
 
   const columns = [
     {

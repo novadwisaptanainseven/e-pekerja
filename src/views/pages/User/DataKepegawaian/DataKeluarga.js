@@ -6,15 +6,17 @@ import { getKeluarga } from "src/context/actions/UserPage/DataKepegawaian/getKel
 import formatTanggal from "src/helpers/formatTanggal";
 import { LoadAnimationBlue } from "src/assets";
 
-const DataKeluarga = () => {
+const DataKeluarga = ({ dataActive }) => {
   const { keluargaState, keluargaDispatch } = useContext(GlobalContext);
   const { data, loading } = keluargaState;
 
   useEffect(() => {
-    if (!data.length > 0) {
-      getKeluarga(keluargaDispatch);
+    if (!data) {
+      if (dataActive === "keluarga") {
+        getKeluarga(keluargaDispatch);
+      }
     }
-  }, [data, keluargaDispatch]);
+  }, [data, keluargaDispatch, dataActive]);
 
   const columns = [
     {

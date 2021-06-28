@@ -27,7 +27,7 @@ import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportEx
 
 const MySwal = withReactContent(swal2);
 
-const DataPendidikan = ({ id }) => {
+const DataPendidikan = ({ id, dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [previewImage, setPreviewImage] = useState({
     modal: false,
@@ -37,13 +37,17 @@ const DataPendidikan = ({ id }) => {
     modal: false,
     id: null,
   });
-  const [pendidikan, setPendidikan] = useState([]);
+  const [pendidikan, setPendidikan] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get Pendidikan by Id Pegawai
-    getPendidikan(id, setPendidikan, setLoading);
-  }, [id]);
+    if (!pendidikan) {
+      if (dataActive === "pendidikan") {
+        // Get Pendidikan by Id Pegawai
+        getPendidikan(id, setPendidikan, setLoading);
+      }
+    }
+  }, [id, dataActive, pendidikan]);
 
   const columns = [
     {
@@ -63,11 +67,7 @@ const DataPendidikan = ({ id }) => {
       selector: "jenjang",
       wrap: true,
       sortable: true,
-      cell: (row) => (
-        <div>
-          {row.jenjang.toUpperCase()}
-        </div>
-      )
+      cell: (row) => <div>{row.jenjang.toUpperCase()}</div>,
     },
     {
       name: "Tahun Lulus",
@@ -237,7 +237,7 @@ const DataPendidikan = ({ id }) => {
             </div>
             <DataTable
               columns={columns}
-              data={pendidikan}
+              data={pendidikan || []}
               noHeader
               responsive={true}
               customStyles={customStyles}

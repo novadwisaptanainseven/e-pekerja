@@ -31,7 +31,7 @@ import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportEx
 
 const MySwal = withReactContent(swal2);
 
-const Penghargaan = ({ id }) => {
+const Penghargaan = ({ id, dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
@@ -45,15 +45,19 @@ const Penghargaan = ({ id }) => {
     modal: false,
     image: null,
   });
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get Penghargaan by Id Pegawai
-    if (id) {
-      getPenghargaan(id, setData, setLoading);
+    if (!data) {
+      if (dataActive === "penghargaan") {
+        // Get Penghargaan by Id Pegawai
+        if (id) {
+          getPenghargaan(id, setData, setLoading);
+        }
+      }
     }
-  }, [id]);
+  }, [id, dataActive, data]);
 
   const columns = [
     {
@@ -239,7 +243,7 @@ const Penghargaan = ({ id }) => {
 
           <DataTable
             columns={columns}
-            data={data}
+            data={data || []}
             noHeader
             responsive={true}
             customStyles={customStyles}

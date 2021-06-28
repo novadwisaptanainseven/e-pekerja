@@ -26,19 +26,22 @@ import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportEx
 
 const MySwal = withReactContent(swal2);
 
-const DataKeluarga = ({ id }) => {
+const DataKeluarga = ({ id, dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
-  const [keluarga, setKeluarga] = useState([]);
+  const [keluarga, setKeluarga] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get Keluarga by Id Pegawai
-    getKeluarga(id, setKeluarga, setLoading);
-  }, [id]);
+    if (!keluarga) {
+      if (dataActive === "keluarga")
+        // Get Keluarga by Id Pegawai
+        getKeluarga(id, setKeluarga, setLoading);
+    }
+  }, [id, dataActive, keluarga]);
 
   const columns = [
     {
@@ -199,7 +202,9 @@ const DataKeluarga = ({ id }) => {
                   type="button"
                   className="ml-2"
                   color="success"
-                  onClick={() => exportExcel("laporan-pegawai/" + id + "/keluarga")}
+                  onClick={() =>
+                    exportExcel("laporan-pegawai/" + id + "/keluarga")
+                  }
                 >
                   Excel <CIcon content={cilPrint} />
                 </CButton>
@@ -207,7 +212,7 @@ const DataKeluarga = ({ id }) => {
             </div>
             <DataTable
               columns={columns}
-              data={keluarga}
+              data={keluarga || []}
               noHeader
               responsive={true}
               customStyles={customStyles}

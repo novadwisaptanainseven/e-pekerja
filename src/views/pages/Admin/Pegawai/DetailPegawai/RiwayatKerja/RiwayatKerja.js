@@ -26,20 +26,24 @@ import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportEx
 
 const MySwal = withReactContent(swal2);
 
-const DataRiwayatKerja = ({ id }) => {
+const DataRiwayatKerja = ({ id, dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get Riwayat Kerja by Id Pegawai
-    getRiwayatKerja(id, setData, setLoading);
-  }, [id]);
+    if (!data) {
+      if (dataActive === "riwayat-kerja") {
+        // Get Riwayat Kerja by Id Pegawai
+        getRiwayatKerja(id, setData, setLoading);
+      }
+    }
+  }, [id, dataActive, data]);
 
   const columns = [
     {
@@ -191,7 +195,7 @@ const DataRiwayatKerja = ({ id }) => {
             </div>
             <DataTable
               columns={columns}
-              data={data}
+              data={data || []}
               noHeader
               responsive={true}
               customStyles={customStyles}

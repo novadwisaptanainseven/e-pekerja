@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CCard,
   CCardHeader,
@@ -23,6 +23,7 @@ import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDat
 const DetailPegawai = () => {
   const { dataDiriState, dataDiriDispatch } = useContext(GlobalContext);
   const { data } = dataDiriState;
+  const [activeTab, setActiveTab] = useState("data-diri");
 
   useEffect(() => {
     if (!data) {
@@ -38,51 +39,54 @@ const DetailPegawai = () => {
           <h3>Data Kepegawaian</h3>
         </CCardHeader>
         <CCardBody>
-          <CTabs>
+          <CTabs
+            activeTab="data-diri"
+            onActiveTabChange={(tab) => setActiveTab(tab)}
+          >
             <CNav variant="tabs">
               <CNavItem>
-                <CNavLink>Data Diri</CNavLink>
+                <CNavLink data-tab="data-diri">Data Diri</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Keluarga</CNavLink>
+                <CNavLink data-tab="keluarga">Keluarga</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Pendidikan</CNavLink>
+                <CNavLink data-tab="pendidikan">Pendidikan</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Diklat / Pelatihan</CNavLink>
+                <CNavLink data-tab="diklat">Diklat / Pelatihan</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Riwayat Kerja</CNavLink>
+                <CNavLink data-tab="riwayat-kerja">Riwayat Kerja</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Penghargaan</CNavLink>
+                <CNavLink data-tab="penghargaan">Penghargaan</CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink>Berkas</CNavLink>
+                <CNavLink data-tab="berkas">Berkas</CNavLink>
               </CNavItem>
             </CNav>
             <CTabContent>
-              <CTabPane>
+              <CTabPane data-tab="data-diri">
                 <DataDiri data={data} />
               </CTabPane>
-              <CTabPane>
-                <DataKeluarga />
+              <CTabPane data-tab="keluarga">
+                <DataKeluarga dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <DataPendidikan />
+              <CTabPane data-tab="pendidikan">
+                <DataPendidikan dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <DataDiklat />
+              <CTabPane data-tab="diklat">
+                <DataDiklat dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <RiwayatKerja />
+              <CTabPane data-tab="riwayat-kerja">
+                <RiwayatKerja dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <Penghargaan />
+              <CTabPane data-tab="penghargaan">
+                <Penghargaan dataActive={activeTab} />
               </CTabPane>
-              <CTabPane>
-                <DataBerkas />
+              <CTabPane data-tab="berkas">
+                <DataBerkas dataActive={activeTab} />
               </CTabPane>
             </CTabContent>
           </CTabs>

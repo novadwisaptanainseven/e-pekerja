@@ -19,10 +19,9 @@ import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaa
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 
-const Penghargaan = () => {
-  const { penghargaanUserState, penghargaanUserDispatch } = useContext(
-    GlobalContext
-  );
+const Penghargaan = ({dataActive}) => {
+  const { penghargaanUserState, penghargaanUserDispatch } =
+    useContext(GlobalContext);
   const { data, loading } = penghargaanUserState;
   const [modalDetail, setModalDetail] = useState({
     modal: false,
@@ -34,11 +33,13 @@ const Penghargaan = () => {
   });
 
   useEffect(() => {
-    if (!data.length > 0) {
-      // Get data penghargaan
-      getPenghargaan(penghargaanUserDispatch);
+    if (!data) {
+      if (dataActive === "penghargaan") {
+        // Get data penghargaan
+        getPenghargaan(penghargaanUserDispatch);
+      }
     }
-  }, [data, penghargaanUserDispatch]);
+  }, [data, penghargaanUserDispatch, dataActive]);
 
   const columns = [
     {

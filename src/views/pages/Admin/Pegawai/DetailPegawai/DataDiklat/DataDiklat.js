@@ -27,7 +27,7 @@ import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportEx
 
 const MySwal = withReactContent(swal2);
 
-const DataDiklat = ({ id }) => {
+const DataDiklat = ({ id, dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
@@ -37,13 +37,17 @@ const DataDiklat = ({ id }) => {
     modal: false,
     image: null,
   });
-  const [diklat, setDiklat] = useState([]);
+  const [diklat, setDiklat] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Get Diklat By Id Pegawai
-    getDiklat(id, setDiklat, setLoading);
-  }, [id]);
+    if (!diklat) {
+      if (dataActive === "diklat") {
+        // Get Diklat by Id Pegawai
+        getDiklat(id, setDiklat, setLoading);
+      }
+    }
+  }, [id, dataActive, diklat]);
 
   const columns = [
     {
@@ -263,7 +267,7 @@ const DataDiklat = ({ id }) => {
             </div>
             <DataTable
               columns={columns}
-              data={diklat}
+              data={diklat || []}
               noHeader
               responsive={true}
               customStyles={customStyles}

@@ -6,14 +6,18 @@ import { getRiwayatKerja } from "src/context/actions/UserPage/DataKepegawaian/ge
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 
-const RiwayatKerja = () => {
+const RiwayatKerja = ({dataActive}) => {
   const { riwayatKerjaState, riwayatKerjaDispatch } = useContext(GlobalContext);
   const { data, loading } = riwayatKerjaState;
 
   useEffect(() => {
-    // Get data riwayat kerja
-    getRiwayatKerja(riwayatKerjaDispatch);
-  }, [riwayatKerjaDispatch]);
+    if (!data) {
+      if (dataActive === "riwayat-kerja") {
+        // Get data riwayat kerja
+        getRiwayatKerja(riwayatKerjaDispatch);
+      }
+    }
+  }, [riwayatKerjaDispatch, dataActive, data]);
 
   const columns = [
     {
