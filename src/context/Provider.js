@@ -21,6 +21,8 @@ import initStatePensiun from "./initStates/initStatePensiun";
 import penghargaanReducer from "./reducers/Penghargaan";
 import initStatePenghargaan from "./initStates/initStatePenghargaan";
 import reducer from "./reducers/reducer";
+import initStateLogin from "./initStates/initStateLogin";
+import checkLoginReducer from "./reducers/Auth/checkLoginReducer";
 
 export const GlobalContext = createContext({});
 
@@ -29,6 +31,12 @@ export const GlobalProvider = ({ children }) => {
   const [loginState, loginDispatch] = useReducer(
     loginReducer,
     initStateDefault
+  );
+
+  // Check Login
+  const [checkLoginState, checkLoginDispatch] = useReducer(
+    checkLoginReducer,
+    initStateLogin
   );
 
   // Save Current User
@@ -166,6 +174,8 @@ export const GlobalProvider = ({ children }) => {
       value={{
         loginState,
         loginDispatch,
+        checkLoginState,
+        checkLoginDispatch,
         userState,
         userDispatch,
         dashboardState,

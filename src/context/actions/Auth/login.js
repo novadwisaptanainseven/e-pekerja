@@ -16,6 +16,7 @@ export const login = (values, dispatch) => {
       localStorage.token = res.data.token;
       localStorage.level = res.data.user.level;
       localStorage.id_user = res.data.user.id;
+      localStorage.loginTimestamp = new Date().getTime();
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data.user,
