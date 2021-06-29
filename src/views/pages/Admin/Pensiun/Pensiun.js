@@ -182,7 +182,6 @@ const Pensiun = () => {
     {
       name: "Keterangan",
       selector: "keterangan",
-      sortable: true,
       wrap: true,
       width: "250px",
     },

@@ -223,6 +223,18 @@ const DetailPensiun = React.lazy(() =>
   import("./views/pages/Admin/Pensiun/DetailPensiun")
 );
 
+// Mutasi
+const Mutasi = React.lazy(() => import("./views/pages/Admin/Mutasi/Mutasi"));
+const TambahMutasi = React.lazy(() =>
+  import("./views/pages/Admin/Mutasi/TambahMutasi")
+);
+const DetailMutasi = React.lazy(() =>
+  import("./views/pages/Admin/Mutasi/DetailMutasi")
+);
+const EditMutasi = React.lazy(() =>
+  import("./views/pages/Admin/Mutasi/EditMutasi")
+);
+
 // Users
 const Users = React.lazy(() => import("./views/pages/Admin/Users/Users"));
 const TambahUser = React.lazy(() =>
@@ -644,6 +656,32 @@ const routes = [
     path: "/epekerja/admin/pensiun/detail/:id",
     name: "Detail Pensiun",
     component: DetailPensiun,
+  },
+
+  // Mutasi
+  {
+    path: "/epekerja/admin/mutasi",
+    name: "Mutasi",
+    component: Mutasi,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/mutasi/tambah",
+    name: "Tambah Mutasi",
+    component: TambahMutasi,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/mutasi/detail/:id",
+    name: "Detail Mutasi",
+    component: DetailMutasi,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/mutasi/edit/:id",
+    name: "Edit Mutasi",
+    component: EditMutasi,
+    exact: true,
   },
 
   // Users

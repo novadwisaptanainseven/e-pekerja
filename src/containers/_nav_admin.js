@@ -179,6 +179,12 @@ const _nav_admin = [
   },
   {
     _tag: "CSidebarNavItem",
+    name: "Data Mutasi",
+    to: "/epekerja/admin/mutasi",
+    icon: <CIcon content={cilGroup} customClasses="c-sidebar-nav-icon" />,
+  },
+  {
+    _tag: "CSidebarNavItem",
     name: "Data Users",
     to: "/epekerja/admin/users",
     icon: <CIcon content={cilGroup} customClasses="c-sidebar-nav-icon" />,
