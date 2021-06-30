@@ -14,16 +14,16 @@ import {
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 
-const ModalKirimWa = ({ modal, setModal, type }) => {
+const ModalKirimWa = ({ modal, setModal }) => {
   const [isiPesan, setIsiPesan] = useState("");
 
   useEffect(() => {
     if (modal.data) {
-      if (type === "pangkat-updated") {
+      if (modal.type === "pangkat-updated") {
         setIsiPesan(
           `Kepada Yth. Nova Dwi Sapta Nain Seven, pangkat Anda telah diperbarui menjadi Pembina Utama (IVa) terhitung mulai tanggal 18/11/2021. Terimakasih`
         );
-      } else if (type === "akan-naik-pangkat") {
+      } else if (modal.type === "akan-naik-pangkat") {
         setIsiPesan(
           `Kepada Yth. Nova Dwi Sapta Nain Seven, Anda akan mengalami kenaikan pangkat pada tanggal 18/11/2021. Terimakasih`
         );

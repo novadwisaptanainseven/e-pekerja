@@ -17,6 +17,8 @@ import Loading from "src/reusable/Loading";
 import ModalKenaikanPangkat from "./ModalKenaikanPangkat";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import ModalKirimWa from "./ModalKirimWa";
+import { format } from "date-fns";
 
 const MySwal = withReactContent(swal2);
 
@@ -25,7 +27,11 @@ const KenaikanPangkat = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [modalKenaikanPangkat, setModalKenaikanPangkat] = useState({
     modal: false,
-    id: null,
+    data: null,
+    type: null,
+  });
+  const [modalKirimWa, setModalKirimWa] = useState({
+    modal: false,
   });
 
   const dataDummy = [
@@ -37,7 +43,7 @@ const KenaikanPangkat = () => {
       nama: "Nova Dwi Sapta Nain Seven",
       pangkat_golongan: "Pranata (IIIa)",
       pangkat_baru: "Pembina Utama (IVa)",
-      tmt_kenaikan_pangkat: "2021-07-30",
+      tmt_kenaikan_pangkat: "2021-06-30",
     },
     {
       id: 2,
@@ -98,8 +104,13 @@ const KenaikanPangkat = () => {
       wrap: true,
       cell: (row) => {
         return (
-          <>
-            {row.pangkat_baru && row.pangkat_baru}
+          <div className="text-center">
+            {row.pangkat_baru && (
+              <span>
+                {row.pangkat_baru} <br />
+                {format(new Date(row.tmt_kenaikan_pangkat), "dd/MM/y")}
+              </span>
+            )}
             {!row.pangkat_baru && (
               <CButton
                 className="my-1"
@@ -115,7 +126,7 @@ const KenaikanPangkat = () => {
                 Tidak ada kenaikan pangkat
               </CButton>
             )}
-          </>
+          </div>
         );
       },
     },
@@ -157,6 +168,44 @@ const KenaikanPangkat = () => {
           icon: "success",
           title: "Sukses",
           text: "Kenaikan Pangkat Berhasil Dibatalkan",
+        });
+      }
+    });
+  };
+
+  const handleUpdatePangkat = (data) => {
+    let timerInterval;
+    MySwal.fire({
+      title: "Pangkat Golongan Sedang Diperbarui!",
+      html: "Loading...",
+      timer: 1000,
+      timerProgressBar: true,
+      didOpen: () => {
+        MySwal.showLoading();
+        // Update Pangkat
+        // MySwal.close();
+      },
+    }).then((result) => {
+      if (result.dismiss === MySwal.DismissReason.timer) {
+        MySwal.fire({
+          icon: "warning",
+          title: "Anda ingin mengirim notifikasi WA ?",
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonColor: "#1c9c25",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "YA",
+          cancelButtonText: "TIDAK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setModalKirimWa({
+              ...modalKirimWa,
+              modal: true,
+              data: data,
+              type: "pangkat-updated",
+            });
+            // MySwal.close();
+          }
         });
       }
     });
@@ -224,12 +273,12 @@ const KenaikanPangkat = () => {
               <CBadge color="primary">Akan Naik Pangkat</CBadge>
             )}
             {status === "naik-pangkat" && (
-              <CButton color="info">Update Pangkat</CButton>
+              <CButton color="info" onClick={() => handleUpdatePangkat(data)}>
+                Update Pangkat
+              </CButton>
             )}
             {!status && (
-              <CBadge color="danger" className="py-2">
-                Tidak ada kenaikan pangkat
-              </CBadge>
+              <CBadge color="danger">Tidak ada kenaikan pangkat</CBadge>
             )}
           </CCol>
         </CRow>
@@ -242,7 +291,22 @@ const KenaikanPangkat = () => {
             {status === "akan-naik-pangkat" && (
               <span>
                 Pegawai ini akan mengalami kenaikan pangkat menjadi{" "}
-                {data.pangkat_baru} pada tanggal {data.tmt_kenaikan_pangkat}
+                {data.pangkat_baru} pada tanggal {data.tmt_kenaikan_pangkat}{" "}
+                <br />
+                <CButton
+                  color="success"
+                  className="mt-1"
+                  onClick={() =>
+                    setModalKirimWa({
+                      ...modalKirimWa,
+                      modal: true,
+                      data: data,
+                      type: "akan-naik-pangkat",
+                    })
+                  }
+                >
+                  Notifikasi WA <CIcon content={cilSend} />
+                </CButton>
               </span>
             )}
             {status === "naik-pangkat" && (
@@ -288,6 +352,8 @@ const KenaikanPangkat = () => {
         modal={modalKenaikanPangkat}
         setModal={setModalKenaikanPangkat}
       />
+
+      <ModalKirimWa modal={modalKirimWa} setModal={setModalKirimWa} />
     </div>
   );
 };
