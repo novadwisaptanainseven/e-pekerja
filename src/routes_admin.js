@@ -160,6 +160,9 @@ const RiwayatMasaKerjaFile = React.lazy(() =>
   import("./views/pages/Admin/MasaKerja/RiwayatMasaKerjaFile")
 );
 
+// Kenaikan Pangkat
+const KenaikanPangkat = React.lazy(() => import("./views/pages/Admin/KenaikanPangkat/KenaikanPangkat"));
+
 // Kenaikan Gaji Berkala
 const KGB = React.lazy(() => import("./views/pages/Admin/KGB/KGB"));
 const DaftarKGB = React.lazy(() => import("./views/pages/Admin/KGB/DaftarKGB"));
@@ -520,6 +523,14 @@ const routes = [
     path: "/epekerja/admin/masa-kerja/riwayat",
     name: "Riwayat Pegawai Berdasarkan Masa Kerja",
     component: RiwayatMasaKerjaFile,
+    exact: true,
+  },
+
+  // Kenaikan Pangkat
+  {
+    path: "/epekerja/admin/kenaikan-pangkat",
+    name: "Kenaikan Pangkat PNS",
+    component: KenaikanPangkat,
     exact: true,
   },
 

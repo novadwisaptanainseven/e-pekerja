@@ -1,8 +1,9 @@
 import { CCard, CCardHeader, CButton, CCardBody, CBadge } from "@coreui/react";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { getImage } from "src/context/actions/DownloadFile";
+import { getMutasiById } from "src/context/actions/Mutasi/getMutasiById";
 
 const DetailMutasi = ({ match }) => {
   const params = match.params;
@@ -12,6 +13,11 @@ const DetailMutasi = ({ match }) => {
   const goBackToParent = () => {
     history.goBack();
   };
+
+  useEffect(() => {
+    // Get mutasi by id
+    getMutasiById(params.id, setData);
+  }, [params]);
 
   // Menangani Komponen Status Mutasi
   const StatusMutasi = ({ tglMutasi }) => {

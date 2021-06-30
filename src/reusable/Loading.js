@@ -4,7 +4,7 @@ import { LoadAnimationBlue } from "src/assets";
 
 const Loading = () => {
   return (
-    <CRow>
+    <CRow className="mb-3">
       <CCol className="text-center">
         <img
           className="mt-4 ml-3"

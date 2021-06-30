@@ -11,10 +11,14 @@ import {
   CButtonGroup,
 } from "@coreui/react";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
+import printMutasiPegawai from "src/context/actions/DownloadFile/printMutasiPegawai";
+import { batalkanMutasi } from "src/context/actions/Mutasi/batalkanMutasi";
+import { getMutasi } from "src/context/actions/Mutasi/getMutasi";
+import { GlobalContext } from "src/context/Provider";
 import customStyles from "src/reusable/customStyles";
 import FilterPencarianTanggal from "src/reusable/FilterPencarianTanggal";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
@@ -26,9 +30,11 @@ const MySwal = withReactContent(swal2);
 
 const Mutasi = () => {
   const history = useHistory();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { mutasiState, mutasiDispatch } = useContext(GlobalContext);
+  const { data, loading } = mutasiState;
   const [paramsFilter, setParamsFilter] = useState({
     bulan: "",
     tahun: "",
@@ -42,26 +48,12 @@ const Mutasi = () => {
     history.push(`/epekerja/admin/mutasi/detail/${id}`);
   };
 
-  const dataMutasi = [
-    {
-      id_mutasi: 1,
-      no: 1,
-      nip: "123123",
-      nama: "Nova Dwi Sapta",
-      tgl_mutasi: "2021-10-08",
-      keterangan: "Pindah ke Dinas Sosial",
-    },
-    {
-      id_mutasi: 2,
-      no: 2,
-      nip: "123123",
-      nama: "Nova Dwi Sapta",
-      tgl_mutasi: "2021-10-08",
-      keterangan: "Pindah ke Dinas Sosial",
-    },
-  ];
+  useEffect(() => {
+    // Get all mutasi
+    getMutasi(mutasiDispatch);
+  }, [mutasiDispatch]);
 
-  const filteredData = dataMutasi.filter((item) =>
+  const filteredData = data.filter((item) =>
     item.nama.toLowerCase().includes(filterText.toLowerCase())
   );
 
@@ -192,7 +184,7 @@ const Mutasi = () => {
               type="button"
               color="info"
               className="ml-2"
-              // onClick={() => printPensiunPegawai(paramsFilter)}
+              onClick={() => printMutasiPegawai(paramsFilter)}
             >
               PDF <CIcon content={cilPrint} />
             </CButton>
@@ -231,7 +223,7 @@ const Mutasi = () => {
     }).then((res) => {
       if (res.isConfirmed) {
         // Batalkan pensiun
-        // batalkanPensiun(id, pensiunDispatch);
+        batalkanMutasi(id, mutasiDispatch);
         MySwal.fire({
           icon: "success",
           title: "Sukses",
@@ -242,10 +234,16 @@ const Mutasi = () => {
   };
 
   // Handle reset filter pencarian
-  const handleResetFilter = () => {};
+  const handleResetFilter = () => {
+    getMutasi(mutasiDispatch);
+  };
 
   // Handle filter pencarian
-  const handleFilterCari = (e) => {};
+  const handleFilterCari = (e) => {
+    e.preventDefault();
+
+    getMutasi(mutasiDispatch, paramsFilter);
+  };
 
   return (
     <div>
@@ -264,7 +262,7 @@ const Mutasi = () => {
               />
             </CCol>
           </CRow>
-          {dataMutasi.length > 0 ? (
+          {data.length > 0 ? (
             <DataTable
               columns={columns}
               data={filteredData}

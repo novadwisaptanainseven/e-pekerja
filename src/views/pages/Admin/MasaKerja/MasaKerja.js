@@ -8,9 +8,11 @@ import {
   CRow,
   CCol,
   CAlert,
+  CModal,
+  CModalHeader,
+  CModalTitle,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
-import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
@@ -21,61 +23,8 @@ import { LoadAnimationBlue } from "src/assets";
 import printMasaKerja from "src/context/actions/DownloadFile/printMasaKerja";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import ModalSimpanRiwayat from "./ModalSimpanRiwayat";
-
-const TextField = styled.input`
-  height: 37px;
-  width: 200px;
-  border-radius: 3px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border: 1px solid #e5e5e5;
-  padding: 0 32px 0 16px;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const ClearButton = styled.button`
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  height: 37px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #3e5973;
-  border: none;
-  color: white;
-  padding: 0 10px;
-  transition: 0.3s;
-
-  &:hover {
-    background-color: #283c4f;
-  }
-`;
-
-// Handle filter pencarian
-
-const FilterComponent = ({ filterText, onFilter, onClear }) => (
-  <>
-    <TextField
-      id="search"
-      type="text"
-      placeholder="Cari pegawai"
-      aria-label="Search Input"
-      value={filterText}
-      onChange={onFilter}
-    />
-    <ClearButton type="button" onClick={onClear}>
-      Reset
-    </ClearButton>
-  </>
-);
+import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
+import PerbaruiMasaKerja from "./PerbaruiMasaKerja";
 
 const MasaKerja = () => {
   const history = useHistory();
@@ -85,6 +34,10 @@ const MasaKerja = () => {
   const { data, loading } = masaKerjaState;
   const [modalSimpanRiwayat, setModalSimpanRiwayat] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
+  const [modalTambah, setModalTambah] = useState({
+    modal: false,
+    id: null,
+  });
 
   useEffect(() => {
     // Get all masa kerja
@@ -146,7 +99,14 @@ const MasaKerja = () => {
             <CButton
               color="success"
               className="btn btn-sm"
-              onClick={() => goToRiwayat(row.id_pegawai)}
+              // onClick={() => goToRiwayat(row.id_pegawai)}
+              onClick={() =>
+                setModalTambah({
+                  ...modalTambah,
+                  modal: true,
+                  id: row.id_masa_kerja,
+                })
+              }
             >
               Perbarui
             </CButton>
@@ -210,9 +170,9 @@ const MasaKerja = () => {
     );
   }, [filterText, resetPaginationToggle, history]);
 
-  const goToRiwayat = (id) => {
-    history.push(`/epekerja/admin/masa-kerja/pegawai/${id}`);
-  };
+  // const goToRiwayat = (id) => {
+  //   history.push(`/epekerja/admin/masa-kerja/pegawai/${id}`);
+  // };
 
   const goToRiwayatMasaKerjaFile = () => {
     history.push(`/epekerja/admin/masa-kerja/riwayat`);
@@ -361,6 +321,25 @@ const MasaKerja = () => {
         setAlertSuccess={setAlertSuccess}
       />
       {/* End of Modal Simpan Riwayat */}
+
+      {/* Modal Perbarui Masa Kerja */}
+      <CModal
+        show={modalTambah.modal}
+        onClose={() => setModalTambah({ ...modalTambah, modal: false })}
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Perbarui Masa Kerja</CModalTitle>
+        </CModalHeader>
+
+        <PerbaruiMasaKerja
+          masaKerjaDispatch={masaKerjaDispatch}
+          modalTambah={modalTambah}
+          setModalTambah={setModalTambah}
+          id_pegawai={modalTambah.id}
+          setAlertSuccess={setAlertSuccess}
+        />
+      </CModal>
     </>
   );
 };

@@ -20,10 +20,9 @@ import {
 } from "@coreui/react";
 
 import { useHistory } from "react-router";
+import { insertRiwayatMasaKerja } from "src/context/actions/MasaKerja/insertRiwayatMasaKerja";
+import { getRiwayatMasaKerjaTerbaru } from "src/context/actions/MasaKerja/getRiwayatMasaKerjaTerbaru";
 import { splitMasaKerja } from "./functions";
-import { getMasaKerjaById } from "src/context/actions/MasaKerja/getMasaKerjaById";
-import { editMasaKerja } from "src/context/actions/MasaKerja/editMasaKerja";
-import { getMasaKerja } from "src/context/actions/MasaKerja/getMasaKerja";
 
 const MySwal = withReactContent(swal2);
 
@@ -31,7 +30,7 @@ const PerbaruiMasaKerja = ({
   modalTambah,
   setModalTambah,
   id_pegawai,
-  masaKerjaDispatch,
+  setAlertSuccess,
 }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
@@ -39,12 +38,9 @@ const PerbaruiMasaKerja = ({
 
   // Get Riwayat Terakhir Masa Kerja
   useEffect(() => {
-    console.log(id_pegawai);
-    if (id_pegawai && modalTambah.modal) {
-      getMasaKerjaById(id_pegawai, setData);
+    if (id_pegawai && modalTambah) {
+      getRiwayatMasaKerjaTerbaru(id_pegawai, setData);
     }
-
-    return () => setData("");
   }, [id_pegawai, modalTambah]);
 
   // Inisialisasi State Formik
@@ -67,9 +63,8 @@ const PerbaruiMasaKerja = ({
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      getMasaKerja(masaKerjaDispatch);
-      setModalTambah({ ...modalTambah, modal: false, id: null });
-      history.push(`/epekerja/admin/masa-kerja`);
+      setModalTambah(!modalTambah);
+      history.push(`/epekerja/admin/masa-kerja/pegawai/${id_pegawai}`);
     });
   };
 
@@ -103,30 +98,35 @@ const PerbaruiMasaKerja = ({
 
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
+    const formData = new FormData();
     const mkGolongan = `${values.mk_golongan_tahun} Tahun ${values.mk_golongan_bulan} Bulan`;
     const mkJabatan = `${values.mk_jabatan_tahun} Tahun ${values.mk_jabatan_bulan} Bulan`;
     const mkCpns = `${values.mk_cpns_tahun} Tahun ${values.mk_cpns_bulan} Bulan`;
     const mkSeluruhnya = `${values.mk_seluruhnya_tahun} Tahun ${values.mk_seluruhnya_bulan} Bulan`;
 
-    const newVal = {
-      mk_golongan: mkGolongan,
-      mk_jabatan: mkJabatan,
-      mk_sebelum_cpns: mkCpns,
-      mk_seluruhnya: mkSeluruhnya,
-    };
+    formData.append("mk_golongan", mkGolongan);
+    formData.append("mk_jabatan", mkJabatan);
+    formData.append("mk_cpns", mkCpns);
+    formData.append("mk_seluruhnya", mkSeluruhnya);
 
-    editMasaKerja(
+    for (var pair of formData.entries()) {
+      console.log(pair);
+    }
+
+    // Memanggil method Insert Pembaruan SK untuk menambah data SK ke database
+    insertRiwayatMasaKerja(
       id_pegawai,
-      newVal,
+      formData,
       setLoading,
       showAlertSuccess,
-      showAlertError
+      showAlertError,
+      setAlertSuccess
     );
   };
 
   return (
     <>
-      {data ? (
+      {true ? (
         <Formik
           initialValues={initState}
           validationSchema={validationSchema}
@@ -374,9 +374,7 @@ const PerbaruiMasaKerja = ({
                 <CButton
                   type="button"
                   color="secondary"
-                  onClick={() =>
-                    setModalTambah({ ...modalTambah, modal: false })
-                  }
+                  onClick={() => setModalTambah(!modalTambah)}
                 >
                   Batal
                 </CButton>

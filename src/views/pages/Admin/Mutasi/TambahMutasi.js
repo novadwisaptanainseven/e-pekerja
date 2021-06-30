@@ -19,6 +19,7 @@ import { Formik } from "formik";
 import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
 import Select from "react-select";
 import LoadingSubmit from "src/reusable/LoadingSubmit";
+import { insertMutasi } from "src/context/actions/Mutasi/insertMutasi";
 
 const MySwal = withReactContent(swal2);
 
@@ -67,7 +68,7 @@ const TambahMutasi = () => {
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      history.push("/epekerja/admin/pensiun");
+      history.push("/epekerja/admin/mutasi");
     });
   };
 
@@ -105,6 +106,9 @@ const TambahMutasi = () => {
     for (let pair of formData.entries()) {
       console.log(pair);
     }
+
+    // Tambah data mutasi
+    insertMutasi(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
   // Custom Styling for React Select

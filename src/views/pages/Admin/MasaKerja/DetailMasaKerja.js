@@ -22,9 +22,9 @@ const DetailMasaKerja = ({ match }) => {
     history.goBack();
   };
 
-  const goToEdit = (id) => {
-    history.push(`/epekerja/admin/masa-kerja-edit/${id}`);
-  };
+  // const goToEdit = (id) => {
+  //   history.push(`/epekerja/admin/masa-kerja-edit/${id}`);
+  // };
 
   useEffect(() => {
     // Get Masa Kerja by Id
@@ -54,14 +54,14 @@ const DetailMasaKerja = ({ match }) => {
             <div className="my-3">
               <CRow>
                 <CCol md="8">
-                  <CButton
+                  {/* <CButton
                     className="mb-2"
                     type="button"
                     color="success"
                     onClick={() => goToEdit(params.id)}
                   >
                     Perbarui Masa Kerja
-                  </CButton>
+                  </CButton> */}
                   <table className="table table-sm table-bordered">
                     <tbody>
                       <tr>

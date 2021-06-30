@@ -24,7 +24,7 @@ const Dashboard = () => {
   return (
     <>
       <CRow>
-        <CCol xs="12" sm="6" lg="4">
+        <CCol xs="12" sm="6" lg="3">
           <CWidgetIcon
             text="Total Pegawai"
             header={data ? `${data.total_pegawai}` : "..."}
@@ -34,7 +34,7 @@ const Dashboard = () => {
             <CIcon width={24} name="cil-user" />
           </CWidgetIcon>
         </CCol>
-        <CCol xs="12" sm="6" lg="4">
+        <CCol xs="12" sm="6" lg="3">
           <CWidgetIcon
             text="Pegawai Cuti"
             header={data ? `${data.total_cuti}` : "..."}
@@ -44,10 +44,20 @@ const Dashboard = () => {
             <CIcon width={24} name="cil-user" />
           </CWidgetIcon>
         </CCol>
-        <CCol xs="12" sm="6" lg="4">
+        <CCol xs="12" sm="6" lg="3">
           <CWidgetIcon
-            text="Total Pengguna"
-            header={data ? `${data.total_users}` : "..."}
+            text="Pegawai Pensiun"
+            header={data ? `${data.total_pensiun}` : "..."}
+            color="warning"
+            iconPadding={false}
+          >
+            <CIcon width={24} name="cil-user" />
+          </CWidgetIcon>
+        </CCol>
+        <CCol xs="12" sm="6" lg="3">
+          <CWidgetIcon
+            text="Pegawai Mutasi"
+            header={data ? `${data.total_mutasi}` : "..."}
             color="success"
             iconPadding={false}
           >

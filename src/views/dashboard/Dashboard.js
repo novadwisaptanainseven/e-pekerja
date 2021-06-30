@@ -1,4 +1,4 @@
-import React, { useContext, useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import { CCol, CRow, CWidgetIcon } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
@@ -30,7 +30,7 @@ const Dashboard = () => {
           <img
             className="img-thumbnail mb-4"
             width={400}
-            src={data ? getImage(data.foto_profil) : ""}
+            src={dataDashboard ? getImage(dataDashboard.foto_pegawai) : ""}
             alt="foto-pegawai"
           />
         </CCol>

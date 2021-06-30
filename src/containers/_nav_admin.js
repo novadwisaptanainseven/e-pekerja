@@ -8,6 +8,7 @@ import {
   cilEnvelopeClosed,
   cilStar,
   cilUser,
+  cilBadge,
 } from "@coreui/icons";
 
 const _nav_admin = [
@@ -122,6 +123,12 @@ const _nav_admin = [
     name: "Masa Kerja Pegawai",
     to: "/epekerja/admin/masa-kerja",
     icon: <CIcon content={cilAvTimer} customClasses="c-sidebar-nav-icon" />,
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Kenaikan Pangkat PNS",
+    to: "/epekerja/admin/kenaikan-pangkat",
+    icon: <CIcon content={cilBadge} customClasses="c-sidebar-nav-icon" />,
   },
   {
     _tag: "CSidebarNavItem",

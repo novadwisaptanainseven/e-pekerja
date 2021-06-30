@@ -14,54 +14,20 @@ import {
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 
-const ModalKirimWa = ({ modal, setModal }) => {
+const ModalKirimWa = ({ modal, setModal, type }) => {
   const [isiPesan, setIsiPesan] = useState("");
 
   useEffect(() => {
-    let strIsiPesan = "";
     if (modal.data) {
-      if (modal.data.status_kgb === "akan-naik-gaji") {
-        strIsiPesan = `Kepada Yth. ${
-          modal.data.nama
-        }, akan mengalami kenaikan gaji sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
-          "id",
-          {
-            style: "currency",
-            currency: "IDR",
-          }
-        )} pada tanggal ${format(
-          new Date(modal.data.kenaikan_gaji_yad),
-          "dd/MM/y"
-        )}. Terimakasih`;
-      } else if (modal.data.status_kgb === "sedang-berjalan") {
-        strIsiPesan = `Kepada Yth. ${
-          modal.data.nama
-        }, gaji Anda telah diperbarui sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
-          "id",
-          {
-            style: "currency",
-            currency: "IDR",
-          }
-        )} pada tanggal ${format(
-          new Date(modal.data.tmt_kenaikan_gaji),
-          "dd/MM/y"
-        )}. Terimakasih`;
-      } else if (modal.data.status_kgb === "akan-naik-gaji-2") {
-        strIsiPesan = `Kepada Yth. ${
-          modal.data.nama
-        }, dalam waktu dekat Anda akan mengalami kenaikan gaji sebesar ${modal.data.gaji_pokok_baru.toLocaleString(
-          "id",
-          {
-            style: "currency",
-            currency: "IDR",
-          }
-        )} pada tanggal ${format(
-          new Date(modal.data.kenaikan_gaji_yad),
-          "dd/MM/y"
-        )}. Terimakasih`;
+      if (type === "pangkat-updated") {
+        setIsiPesan(
+          `Kepada Yth. Nova Dwi Sapta Nain Seven, pangkat Anda telah diperbarui menjadi Pembina Utama (IVa) terhitung mulai tanggal 18/11/2021. Terimakasih`
+        );
+      } else if (type === "akan-naik-pangkat") {
+        setIsiPesan(
+          `Kepada Yth. Nova Dwi Sapta Nain Seven, Anda akan mengalami kenaikan pangkat pada tanggal 18/11/2021. Terimakasih`
+        );
       }
-
-      setIsiPesan(strIsiPesan);
     }
 
     return () => setIsiPesan("");

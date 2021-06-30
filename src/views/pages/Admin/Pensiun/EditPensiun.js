@@ -138,39 +138,19 @@ const EditPensiun = ({ match }) => {
             }) => (
               <CForm onSubmit={handleSubmit}>
                 <CCardBody>
-                  {/* <CFormGroup row>
-                  <CCol md="2">
-                    <CLabel>Nama Pegawai</CLabel>
-                  </CCol>
-                  <CCol>
-                    <Select
-                      styles={customStyles}
-                      name="id_pegawai"
-                      id="id_pegawai"
-                      onChange={(opt) => {
-                        setTouchedSelect(false);
-                        setFieldValue("id_pegawai", opt ? opt.value : "");
-                      }}
-                      onFocus={() => setTouchedSelect(true)}
-                      placeholder="-- Pilih Pegawai --"
-                      isSearchable
-                      isClearable
-                      options={optionsData}
-                      defaultValue={{
-                        value: pensiun ? pensiun.id_pegawai : "",
-                        label: pensiun ? pensiun.nama : "",
-                      }}
-                    />
-                    {!values.id_pegawai && touchedSelect && (
-                      <div
-                        className="text-danger mt-1"
-                        style={{ fontSize: "0.8em" }}
-                      >
-                        Nama penerima harus diisi
-                      </div>
-                    )}
-                  </CCol>
-                </CFormGroup> */}
+                  <CFormGroup row>
+                    <CCol md="2">
+                      <CLabel>Nama Pegawai</CLabel>
+                    </CCol>
+                    <CCol>
+                      <CInput
+                        type="text"
+                        name="nama"
+                        value={pensiun.nama}
+                        readOnly
+                      />
+                    </CCol>
+                  </CFormGroup>
 
                   <CFormGroup row>
                     <CCol md="2">
