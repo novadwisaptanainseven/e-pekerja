@@ -9,7 +9,7 @@ import {
   CRow,
   CCol,
 } from "@coreui/react";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import customStyles from "src/reusable/customStyles";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
@@ -19,12 +19,18 @@ import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import ModalKirimWa from "./ModalKirimWa";
 import { format } from "date-fns";
+import { GlobalContext } from "src/context/Provider";
+import { getKenaikanPangkat } from "src/context/actions/KenaikanPangkat/getKenaikanPangkat";
+import { batalkanKenaikanPangkat } from "src/context/actions/KenaikanPangkat/batalkanKenaikanPangkat";
 
 const MySwal = withReactContent(swal2);
 
 const KenaikanPangkat = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const { kenaikanPangkatState, kenaikanPangkatDispatch } =
+    useContext(GlobalContext);
+  const { data, loading } = kenaikanPangkatState;
   const [modalKenaikanPangkat, setModalKenaikanPangkat] = useState({
     modal: false,
     data: null,
@@ -34,40 +40,44 @@ const KenaikanPangkat = () => {
     modal: false,
   });
 
-  const dataDummy = [
-    {
-      id: 1,
-      no: 1,
-      id_pegawai: 1,
-      nip: "199727",
-      nama: "Nova Dwi Sapta Nain Seven",
-      pangkat_golongan: "Pranata (IIIa)",
-      pangkat_baru: "Pembina Utama (IVa)",
-      tmt_kenaikan_pangkat: "2021-06-30",
-    },
-    {
-      id: 2,
-      no: 2,
-      id_pegawai: 2,
-      nip: "199727",
-      nama: "Muhammad Firdaus",
-      pangkat_golongan: "Pembina Utama (VIa)",
-      pangkat_baru: "Pembina Utama (VIa)",
-      tmt_kenaikan_pangkat: "2021-08-10",
-    },
-    {
-      id: 3,
-      no: 3,
-      id_pegawai: 3,
-      nip: "199727",
-      nama: "Ronaldo",
-      pangkat_golongan: "Pembina Utama (VIa)",
-      pangkat_baru: "",
-      tmt_kenaikan_pangkat: "",
-    },
-  ];
+  useEffect(() => {
+    getKenaikanPangkat(kenaikanPangkatDispatch);
+  }, [kenaikanPangkatDispatch]);
 
-  const filteredData = dataDummy.filter(
+  // const dataDummy = [
+  //   {
+  //     id: 1,
+  //     no: 1,
+  //     id_pegawai: 1,
+  //     nip: "199727",
+  //     nama: "Nova Dwi Sapta Nain Seven",
+  //     pangkat_golongan: "Pranata (IIIa)",
+  //     pangkat_baru: "Pembina Utama (IVa)",
+  //     tmt_kenaikan_pangkat: "2021-06-30",
+  //   },
+  //   {
+  //     id: 2,
+  //     no: 2,
+  //     id_pegawai: 2,
+  //     nip: "199727",
+  //     nama: "Muhammad Firdaus",
+  //     pangkat_golongan: "Pembina Utama (VIa)",
+  //     pangkat_baru: "Pembina Utama (VIa)",
+  //     tmt_kenaikan_pangkat: "2021-08-10",
+  //   },
+  //   {
+  //     id: 3,
+  //     no: 3,
+  //     id_pegawai: 3,
+  //     nip: "199727",
+  //     nama: "Ronaldo",
+  //     pangkat_golongan: "Pembina Utama (VIa)",
+  //     pangkat_baru: "",
+  //     tmt_kenaikan_pangkat: "",
+  //   },
+  // ];
+
+  const filteredData = data.filter(
     (item) =>
       item.nip.toLowerCase().includes(filterText.toLowerCase()) ||
       item.nama.toLowerCase().includes(filterText.toLowerCase())
@@ -95,8 +105,14 @@ const KenaikanPangkat = () => {
     },
     {
       name: "Pangkat / Gol",
-      selector: "pangkat_golongan",
       wrap: true,
+      cell: (row) => {
+        return (
+          <span>
+            {row.keterangan} ({row.golongan})
+          </span>
+        );
+      },
     },
     {
       name: "Kenaikan Pangkat",
@@ -163,7 +179,7 @@ const KenaikanPangkat = () => {
     }).then((res) => {
       if (res.isConfirmed) {
         // Batalkan kenaikan pangkat
-        // batalkanPensiun(id, pensiunDispatch);
+        batalkanKenaikanPangkat(id, kenaikanPangkatDispatch);
         MySwal.fire({
           icon: "success",
           title: "Sukses",
@@ -325,7 +341,7 @@ const KenaikanPangkat = () => {
           <h3>Kenaikan Pangkat PNS</h3>
         </CCardHeader>
         <CCardBody>
-          {dataDummy.length > 0 ? (
+          {data.length > 0 ? (
             <DataTable
               columns={columns}
               data={filteredData}

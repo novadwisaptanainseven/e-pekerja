@@ -135,6 +135,12 @@ export const GlobalProvider = ({ children }) => {
     initState
   );
 
+  // Kenaikan Pangkat
+  const [kenaikanPangkatState, kenaikanPangkatDispatch] = useReducer(
+    pensiunReducer,
+    initState
+  );
+
   // Penghargaan
   const [penghargaanState, penghargaanDispatch] = useReducer(
     penghargaanReducer,
@@ -220,6 +226,8 @@ export const GlobalProvider = ({ children }) => {
         pensiunDispatch,
         mutasiState,
         mutasiDispatch,
+        kenaikanPangkatState,
+        kenaikanPangkatDispatch,
         penghargaanState,
         penghargaanDispatch,
         usersState,
