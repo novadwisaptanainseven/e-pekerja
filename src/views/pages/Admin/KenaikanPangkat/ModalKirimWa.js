@@ -19,13 +19,26 @@ const ModalKirimWa = ({ modal, setModal }) => {
 
   useEffect(() => {
     if (modal.data) {
+      console.log(modal.data);
       if (modal.type === "pangkat-updated") {
         setIsiPesan(
-          `Kepada Yth. Nova Dwi Sapta Nain Seven, pangkat Anda telah diperbarui menjadi Pembina Utama (IVa) terhitung mulai tanggal 18/11/2021. Terimakasih`
+          `Kepada Yth. ${
+            modal.data.nama
+          }, pangkat Anda telah diperbarui menjadi ${
+            modal.data.pangkat_baru
+          } terhitung mulai tanggal ${format(
+            new Date(modal.data.tmt_kenaikan_pangkat),
+            "dd/MM/y"
+          )}. Terimakasih`
         );
       } else if (modal.type === "akan-naik-pangkat") {
         setIsiPesan(
-          `Kepada Yth. Nova Dwi Sapta Nain Seven, Anda akan mengalami kenaikan pangkat pada tanggal 18/11/2021. Terimakasih`
+          `Kepada Yth. ${
+            modal.data.nama
+          }, Anda akan mengalami kenaikan pangkat pada tanggal ${format(
+            new Date(modal.data.tmt_kenaikan_pangkat),
+            "dd/MM/y"
+          )}. Terimakasih`
         );
       }
     }

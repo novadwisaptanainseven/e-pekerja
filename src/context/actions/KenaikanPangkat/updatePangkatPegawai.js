@@ -1,23 +1,14 @@
 import axiosInstance from "src/helpers/axios";
+import { getKenaikanPangkat } from "./getKenaikanPangkat";
 
-export const updatePangkatPegawai = (
-  id,
-  values,
-  setLoading,
-  showAlertSuccess,
-  showAlertError
-) => {
-  setLoading(true);
-
+export const updatePangkatPegawai = (id, dispatch) => {
   axiosInstance
-    .put(`admin/kenaikan-pangkat-update/${id}`, values)
+    .put(`admin/kenaikan-pangkat-update/${id}`)
     .then((res) => {
       console.log(res.data);
-      setLoading(false);
-      showAlertSuccess();
+      getKenaikanPangkat(dispatch);
     })
     .catch((err) => {
       console.log(err.response.data);
-      showAlertError(err.response.data.errors);
     });
 };

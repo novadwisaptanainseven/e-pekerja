@@ -12,17 +12,16 @@ import {
 } from "@coreui/react";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 import { getSelectGolongan } from "src/context/actions/MasterData/PangkatGolongan/getSelectGolongan";
 import LoadingSubmit from "src/reusable/LoadingSubmit";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
+import { insertKenaikanPangkat } from "src/context/actions/KenaikanPangkat/insertKenaikanPangkat";
 
 const MySwal = withReactContent(swal2);
 
-const ModalKenaikanPangkat = ({ modal, setModal }) => {
-  const history = useHistory();
+const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
   const [loading, setLoading] = useState(false);
   const [pangkat, setPangkat] = useState([]);
 
@@ -47,7 +46,8 @@ const ModalKenaikanPangkat = ({ modal, setModal }) => {
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      history.push("/epekerja/admin/kenaikan-pangkat");
+      // history.push("/epekerja/admin/kenaikan-pangkat");
+      setModal({ ...modal, modal: false });
     });
   };
 
@@ -80,16 +80,26 @@ const ModalKenaikanPangkat = ({ modal, setModal }) => {
   const handleFormSubmit = (values) => {
     const formData = new FormData();
     const arrPangkatBaru = values.pangkat_baru.split("-");
+    const idPangkatBaru = arrPangkatBaru[0];
+    const strPangkatBaru = arrPangkatBaru[1];
 
-    formData.append("pangkat_baru", values.pangkat_baru);
+    formData.append("id_golongan", idPangkatBaru);
+    formData.append("pangkat_baru", strPangkatBaru);
     formData.append("tmt_kenaikan_pangkat", values.tmt_kenaikan_pangkat);
 
     for (var pair of formData.entries()) {
       console.log(pair);
     }
 
-    // Tambah data pensiun
-    // insertPensiun(formData, setLoading, showAlertSuccess, showAlertError);
+    // Tambah data kenaikan pangkat
+    insertKenaikanPangkat(
+      modal.id,
+      formData,
+      setLoading,
+      showAlertSuccess,
+      showAlertError,
+      dispatch
+    );
   };
 
   return (

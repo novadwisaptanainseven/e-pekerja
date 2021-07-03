@@ -1,11 +1,13 @@
 import axiosInstance from "src/helpers/axios";
+import { getKenaikanPangkat } from "./getKenaikanPangkat";
 
 export const insertKenaikanPangkat = (
   id,
   values,
   setLoading,
   showAlertSuccess,
-  showAlertError
+  showAlertError,
+  dispatch
 ) => {
   setLoading(true);
 
@@ -19,6 +21,7 @@ export const insertKenaikanPangkat = (
       console.log(res.data);
       setLoading(false);
       showAlertSuccess();
+      getKenaikanPangkat(dispatch);
     })
     .catch((err) => {
       console.log(err.response.data);

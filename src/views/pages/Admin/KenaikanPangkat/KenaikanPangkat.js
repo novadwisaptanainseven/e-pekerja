@@ -22,6 +22,9 @@ import { format } from "date-fns";
 import { GlobalContext } from "src/context/Provider";
 import { getKenaikanPangkat } from "src/context/actions/KenaikanPangkat/getKenaikanPangkat";
 import { batalkanKenaikanPangkat } from "src/context/actions/KenaikanPangkat/batalkanKenaikanPangkat";
+import { updatePangkatPegawai } from "src/context/actions/KenaikanPangkat/updatePangkatPegawai";
+import printKenaikanPangkat from "src/context/actions/DownloadFile/printKenaikanPangkat";
+import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 
 const MySwal = withReactContent(swal2);
 
@@ -43,39 +46,6 @@ const KenaikanPangkat = () => {
   useEffect(() => {
     getKenaikanPangkat(kenaikanPangkatDispatch);
   }, [kenaikanPangkatDispatch]);
-
-  // const dataDummy = [
-  //   {
-  //     id: 1,
-  //     no: 1,
-  //     id_pegawai: 1,
-  //     nip: "199727",
-  //     nama: "Nova Dwi Sapta Nain Seven",
-  //     pangkat_golongan: "Pranata (IIIa)",
-  //     pangkat_baru: "Pembina Utama (IVa)",
-  //     tmt_kenaikan_pangkat: "2021-06-30",
-  //   },
-  //   {
-  //     id: 2,
-  //     no: 2,
-  //     id_pegawai: 2,
-  //     nip: "199727",
-  //     nama: "Muhammad Firdaus",
-  //     pangkat_golongan: "Pembina Utama (VIa)",
-  //     pangkat_baru: "Pembina Utama (VIa)",
-  //     tmt_kenaikan_pangkat: "2021-08-10",
-  //   },
-  //   {
-  //     id: 3,
-  //     no: 3,
-  //     id_pegawai: 3,
-  //     nip: "199727",
-  //     nama: "Ronaldo",
-  //     pangkat_golongan: "Pembina Utama (VIa)",
-  //     pangkat_baru: "",
-  //     tmt_kenaikan_pangkat: "",
-  //   },
-  // ];
 
   const filteredData = data.filter(
     (item) =>
@@ -190,7 +160,6 @@ const KenaikanPangkat = () => {
   };
 
   const handleUpdatePangkat = (data) => {
-    let timerInterval;
     MySwal.fire({
       title: "Pangkat Golongan Sedang Diperbarui!",
       html: "Loading...",
@@ -199,6 +168,7 @@ const KenaikanPangkat = () => {
       didOpen: () => {
         MySwal.showLoading();
         // Update Pangkat
+        updatePangkatPegawai(data.id, kenaikanPangkatDispatch);
         // MySwal.close();
       },
     }).then((result) => {
@@ -246,7 +216,7 @@ const KenaikanPangkat = () => {
           type="button"
           color="info"
           className="ml-2"
-          // onClick={() => printKGBPegawai(params.id)}
+          onClick={() => printKenaikanPangkat()}
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -254,7 +224,7 @@ const KenaikanPangkat = () => {
           type="button"
           color="success"
           className="ml-2"
-          // onClick={() => exportExcel(`kgb-pegawai/` + params.id)}
+          onClick={() => exportExcel(`kenaikan-pangkat`)}
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
@@ -307,8 +277,8 @@ const KenaikanPangkat = () => {
             {status === "akan-naik-pangkat" && (
               <span>
                 Pegawai ini akan mengalami kenaikan pangkat menjadi{" "}
-                {data.pangkat_baru} pada tanggal {data.tmt_kenaikan_pangkat}{" "}
-                <br />
+                {data.pangkat_baru} pada tanggal{" "}
+                {format(new Date(data.tmt_kenaikan_pangkat), "dd/MM/y")} <br />
                 <CButton
                   color="success"
                   className="mt-1"
@@ -357,8 +327,17 @@ const KenaikanPangkat = () => {
               expandableRowsComponent={<ExpandableComponent />}
               highlightOnHover
             />
-          ) : (
+          ) : loading ? (
             <Loading />
+          ) : (
+            // Jika data kosong
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
           )}
         </CCardBody>
       </CCard>
@@ -367,6 +346,7 @@ const KenaikanPangkat = () => {
       <ModalKenaikanPangkat
         modal={modalKenaikanPangkat}
         setModal={setModalKenaikanPangkat}
+        dispatch={kenaikanPangkatDispatch}
       />
 
       <ModalKirimWa modal={modalKirimWa} setModal={setModalKirimWa} />
