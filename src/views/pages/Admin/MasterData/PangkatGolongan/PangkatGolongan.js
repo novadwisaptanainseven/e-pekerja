@@ -1,5 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { CCard, CCardHeader, CCardBody, CButton, CRow, CCol } from "@coreui/react";
+import {
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+  CRow,
+  CCol,
+} from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import swal2 from "sweetalert2";
@@ -14,7 +21,7 @@ const MySwal = withReactContent(swal2);
 const PangkatGolongan = () => {
   const history = useHistory();
   const { golonganState, golonganDispatch } = useContext(GlobalContext);
-  const { data } = golonganState;
+  const { data, loading } = golonganState;
 
   useEffect(() => {
     // Get data golongan
@@ -125,7 +132,7 @@ const PangkatGolongan = () => {
               responsive={true}
               customStyles={customStyles}
             />
-          ) : (
+          ) : loading ? (
             <>
               <div>
                 <CRow>
@@ -140,6 +147,13 @@ const PangkatGolongan = () => {
                 </CRow>
               </div>
             </>
+          ) : (
+            <DataTable
+              columns={columns}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
           )}
         </CCardBody>
       </CCard>

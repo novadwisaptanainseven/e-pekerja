@@ -20,10 +20,9 @@ const MySwal = withReactContent(swal2);
 
 const StatusPegawai = () => {
   const history = useHistory();
-  const { statusPegawaiState, statusPegawaiDispatch } = useContext(
-    GlobalContext
-  );
-  const { data } = statusPegawaiState;
+  const { statusPegawaiState, statusPegawaiDispatch } =
+    useContext(GlobalContext);
+  const { data, loading } = statusPegawaiState;
 
   useEffect(() => {
     getStatusPegawai(statusPegawaiDispatch);
@@ -131,7 +130,7 @@ const StatusPegawai = () => {
               responsive={true}
               customStyles={customStyles}
             />
-          ) : (
+          ) : loading ? (
             <>
               <div>
                 <CRow>
@@ -146,6 +145,13 @@ const StatusPegawai = () => {
                 </CRow>
               </div>
             </>
+          ) : (
+            <DataTable
+              columns={columns}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
           )}
         </CCardBody>
       </CCard>

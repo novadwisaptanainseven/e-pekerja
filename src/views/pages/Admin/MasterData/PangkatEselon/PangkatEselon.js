@@ -1,5 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { CCard, CCardHeader, CCardBody, CButton, CRow, CCol } from "@coreui/react";
+import {
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+  CRow,
+  CCol,
+} from "@coreui/react";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import swal2 from "sweetalert2";
@@ -13,7 +20,7 @@ const MySwal = withReactContent(swal2);
 const PangkatEselon = () => {
   const history = useHistory();
   const { eselonState, eselonDispatch } = useContext(GlobalContext);
-  const { data } = eselonState;
+  const { data, loading } = eselonState;
 
   useEffect(() => {
     // Get data eselon
@@ -122,7 +129,7 @@ const PangkatEselon = () => {
               responsive={true}
               customStyles={customStyles}
             />
-          ) : (
+          ) : loading ? (
             <>
               <div>
                 <CRow>
@@ -137,6 +144,13 @@ const PangkatEselon = () => {
                 </CRow>
               </div>
             </>
+          ) : (
+            <DataTable
+              columns={columns}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
           )}
         </CCardBody>
       </CCard>

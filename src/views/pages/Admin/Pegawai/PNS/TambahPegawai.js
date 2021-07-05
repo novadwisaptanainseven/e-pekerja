@@ -232,7 +232,7 @@ const TambahPegawai = () => {
     tmt_jabatan: Yup.string().required("TMT. Jabatan harus diisi!"),
     no_hp: Yup.string().required("No. HP harus diisi!"),
     email: Yup.string()
-      .email("Email tidak valid")
+      // .email("Email tidak valid")
       .required("No. HP harus diisi!"),
     no_ktp: Yup.string().required("No. KTP harus diisi!"),
     gaji_pokok: Yup.number()
@@ -240,16 +240,19 @@ const TambahPegawai = () => {
       .integer("Gaji pokok harus berupa bilangan")
       .required("Gaji pokok harus diisi!"),
     foto: Yup.mixed()
-      .required("Foto belum dipilih")
-      .test(
-        "size",
-        "Kapasitas file maksimal 2 mb",
-        (value) => value && value.size <= FOTO_PEGAWAI_SIZE
-      )
+      // .required("Foto belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) return value && value.size <= FOTO_PEGAWAI_SIZE;
+        else return true;
+      })
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, dan png",
-        (value) => value && FOTO_PEGAWAI_SUPPORTED_FORMATS.includes(value.type)
+        (value) => {
+          if (value)
+            return value && FOTO_PEGAWAI_SUPPORTED_FORMATS.includes(value.type);
+          else return true;
+        }
       ),
     mk_jabatan_tahun: Yup.string().required("Tahun harus diisi!"),
     mk_jabatan_bulan: Yup.string().required("Bulan harus diisi!"),
@@ -265,16 +268,19 @@ const TambahPegawai = () => {
     jenjang: Yup.string().required("Jenjang harus diisi!"),
     no_ijazah: Yup.string().required("No. ijazah harus diisi!"),
     foto_ijazah: Yup.mixed()
-      .required("Ijazah belum dipilih")
-      .test(
-        "size",
-        "Kapasitas file maksimal 2 mb",
-        (value) => value && value.size <= FILE_IJAZAH_SIZE
-      )
+      // .required("Ijazah belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) return value && value.size <= FILE_IJAZAH_SIZE;
+        else return true;
+      })
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, png, dan pdf",
-        (value) => value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type)
+        (value) => {
+          if (value)
+            return value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type);
+          else return true;
+        }
       ),
   });
 
@@ -287,46 +293,50 @@ const TambahPegawai = () => {
     const mk_sebelum_cpns = `${values.mk_sebelum_cpns_tahun} Tahun ${values.mk_sebelum_cpns_bulan} Bulan`;
     const mk_seluruhnya = `${values.mk_seluruhnya_tahun} Tahun ${values.mk_seluruhnya_bulan} Bulan`;
 
-    for (const item in values) {
-      formData.append(item, values[item]);
+    // for (const item in values) {
+    //   formData.append(item, values[item]);
+    // }
+    // formData.append("mk_golongan", mk_golongan);
+    // formData.append("mk_jabatan", mk_jabatan);
+    // formData.append("mk_sebelum_cpns", mk_sebelum_cpns);
+    // formData.append("mk_seluruhnya", mk_seluruhnya);
+
+    formData.append("nip", values.nip);
+    formData.append("nama", values.nama);
+    formData.append("id_jabatan", values.id_jabatan);
+    formData.append("id_bidang", values.id_bidang);
+    formData.append("id_golongan", values.id_golongan);
+    formData.append("id_eselon", values.id_eselon);
+    formData.append("id_agama", values.id_agama);
+    formData.append("tempat_lahir", values.tempat_lahir);
+    formData.append("tgl_lahir", values.tgl_lahir);
+    formData.append("alamat", values.alamat);
+    formData.append("jenis_kelamin", values.jenis_kelamin);
+    formData.append("karpeg", values.karpeg);
+    formData.append("bpjs", values.bpjs);
+    formData.append("npwp", values.npwp);
+    formData.append("tmt_golongan", values.tmt_golongan);
+    formData.append("tmt_cpns", values.tmt_cpns);
+    formData.append("tmt_jabatan", values.tmt_jabatan);
+    formData.append("no_hp", values.no_hp);
+    formData.append("email", values.email);
+    formData.append("no_ktp", values.no_ktp);
+    formData.append("gaji_pokok", values.gaji_pokok);
+    if (values.foto) {
+      formData.append("foto", values.foto);
     }
-    formData.append("mk_golongan", mk_golongan);
     formData.append("mk_jabatan", mk_jabatan);
     formData.append("mk_sebelum_cpns", mk_sebelum_cpns);
+    formData.append("mk_golongan", mk_golongan);
     formData.append("mk_seluruhnya", mk_seluruhnya);
-
-    // formData.append("nip", values.nip);
-    // formData.append("nama", values.nama);
-    // formData.append("id_jabatan", values.id_jabatan);
-    // formData.append("id_bidang", values.id_bidang);
-    // formData.append("id_golongan", values.id_golongan);
-    // formData.append("id_eselon", values.id_eselon);
-    // formData.append("id_agama", values.id_agama);
-    // formData.append("tempat_lahir", values.tempat_lahir);
-    // formData.append("tgl_lahir", values.tgl_lahir);
-    // formData.append("alamat", values.alamat);
-    // formData.append("jenis_kelamin", values.jenis_kelamin);
-    // formData.append("karpeg", values.karpeg);
-    // formData.append("bpjs", values.bpjs);
-    // formData.append("npwp", values.npwp);
-    // formData.append("tmt_golongan", values.tmt_golongan);
-    // formData.append("tmt_cpns", values.tmt_cpns);
-    // formData.append("tmt_jabatan", values.tmt_jabatan);
-    // formData.append("no_hp", values.no_hp);
-    // formData.append("email", values.email);
-    // formData.append("no_ktp", values.no_ktp);
-    // formData.append("gaji_pokok", values.gaji_pokok);
-    // formData.append("foto", values.foto);
-    // formData.append("mk_jabatan", values.mk_jabatan);
-    // formData.append("mk_sebelum_cpns", values.mk_sebelum_cpns);
-    // formData.append("mk_golongan", values.mk_golongan);
-    // formData.append("mk_seluruhnya", values.mk_seluruhnya);
-    // formData.append("nama_akademi", values.nama_akademi);
-    // formData.append("jurusan", values.jurusan);
-    // formData.append("tahun_lulus", values.tahun_lulus);
-    // formData.append("jenjang", values.jenjang);
-    // formData.append("no_ijazah", values.no_ijazah);
-    // formData.append("foto_ijazah", values.foto_ijazah);
+    formData.append("nama_akademi", values.nama_akademi);
+    formData.append("jurusan", values.jurusan);
+    formData.append("tahun_lulus", values.tahun_lulus);
+    formData.append("jenjang", values.jenjang);
+    formData.append("no_ijazah", values.no_ijazah);
+    if (values.foto_ijazah) {
+      formData.append("foto_ijazah", values.foto_ijazah);
+    }
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -1324,6 +1334,7 @@ const TambahPegawai = () => {
                           <option value="S1">S1</option>
                           <option value="S2">S2</option>
                           <option value="S3">S3</option>
+                          <option value="-">-</option>
                         </CSelect>
                         {errors.jenjang && touched.jenjang && (
                           <div className="invalid-feedback">

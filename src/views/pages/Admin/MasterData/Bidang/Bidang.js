@@ -23,7 +23,7 @@ const MySwal = withReactContent(swal2);
 const Bidang = () => {
   const history = useHistory();
   const { bidangState, bidangDispatch } = useContext(GlobalContext);
-  const { data } = bidangState;
+  const { data, loading } = bidangState;
 
   useEffect(() => {
     // Get data bidang
@@ -136,7 +136,7 @@ const Bidang = () => {
               responsive={true}
               customStyles={customStyles}
             />
-          ) : (
+          ) : loading ? (
             <>
               <div>
                 <CRow>
@@ -151,6 +151,13 @@ const Bidang = () => {
                 </CRow>
               </div>
             </>
+          ) : (
+            <DataTable
+              columns={columns}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
           )}
         </CCardBody>
       </CCard>

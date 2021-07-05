@@ -21,7 +21,7 @@ const MySwal = withReactContent(swal2);
 const Agama = () => {
   const history = useHistory();
   const { agamaState, agamaDispatch } = useContext(GlobalContext);
-  const { data } = agamaState;
+  const { data, loading } = agamaState;
 
   useEffect(() => {
     // Get Data Agama
@@ -122,7 +122,7 @@ const Agama = () => {
               responsive={true}
               customStyles={customStyles}
             />
-          ) : (
+          ) : loading ? (
             <>
               <div>
                 <CRow>
@@ -137,6 +137,13 @@ const Agama = () => {
                 </CRow>
               </div>
             </>
+          ) : (
+            <DataTable
+              columns={columns}
+              noHeader
+              responsive={true}
+              customStyles={customStyles}
+            />
           )}
         </CCardBody>
       </CCard>
