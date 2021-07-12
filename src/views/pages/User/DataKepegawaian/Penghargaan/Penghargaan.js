@@ -19,7 +19,7 @@ import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaa
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 
-const Penghargaan = ({dataActive}) => {
+const Penghargaan = ({ dataActive }) => {
   const { penghargaanUserState, penghargaanUserDispatch } =
     useContext(GlobalContext);
   const { data, loading } = penghargaanUserState;
@@ -157,7 +157,7 @@ const Penghargaan = ({dataActive}) => {
           // paginationRowsPerPageOptions={[5, 10, 15]}
           // paginationPerPage={5}
           expandableRows={true}
-          expandableRowsComponent={<ExpandableComponent />}
+          expandableRowsComponent={ExpandableComponent}
           expandOnRowClicked
           highlightOnHover
         />

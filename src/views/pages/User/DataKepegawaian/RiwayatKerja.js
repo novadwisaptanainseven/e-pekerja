@@ -6,7 +6,7 @@ import { getRiwayatKerja } from "src/context/actions/UserPage/DataKepegawaian/ge
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 
-const RiwayatKerja = ({dataActive}) => {
+const RiwayatKerja = ({ dataActive }) => {
   const { riwayatKerjaState, riwayatKerjaDispatch } = useContext(GlobalContext);
   const { data, loading } = riwayatKerjaState;
 
@@ -82,7 +82,7 @@ const RiwayatKerja = ({dataActive}) => {
             responsive={true}
             customStyles={customStyles}
             expandableRows
-            expandableRowsComponent={<ExpandableComponent />}
+            expandableRowsComponent={ExpandableComponent}
             expandOnRowClicked
             highlightOnHover
           />

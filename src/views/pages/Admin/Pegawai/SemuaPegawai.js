@@ -221,7 +221,7 @@ const SemuaPegawai = () => {
               expandableRows
               expandOnRowClicked
               highlightOnHover
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           ) : loading ? (
             <>

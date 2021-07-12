@@ -314,7 +314,7 @@ const RiwayatCuti = ({ match }) => {
               highlightOnHover
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           ) : loading ? (
             <div>
@@ -343,7 +343,7 @@ const RiwayatCuti = ({ match }) => {
               highlightOnHover
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           )}
         </CCardBody>

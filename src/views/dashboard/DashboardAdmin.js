@@ -105,7 +105,7 @@ const Dashboard = () => {
                         data: [data.total_pria, data.total_wanita],
                       },
                     ]}
-                    labels={["Pria", "Wanita"]}
+                    labels={["Laki-Laki", "Perempuan"]}
                     options={{
                       tooltips: {
                         enabled: true,

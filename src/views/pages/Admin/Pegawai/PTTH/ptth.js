@@ -251,7 +251,7 @@ const DataPTTH = () => {
               expandableRows
               highlightOnHover
               expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           ) : loading ? (
             <>

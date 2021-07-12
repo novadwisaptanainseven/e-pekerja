@@ -275,13 +275,17 @@ const TambahPTTH = () => {
     formData.append("no_hp", values.no_hp);
     formData.append("email", values.email);
     formData.append("no_ktp", values.no_ktp);
-    formData.append("foto", values.foto);
+    if (values.foto) {
+      formData.append("foto", values.foto);
+    }
     formData.append("nama_akademi", values.nama_akademi);
     formData.append("jurusan", values.jurusan);
     formData.append("tahun_lulus", values.tahun_lulus);
     formData.append("jenjang", values.jenjang);
     formData.append("no_ijazah", values.no_ijazah);
-    formData.append("foto_ijazah", values.foto_ijazah);
+    if (values.foto_ijazah) {
+      formData.append("foto_ijazah", values.foto_ijazah);
+    }
 
     // for (var pair of formData.entries()) {
     //   console.log(pair);
@@ -454,7 +458,7 @@ const TambahPTTH = () => {
                       </CCol>
                       <CCol md="9" sm="12">
                         <CInput
-                          type="date"
+                          type="text"
                           name="tgl_mulai_tugas"
                           id="tgl_mulai_tugas"
                           placeholder="Masukkan tgl. mulai tugas"
@@ -664,7 +668,7 @@ const TambahPTTH = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             name="jenis_kelamin"
-                            value="Laki - Laki"
+                            value="Laki-Laki"
                             required
                           />
                           <CLabel

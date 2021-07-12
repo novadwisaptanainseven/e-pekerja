@@ -343,7 +343,7 @@ const DaftarKGB = ({ match }) => {
               highlightOnHover
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           ) : loading ? (
             <div>
@@ -372,7 +372,7 @@ const DaftarKGB = ({ match }) => {
               highlightOnHover
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           )}
         </CCardBody>

@@ -694,7 +694,7 @@ const TambahPegawai = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             name="jenis_kelamin"
-                            value="Laki - Laki"
+                            value="Laki-Laki"
                             required
                           />
                           <CLabel

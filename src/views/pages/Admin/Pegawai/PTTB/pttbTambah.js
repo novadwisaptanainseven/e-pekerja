@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import { LoadAnimationWhite } from "src/assets";
 
+import Select from "react-select";
+
 import {
   CCard,
   CCardBody,
@@ -43,6 +45,7 @@ const TambahPTTB = () => {
   const [bidang, setBidang] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
+  const [touchedSelect, setTouchedSelect] = useState(false);
 
   useEffect(() => {
     // Get Bidang
@@ -52,6 +55,20 @@ const TambahPTTB = () => {
     // Get Agama
     getSelectAgama(setAgama);
   }, []);
+
+  const getDataOptions = (jabatan) => {
+    let options = [];
+
+    jabatan.forEach((item) => {
+      options.push({
+        value: item.id_jabatan,
+        label: item.nama_jabatan,
+      });
+    });
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(jabatan), [jabatan]);
 
   // Menangani preview input gambar setelah dipilih
   const handleSelectedFile = useCallback(() => {
@@ -282,13 +299,17 @@ const TambahPTTB = () => {
     formData.append("no_hp", values.no_hp);
     formData.append("email", values.email);
     formData.append("no_ktp", values.no_ktp);
-    formData.append("foto", values.foto);
+    if (values.foto) {
+      formData.append("foto", values.foto);
+    }
     formData.append("nama_akademi", values.nama_akademi);
     formData.append("jurusan", values.jurusan);
     formData.append("tahun_lulus", values.tahun_lulus);
     formData.append("jenjang", values.jenjang);
     formData.append("no_ijazah", values.no_ijazah);
-    formData.append("foto_ijazah", values.foto_ijazah);
+    if (values.foto_ijazah) {
+      formData.append("foto_ijazah", values.foto_ijazah);
+    }
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -296,6 +317,14 @@ const TambahPTTB = () => {
 
     // Memanggil method Insert PTTB untuk menambah data PTTB ke database
     insertPTTB(formData, setLoading, showAlertSuccess, showAlertError);
+  };
+
+  // Costum Styles for Select Data
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
@@ -487,7 +516,7 @@ const TambahPTTB = () => {
                         <CLabel>Tugas</CLabel>
                       </CCol>
                       <CCol md="9" sm="12">
-                        <CSelect
+                        {/* <CSelect
                           custom
                           name="id_jabatan"
                           id="id_jabatan"
@@ -510,6 +539,28 @@ const TambahPTTB = () => {
                         {errors.id_jabatan && touched.id_jabatan && (
                           <div className="invalid-feedback">
                             {errors.id_jabatan}
+                          </div>
+                        )} */}
+                        <Select
+                          styles={customStyles}
+                          name="id_jabatan"
+                          id="id_jabatan"
+                          onChange={(opt) => {
+                            setTouchedSelect(false);
+                            setFieldValue("id_jabatan", opt ? opt.value : "");
+                          }}
+                          onFocus={() => setTouchedSelect(true)}
+                          placeholder="-- Pilih Tugas --"
+                          isSearchable
+                          isClearable
+                          options={optionsData}
+                        />
+                        {!values.id_jabatan && touchedSelect && (
+                          <div
+                            className="text-danger mt-1"
+                            style={{ fontSize: "0.8em" }}
+                          >
+                            Tugas pokok (jabatan) harus diisi
                           </div>
                         )}
                       </CCol>
@@ -723,7 +774,7 @@ const TambahPTTB = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             name="jenis_kelamin"
-                            value="Laki - Laki"
+                            value="Laki-Laki"
                             required
                           />
                           <CLabel
@@ -1133,6 +1184,11 @@ const TambahPTTB = () => {
                   type="submit"
                   className="mr-3"
                   disabled={loading ? true : false}
+                  onClick={() => {
+                    !values.id_jabatan
+                      ? setTouchedSelect(true)
+                      : setTouchedSelect(false);
+                  }}
                 >
                   {loading ? (
                     <img
