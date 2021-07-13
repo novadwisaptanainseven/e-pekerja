@@ -31,7 +31,6 @@ import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSele
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { insertPTTB } from "src/context/actions/Pegawai/PTTB/insertPTTB";
 import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
-import Select from "react-select";
 
 const MySwal = withReactContent(swal2);
 
