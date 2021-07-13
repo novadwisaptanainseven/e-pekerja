@@ -99,7 +99,7 @@ const DataDiriPTTB = ({ data }) => {
                     <tr>
                       <th>Tgl. Mulai Tugas</th>
                       <td>
-                        {format(new Date(data.tgl_mulai_tugas), "d/MM/Y")}
+                        {data.tgl_mulai_tugas}
                       </td>
                     </tr>
                     <tr>

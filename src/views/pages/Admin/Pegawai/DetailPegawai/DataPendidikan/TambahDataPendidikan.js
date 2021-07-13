@@ -181,6 +181,7 @@ const TambahDataPendidikan = ({
                   }
                 >
                   <option value="">-- Pilih Jenjang --</option>
+                  <option value="-">-</option>
                   <option value="sd">SD</option>
                   <option value="smp">SMP</option>
                   <option value="sma/ma/smk">SMA/MA/SMK</option>

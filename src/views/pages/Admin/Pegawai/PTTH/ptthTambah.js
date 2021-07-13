@@ -29,6 +29,7 @@ import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSele
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { insertPTTH } from "src/context/actions/Pegawai/PTTH/insertPTTH";
 import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
+import Select from "react-select";
 
 const MySwal = withReactContent(swal2);
 
@@ -43,6 +44,7 @@ const TambahPTTH = () => {
   const [bidang, setBidang] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
+  const [touchedSelect, setTouchedSelect] = useState(false);
 
   useEffect(() => {
     // Get Sub Bidang
@@ -52,6 +54,20 @@ const TambahPTTH = () => {
     // Get Agama
     getSelectAgama(setAgama);
   }, []);
+
+  const getDataOptions = (jabatan) => {
+    let options = [];
+
+    jabatan.forEach((item) => {
+      options.push({
+        value: item.id_jabatan,
+        label: item.nama_jabatan,
+      });
+    });
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(jabatan), [jabatan]);
 
   // Menangani preview input gambar setelah dipilih
   const handleSelectedFile = useCallback(() => {
@@ -217,38 +233,51 @@ const TambahPTTH = () => {
     no_hp: Yup.string().required("No. HP harus diisi!"),
     no_ktp: Yup.string().required("No. KTP harus diisi!"),
     email: Yup.string()
-      .email("Email tidak valid")
+      // .email("Email tidak valid")
       .required("No. email harus diisi!"),
     nama_akademi: Yup.string().required("Nama akademi harus diisi!"),
     jurusan: Yup.string().required("Jurusan harus diisi!"),
     tahun_lulus: Yup.string().required("Tahun lulus harus diisi!"),
     jenjang: Yup.string().required("Jenjang harus diisi!"),
     no_ijazah: Yup.string().required("No. ijazah harus diisi!"),
-
     foto: Yup.mixed()
-      .required("Foto belum dipilih")
-      .test(
-        "size",
-        "Kapasitas file maksimal 2 mb",
-        (value) => value && value.size <= FOTO_PEGAWAI_SIZE
-      )
+      // .required("Foto belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) {
+          return value && value.size <= FOTO_PEGAWAI_SIZE;
+        } else return true;
+      })
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, dan png",
-        (value) => value && FOTO_PEGAWAI_SUPPORTED_FORMATS.includes(value.type)
+        (value) => {
+          if (value) {
+            return value && FOTO_PEGAWAI_SUPPORTED_FORMATS.includes(value.type);
+          } else {
+            return true;
+          }
+        }
       ),
 
     foto_ijazah: Yup.mixed()
-      .required("Ijazah belum dipilih")
-      .test(
-        "size",
-        "Kapasitas file maksimal 2 mb",
-        (value) => value && value.size <= FILE_IJAZAH_SIZE
-      )
+      // .required("Ijazah belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) {
+          return value && value.size <= FILE_IJAZAH_SIZE;
+        } else {
+          return true;
+        }
+      })
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, png, dan pdf",
-        (value) => value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type)
+        (value) => {
+          if (value) {
+            return value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type);
+          } else {
+            return true;
+          }
+        }
       ),
   });
 
@@ -275,13 +304,17 @@ const TambahPTTH = () => {
     formData.append("no_hp", values.no_hp);
     formData.append("email", values.email);
     formData.append("no_ktp", values.no_ktp);
-    formData.append("foto", values.foto);
+    if (values.foto) {
+      formData.append("foto", values.foto);
+    }
     formData.append("nama_akademi", values.nama_akademi);
     formData.append("jurusan", values.jurusan);
     formData.append("tahun_lulus", values.tahun_lulus);
     formData.append("jenjang", values.jenjang);
     formData.append("no_ijazah", values.no_ijazah);
-    formData.append("foto_ijazah", values.foto_ijazah);
+    if (values.foto_ijazah) {
+      formData.append("foto_ijazah", values.foto_ijazah);
+    }
 
     // for (var pair of formData.entries()) {
     //   console.log(pair);
@@ -289,6 +322,14 @@ const TambahPTTH = () => {
 
     // Memanggil method Insert PTTH untuk menambah data PTTH ke database
     insertPTTH(formData, setLoading, showAlertSuccess, showAlertError);
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      // none of react-select's styles are passed to <Control />
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
@@ -454,7 +495,7 @@ const TambahPTTH = () => {
                       </CCol>
                       <CCol md="9" sm="12">
                         <CInput
-                          type="date"
+                          type="text"
                           name="tgl_mulai_tugas"
                           id="tgl_mulai_tugas"
                           placeholder="Masukkan tgl. mulai tugas"
@@ -480,7 +521,7 @@ const TambahPTTH = () => {
                         <CLabel>Tugas</CLabel>
                       </CCol>
                       <CCol md="9" sm="12">
-                        <CSelect
+                        {/* <CSelect
                           custom
                           name="id_jabatan"
                           id="id_jabatan"
@@ -503,6 +544,33 @@ const TambahPTTH = () => {
                         {errors.id_jabatan && touched.id_jabatan && (
                           <div className="invalid-feedback">
                             {errors.id_jabatan}
+                          </div>
+                        )} */}
+                        <Select
+                          styles={customStyles}
+                          name="id_jabatan"
+                          id="id_jabatan"
+                          onChange={(opt) => {
+                            setTouchedSelect(false);
+                            setFieldValue("id_jabatan", opt ? opt.value : "");
+                          }}
+                          onBlur={() =>
+                            values.id_jabatan
+                              ? setTouchedSelect(false)
+                              : setTouchedSelect(true)
+                          }
+                          onFocus={() => setTouchedSelect(true)}
+                          placeholder="-- Pilih Tugas --"
+                          isSearchable
+                          isClearable
+                          options={optionsData}
+                        />
+                        {!values.id_jabatan && touchedSelect && (
+                          <div
+                            className="text-danger mt-1"
+                            style={{ fontSize: "0.8em" }}
+                          >
+                            Nama penerima harus diisi
                           </div>
                         )}
                       </CCol>
@@ -771,7 +839,7 @@ const TambahPTTH = () => {
                           type="text"
                           name="email"
                           id="email"
-                          placeholder="Masukkan no. hp"
+                          placeholder="Masukkan email"
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={values.email}
@@ -981,6 +1049,7 @@ const TambahPTTH = () => {
                           }
                         >
                           <option value="">-- Pilih Jenjang --</option>
+                          <option value="-">-</option>
                           <option value="sd">SD</option>
                           <option value="smp">SMP</option>
                           <option value="sma/ma/smk">SMA/MA/SMK</option>
@@ -1069,6 +1138,11 @@ const TambahPTTH = () => {
                   type="submit"
                   className="mr-3"
                   disabled={loading ? true : false}
+                  onClick={() => {
+                    !values.id_pegawai
+                      ? setTouchedSelect(true)
+                      : setTouchedSelect(false);
+                  }}
                 >
                   {loading ? (
                     <img

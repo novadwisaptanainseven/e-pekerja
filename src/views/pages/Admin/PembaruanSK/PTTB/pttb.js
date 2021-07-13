@@ -147,7 +147,7 @@ const DataPTTB = () => {
       <div style={{ padding: "10px 63px" }}>
         <CRow className="mb-1">
           <CCol md="2">
-            <strong>NIPTTB</strong>
+            <strong>NIPB</strong>
           </CCol>
           <CCol>{data.nip}</CCol>
         </CRow>

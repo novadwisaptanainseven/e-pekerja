@@ -29,6 +29,7 @@ import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSele
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { insertPTTB } from "src/context/actions/Pegawai/PTTB/insertPTTB";
 import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
+import Select from "react-select";
 
 const MySwal = withReactContent(swal2);
 
@@ -43,6 +44,7 @@ const TambahPTTB = () => {
   const [bidang, setBidang] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
+  const [touchedSelect, setTouchedSelect] = useState(false);
 
   useEffect(() => {
     // Get Bidang
@@ -52,6 +54,20 @@ const TambahPTTB = () => {
     // Get Agama
     getSelectAgama(setAgama);
   }, []);
+
+  const getDataOptions = (jabatan) => {
+    let options = [];
+
+    jabatan.forEach((item) => {
+      options.push({
+        value: item.id_jabatan,
+        label: item.nama_jabatan,
+      });
+    });
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(jabatan), [jabatan]);
 
   // Menangani preview input gambar setelah dipilih
   const handleSelectedFile = useCallback(() => {
@@ -217,7 +233,7 @@ const TambahPTTB = () => {
     no_hp: Yup.string().required("No. HP harus diisi!"),
     no_ktp: Yup.string().required("No. KTP harus diisi!"),
     email: Yup.string()
-      .email("Email tidak valid")
+      // .email("Email tidak valid")
       .required("No. email harus diisi!"),
     nama_akademi: Yup.string().required("Nama akademi harus diisi!"),
     jurusan: Yup.string().required("Jurusan harus diisi!"),
@@ -226,29 +242,45 @@ const TambahPTTB = () => {
     no_ijazah: Yup.string().required("No. ijazah harus diisi!"),
 
     foto: Yup.mixed()
-      .required("Foto belum dipilih")
-      .test(
-        "size",
-        "Kapasitas file maksimal 2 mb",
-        (value) => value && value.size <= FOTO_PEGAWAI_SIZE
-      )
+      // .required("Foto belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) {
+          return value && value.size <= FOTO_PEGAWAI_SIZE;
+        } else {
+          return true;
+        }
+      })
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, dan png",
-        (value) => value && FOTO_PEGAWAI_SUPPORTED_FORMATS.includes(value.type)
+        (value) => {
+          if (value) {
+            return value && FOTO_PEGAWAI_SUPPORTED_FORMATS.includes(value.type);
+          } else {
+            return true;
+          }
+        }
       ),
 
     foto_ijazah: Yup.mixed()
-      .required("Ijazah belum dipilih")
-      .test(
-        "size",
-        "Kapasitas file maksimal 2 mb",
-        (value) => value && value.size <= FILE_IJAZAH_SIZE
-      )
+      // .required("Ijazah belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) {
+          return value && value.size <= FILE_IJAZAH_SIZE;
+        } else {
+          return true;
+        }
+      })
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya jpg, jpeg, png, dan pdf",
-        (value) => value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type)
+        (value) => {
+          if (value) {
+            return value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type);
+          } else {
+            return true;
+          }
+        }
       ),
   });
 
@@ -282,13 +314,17 @@ const TambahPTTB = () => {
     formData.append("no_hp", values.no_hp);
     formData.append("email", values.email);
     formData.append("no_ktp", values.no_ktp);
-    formData.append("foto", values.foto);
+    if (values.foto) {
+      formData.append("foto", values.foto);
+    }
     formData.append("nama_akademi", values.nama_akademi);
     formData.append("jurusan", values.jurusan);
     formData.append("tahun_lulus", values.tahun_lulus);
     formData.append("jenjang", values.jenjang);
     formData.append("no_ijazah", values.no_ijazah);
-    formData.append("foto_ijazah", values.foto_ijazah);
+    if (values.foto_ijazah) {
+      formData.append("foto_ijazah", values.foto_ijazah);
+    }
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -296,6 +332,14 @@ const TambahPTTB = () => {
 
     // Memanggil method Insert PTTB untuk menambah data PTTB ke database
     insertPTTB(formData, setLoading, showAlertSuccess, showAlertError);
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      // none of react-select's styles are passed to <Control />
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
@@ -334,14 +378,14 @@ const TambahPTTB = () => {
                     <hr />
                     <CFormGroup row>
                       <CCol>
-                        <CLabel>NIP</CLabel>
+                        <CLabel>NIPB</CLabel>
                       </CCol>
                       <CCol md="9" sm="12">
                         <CInput
                           type="text"
                           name="nip"
                           id="nip"
-                          placeholder="Masukkan NIP"
+                          placeholder="Masukkan NIPB"
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={values.nip}
@@ -487,29 +531,31 @@ const TambahPTTB = () => {
                         <CLabel>Tugas</CLabel>
                       </CCol>
                       <CCol md="9" sm="12">
-                        <CSelect
-                          custom
+                        <Select
+                          styles={customStyles}
                           name="id_jabatan"
                           id="id_jabatan"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.id_jabatan}
-                          className={
-                            errors.id_jabatan && touched.id_jabatan
-                              ? "is-invalid"
-                              : null
+                          onChange={(opt) => {
+                            setTouchedSelect(false);
+                            setFieldValue("id_jabatan", opt ? opt.value : "");
+                          }}
+                          onBlur={() =>
+                            values.id_jabatan
+                              ? setTouchedSelect(false)
+                              : setTouchedSelect(true)
                           }
-                        >
-                          <option value="">-- Pilih Tugas --</option>
-                          {jabatan.map((item, index) => (
-                            <option key={index} value={item.id_jabatan}>
-                              {item.nama_jabatan}
-                            </option>
-                          ))}
-                        </CSelect>
-                        {errors.id_jabatan && touched.id_jabatan && (
-                          <div className="invalid-feedback">
-                            {errors.id_jabatan}
+                          onFocus={() => setTouchedSelect(true)}
+                          placeholder="-- Pilih Tugas --"
+                          isSearchable
+                          isClearable
+                          options={optionsData}
+                        />
+                        {!values.id_jabatan && touchedSelect && (
+                          <div
+                            className="text-danger mt-1"
+                            style={{ fontSize: "0.8em" }}
+                          >
+                            Nama penerima harus diisi
                           </div>
                         )}
                       </CCol>
@@ -521,7 +567,7 @@ const TambahPTTB = () => {
                       </CCol>
                       <CCol md="9" sm="12">
                         <CInput
-                          type="date"
+                          type="text"
                           name="tgl_mulai_tugas"
                           id="tgl_mulai_tugas"
                           placeholder="Masukkan tanggal mulai tugas"
@@ -1045,6 +1091,7 @@ const TambahPTTB = () => {
                           }
                         >
                           <option value="">-- Pilih Jenjang --</option>
+                          <option value="-">-</option>
                           <option value="sd">SD</option>
                           <option value="smp">SMP</option>
                           <option value="sma/ma/smk">SMA/MA/SMK</option>

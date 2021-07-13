@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const host = "http://127.0.0.1:8000/";
+const host = "https://disperkim.samarindakota.go.id/e-pekerja-api/";
 const baseURL = `${host}api/v1/`;
 localStorage.baseURL = baseURL;
 let headers = {};
@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
       return new Promise((resolve, reject) => {});
     }
     if (error.response.status === 403) {
-      localStorage.removeItem("token");
+      localStorage.clear();
       console.log("Error Status 403 Executed");
       window.location.href = "/epekerja/login";
       return new Promise((resolve, reject) => {

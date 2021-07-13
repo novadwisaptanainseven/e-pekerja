@@ -1326,6 +1326,7 @@ const TambahPegawai = () => {
                           }
                         >
                           <option value="">-- Pilih Jenjang --</option>
+                          <option value="-">-</option>
                           <option value="sd">SD</option>
                           <option value="smp">SMP</option>
                           <option value="sma/ma/smk">SMA/MA/SMK</option>
@@ -1334,7 +1335,6 @@ const TambahPegawai = () => {
                           <option value="S1">S1</option>
                           <option value="S2">S2</option>
                           <option value="S3">S3</option>
-                          <option value="-">-</option>
                         </CSelect>
                         {errors.jenjang && touched.jenjang && (
                           <div className="invalid-feedback">

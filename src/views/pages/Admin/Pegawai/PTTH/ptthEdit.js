@@ -31,6 +31,7 @@ import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAg
 import { getImage } from "src/context/actions/DownloadFile";
 import { editPTTH } from "src/context/actions/Pegawai/PTTH/editPTTH";
 import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
+import Select from "react-select";
 
 const MySwal = withReactContent(swal2);
 
@@ -45,6 +46,7 @@ const EditPTTH = ({ match }) => {
   const [bidang, setBidang] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
+  const [touchedSelect, setTouchedSelect] = useState(false);
 
   const goBackToParent = () => {
     history.goBack();
@@ -60,6 +62,20 @@ const EditPTTH = ({ match }) => {
     // Get Agama
     getSelectAgama(setAgama);
   }, [params]);
+
+  const getDataOptions = (jabatan) => {
+    let options = [];
+
+    jabatan.forEach((item) => {
+      options.push({
+        value: item.id_jabatan,
+        label: item.nama_jabatan,
+      });
+    });
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(jabatan), [jabatan]);
 
   useEffect(() => {
     if (data) {
@@ -188,7 +204,7 @@ const EditPTTH = ({ match }) => {
     no_hp: Yup.string().required("No. HP harus diisi!"),
     no_ktp: Yup.string().required("No. KTP harus diisi!"),
     email: Yup.string()
-      .email("Email tidak valid")
+      // .email("Email tidak valid")
       .required("No. email harus diisi!"),
     foto: Yup.mixed()
       .test("size", "Kapasitas file maksimal 2 mb", (value) => {
@@ -242,6 +258,14 @@ const EditPTTH = ({ match }) => {
 
     // Memanggil method edit PTTH untuk menambah data PTTH ke database
     editPTTH(params.id, formData, setLoading, showAlertSuccess, showAlertError);
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      // none of react-select's styles are passed to <Control />
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
@@ -420,7 +444,7 @@ const EditPTTH = ({ match }) => {
                           </CCol>
                           <CCol md="9" sm="12">
                             <CInput
-                              type="date"
+                              type="text"
                               name="tgl_mulai_tugas"
                               id="tgl_mulai_tugas"
                               placeholder="Masukkan tgl. mulai tugas"
@@ -448,7 +472,7 @@ const EditPTTH = ({ match }) => {
                             <CLabel>Tugas</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
-                            <CSelect
+                            {/* <CSelect
                               custom
                               name="id_jabatan"
                               id="id_jabatan"
@@ -472,7 +496,33 @@ const EditPTTH = ({ match }) => {
                               <div className="invalid-feedback">
                                 {errors.id_jabatan}
                               </div>
-                            )}
+                            )} */}
+                            <Select
+                              styles={customStyles}
+                              name="id_jabatan"
+                              id="id_jabatan"
+                              onChange={(opt) => {
+                                setTouchedSelect(false);
+                                setFieldValue(
+                                  "id_jabatan",
+                                  opt ? opt.value : ""
+                                );
+                              }}
+                              onBlur={() =>
+                                values.id_jabatan
+                                  ? setTouchedSelect(false)
+                                  : setTouchedSelect(true)
+                              }
+                              onFocus={() => setTouchedSelect(true)}
+                              placeholder="-- Pilih Tugas --"
+                              isSearchable
+                              isClearable
+                              defaultValue={{
+                                value: data ? data.id_jabatan : "",
+                                label: data ? data.nama_jabatan : "",
+                              }}
+                              options={optionsData}
+                            />
                           </CCol>
                         </CFormGroup>
                         <CFormGroup row>

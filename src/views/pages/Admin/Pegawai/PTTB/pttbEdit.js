@@ -31,6 +31,7 @@ import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAg
 import { getImage } from "src/context/actions/DownloadFile";
 import { editPTTB } from "src/context/actions/Pegawai/PTTB/editPTTB";
 import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
+import Select from "react-select";
 
 const MySwal = withReactContent(swal2);
 
@@ -45,6 +46,7 @@ const EditPTTB = ({ match }) => {
   const [bidang, setBidang] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
+  const [touchedSelect, setTouchedSelect] = useState(false);
 
   const goBackToParent = () => {
     history.goBack();
@@ -60,6 +62,20 @@ const EditPTTB = ({ match }) => {
     // Get Agama
     getSelectAgama(setAgama);
   }, [params]);
+
+  const getDataOptions = (jabatan) => {
+    let options = [];
+
+    jabatan.forEach((item) => {
+      options.push({
+        value: item.id_jabatan,
+        label: item.nama_jabatan,
+      });
+    });
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(jabatan), [jabatan]);
 
   useEffect(() => {
     if (data) {
@@ -188,7 +204,7 @@ const EditPTTB = ({ match }) => {
     no_hp: Yup.string().required("No HP harus diisi!"),
     no_ktp: Yup.string().required("No. KTP harus diisi!"),
     email: Yup.string()
-      .email("Email tidak valid")
+      // .email("Email tidak valid")
       .required("No. email harus diisi!"),
     gaji_pokok: Yup.number()
       .typeError("Gaji pokok harus berupa bilangan")
@@ -248,6 +264,14 @@ const EditPTTB = ({ match }) => {
 
     // Memanggil method edit PTTB untuk menambah data PTTB ke database
     editPTTB(params.id, formData, setLoading, showAlertSuccess, showAlertError);
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      // none of react-select's styles are passed to <Control />
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
@@ -480,7 +504,7 @@ const EditPTTB = ({ match }) => {
                           </CCol>
                           <CCol md="9" sm="12">
                             <CInput
-                              type="date"
+                              type="text"
                               name="tgl_mulai_tugas"
                               id="tgl_mulai_tugas"
                               placeholder="Masukkan tgl. mulai tugas"
@@ -508,31 +532,32 @@ const EditPTTB = ({ match }) => {
                             <CLabel>Tugas</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
-                            <CSelect
-                              custom
+                            <Select
+                              styles={customStyles}
                               name="id_jabatan"
                               id="id_jabatan"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.id_jabatan}
-                              className={
-                                errors.id_jabatan && touched.id_jabatan
-                                  ? "is-invalid"
-                                  : null
+                              onChange={(opt) => {
+                                setTouchedSelect(false);
+                                setFieldValue(
+                                  "id_jabatan",
+                                  opt ? opt.value : ""
+                                );
+                              }}
+                              onBlur={() =>
+                                values.id_jabatan
+                                  ? setTouchedSelect(false)
+                                  : setTouchedSelect(true)
                               }
-                            >
-                              <option value="">-- Pilih Tugas --</option>
-                              {jabatan.map((item, index) => (
-                                <option key={index} value={item.id_jabatan}>
-                                  {item.nama_jabatan}
-                                </option>
-                              ))}
-                            </CSelect>
-                            {errors.id_jabatan && touched.id_jabatan && (
-                              <div className="invalid-feedback">
-                                {errors.id_jabatan}
-                              </div>
-                            )}
+                              onFocus={() => setTouchedSelect(true)}
+                              placeholder="-- Pilih Tugas --"
+                              isSearchable
+                              isClearable
+                              defaultValue={{
+                                value: data ? data.id_jabatan : "",
+                                label: data ? data.jabatan : "",
+                              }}
+                              options={optionsData}
+                            />
                           </CCol>
                         </CFormGroup>
                         <CFormGroup row>

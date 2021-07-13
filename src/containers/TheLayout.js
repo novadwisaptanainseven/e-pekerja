@@ -22,7 +22,8 @@ const TheLayout = () => {
           title: "Akses Diblok",
           text: "Hanya user non-admin yang bisa akses halaman ini",
         }).then((result) => {
-          window.location.href = "/epekerja/admin";
+          window.location.href = "/epekerja/login";
+          localStorage.clear();
         });
       }
     }

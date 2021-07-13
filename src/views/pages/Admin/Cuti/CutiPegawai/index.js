@@ -88,7 +88,7 @@ const CutiPegawai = () => {
   // Columns Datatable
   const columns = [
     {
-      name: "Nama/NIP/NIPTTB/NIK",
+      name: "Nama/NIP/NIPB/NIK",
       selector: "nama",
       sortable: true,
       wrap: true,

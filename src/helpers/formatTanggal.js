@@ -40,7 +40,7 @@ const formatTanggal = (date) => {
     case "Nov":
       bulan = "November";
       break;
-    case "Des":
+    case "Dec":
       bulan = "Desember";
       break;
 

@@ -16,11 +16,12 @@ export const login = (values, dispatch) => {
       localStorage.token = res.data.token;
       localStorage.level = res.data.user.level;
       localStorage.id_user = res.data.user.id;
-      localStorage.loginTimestamp = new Date().getTime();
+      localStorage.loginTimestamp = new Date().getTime() + 2 * 60 * 60 * 1000; // Durasi login = 1 jam
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data.user,
       });
+      
       console.log(res.data);
     })
     .catch((err) => {
