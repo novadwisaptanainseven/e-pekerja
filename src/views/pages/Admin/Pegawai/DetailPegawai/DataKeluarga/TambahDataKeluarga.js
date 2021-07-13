@@ -236,7 +236,7 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, keluarga }) => {
                     custom
                     id="inline-radio1"
                     name="jenis_kelamin"
-                    value="Laki - Laki"
+                    value="Laki-Laki"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     required

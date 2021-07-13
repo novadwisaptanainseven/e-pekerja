@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import { LoadAnimationWhite } from "src/assets";
 
+import Select from "react-select";
+
 import {
   CCard,
   CCardBody,
@@ -334,9 +336,9 @@ const TambahPTTB = () => {
     insertPTTB(formData, setLoading, showAlertSuccess, showAlertError);
   };
 
+  // Costum Styles for Select Data
   const customStyles = {
     control: (provided, state) => ({
-      // none of react-select's styles are passed to <Control />
       ...provided,
       border: !touchedSelect ? provided.border : "1px solid #e55353",
     }),
@@ -539,11 +541,6 @@ const TambahPTTB = () => {
                             setTouchedSelect(false);
                             setFieldValue("id_jabatan", opt ? opt.value : "");
                           }}
-                          onBlur={() =>
-                            values.id_jabatan
-                              ? setTouchedSelect(false)
-                              : setTouchedSelect(true)
-                          }
                           onFocus={() => setTouchedSelect(true)}
                           placeholder="-- Pilih Tugas --"
                           isSearchable
@@ -555,7 +552,7 @@ const TambahPTTB = () => {
                             className="text-danger mt-1"
                             style={{ fontSize: "0.8em" }}
                           >
-                            Nama penerima harus diisi
+                            Tugas pokok (jabatan) harus diisi
                           </div>
                         )}
                       </CCol>
@@ -769,7 +766,7 @@ const TambahPTTB = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             name="jenis_kelamin"
-                            value="Laki - Laki"
+                            value="Laki-Laki"
                             required
                           />
                           <CLabel
@@ -1180,6 +1177,11 @@ const TambahPTTB = () => {
                   type="submit"
                   className="mr-3"
                   disabled={loading ? true : false}
+                  onClick={() => {
+                    !values.id_jabatan
+                      ? setTouchedSelect(true)
+                      : setTouchedSelect(false);
+                  }}
                 >
                   {loading ? (
                     <img

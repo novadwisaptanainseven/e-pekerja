@@ -297,7 +297,7 @@ const RiwayatSK = ({ match }) => {
               highlightOnHover
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           ) : loading ? (
             <div>
@@ -326,7 +326,7 @@ const RiwayatSK = ({ match }) => {
               highlightOnHover
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
+              expandableRowsComponent={ExpandableComponent}
             />
           )}
         </CCardBody>

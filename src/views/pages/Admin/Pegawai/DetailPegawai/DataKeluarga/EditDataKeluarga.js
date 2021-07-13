@@ -240,9 +240,9 @@ const EditDataKeluarga = ({
                     onChange={handleChange}
                     onBlur={handleBlur}
                     name="jenis_kelamin"
-                    value="Laki - Laki"
+                    value="Laki-Laki"
                     checked={
-                      values.jenis_kelamin === "Laki - Laki" ? true : false
+                      values.jenis_kelamin === "Laki-Laki" ? true : false
                     }
                     required
                   />

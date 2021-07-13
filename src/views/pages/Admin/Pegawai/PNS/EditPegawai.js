@@ -589,9 +589,9 @@ const EditPegawai = ({ match }) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 name="jenis_kelamin"
-                                value="Laki - Laki"
+                                value="Laki-Laki"
                                 checked={
-                                  values.jenis_kelamin === "Laki - Laki"
+                                  values.jenis_kelamin === "Laki-Laki"
                                     ? true
                                     : false
                                 }
