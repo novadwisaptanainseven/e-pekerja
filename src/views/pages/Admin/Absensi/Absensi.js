@@ -284,7 +284,7 @@ const Absensi = () => {
             subHeaderComponent={SubHeaderComponentMemo}
             expandOnRowClicked
             expandableRows
-            expandableRowsComponent={ExpandableComponent}
+            expandableRowsComponent={<ExpandableComponent />}
             highlightOnHover
           />
         </CCardBody>

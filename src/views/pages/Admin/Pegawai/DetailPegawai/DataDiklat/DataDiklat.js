@@ -272,7 +272,7 @@ const DataDiklat = ({ id, dataActive }) => {
               responsive={true}
               customStyles={customStyles}
               expandableRows
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
               expandOnRowClicked
               highlightOnHover
             />

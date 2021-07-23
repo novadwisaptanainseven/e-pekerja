@@ -379,7 +379,7 @@ const KGBPegawai = () => {
                   subHeader
                   subHeaderComponent={SubHeaderComponentMemo}
                   expandableRows
-                  expandableRowsComponent={ExpandableComponent}
+                  expandableRowsComponent={<ExpandableComponent />}
                   expandOnRowClicked
                   highlightOnHover
                 />

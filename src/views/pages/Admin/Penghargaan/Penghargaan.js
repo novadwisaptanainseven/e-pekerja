@@ -268,7 +268,7 @@ const Penghargaan = () => {
               subHeader
               subHeaderComponent={SubHeaderComponentMemo}
               expandableRows={true}
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
               expandOnRowClicked
               highlightOnHover
             />

@@ -226,7 +226,7 @@ const AbsensiPTTB = () => {
               expandableRows
               highlightOnHover
               expandOnRowClicked
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
             />
           ) : loading ? (
             <div>

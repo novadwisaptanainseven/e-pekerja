@@ -106,6 +106,7 @@ const KenaikanPangkat = () => {
                     ...modalKenaikanPangkat,
                     modal: true,
                     id: row.id,
+                    data: row,
                   })
                 }
               >
@@ -324,7 +325,7 @@ const KenaikanPangkat = () => {
               subHeaderComponent={SubHeaderComponentMemo}
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
               highlightOnHover
             />
           ) : loading ? (

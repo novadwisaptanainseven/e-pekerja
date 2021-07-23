@@ -302,7 +302,7 @@ const DukPNS = () => {
               expandableRows={true}
               expandOnRowClicked
               highlightOnHover
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
             />
           ) : (
             <>

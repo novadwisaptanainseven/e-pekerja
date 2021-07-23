@@ -383,7 +383,7 @@ const CutiPegawai = () => {
                   subHeader
                   subHeaderComponent={SubHeaderComponentMemo}
                   expandableRows
-                  expandableRowsComponent={ExpandableComponent}
+                  expandableRowsComponent={<ExpandableComponent />}
                   expandOnRowClicked
                   highlightOnHover
                 />

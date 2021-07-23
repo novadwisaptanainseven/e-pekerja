@@ -681,11 +681,11 @@ const EditPTTH = ({ match }) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 checked={
-                                  values.jenis_kelamin === "Laki - Laki"
+                                  values.jenis_kelamin === "Laki-Laki"
                                     ? true
                                     : false
                                 }
-                                value="Laki - Laki"
+                                value="Laki-Laki"
                                 required
                               />
                               <CLabel

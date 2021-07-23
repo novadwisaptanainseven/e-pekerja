@@ -286,7 +286,7 @@ const Users = () => {
               subHeaderComponent={SubHeaderComponentMemo}
               expandableRows
               expandOnRowClicked
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
               highlightOnHover
             />
           ) : loading ? (

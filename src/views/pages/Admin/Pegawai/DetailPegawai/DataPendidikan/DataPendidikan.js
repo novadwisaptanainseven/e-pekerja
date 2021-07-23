@@ -242,7 +242,7 @@ const DataPendidikan = ({ id, dataActive }) => {
               responsive={true}
               customStyles={customStyles}
               expandableRows
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
               highlightOnHover
               expandOnRowClicked
             />

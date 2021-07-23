@@ -9,6 +9,9 @@ import {
   CFormGroup,
   CForm,
   CSelect,
+  CRow,
+  CCol,
+  CFormText,
 } from "@coreui/react";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
@@ -109,8 +112,8 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
     >
       <CModalHeader closeButton>
         <div>
-          <h4>Nova Dwi Sapta</h4>
-          <h5 className="font-weight-normal">199727</h5>
+          <h4>{modal.data && modal.data.nama}</h4>
+          <h5 className="font-weight-normal">{modal.data && modal.data.nip}</h5>
         </div>
       </CModalHeader>
       <Formik
@@ -128,6 +131,28 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
         }) => (
           <CForm onSubmit={handleSubmit}>
             <CModalBody>
+              <CFormGroup>
+                <CLabel>Jenis Kenaikan Pangkat</CLabel>
+                <CSelect
+                  name="jenis_kp"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={
+                    errors.jenis_kp && touched.jenis_kp ? "is-invalid" : null
+                  }
+                >
+                  <option value={values.jenis_kp}>
+                    -- Pilih Jenis Kenaikan Pangkat --
+                  </option>
+                  <option value="Reguler">Reguler</option>
+                  <option value="Jabatan Struktural">Jabatan Struktural</option>
+                  <option value="Jabatan Fungsional">Jabatan Fungsional</option>
+                  <option value="Penyesuaian Ijazah">Penyesuaian Ijazah</option>
+                </CSelect>
+                {errors.jenis_kp && touched.jenis_kp && (
+                  <div className="invalid-feedback">{errors.jenis_kp}</div>
+                )}
+              </CFormGroup>
               <CFormGroup>
                 <CLabel>Pangkat / Golongan Baru</CLabel>
                 <CSelect
@@ -157,6 +182,40 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                 )}
               </CFormGroup>
               <CFormGroup>
+                <CRow>
+                  <CCol>
+                    <CLabel>No. SK</CLabel>
+                    <CInput
+                      type="text"
+                      name="no_sk"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={
+                        errors.no_sk && touched.no_sk ? "is-invalid" : null
+                      }
+                    />
+                    {errors.no_sk && touched.no_sk && (
+                      <div className="invalid-feedback">{errors.no_sk}</div>
+                    )}
+                  </CCol>
+                  <CCol>
+                    <CLabel>Tgl. Kenaikan Pangkat</CLabel>
+                    <CInput
+                      type="date"
+                      name="tanggal"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={
+                        errors.tanggal && touched.tanggal ? "is-invalid" : null
+                      }
+                    />
+                    {errors.tanggal && touched.tanggal && (
+                      <div className="invalid-feedback">{errors.tanggal}</div>
+                    )}
+                  </CCol>
+                </CRow>
+              </CFormGroup>
+              <CFormGroup>
                 <CLabel>TMT. Kenaikan Pangkat</CLabel>
                 <CInput
                   type="date"
@@ -175,6 +234,99 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                       {errors.tmt_kenaikan_pangkat}
                     </div>
                   )}
+              </CFormGroup>
+              <CFormGroup>
+                <CLabel>Pejabat Penetap</CLabel>
+                <CInput
+                  type="text"
+                  name="pejabat_penetap"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={
+                    errors.pejabat_penetap && touched.pejabat_penetap
+                      ? "is-invalid"
+                      : null
+                  }
+                />
+                {errors.pejabat_penetap && touched.pejabat_penetap && (
+                  <div className="invalid-feedback">
+                    {errors.pejabat_penetap}
+                  </div>
+                )}
+              </CFormGroup>
+              <CFormGroup>
+                <CRow>
+                  <CCol>
+                    <CLabel>Masa Kerja Golongan</CLabel>
+                    <CInput
+                      type="number"
+                      name="mk_tahun"
+                      min="0"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="Tahun"
+                      className={
+                        errors.mk_tahun && touched.mk_tahun
+                          ? "is-invalid"
+                          : null
+                      }
+                    />
+                    <CFormText>Tahun</CFormText>
+                    {errors.mk_tahun && touched.mk_tahun && (
+                      <div className="invalid-feedback">{errors.mk_tahun}</div>
+                    )}
+                  </CCol>
+                  <CCol
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-end",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <CInput
+                      type="number"
+                      name="mk_bulan"
+                      min="0"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="Bulan"
+                      className={
+                        errors.mk_bulan && touched.mk_bulan
+                          ? "is-invalid"
+                          : null
+                      }
+                    />
+                    <CFormText>Bulan</CFormText>
+                    {errors.mk_bulan && touched.mk_bulan && (
+                      <div className="invalid-feedback">{errors.mk_bulan}</div>
+                    )}
+                  </CCol>
+                </CRow>
+              </CFormGroup>
+              {/* <CFormGroup>
+                <CLabel>Pangkat Terkini</CLabel>
+                <input type="checkbox" className="ml-2" />
+                <CFormText>Cek apabila merupakan pangkat Anda saat ini</CFormText>
+                {errors.pejabat_penetap && touched.pejabat_penetap && (
+                  <div className="invalid-feedback">
+                    {errors.pejabat_penetap}
+                  </div>
+                )}
+              </CFormGroup> */}
+
+              <CFormGroup>
+                <CLabel>File</CLabel>
+                <CInput
+                  type="file"
+                  name="file"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={errors.file && touched.file ? "is-invalid" : null}
+                />
+                {errors.file && touched.file && (
+                  <div className="invalid-feedback">{errors.file}</div>
+                )}
               </CFormGroup>
             </CModalBody>
             <CModalFooter>

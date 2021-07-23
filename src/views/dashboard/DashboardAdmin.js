@@ -9,7 +9,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
-import { CChartPie } from "@coreui/react-chartjs";
+import { CChartBar, CChartPie } from "@coreui/react-chartjs";
 import { GlobalContext } from "src/context/Provider";
 import { getDashboardInformation } from "src/context/actions/Dashboard/getDashboardInformation";
 
@@ -106,6 +106,44 @@ const Dashboard = () => {
                       },
                     ]}
                     labels={["Laki-Laki", "Perempuan"]}
+                    options={{
+                      tooltips: {
+                        enabled: true,
+                      },
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol>
+              <CCard>
+                <CCardHeader>Total Pegawai Berdasarkan Bidang</CCardHeader>
+                <CCardBody>
+                  <CChartBar
+                    datasets={[
+                      {
+                        label: "Total Pegawai",
+                        backgroundColor: "#f87979",
+                        data: [
+                          0,
+                          data.total_pegawai_bidang.sekretariat,
+                          data.total_pegawai_bidang.permukiman,
+                          data.total_pegawai_bidang.perumahan,
+                          data.total_pegawai_bidang.psu,
+                          0,
+                        ],
+                      },
+                    ]}
+                    labels={[
+                      "",
+                      "Sekretariat",
+                      "Permukiman",
+                      "Perumahan",
+                      "PSU",
+                      "",
+                    ]}
                     options={{
                       tooltips: {
                         enabled: true,

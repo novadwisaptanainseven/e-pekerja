@@ -157,7 +157,7 @@ const Penghargaan = ({ dataActive }) => {
           // paginationRowsPerPageOptions={[5, 10, 15]}
           // paginationPerPage={5}
           expandableRows={true}
-          expandableRowsComponent={ExpandableComponent}
+          expandableRowsComponent={<ExpandableComponent />}
           expandOnRowClicked
           highlightOnHover
         />

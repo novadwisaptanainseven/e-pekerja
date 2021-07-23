@@ -279,7 +279,7 @@ const MasaKerja = () => {
               expandableRows={true}
               expandOnRowClicked
               highlightOnHover
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
             />
           ) : loading ? (
             <div>
@@ -308,7 +308,7 @@ const MasaKerja = () => {
               expandableRows={true}
               expandOnRowClicked
               highlightOnHover
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
             />
           )}
         </CCardBody>

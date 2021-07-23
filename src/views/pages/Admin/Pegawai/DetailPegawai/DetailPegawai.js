@@ -33,7 +33,13 @@ const DetailPegawai = ({ match }) => {
   }, [params]);
 
   const goToParent = () => {
-    history.push(`/epekerja/admin/pegawai/semua-pegawai`);
+    if (data.id_status_pegawai === 1) {
+      history.push(`/epekerja/admin/pegawai`);
+    } else if (data.id_status_pegawai === 2) {
+      history.push(`/epekerja/admin/pegawai/ptth`);
+    } else if (data.id_status_pegawai === 3) {
+      history.push(`/epekerja/admin/pegawai/pttb`);
+    }
   };
 
   return (

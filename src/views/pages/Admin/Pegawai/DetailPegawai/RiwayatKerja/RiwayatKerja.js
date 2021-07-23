@@ -202,7 +202,7 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
               expandableRows
               expandOnRowClicked
               highlightOnHover
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
             />
           </div>
         </>

@@ -338,7 +338,7 @@ const AbsensiPNS = () => {
               expandableRows
               highlightOnHover
               expandOnRowClicked
-              expandableRowsComponent={ExpandableComponent}
+              expandableRowsComponent={<ExpandableComponent />}
             />
           ) : loading ? (
             <div>
