@@ -37,8 +37,15 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
 
   // Inisialisasi state formik
   const initState = {
+    jenis_kp: "",
+    no_sk: "",
+    tanggal: "",
+    mk_tahun: "",
+    mk_bulan: "",
+    pejabat_penetap: "",
     pangkat_baru: "",
     tmt_kenaikan_pangkat: "",
+    file: undefined,
   };
 
   // Fungsi untuk menampilkan alert success tambah data
@@ -72,11 +79,40 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
   };
 
   // Setting validasi form menggunakan YUP & FORMIK
+  const FILE_SIZE = 5048000; // Bytes => 5 mb x 1000 kb x 1000 bytes
+  const FILE_SUPPORTED_FORMATS = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
   const validationSchema = Yup.object().shape({
+    jenis_kp: Yup.string().required("Jenis kenaikan pangkat harus diisi"),
     pangkat_baru: Yup.string().required("Pangkat golongan harus diisi"),
+    no_sk: Yup.string().required("No. SK harus diisi"),
+    tanggal: Yup.string().required("Tanggal kenaikan pangkat harus diisi"),
     tmt_kenaikan_pangkat: Yup.string().required(
       "TMT. Kenaikan pangkat harus diisi"
     ),
+    pejabat_penetap: Yup.string().required("Pejabata penetap harus diisi"),
+    mk_tahun: Yup.string().required("Tahun harus diisi"),
+    mk_bulan: Yup.string().required("Bulan harus diisi"),
+    file: Yup.mixed()
+      .test("size", "Kapasitas file maksimal 5 mb", (value) => {
+        if (value) {
+          return value && value.size <= FILE_SIZE;
+        } else {
+          return true;
+        }
+      })
+      .test(
+        "type",
+        "Ekstensi yang diperbolehkan hanya pdf, doc, dan docx",
+        (value) => {
+          if (value)
+            return value && FILE_SUPPORTED_FORMATS.includes(value.type);
+          else return true;
+        }
+      ),
   });
 
   // Menangani value dari form submit
@@ -85,10 +121,19 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
     const arrPangkatBaru = values.pangkat_baru.split("-");
     const idPangkatBaru = arrPangkatBaru[0];
     const strPangkatBaru = arrPangkatBaru[1];
+    const mkGolongan = values.mk_tahun + " Tahun " + values.mk_bulan + " Bulan";
 
     formData.append("id_golongan", idPangkatBaru);
     formData.append("pangkat_baru", strPangkatBaru);
+    formData.append("jenis_kp", values.jenis_kp);
+    formData.append("no_sk", values.no_sk);
+    formData.append("tanggal", values.tanggal);
     formData.append("tmt_kenaikan_pangkat", values.tmt_kenaikan_pangkat);
+    formData.append("pejabat_penetap", values.pejabat_penetap);
+    formData.append("masa_kerja", mkGolongan);
+    if (values.file) {
+      formData.append("file", values.file);
+    } 
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -128,6 +173,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
           handleChange,
           handleBlur,
           handleSubmit,
+          setFieldValue,
         }) => (
           <CForm onSubmit={handleSubmit}>
             <CModalBody>
@@ -320,7 +366,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                 <CInput
                   type="file"
                   name="file"
-                  onChange={handleChange}
+                  onChange={(e) => setFieldValue("file", e.target.files[0])}
                   onBlur={handleBlur}
                   className={errors.file && touched.file ? "is-invalid" : null}
                 />

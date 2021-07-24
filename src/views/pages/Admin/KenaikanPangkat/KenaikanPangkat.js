@@ -261,7 +261,7 @@ const KenaikanPangkat = () => {
             )}
             {status === "naik-pangkat" && (
               <CButton color="info" onClick={() => handleUpdatePangkat(data)}>
-                Update Pangkat
+                Update Pangkat dan Simpan Ke Riwayat
               </CButton>
             )}
             {!status && (
