@@ -25,10 +25,14 @@ import { batalkanKenaikanPangkat } from "src/context/actions/KenaikanPangkat/bat
 import { updatePangkatPegawai } from "src/context/actions/KenaikanPangkat/updatePangkatPegawai";
 import printKenaikanPangkat from "src/context/actions/DownloadFile/printKenaikanPangkat";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 const MySwal = withReactContent(swal2);
 
 const KenaikanPangkat = () => {
+  const history = useHistory();
+  const match = useRouteMatch();
+  const { path } = match;
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { kenaikanPangkatState, kenaikanPangkatDispatch } =
@@ -233,6 +237,11 @@ const KenaikanPangkat = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
+  // Menuju halaman Riwayat Golongan
+  const goToRiwayat = (id) => {
+    history.push(`${path}/riwayat/${id}`);
+  };
+
   // Expandable Component
   const ExpandableComponent = ({ data }) => {
     let status = "";
@@ -299,6 +308,19 @@ const KenaikanPangkat = () => {
             {status === "naik-pangkat" && (
               <span>Pegawai ini pangkatnya sudah bisa diupdate</span>
             )}
+          </CCol>
+        </CRow>
+        <CRow className="mb-1">
+          <CCol md="3">
+            <strong>Riwayat Golongan</strong>
+          </CCol>
+          <CCol>
+            <CButton
+              color="primary"
+              onClick={() => goToRiwayat(data.id_pegawai)}
+            >
+              Lihat
+            </CButton>
           </CCol>
         </CRow>
       </div>
