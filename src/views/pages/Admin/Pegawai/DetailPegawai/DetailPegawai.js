@@ -20,6 +20,7 @@ import RiwayatKerja from "./RiwayatKerja/RiwayatKerja";
 import { useHistory } from "react-router-dom";
 import Penghargaan from "./Penghargaan/Penghargaan";
 import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
+import RiwayatGolongan from "./RiwayatGolongan/RiwayatGolongan";
 
 const DetailPegawai = ({ match }) => {
   const params = match.params;
@@ -78,6 +79,9 @@ const DetailPegawai = ({ match }) => {
                 <CNavLink data-tab="riwayat-kerja">Riwayat Kerja</CNavLink>
               </CNavItem>
               <CNavItem>
+                <CNavLink data-tab="riwayat-golongan">Golongan</CNavLink>
+              </CNavItem>
+              <CNavItem>
                 <CNavLink data-tab="penghargaan">Penghargaan</CNavLink>
               </CNavItem>
               <CNavItem>
@@ -99,6 +103,9 @@ const DetailPegawai = ({ match }) => {
               </CTabPane>
               <CTabPane data-tab="riwayat-kerja">
                 <RiwayatKerja id={params.id} dataActive={activeTab} />
+              </CTabPane>
+              <CTabPane data-tab="riwayat-golongan">
+                <RiwayatGolongan id={params.id} dataActive={activeTab} />
               </CTabPane>
               <CTabPane data-tab="penghargaan">
                 <Penghargaan id={params.id} dataActive={activeTab} />
