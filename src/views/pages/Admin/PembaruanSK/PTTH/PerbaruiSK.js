@@ -32,8 +32,10 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
 
   // Get All Jabatan
   useEffect(() => {
-    getSelectJabatan(setJabatan);
-  }, []);
+    if (modalTambah) {
+      getSelectJabatan(setJabatan);
+    }
+  }, [modalTambah]);
 
   const getDataOptions = (jabatan) => {
     let options = [];
@@ -273,10 +275,10 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
                 </CCol>
                 <CCol>
                   <CInput
-                    type="date"
+                    type="text"
                     name="tgl_mulai_tugas"
                     id="tgl_mulai_tugas"
-                    placeholder="Masukkan tanggal gaji yang akan datang"
+                    placeholder="Contoh: 4 JAN s/d 31 DES 2021"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.tgl_mulai_tugas}

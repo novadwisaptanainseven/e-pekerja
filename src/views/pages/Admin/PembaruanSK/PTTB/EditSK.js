@@ -19,25 +19,24 @@ import {
 } from "@coreui/react";
 import Select from "react-select";
 
-import { useHistory } from "react-router";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getRiwayatSKById } from "src/context/actions/PembaruanSK/getRiwayatSKById";
 import { editRiwayatSK } from "src/context/actions/PembaruanSK/editRiwayatSK";
 
 const MySwal = withReactContent(swal2);
 
-const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
-  const history = useHistory();
+const EditSK = ({
+  modalEdit,
+  setModalEdit,
+  id_pegawai,
+  id_riwayat_sk,
+  setDataRiwayat,
+}) => {
   const [loading, setLoading] = useState(false);
   const [formatGaji, setFormatGaji] = useState("");
   const [jabatan, setJabatan] = useState([]);
   const [touchedSelect, setTouchedSelect] = useState(false);
   const [data, setData] = useState("");
-
-  // Get All Jabatan
-  useEffect(() => {
-    getSelectJabatan(setJabatan);
-  }, []);
 
   // Get Riwayat SK By ID
   useEffect(() => {
@@ -47,6 +46,13 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
 
     return () => setData("");
   }, [id_pegawai, id_riwayat_sk]);
+
+  // Get All Jabatan
+  useEffect(() => {
+    if (modalEdit.modal) {
+      getSelectJabatan(setJabatan);
+    }
+  }, [modalEdit]);
 
   useEffect(() => {
     if (data) {
@@ -68,6 +74,15 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
 
   const optionsData = React.useMemo(() => getDataOptions(jabatan), [jabatan]);
 
+  // Get masa kerja tahun dan bulan
+  const getMasaKerja = (val) => {
+    let val2 = val.split(" ");
+    let tahun = val2[0];
+    let bulan = val2[2];
+
+    return { tahun: tahun, bulan: bulan };
+  };
+
   // Inisialisasi State Formik
   const initState = {
     no_sk: data ? data.no_sk : "",
@@ -75,6 +90,9 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
     tgl_penetapan_sk: data ? data.tgl_penetapan_sk : "",
     tgl_mulai_tugas: data ? data.tgl_mulai_tugas : "",
     tugas: data ? data.tugas : "",
+    kontrak_ke: data ? data.kontrak_ke : "",
+    masa_kerja_tahun: data ? getMasaKerja(data.masa_kerja).tahun : "",
+    masa_kerja_bulan: data ? getMasaKerja(data.masa_kerja).bulan : "",
     gaji_pokok: data ? data.gaji_pokok : "",
     file: undefined,
   };
@@ -106,7 +124,7 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
         modal: !modalEdit.modal,
         id: null,
       });
-      history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
+      // history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
     });
   };
 
@@ -141,6 +159,9 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
     tgl_penetapan_sk: Yup.string().required("Tgl penatapan harus diisi!"),
     tgl_mulai_tugas: Yup.string().required("Tgl mulai tugas harus diisi!"),
     tugas: Yup.string().required("Tugas pokok (jabatan) harus diisi!"),
+    kontrak_ke: Yup.string().required("Kontrak ke harus diisi!"),
+    masa_kerja_tahun: Yup.string().required("Tahun harus diisi!"),
+    masa_kerja_bulan: Yup.string().required("Bulan harus diisi!"),
     gaji_pokok: Yup.number()
       .typeError("Gaji pokok baru harus berupa bilangan")
       .integer()
@@ -167,6 +188,7 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
+    const masaKerja = `${values.masa_kerja_tahun} Tahun ${values.masa_kerja_bulan} Bulan`;
 
     for (const item in values) {
       if (item !== "file") {
@@ -178,6 +200,8 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
       }
     }
 
+    formData.append("masa_kerja", masaKerja);
+
     for (var pair of formData.entries()) {
       console.log(pair);
     }
@@ -188,6 +212,7 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
       id_riwayat_sk,
       formData,
       setLoading,
+      setDataRiwayat,
       showAlertSuccess,
       showAlertError
     );
@@ -210,7 +235,7 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
           initialValues={initState}
           validationSchema={validationSchema}
           enableReinitialize={true}
-          onSubmit={(values) => handleFormSubmit(values)}
+          onSubmit={handleFormSubmit}
         >
           {({
             values,
@@ -304,10 +329,10 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
                   </CCol>
                   <CCol>
                     <CInput
-                      type="date"
+                      type="text"
                       name="tgl_mulai_tugas"
                       id="tgl_mulai_tugas"
-                      placeholder="Masukkan tanggal gaji yang akan datang"
+                      placeholder="Contoh: 01 Januari s/d 31 Desember 2021"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.tgl_mulai_tugas}
@@ -354,6 +379,84 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
                         style={{ fontSize: "0.8em" }}
                       >
                         Tugas pokok (jabatan) harus diisi
+                      </div>
+                    )}
+                  </CCol>
+                </CFormGroup>
+
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Kontrak Ke</CLabel>
+                  </CCol>
+                  <CCol>
+                    <CInput
+                      type="number"
+                      name="kontrak_ke"
+                      id="kontrak_ke"
+                      placeholder="Masukkan kontrak baru"
+                      min="0"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.kontrak_ke || 0}
+                      className={
+                        errors.kontrak_ke && touched.kontrak_ke
+                          ? "is-invalid"
+                          : null
+                      }
+                    />
+                    {errors.kontrak_ke && touched.kontrak_ke && (
+                      <div className="invalid-feedback">
+                        {errors.kontrak_ke}
+                      </div>
+                    )}
+                  </CCol>
+                </CFormGroup>
+
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Masa Kerja</CLabel>
+                  </CCol>
+                  <CCol>
+                    <CInput
+                      type="number"
+                      name="masa_kerja_tahun"
+                      id="masa_kerja_tahun"
+                      min="0"
+                      placeholder="Masukkan tahun"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.masa_kerja_tahun || 0}
+                      className={
+                        errors.masa_kerja_tahun && touched.masa_kerja_tahun
+                          ? "is-invalid"
+                          : null
+                      }
+                    />
+                    {errors.masa_kerja_tahun && touched.masa_kerja_tahun && (
+                      <div className="invalid-feedback">
+                        {errors.masa_kerja_tahun}
+                      </div>
+                    )}
+                  </CCol>
+                  <CCol>
+                    <CInput
+                      type="number"
+                      name="masa_kerja_bulan"
+                      id="masa_kerja_bulan"
+                      min="0"
+                      placeholder="Masukkan bulan"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.masa_kerja_bulan || 0}
+                      className={
+                        errors.masa_kerja_bulan && touched.masa_kerja_bulan
+                          ? "is-invalid"
+                          : null
+                      }
+                    />
+                    {errors.masa_kerja_bulan && touched.masa_kerja_bulan && (
+                      <div className="invalid-feedback">
+                        {errors.masa_kerja_bulan}
                       </div>
                     )}
                   </CCol>

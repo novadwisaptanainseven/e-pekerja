@@ -18,14 +18,12 @@ import {
 } from "@coreui/react";
 import Select from "react-select";
 
-import { useHistory } from "react-router";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { insertPembaruanSK } from "src/context/actions/PembaruanSK/insertPembaruanSK";
 
 const MySwal = withReactContent(swal2);
 
-const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
-  const history = useHistory();
+const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
   const [loading, setLoading] = useState(false);
   const [formatGaji, setFormatGaji] = useState("");
   const [jabatan, setJabatan] = useState([]);
@@ -33,8 +31,10 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
 
   // Get All Jabatan
   useEffect(() => {
-    getSelectJabatan(setJabatan);
-  }, []);
+    if (modalTambah) {
+      getSelectJabatan(setJabatan);
+    }
+  }, [modalTambah]);
 
   const getDataOptions = (jabatan) => {
     let options = [];
@@ -87,7 +87,7 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
       timer: 1500,
     }).then((res) => {
       setModalTambah(!modalTambah);
-      history.push(`/epekerja/admin/pembaruan-sk/pttb/${id_pegawai}`);
+      // history.push(`/epekerja/admin/pembaruan-sk/pttb/${id_pegawai}`);
     });
   };
 
@@ -163,6 +163,7 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
       id_pegawai,
       formData,
       setLoading,
+      setData,
       showAlertSuccess,
       showAlertError
     );
@@ -282,10 +283,10 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
                 </CCol>
                 <CCol>
                   <CInput
-                    type="date"
+                    type="text"
                     name="tgl_mulai_tugas"
                     id="tgl_mulai_tugas"
-                    placeholder="Masukkan tanggal gaji yang akan datang"
+                    placeholder="Contoh: 01 Januari s/d 31 Desember 2021"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.tgl_mulai_tugas}
@@ -343,9 +344,10 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
                     name="kontrak_ke"
                     id="kontrak_ke"
                     placeholder="Masukkan kontrak baru"
+                    min="0"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.kontrak_ke}
+                    value={values.kontrak_ke || 0}
                     className={
                       errors.kontrak_ke && touched.kontrak_ke
                         ? "is-invalid"
@@ -367,10 +369,11 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
                     type="number"
                     name="masa_kerja_tahun"
                     id="masa_kerja_tahun"
+                    min="0"
                     placeholder="Masukkan tahun"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.masa_kerja_tahun}
+                    value={values.masa_kerja_tahun || 0}
                     className={
                       errors.masa_kerja_tahun && touched.masa_kerja_tahun
                         ? "is-invalid"
@@ -388,10 +391,11 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
                     type="number"
                     name="masa_kerja_bulan"
                     id="masa_kerja_bulan"
+                    min="0"
                     placeholder="Masukkan bulan"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.masa_kerja_bulan}
+                    value={values.masa_kerja_bulan || 0}
                     className={
                       errors.masa_kerja_bulan && touched.masa_kerja_bulan
                         ? "is-invalid"

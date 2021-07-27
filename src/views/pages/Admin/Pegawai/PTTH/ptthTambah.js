@@ -278,7 +278,7 @@ const TambahPTTH = () => {
       })
       .test(
         "type",
-        "Ekstensi yang diperbolehkan hanya jpg, jpeg, png, dan pdf",
+        "Ekstensi yang diperbolehkan hanya jpg, jpeg, png, pdf, doc, dan docx",
         (value) => {
           if (value) {
             return value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type);

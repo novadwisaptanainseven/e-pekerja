@@ -44,7 +44,7 @@ const DetailSK = ({
                 </tr>
                 <tr>
                   <th>Tgl. Mulai Tugas</th>
-                  <td>{format(new Date(data.tgl_mulai_tugas), "dd/MM/y")}</td>
+                  <td>{data.tgl_mulai_tugas}</td>
                 </tr>
                 <tr>
                   <th>Tugas Pokok (Jabatan)</th>

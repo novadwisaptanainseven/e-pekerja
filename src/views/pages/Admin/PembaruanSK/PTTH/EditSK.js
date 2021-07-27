@@ -26,18 +26,19 @@ import { editRiwayatSK } from "src/context/actions/PembaruanSK/editRiwayatSK";
 
 const MySwal = withReactContent(swal2);
 
-const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk, setDataRiwayat }) => {
+const EditSK = ({
+  modalEdit,
+  setModalEdit,
+  id_pegawai,
+  id_riwayat_sk,
+  setDataRiwayat,
+}) => {
   // const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [formatGaji, setFormatGaji] = useState("");
   const [jabatan, setJabatan] = useState([]);
   const [touchedSelect, setTouchedSelect] = useState(false);
   const [data, setData] = useState("");
-
-  // Get All Jabatan
-  useEffect(() => {
-    getSelectJabatan(setJabatan);
-  }, []);
 
   // Get Riwayat SK By ID
   useEffect(() => {
@@ -47,6 +48,13 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk, setDataRiw
 
     return () => setData("");
   }, [id_pegawai, id_riwayat_sk]);
+
+  // Get All Jabatan
+  useEffect(() => {
+    if (modalEdit.modal) {
+      getSelectJabatan(setJabatan);
+    }
+  }, [modalEdit]);
 
   useEffect(() => {
     if (data) {
@@ -305,10 +313,10 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk, setDataRiw
                   </CCol>
                   <CCol>
                     <CInput
-                      type="date"
+                      type="text"
                       name="tgl_mulai_tugas"
                       id="tgl_mulai_tugas"
-                      placeholder="Masukkan tanggal gaji yang akan datang"
+                      placeholder="Contoh: 4 JAN s/d 31 DES 2021"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.tgl_mulai_tugas}

@@ -38,8 +38,10 @@ const TambahPTTB = () => {
   const history = useHistory();
   const [selectedFile, setSelectedFile] = useState();
   const [selectedFile2, setSelectedFile2] = useState();
+  const [selectedFile3, setSelectedFile3] = useState();
   const [preview, setPreview] = useState();
   const [preview2, setPreview2] = useState();
+  const [preview3, setPreview3] = useState();
   const [loading, setLoading] = useState(false);
   const [jabatan, setJabatan] = useState([]);
   const [bidang, setBidang] = useState([]);
@@ -97,10 +99,22 @@ const TambahPTTB = () => {
     setPreview2(filename);
   }, [selectedFile2]);
 
+  // Menangani preview input file sk setelah dipilih
+  const handleSelectedFile3 = useCallback(() => {
+    if (!selectedFile3) {
+      setPreview3(null);
+      return;
+    }
+
+    const filename = selectedFile3.name;
+    setPreview3(filename);
+  }, [selectedFile3]);
+
   useEffect(() => {
     handleSelectedFile();
     handleSelectedFile2();
-  }, [handleSelectedFile, handleSelectedFile2]);
+    handleSelectedFile3();
+  }, [handleSelectedFile, handleSelectedFile2, handleSelectedFile3]);
 
   const onSelectFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -118,6 +132,15 @@ const TambahPTTB = () => {
     }
 
     setSelectedFile2(e.target.files[0]);
+  };
+
+  const onSelectFile3 = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile3(undefined);
+      return;
+    }
+
+    setSelectedFile3(e.target.files[0]);
   };
 
   // Mengubah format gaji dari number ke currency
@@ -156,6 +179,7 @@ const TambahPTTB = () => {
     no_hp: "",
     email: "",
     no_ktp: "",
+    file_sk: undefined,
     foto: undefined,
     nama_akademi: "",
     jurusan: "",
@@ -203,6 +227,8 @@ const TambahPTTB = () => {
   ];
   const FILE_IJAZAH_SIZE = 2048000; // Bytes => 2 mb x 1000 kb x 1000 bytes
   const FILE_IJAZAH_SUPPORTED_FORMATS = [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "application/pdf",
     "image/jpg",
     "image/jpeg",
@@ -241,6 +267,26 @@ const TambahPTTB = () => {
     tahun_lulus: Yup.string().required("Tahun lulus harus diisi!"),
     jenjang: Yup.string().required("Jenjang harus diisi!"),
     no_ijazah: Yup.string().required("No. ijazah harus diisi!"),
+    file_sk: Yup.mixed()
+      // .required("File_sk belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) {
+          return value && value.size <= FILE_IJAZAH_SIZE;
+        } else {
+          return true;
+        }
+      })
+      .test(
+        "type",
+        "Ekstensi yang diperbolehkan hanya jpg, jpeg, png, pdf, doc, dan docx",
+        (value) => {
+          if (value) {
+            return value && FILE_IJAZAH_SUPPORTED_FORMATS.includes(value.type);
+          } else {
+            return true;
+          }
+        }
+      ),
 
     foto: Yup.mixed()
       // .required("Foto belum dipilih")
@@ -315,6 +361,9 @@ const TambahPTTB = () => {
     formData.append("no_hp", values.no_hp);
     formData.append("email", values.email);
     formData.append("no_ktp", values.no_ktp);
+    if (values.file_sk) {
+      formData.append("file_sk", values.file_sk);
+    }
     if (values.foto) {
       formData.append("foto", values.foto);
     }
@@ -948,6 +997,44 @@ const TambahPTTB = () => {
                     </CFormGroup>
 
                     <CFormGroup row>
+                      <CLabel col>File SK</CLabel>
+                      <CCol xs="12" md="9">
+                        <CInputFile
+                          custom
+                          id="custom-file-input"
+                          name="file_sk"
+                          onChange={(e) => {
+                            onSelectFile3(e);
+                            setFieldValue("file_sk", e.target.files[0]);
+                          }}
+                          onBlur={handleBlur}
+                          className={
+                            errors.file_sk && touched.file_sk
+                              ? "is-invalid"
+                              : null
+                          }
+                        />
+                        {errors.file_sk && touched.file_sk && (
+                          <div className="invalid-feedback">
+                            {errors.file_sk}
+                          </div>
+                        )}
+                        <CLabel
+                          style={{ width: "353px", left: 15 }}
+                          htmlFor="custom-file-input"
+                          variant="custom-file"
+                        >
+                          Pilih File SK
+                        </CLabel>
+                        {preview3 && <p className="mt-1">{preview3}</p>}
+                        <CFormText className="help-block">
+                          File SK harus bertipe pdf, doc, docx, jpg, jpeg, atau
+                          png dengan ukuran kurang dari 2 MB
+                        </CFormText>
+                      </CCol>
+                    </CFormGroup>
+
+                    <CFormGroup row>
                       <CLabel col>Foto</CLabel>
                       <CCol xs="12" md="9">
                         <CInputFile
@@ -1131,7 +1218,7 @@ const TambahPTTB = () => {
                       </CCol>
                     </CFormGroup>
                     <CFormGroup row>
-                      <CLabel col>Foto Ijazah</CLabel>
+                      <CLabel col>File Ijazah</CLabel>
                       <CCol xs="12" md="9">
                         <CInputFile
                           name="foto_ijazah"
@@ -1162,8 +1249,8 @@ const TambahPTTB = () => {
                         </CLabel>
                         {preview2 && <p className="mt-1">{preview2}</p>}
                         <CFormText className="help-block">
-                          Foto harus bertipe jpg, jpeg, atau png dengan ukuran
-                          kurang dari 2 MB
+                          File ijazah harus bertipe pdf, doc, docx, jpg, jpeg,
+                          atau png dengan ukuran kurang dari 2 MB
                         </CFormText>
                       </CCol>
                     </CFormGroup>

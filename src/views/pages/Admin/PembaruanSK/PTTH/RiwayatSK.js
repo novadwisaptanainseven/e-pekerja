@@ -53,7 +53,7 @@ const RiwayatSK = ({ match }) => {
   });
 
   const goToDetailPegawai = (id) => {
-    history.push(`/admin/pegawai/${id}`);
+    history.push(`/epekerja/admin/pegawai-detail/${id}`);
   };
 
   const goBackToParent = () => {
