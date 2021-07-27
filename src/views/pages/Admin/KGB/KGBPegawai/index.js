@@ -21,6 +21,11 @@ import { getKGBPegawai } from "src/context/actions/KGB/getKGBPegawai";
 import FilterPencarianTanggal from "src/reusable/FilterPencarianTanggal";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
 import ModalKirimWa from "./ModalKirimWa";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { updateGaji } from "src/context/actions/KGB/updateGaji";
+
+const MySwal = withReactContent(swal2);
 
 const KGBPegawai = () => {
   const history = useHistory();
@@ -130,11 +135,19 @@ const KGBPegawai = () => {
                   Pegawai ini sudah bisa dilakukan kenaikan gaji
                 </span>
               )}
-              {row.status_kgb === "sedang-berjalan" && (
-                <span className="text-success font-weight-bold">
-                  Pegawai ini telah diperbarui gajinya
-                </span>
-              )}
+              {row.status_kgb === "sedang-berjalan" &&
+                row.status_updated !== 1 && (
+                  <span className="text-success font-weight-bold">
+                    Pegawai ini telah diperbarui gajinya. Silahkan untuk update
+                    gaji pegawai di sistem
+                  </span>
+                )}
+              {row.status_kgb === "sedang-berjalan" &&
+                row.status_updated === 1 && (
+                  <span className="text-success font-weight-bold">
+                    Gaji pegawai telah diupdate di sistem.
+                  </span>
+                )}
               {row.status_kgb === "akan-naik-gaji-2" && (
                 <span className="text-warning font-weight-bold">
                   Pegawai ini dalam waktu dekat akan mengalami kenaikan gaji
@@ -154,8 +167,7 @@ const KGBPegawai = () => {
         return (
           <div data-tag="allowRowEvents" className="my-1">
             {(row.status_kgb === "akan-naik-gaji" ||
-              row.status_kgb === "akan-naik-gaji-2" ||
-              row.status_kgb === "sedang-berjalan") && (
+              row.status_kgb === "akan-naik-gaji-2") && (
               <CButton
                 className="mr-1"
                 color="success"
@@ -169,6 +181,17 @@ const KGBPegawai = () => {
               >
                 Kirim (WA)
               </CButton>
+            )}
+            {row.status_kgb === "sedang-berjalan" && row.status_updated !== 1 && (
+              <>
+                <CButton
+                  className="mr-1 mb-1 mt-1"
+                  color="info"
+                  onClick={() => handleUpdateGaji(row)}
+                >
+                  Update Gaji di Sistem
+                </CButton>{" "}
+              </>
             )}
             {row.status_kgb === "naik-gaji" && (
               <>
@@ -186,6 +209,44 @@ const KGBPegawai = () => {
       },
     },
   ];
+
+  const handleUpdateGaji = (data) => {
+    MySwal.fire({
+      title: "Gaji Pegawai di Sistem Sedang Diperbarui!",
+      html: "Loading...",
+      timer: 1000,
+      timerProgressBar: true,
+      didOpen: () => {
+        MySwal.showLoading();
+        // Update Gaji Pegawai di Sistem
+        updateGaji(data.id_pegawai, data, setLoading, setData);
+        // MySwal.close();
+      },
+    }).then((result) => {
+      if (result.dismiss === MySwal.DismissReason.timer) {
+        MySwal.fire({
+          icon: "warning",
+          title: "Anda ingin mengirim notifikasi WA ?",
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonColor: "#1c9c25",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "YA",
+          cancelButtonText: "TIDAK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setModalKirimWa({
+              ...modalKirimWa,
+              modal: true,
+              data: data,
+              status: "gaji-updated",
+            });
+            // MySwal.close();
+          }
+        });
+      }
+    });
+  };
 
   // Style of Datatables
   const customStyles = {

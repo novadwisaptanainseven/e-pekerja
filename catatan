@@ -1,27 +1,5 @@
-
-Catatan
-Halaman Admin
-1. Tambah field keterangan dan keterangan diubah menjadi absen di menu Absensi Pegawai (Selesai)
-2. Terapkan sistem baru absensi di semua menu absen yaitu PNS, PTTH, PTTB 
-10. Tambah Riwayat Penghargaan 
-12. Di form tambah pegawai, buat form input data akun.
-    - nama -> nama pegawai
-    - username -> nik
-    - password -> tgl_lahir
-
-13. Perbaikin input jumlah jam di menu diklat
-14. Perbaiki state loading di menu duk pns dll
-15. Perbaiki input masa kerja di menu tambah pegawai
-
-14. Perbaiki alur pensiun. Jika pegawai telah pensiun atau pindah maka ubah status kerja pegawai di tabel pegawai. Lalu tampilkan data pegawai yang status kerjanya aktif
-15. Hilangan tombol delete di histori KGB
-17. Perbaiki tata letak tombol cetak riwayat pegawai, pindahkan ke bagian date picker
-18. Hilangkan lama hari di bagian tambah cuti
-
-Halaman User
-
-Algoritma
-1. Format tanggal yang tersimpan di database y-m-d
-2. 1 reducer bisa digunakan untuk banyak
-3. 1 action types bisa digunakan untuk banyak
-
+Updated tabel
+1. KGB
+2. Kenaikan Pangkat
+3. Riwayat Kenaikan Pangkat
+4. Riwayat SK

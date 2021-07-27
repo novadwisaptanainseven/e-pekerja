@@ -105,9 +105,7 @@ const RiwayatSK = ({ match }) => {
       selector: "tgl_mulai_tugas",
       sortable: true,
       wrap: true,
-      cell: (row) => (
-        <div>{format(new Date(row.tgl_mulai_tugas), "dd/MM/y")}</div>
-      ),
+      cell: (row) => <div>{row.tgl_mulai_tugas}</div>,
     },
     {
       // maxWidth: "150px",
@@ -345,6 +343,7 @@ const RiwayatSK = ({ match }) => {
         <PerbaruiSK
           modalTambah={modalTambah}
           setModalTambah={setModalTambah}
+          setData={setData}
           id_pegawai={params.id}
         />
       </CModal>
@@ -369,6 +368,7 @@ const RiwayatSK = ({ match }) => {
           id_riwayat_sk={modalEdit.id}
           id_pegawai={params.id}
           modalEdit={modalEdit}
+          setDataRiwayat={setData}
           setModalEdit={setModalEdit}
         />
       </CModal>

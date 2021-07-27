@@ -66,14 +66,14 @@ const DaftarKGB = ({ match }) => {
   const columns = [
     {
       name: "No",
-      selector: "no",
+      selector: (row) => row.no,
       sortable: true,
       wrap: true,
       width: "100px",
     },
     {
       name: "TMT. Kenaikan Gaji",
-      selector: "tmt_kenaikan_gaji",
+      selector: (row) => row.tmt_kenaikan_gaji,
       sortable: true,
       // maxWidth: "200px",
       wrap: true,
@@ -83,7 +83,6 @@ const DaftarKGB = ({ match }) => {
     },
     {
       name: "Gaji P. Lama",
-      selector: "gaji_pokok_lama",
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
@@ -98,7 +97,6 @@ const DaftarKGB = ({ match }) => {
     },
     {
       name: "Gaji P. Baru",
-      selector: "gaji_pokok_baru",
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
@@ -113,7 +111,6 @@ const DaftarKGB = ({ match }) => {
     },
     {
       name: "Kenaikan Gaji YAD",
-      selector: "kenaikan_gaji_yad",
       sortable: true,
       wrap: true,
       cell: (row) => (
@@ -122,7 +119,6 @@ const DaftarKGB = ({ match }) => {
     },
     {
       name: "Status",
-      selector: "status",
       sortable: true,
       wrap: true,
       cell: (row) => {
@@ -295,17 +291,24 @@ const DaftarKGB = ({ match }) => {
     return (
       <div style={{ padding: "10px 63px" }}>
         <CRow className="mb-1">
-          <CCol md="2">
+          <CCol md="3">
             <strong>Tgl. Pembuatan KGB</strong>
           </CCol>
           <CCol>{format(new Date(data.created_at), "dd/MM/y")}</CCol>
         </CRow>
 
         <CRow className="mb-1">
-          <CCol md="2">
+          <CCol md="3">
             <strong>Peraturan</strong>
           </CCol>
           <CCol>{data.peraturan}</CCol>
+        </CRow>
+
+        <CRow className="mb-1">
+          <CCol md="3">
+            <strong>Keterangan</strong>
+          </CCol>
+          <CCol>{data.keterangan}</CCol>
         </CRow>
       </div>
     );

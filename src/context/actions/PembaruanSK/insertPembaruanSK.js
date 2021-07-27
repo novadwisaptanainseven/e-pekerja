@@ -1,9 +1,11 @@
 import axiosInstance from "src/helpers/axios";
+import { getRiwayatSK } from "./getRiwayatSK";
 
 export const insertPembaruanSK = (
   id_pegawai,
   values,
   setLoading,
+  setData,
   showAlertSuccess,
   showAlertError
 ) => {
@@ -17,6 +19,7 @@ export const insertPembaruanSK = (
     })
     .then((res) => {
       console.log(res.data);
+      getRiwayatSK(id_pegawai, setLoading, setData);
       setLoading(false);
       showAlertSuccess();
     })

@@ -18,14 +18,13 @@ import {
 } from "@coreui/react";
 import Select from "react-select";
 
-import { useHistory } from "react-router";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { insertPembaruanSK } from "src/context/actions/PembaruanSK/insertPembaruanSK";
 
 const MySwal = withReactContent(swal2);
 
-const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
-  const history = useHistory();
+const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
+  // const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [formatGaji, setFormatGaji] = useState("");
   const [jabatan, setJabatan] = useState([]);
@@ -84,7 +83,7 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
       timer: 1500,
     }).then((res) => {
       setModalTambah(!modalTambah);
-      history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
+      // history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
     });
   };
 
@@ -154,6 +153,7 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai }) => {
       id_pegawai,
       formData,
       setLoading,
+      setData,
       showAlertSuccess,
       showAlertError
     );

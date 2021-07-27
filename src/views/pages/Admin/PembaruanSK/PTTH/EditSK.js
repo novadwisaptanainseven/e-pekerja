@@ -19,15 +19,15 @@ import {
 } from "@coreui/react";
 import Select from "react-select";
 
-import { useHistory } from "react-router";
+// import { useHistory } from "react-router";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getRiwayatSKById } from "src/context/actions/PembaruanSK/getRiwayatSKById";
 import { editRiwayatSK } from "src/context/actions/PembaruanSK/editRiwayatSK";
 
 const MySwal = withReactContent(swal2);
 
-const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
-  const history = useHistory();
+const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk, setDataRiwayat }) => {
+  // const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [formatGaji, setFormatGaji] = useState("");
   const [jabatan, setJabatan] = useState([]);
@@ -106,7 +106,7 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
         modal: !modalEdit.modal,
         id: null,
       });
-      history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
+      // history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
     });
   };
 
@@ -188,6 +188,7 @@ const EditSK = ({ modalEdit, setModalEdit, id_pegawai, id_riwayat_sk }) => {
       id_riwayat_sk,
       formData,
       setLoading,
+      setDataRiwayat,
       showAlertSuccess,
       showAlertError
     );

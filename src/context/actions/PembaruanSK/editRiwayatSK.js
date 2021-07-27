@@ -1,10 +1,12 @@
 import axiosInstance from "src/helpers/axios";
+import { getRiwayatSK } from "./getRiwayatSK";
 
 export const editRiwayatSK = (
   id_pegawai,
   id_riwayat_sk,
   values,
   setLoading,
+  setData,
   showAlertSuccess,
   showAlertError
 ) => {
@@ -18,6 +20,7 @@ export const editRiwayatSK = (
     })
     .then((res) => {
       console.log(res.data);
+      getRiwayatSK(id_pegawai, setLoading, setData);
       setLoading(false);
       showAlertSuccess();
     })

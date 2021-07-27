@@ -89,33 +89,32 @@ const KGB = () => {
   const columns = [
     {
       name: "No",
-      selector: "no",
+      selector: (row) => row.no,
       sortable: true,
       wrap: true,
       maxWidth: "30px",
     },
     {
       name: "NIP",
-      selector: "nip",
+      selector: (row) => row.nip,
       sortable: true,
       wrap: true,
     },
     {
       name: "Nama",
-      selector: "nama",
+      selector: (row) => row.nama,
       sortable: true,
       // maxWidth: "200px",
       wrap: true,
     },
     {
       name: "Jabatan",
-      selector: "jabatan",
+      selector: (row) => row.jabatan,
       sortable: true,
       wrap: true,
     },
     {
       name: "Golongan",
-      selector: "golongan",
       sortable: true,
       wrap: true,
       cell: (row) => (

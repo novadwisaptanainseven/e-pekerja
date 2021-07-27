@@ -44,6 +44,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
     tmt_kenaikan_gaji: "",
     kenaikan_gaji_yad: "",
     peraturan: "",
+    keterangan: "",
   };
 
   // Mengubah format gaji dari number ke currency
@@ -105,6 +106,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
       "Kenaikan gaji yang akan datand harus diisi!"
     ),
     peraturan: Yup.string().required("Peraturan harus diisi!"),
+    keterangan: Yup.string().required("Keterangan harus diisi!"),
   });
 
   // Menangani value dari form submit
@@ -115,6 +117,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
     formData.append("tmt_kenaikan_gaji", values.tmt_kenaikan_gaji);
     formData.append("kenaikan_gaji_yad", values.kenaikan_gaji_yad);
     formData.append("peraturan", values.peraturan);
+    formData.append("keterangan", values.keterangan);
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -234,6 +237,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
                       placeholder="Masukkan tmt kenaikan gaji"
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      max={values.kenaikan_gaji_yad}
                       value={values.tmt_kenaikan_gaji}
                       className={
                         errors.tmt_kenaikan_gaji && touched.tmt_kenaikan_gaji
@@ -260,6 +264,7 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
                       placeholder="Masukkan tanggal gaji yang akan datang"
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      min={values.tmt_kenaikan_gaji}
                       value={values.kenaikan_gaji_yad}
                       className={
                         errors.kenaikan_gaji_yad && touched.kenaikan_gaji_yad
@@ -295,6 +300,32 @@ const TambahKGB = ({ modalTambah, setModalTambah, id_pegawai }) => {
                     />
                     {errors.peraturan && touched.peraturan && (
                       <div className="invalid-feedback">{errors.peraturan}</div>
+                    )}
+                  </CCol>
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Keterangan</CLabel>
+                  </CCol>
+                  <CCol>
+                    <CInput
+                      type="text"
+                      name="keterangan"
+                      id="keterangan"
+                      placeholder="Masukkan keterangan"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.keterangan}
+                      className={
+                        errors.keterangan && touched.keterangan
+                          ? "is-invalid"
+                          : null
+                      }
+                    />
+                    {errors.keterangan && touched.keterangan && (
+                      <div className="invalid-feedback">
+                        {errors.keterangan}
+                      </div>
                     )}
                   </CCol>
                 </CFormGroup>
