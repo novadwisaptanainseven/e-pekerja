@@ -166,7 +166,7 @@ const DataPTTH = () => {
           <CCol md="2">
             <strong>Tgl. Mulai Tugas</strong>
           </CCol>
-          <CCol>{format(new Date(data.tgl_mulai_tugas), "dd/MM/y")}</CCol>
+          <CCol>{data.tgl_mulai_tugas}</CCol>
         </CRow>
       </div>
     </>

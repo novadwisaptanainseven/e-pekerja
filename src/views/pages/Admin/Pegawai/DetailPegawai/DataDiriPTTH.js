@@ -36,7 +36,7 @@ const DataDiriPTTH = ({ data }) => {
                 <table className="table table-sm table-striped">
                   <tbody>
                     <tr>
-                      <th>NIP</th>
+                      <th>NIK</th>
                       <td>{data.nik}</td>
                     </tr>
                     <tr>

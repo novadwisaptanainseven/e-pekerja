@@ -167,7 +167,7 @@ const DataPTTB = () => {
           <CCol md="2">
             <strong>Tgl. Mulai Tugas</strong>
           </CCol>
-          <CCol>{format(new Date(data.tgl_mulai_tugas), "dd/MM/y")}</CCol>
+          <CCol>{data.tgl_mulai_tugas}</CCol>
         </CRow>
         <CRow className="mb-1">
           <CCol md="2">
