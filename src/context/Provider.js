@@ -48,6 +48,12 @@ export const GlobalProvider = ({ children }) => {
     initStateDashboard
   );
 
+  // Struktur Organisasi
+  const [strukturState, strukturDispatch] = useReducer(
+    reducer,
+    initStateDefault
+  );
+
   // Master Data
 
   // Agama
@@ -130,10 +136,7 @@ export const GlobalProvider = ({ children }) => {
   );
 
   // Mutasi
-  const [mutasiState, mutasiDispatch] = useReducer(
-    pensiunReducer,
-    initState
-  );
+  const [mutasiState, mutasiDispatch] = useReducer(pensiunReducer, initState);
 
   // Kenaikan Pangkat
   const [kenaikanPangkatState, kenaikanPangkatDispatch] = useReducer(
@@ -248,6 +251,8 @@ export const GlobalProvider = ({ children }) => {
         riwayatKerjaDispatch,
         rekapPegawaiState,
         rekapPegawaiDispatch,
+        strukturState,
+        strukturDispatch,
       }}
     >
       {children}

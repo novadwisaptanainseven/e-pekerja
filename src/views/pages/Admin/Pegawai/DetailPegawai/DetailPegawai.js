@@ -78,9 +78,11 @@ const DetailPegawai = ({ match }) => {
               <CNavItem>
                 <CNavLink data-tab="riwayat-kerja">Riwayat Kerja</CNavLink>
               </CNavItem>
-              <CNavItem>
-                <CNavLink data-tab="riwayat-golongan">Golongan</CNavLink>
-              </CNavItem>
+              {data && data.id_status_pegawai === 1 && (
+                <CNavItem>
+                  <CNavLink data-tab="riwayat-golongan">Golongan</CNavLink>
+                </CNavItem>
+              )}
               <CNavItem>
                 <CNavLink data-tab="penghargaan">Penghargaan</CNavLink>
               </CNavItem>
@@ -104,9 +106,11 @@ const DetailPegawai = ({ match }) => {
               <CTabPane data-tab="riwayat-kerja">
                 <RiwayatKerja id={params.id} dataActive={activeTab} />
               </CTabPane>
-              <CTabPane data-tab="riwayat-golongan">
-                <RiwayatGolongan id={params.id} dataActive={activeTab} />
-              </CTabPane>
+              {data && data.id_status_pegawai === 1 && (
+                <CTabPane data-tab="riwayat-golongan">
+                  <RiwayatGolongan id={params.id} dataActive={activeTab} />
+                </CTabPane>
+              )}
               <CTabPane data-tab="penghargaan">
                 <Penghargaan id={params.id} dataActive={activeTab} />
               </CTabPane>

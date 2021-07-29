@@ -112,12 +112,12 @@ const _nav_admin = [
       },
     ],
   },
-  // {
-  //   _tag: "CSidebarNavItem",
-  //   name: "DUK Pegawai Negeri Sipil",
-  //   to: "/epekerja/admin/duk",
-  //   icon: <CIcon content={cilBadge} customClasses="c-sidebar-nav-icon" />,
-  // },
+  {
+    _tag: "CSidebarNavItem",
+    name: "DUK Pegawai Negeri Sipil",
+    to: "/epekerja/admin/duk",
+    icon: <CIcon content={cilBadge} customClasses="c-sidebar-nav-icon" />,
+  },
   {
     _tag: "CSidebarNavItem",
     name: "Masa Kerja Pegawai",
