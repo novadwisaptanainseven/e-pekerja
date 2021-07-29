@@ -130,16 +130,24 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
       .integer()
       .required("Gaji pokok baru harus diisi!"),
     file: Yup.mixed()
-      .required("File SK belum dipilih")
-      .test(
-        "size",
-        "Kapasitas file maksimal 2 mb",
-        (value) => value && value.size <= FILE_SK_SIZE
-      )
+      // .required("File SK belum dipilih")
+      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+        if (value) {
+          return value && value.size <= FILE_SK_SIZE;
+        } else {
+          return true;
+        }
+      })
       .test(
         "type",
         "Ekstensi yang diperbolehkan hanya pdf, docx, atau doc",
-        (value) => value && FILE_SK_SUPPORTED_FORMATS.includes(value.type)
+        (value) => {
+          if (value) {
+            return value && FILE_SK_SUPPORTED_FORMATS.includes(value.type);
+          } else {
+            return true;
+          }
+        }
       ),
   });
 
@@ -317,6 +325,11 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
                       setTouchedSelect(false);
                       setFieldValue("tugas", opt ? opt.value : "");
                     }}
+                    onBlur={() =>
+                      values.tugas
+                        ? setTouchedSelect(false)
+                        : setTouchedSelect(true)
+                    }
                     onFocus={() => setTouchedSelect(true)}
                     placeholder="-- Pilih Tugas --"
                     isSearchable

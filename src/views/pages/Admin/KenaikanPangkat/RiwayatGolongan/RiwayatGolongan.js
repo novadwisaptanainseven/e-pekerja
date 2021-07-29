@@ -14,7 +14,11 @@ import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { getDocument } from "src/context/actions/DownloadFile";
+import {
+  exportExcel,
+  getDocument,
+  printRiwayatGolongan,
+} from "src/context/actions/DownloadFile";
 import {
   deleteRiwayatGolongan,
   getRiwayatGolongan,
@@ -203,7 +207,7 @@ const RiwayatGolongan = () => {
             type="button"
             color="info"
             className="ml-2"
-            // onClick={() => printRiwayatCuti(params.id)}
+            onClick={() => printRiwayatGolongan(params.id)}
           >
             PDF <CIcon content={cilPrint} />
           </CButton>
@@ -211,7 +215,7 @@ const RiwayatGolongan = () => {
             type="button"
             color="success"
             className="ml-2"
-            // onClick={() => exportExcel("cuti-pegawai/" + params.id)}
+            onClick={() => exportExcel("riwayat-golongan/" + params.id)}
           >
             Excel <CIcon content={cilPrint} />
           </CButton>

@@ -1,15 +1,16 @@
 Updated tabel
-1. KGB
-2. Kenaikan Pangkat
-3. Riwayat Kenaikan Pangkat
-4. Riwayat SK
+1. struktur_org
+
+Perubahan file di e-pekerja-api
+1. StrukturOrgController dan Model StrukturOrg
+2. struktur di routes
+3. riwayat-golongan di folder print_route
+4. RiwayatGolonganExport di file export excel
+5. FileController Updated
+6. print_riwayat_golongan_pegawai di file print
 
 
 Perbaikan
-1. Tambahkan struktur organisasi
-2. Perbaiki line warna merah di form pembaruan SK
-3. Ubah konfigurasi validasi file sk di form pembaruan sk menjadi boleh tidak diisi
-4. Munculkan riwayat golongan hanya untuk pegawai PNS
 
 
 Data yang blm ada sk nya

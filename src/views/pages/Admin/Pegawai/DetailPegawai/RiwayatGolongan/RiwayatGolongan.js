@@ -14,7 +14,11 @@ import {
 } from "src/context/actions/RiwayatGolongan";
 import { format } from "date-fns";
 import customStyles from "src/reusable/customStyles";
-import { getDocument } from "src/context/actions/DownloadFile";
+import {
+  exportExcel,
+  getDocument,
+  printRiwayatGolongan,
+} from "src/context/actions/DownloadFile";
 import getFilename from "src/helpers/getFilename";
 import Loading from "src/reusable/Loading";
 import ModalTambah from "./ModalTambah";
@@ -203,7 +207,7 @@ const RiwayatGolongan = ({ id, dataActive }) => {
               type="button"
               color="info"
               className="ml-2"
-              // onClick={() => printRiwayatCuti(params.id)}
+              onClick={() => printRiwayatGolongan(id)}
             >
               PDF <CIcon content={cilPrint} />
             </CButton>
@@ -211,7 +215,7 @@ const RiwayatGolongan = ({ id, dataActive }) => {
               type="button"
               color="success"
               className="ml-2"
-              // onClick={() => exportExcel("cuti-pegawai/" + params.id)}
+              onClick={() => exportExcel("riwayat-golongan/" + id)}
             >
               Excel <CIcon content={cilPrint} />
             </CButton>
