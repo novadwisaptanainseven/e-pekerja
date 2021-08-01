@@ -8,8 +8,6 @@ import {
   CBadge,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-import CIcon from "@coreui/icons-react";
-import { cilPrint } from "@coreui/icons";
 import { getPensiunById } from "src/context/actions/Pensiun.js/getPensiunById";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
@@ -64,9 +62,9 @@ const DetailPenghargaan = ({ match }) => {
         </CCardHeader>
         <CForm className="form-horizontal">
           <CCardBody>
-            <CButton type="button" color="info" className="mb-3">
+            {/* <CButton type="button" color="info" className="mb-3">
               Cetak Surat Pensiun <CIcon content={cilPrint} />
-            </CButton>
+            </CButton> */}
             <table className="table table-striped table-borderless">
               <tbody>
                 <tr>

@@ -133,7 +133,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
     formData.append("masa_kerja", mkGolongan);
     if (values.file) {
       formData.append("file", values.file);
-    } 
+    }
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -268,6 +268,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                   name="tmt_kenaikan_pangkat"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  min={values.tgl_kenaikan_pangkat}
                   className={
                     errors.tmt_kenaikan_pangkat && touched.tmt_kenaikan_pangkat
                       ? "is-invalid"

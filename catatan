@@ -1,17 +1,8 @@
 Updated tabel
 1. struktur_org
 
-Perubahan file di e-pekerja-api
-1. StrukturOrgController dan Model StrukturOrg
-2. struktur di routes
-3. riwayat-golongan di folder print_route
-4. RiwayatGolonganExport di file export excel
-5. FileController Updated
-6. print_riwayat_golongan_pegawai di file print
-
-
 Perbaikan
-
+1. Tambahkan riwayat sk di detail ptth dan pttb
 
 Data yang blm ada sk nya
 1. H. Muhammad

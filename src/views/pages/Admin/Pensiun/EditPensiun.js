@@ -97,7 +97,7 @@ const EditPensiun = ({ match }) => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Edit Data Pensiun : {params.id}</h3>
+          <h3>Edit Data Pensiun</h3>
           <CButton
             type="button"
             color="warning"
