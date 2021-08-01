@@ -19,6 +19,7 @@ import DataBerkas from "./DataBerkas/DataBerkas";
 import Penghargaan from "./Penghargaan/Penghargaan";
 import { GlobalContext } from "src/context/Provider";
 import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDataDiri";
+import RiwayatGolongan from "./RiwayatGolongan";
 
 const DetailPegawai = () => {
   const { dataDiriState, dataDiriDispatch } = useContext(GlobalContext);
@@ -59,6 +60,11 @@ const DetailPegawai = () => {
               <CNavItem>
                 <CNavLink data-tab="riwayat-kerja">Riwayat Kerja</CNavLink>
               </CNavItem>
+              {data && data.id_status_pegawai === 1 && (
+                <CNavItem>
+                  <CNavLink data-tab="riwayat-golongan">Golongan</CNavLink>
+                </CNavItem>
+              )}
               <CNavItem>
                 <CNavLink data-tab="penghargaan">Penghargaan</CNavLink>
               </CNavItem>
@@ -82,6 +88,14 @@ const DetailPegawai = () => {
               <CTabPane data-tab="riwayat-kerja">
                 <RiwayatKerja dataActive={activeTab} />
               </CTabPane>
+              {data && data.id_status_pegawai === 1 && (
+                <CTabPane data-tab="riwayat-golongan">
+                  <RiwayatGolongan
+                    id={localStorage.id_user}
+                    dataActive={activeTab}
+                  />
+                </CTabPane>
+              )}
               <CTabPane data-tab="penghargaan">
                 <Penghargaan dataActive={activeTab} />
               </CTabPane>

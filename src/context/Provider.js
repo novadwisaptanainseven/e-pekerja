@@ -183,6 +183,11 @@ export const GlobalProvider = ({ children }) => {
     reducer,
     initStateDefault
   );
+  // Riwayat Golongan
+  const [riwayatGolonganState, riwayatGolonganDispatch] = useReducer(
+    reducer,
+    initStateDefault
+  );
 
   return (
     <GlobalContext.Provider
@@ -253,6 +258,8 @@ export const GlobalProvider = ({ children }) => {
         rekapPegawaiDispatch,
         strukturState,
         strukturDispatch,
+        riwayatGolonganState,
+        riwayatGolonganDispatch,
       }}
     >
       {children}

@@ -1,25 +1,52 @@
-import React, { useContext, useEffect } from "react";
-import { CCol, CRow, CWidgetIcon } from "@coreui/react";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CNav,
+  CNavItem,
+  CNavLink,
+  CRow,
+  CTabContent,
+  CTabPane,
+  CTabs,
+  CWidgetIcon,
+} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
 // import { CChartPie } from "@coreui/react-chartjs";
 import { cilGroup, cilMoney } from "@coreui/icons";
 import { GlobalContext } from "src/context/Provider";
-import { getImage } from "src/context/actions/DownloadFile";
+import { getDocument, getImage } from "src/context/actions/DownloadFile";
 import { getDashboardInformation } from "src/context/actions/UserPage/Dashboard/getDashboardInformation";
+import { getStruktur } from "src/context/actions/UserPage/Dashboard/getStruktur";
+import capitalizeFirst from "src/helpers/capitalizeFirst";
 
 const Dashboard = () => {
-  const { userState, dashboardState, dashboardDispatch } =
-    useContext(GlobalContext);
+  const {
+    userState,
+    dashboardState,
+    dashboardDispatch,
+    strukturState,
+    strukturDispatch,
+  } = useContext(GlobalContext);
   const { data } = userState;
   const { data: dataDashboard } = dashboardState;
+  const { data: dataStruktur } = strukturState;
+  const [activeTab, setActiveTab] = useState("1");
 
+  // Get dashboard information
   useEffect(() => {
-    // Get dashboard information
     if (!dataDashboard) {
       getDashboardInformation(dashboardDispatch);
     }
   }, [dataDashboard, dashboardDispatch]);
+
+  // Get struktur organisasi
+  useEffect(() => {
+    getStruktur(strukturDispatch);
+  }, [strukturDispatch]);
 
   return (
     <>
@@ -119,6 +146,56 @@ const Dashboard = () => {
               </CCard>
             </CCol>
           </CRow> */}
+        </CCol>
+      </CRow>
+
+      {/* Struktur Organisasi */}
+      <CRow>
+        <CCol>
+          <CCard>
+            <CCardHeader>Struktur Organisasi</CCardHeader>
+            <CCardBody>
+              <CTabs
+                activeTab={activeTab}
+                onActiveTabChange={(tab) => {
+                  setActiveTab(tab);
+                }}
+              >
+                <CNav variant="pills">
+                  {dataStruktur &&
+                    dataStruktur.map((item, index) => (
+                      <CNavItem key={index}>
+                        <CNavLink data-tab={item.id}>
+                          {capitalizeFirst(item.nama_struktur)}
+                        </CNavLink>
+                      </CNavItem>
+                    ))}
+                </CNav>
+                <CTabContent>
+                  {dataStruktur &&
+                    dataStruktur.map((item, index) => (
+                      <CTabPane key={index} data-tab={item.id}>
+                        <div className="mt-3">
+                          {item.gambar ? (
+                            <div className="mt-3">
+                              <img
+                                style={{ width: "100%" }}
+                                src={getDocument(item.gambar)}
+                                alt="struktur-organisasi-img"
+                              />
+                            </div>
+                          ) : (
+                            <div className="text-center mt-3">
+                              Belum ada Gambar. Silahkan upload terlebih dahulu
+                            </div>
+                          )}
+                        </div>
+                      </CTabPane>
+                    ))}
+                </CTabContent>
+              </CTabs>
+            </CCardBody>
+          </CCard>
         </CCol>
       </CRow>
     </>

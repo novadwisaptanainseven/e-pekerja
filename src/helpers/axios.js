@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 403) {
       localStorage.clear();
       console.log("Error Status 403 Executed");
-      window.location.href = "/epekerja/login";
+      // window.location.href = "/epekerja/login";
       return new Promise((resolve, reject) => {
         reject(error);
       });
