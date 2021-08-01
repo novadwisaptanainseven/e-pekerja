@@ -42,6 +42,7 @@ const TheSidebarAdmin = () => {
           width={35}
           className="mr-2"
         />
+
         <h2>E-Pekerja</h2>
       </CSidebarBrand>
       <CSidebarNav>
@@ -55,6 +56,7 @@ const TheSidebarAdmin = () => {
           }}
         />
       </CSidebarNav>
+
       <CSidebarMinimizer className="c-d-md-down-none" />
     </CSidebar>
   );
