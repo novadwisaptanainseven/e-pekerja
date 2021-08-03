@@ -21,9 +21,8 @@ import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 import { getPTTB } from "src/context/actions/Pegawai/PTTB/getPTTB";
 import { deletePTTB } from "src/context/actions/Pegawai/PTTB/deletePTTB";
 import { format } from "date-fns";
-import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
-import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
+import FilterPrint from "./FilterPrint";
 
 const MySwal = withReactContent(swal2);
 
@@ -33,6 +32,10 @@ const DataPTTB = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { pttbState, pttbDispatch } = useContext(GlobalContext);
   const { data, loading } = pttbState;
+  const [modalPrint, setModalPrint] = useState({
+    type: "",
+    modal: false,
+  });
 
   useEffect(() => {
     // Get data PTTB
@@ -146,7 +149,13 @@ const DataPTTB = () => {
           type="button"
           color="info"
           className="ml-2"
-          onClick={() => printDaftarPegawai("pttb")}
+          onClick={() =>
+            setModalPrint({
+              ...modalPrint,
+              type: "print",
+              modal: true,
+            })
+          }
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -155,13 +164,19 @@ const DataPTTB = () => {
           type="button"
           color="success"
           className="ml-2"
-          onClick={() => exportExcel("pttb")}
+          onClick={() =>
+            setModalPrint({
+              ...modalPrint,
+              type: "excel",
+              modal: true,
+            })
+          }
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, modalPrint]);
 
   const goToTambah = () => {
     history.push("/epekerja/admin/pegawai/pttb-tambah");
@@ -297,6 +312,9 @@ const DataPTTB = () => {
           )}
         </CCardBody>
       </CCard>
+
+      {/* Modal Filter Print */}
+      <FilterPrint modal={modalPrint} setModal={setModalPrint} />
     </>
   );
 };

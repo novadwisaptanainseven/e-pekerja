@@ -17,10 +17,7 @@ import { getJenjangPendidikan } from "src/context/actions/Pegawai/Pendidikan/get
 
 const FilterPrint = ({ modal, setModal }) => {
   const [pendidikan, setPendidikan] = useState([]);
-  const [filter, setFilter] = useState({
-    jenjang: "",
-    order: "asc",
-  });
+  const [jenjang, setJenjang] = useState("");
 
   // Get Jenjang Pendidikan
   useEffect(() => {
@@ -30,15 +27,9 @@ const FilterPrint = ({ modal, setModal }) => {
   // Handle Print pdf dan excel
   const handlePrint = () => {
     if (modal.type === "print") {
-      printDaftarPegawai(
-        `pns?pendidikan=${filter.jenjang}&order=${filter.order}`
-      );
+      printDaftarPegawai(`ptth?pendidikan=${jenjang}`);
     } else {
-      exportExcel(
-        "pns",
-        { pendidikan: filter.jenjang, order: filter.order },
-        "filter_pegawai"
-      );
+      exportExcel("ptth", { pendidikan: jenjang }, "filter_pegawai");
     }
   };
 
@@ -59,26 +50,11 @@ const FilterPrint = ({ modal, setModal }) => {
       <CForm>
         <CModalBody>
           <CFormGroup>
-            <CLabel>Urutan</CLabel>
-            <CSelect
-              name="order"
-              value={filter.order}
-              onChange={(e) =>
-                setFilter({ ...filter, [e.target.name]: e.target.value })
-              }
-            >
-              <option value="asc">A - Z (Ascending)</option>
-              <option value="desc">Z - A (Descending)</option>
-            </CSelect>
-          </CFormGroup>
-          <CFormGroup>
             <CLabel>Pendidikan</CLabel>
             <CSelect
-              name="jenjang"
-              value={filter.jenjang}
-              onChange={(e) =>
-                setFilter({ ...filter, [e.target.name]: e.target.value })
-              }
+              name="id_pendidikan"
+              value={jenjang}
+              onChange={(e) => setJenjang(e.target.value)}
             >
               <option value="">Semua</option>
               {pendidikan.map((item, index) => (

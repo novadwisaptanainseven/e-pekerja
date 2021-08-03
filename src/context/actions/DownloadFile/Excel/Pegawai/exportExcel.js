@@ -11,7 +11,7 @@ const exportExcel = (data, request = null, type = "") => {
     let params = `bulan=${request.bulan}&tahun=${request.tahun}`;
     window.open(`${localStorage.baseURL}${data}/export?${params}`, "_self");
   } else if (type === "filter_pegawai") {
-    let params = `pendidikan=${request.pendidikan}`;
+    let params = `pendidikan=${request.pendidikan}&order=${request.order}`;
     window.open(`${localStorage.baseURL}${data}/export?${params}`, "_self");
   }
 };
