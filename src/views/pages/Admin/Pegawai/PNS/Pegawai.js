@@ -20,9 +20,8 @@ import CIcon from "@coreui/icons-react";
 import { cilPrint, cilPen, cilTrash } from "@coreui/icons";
 import { getPNS } from "src/context/actions/Pegawai/PNS/getPNS";
 import { deletePNS } from "src/context/actions/Pegawai/PNS/deletePNS";
-import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
-import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
+import FilterPrint from "./FilterPrint";
 
 const MySwal = withReactContent(swal2);
 
@@ -32,6 +31,10 @@ const Pegawai = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { pnsState, pnsDispatch } = useContext(GlobalContext);
   const { data, loading } = pnsState;
+  const [modalPrint, setModalPrint] = useState({
+    type: "",
+    modal: false,
+  });
 
   useEffect(() => {
     // Get data PNS
@@ -147,7 +150,10 @@ const Pegawai = () => {
           type="button"
           color="info"
           className="ml-2"
-          onClick={() => printDaftarPegawai("pns")}
+          // onClick={() => printDaftarPegawai("pns")}
+          onClick={() =>
+            setModalPrint({ ...modalPrint, type: "print", modal: true })
+          }
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -156,13 +162,19 @@ const Pegawai = () => {
           type="button"
           color="success"
           className="ml-2"
-          onClick={() => exportExcel("pns")}
+          onClick={() =>
+            setModalPrint({
+              ...modalPrint,
+              type: "excel",
+              modal: true,
+            })
+          }
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, modalPrint]);
 
   // const handleCetak = () => {
   //   window.open(localStorage.baseURL + "rekap-pns-pdf");
@@ -286,6 +298,9 @@ const Pegawai = () => {
           )}
         </CCardBody>
       </CCard>
+
+      {/* Modal Print */}
+      <FilterPrint modal={modalPrint} setModal={setModalPrint} />
     </>
   );
 };
