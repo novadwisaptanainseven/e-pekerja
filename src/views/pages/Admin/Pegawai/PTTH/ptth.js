@@ -59,7 +59,7 @@ const DataPTTH = () => {
       name: "No",
       selector: "no",
       sortable: true,
-      width: "50px",
+      width: "75px",
     },
     {
       name: "Nama",
@@ -77,6 +77,12 @@ const DataPTTH = () => {
     {
       name: "Tugas Pokok",
       selector: "jabatan",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Bidang",
+      selector: "bidang",
       sortable: true,
       wrap: true,
     },

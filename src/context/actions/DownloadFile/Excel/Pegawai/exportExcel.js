@@ -11,7 +11,12 @@ const exportExcel = (data, request = null, type = "") => {
     let params = `bulan=${request.bulan}&tahun=${request.tahun}`;
     window.open(`${localStorage.baseURL}${data}/export?${params}`, "_self");
   } else if (type === "filter_pegawai") {
-    let params = `pendidikan=${request.pendidikan}&order=${request.order}`;
+    let params = "";
+    if (request.jenjang) {
+      params = `jenjang=${request.jenjang}&order=${request.order}`;
+    } else {
+      params = `kolom=${request.kolom}&order=${request.order}`;
+    }
     window.open(`${localStorage.baseURL}${data}/export?${params}`, "_self");
   }
 };
