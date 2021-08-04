@@ -14,18 +14,28 @@ import React, { memo, useEffect, useState } from "react";
 import { exportExcel } from "src/context/actions/DownloadFile";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
 import { getJenjangPendidikan } from "src/context/actions/Pegawai/Pendidikan/getJenjangPendidikan";
+import { getSelectStatusPegawai } from "src/context/actions/StatusPegawai/getSelectStatusPegawai";
 
 const FilterPrint = ({ modal, setModal }) => {
   const [pendidikan, setPendidikan] = useState([]);
+  const [statusSelect, setStatusSelect] = useState([]);
   const [filter, setFilter] = useState({
     kolom: "",
     order: "asc",
   });
   const [jenjang, setJenjang] = useState("");
+  const [statusPegawai, setStatusPegawai] = useState("");
 
   // Get Jenjang Pendidikan
   useEffect(() => {
     if (modal.modal) getJenjangPendidikan(setPendidikan);
+  }, [modal]);
+
+  // Get Status Pegawai
+  useEffect(() => {
+    if (modal.modal) {
+      getSelectStatusPegawai(setStatusSelect);
+    }
   }, [modal]);
 
   // Handle Print pdf dan excel
@@ -43,20 +53,29 @@ const FilterPrint = ({ modal, setModal }) => {
       filter.kolom = {
         jenjang: jenjang,
       };
-      url = `pttb?jenjang=${filter.kolom.jenjang}&order=${filter.order}`;
+      url = `semua-pegawai?jenjang=${filter.kolom.jenjang}&order=${filter.order}`;
+    } else if (statusPegawai) {
+      request = {
+        statusPegawai: statusPegawai,
+        order: filter.order,
+      };
+      filter.kolom = {
+        statusPegawai: statusPegawai,
+      };
+      url = `semua-pegawai?status_pegawai=${filter.kolom.statusPegawai}&order=${filter.order}`;
     } else {
       request = {
         kolom: filter.kolom,
         order: filter.order,
       };
-      url = `pttb?kolom=${filter.kolom}&order=${filter.order}`;
+      url = `semua-pegawai?kolom=${filter.kolom}&order=${filter.order}`;
     }
 
     // console.log(filter);
     if (modal.type === "print") {
       printDaftarPegawai(url);
     } else {
-      exportExcel("pttb", request, "filter_pegawai");
+      exportExcel("semua-pegawai", request, "filter_pegawai");
     }
 
     setModal({ ...modal, type: "", modal: false });
@@ -92,6 +111,40 @@ const FilterPrint = ({ modal, setModal }) => {
             </CSelect>
             {!jenjang && (
               <div className="invalid-feedback">Jenjang harus diisi!</div>
+            )}
+          </CFormGroup>
+        )}
+      </>
+    );
+  });
+
+  // Component Form Status Pegawai Memo
+  const FormStatusPegawai = memo(({ filter }) => {
+    if (filter.kolom !== "status_pegawai") {
+      setStatusPegawai("");
+    }
+    return (
+      <>
+        {filter.kolom === "status_pegawai" && (
+          <CFormGroup>
+            <CLabel>Status Pegawai</CLabel>
+            <CSelect
+              required
+              value={statusPegawai}
+              onChange={(e) => setStatusPegawai(e.target.value)}
+              className={!statusPegawai ? "is-invalid" : null}
+            >
+              <option value="">-- Pilih Status Pegawai --</option>
+              {statusSelect.map((item, index) => (
+                <option value={item.status_pegawai} key={index}>
+                  {item.status_pegawai}
+                </option>
+              ))}
+            </CSelect>
+            {!statusPegawai && (
+              <div className="invalid-feedback">
+                Status pegawai harus diisi!
+              </div>
             )}
           </CFormGroup>
         )}
@@ -138,17 +191,25 @@ const FilterPrint = ({ modal, setModal }) => {
               <option value="">Semua</option>
               <option value="nama">Nama</option>
               <option value="bidang">Bidang</option>
-              <option value="jabatan">Tugas Pokok</option>
+              <option value="status_pegawai">Status Pegawai</option>
+              <option value="jabatan">Jabatan</option>
               <option value="jenjang">Jenjang Pendidikan</option>
             </CSelect>
           </CFormGroup>
           <FormJenjang filter={filter} />
+          <FormStatusPegawai filter={filter} />
         </CModalBody>
         <CModalFooter>
           <CButton
+            type="submit"
             color="primary"
-            onClick={handlePrint}
-            disabled={filter.kolom === "jenjang" && !jenjang ? true : false}
+            onClick={(e) => handlePrint(e)}
+            disabled={
+              (filter.kolom === "jenjang" && !jenjang) ||
+              (filter.kolom === "status_pegawai" && !statusPegawai)
+                ? true
+                : false
+            }
           >
             Print
           </CButton>

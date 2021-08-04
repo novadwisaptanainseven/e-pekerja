@@ -14,6 +14,8 @@ const exportExcel = (data, request = null, type = "") => {
     let params = "";
     if (request.jenjang) {
       params = `jenjang=${request.jenjang}&order=${request.order}`;
+    } else if (request.statusPegawai) {
+      params = `status_pegawai=${request.statusPegawai}&order=${request.order}`;
     } else {
       params = `kolom=${request.kolom}&order=${request.order}`;
     }

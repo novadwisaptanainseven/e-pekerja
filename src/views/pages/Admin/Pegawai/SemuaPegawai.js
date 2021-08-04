@@ -17,9 +17,8 @@ import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
 import { cilPrint } from "@coreui/icons";
 import { getAllPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getAllPegawai";
-import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
-import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import FilterComponent from "src/reusable/FilterSearchComponent/FilterComponent";
+import FilterPrint from "./FilterPrint";
 
 const SemuaPegawai = () => {
   const history = useHistory();
@@ -27,6 +26,10 @@ const SemuaPegawai = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const { pegawaiState, pegawaiDispatch } = useContext(GlobalContext);
   const { data, loading } = pegawaiState;
+  const [modalPrint, setModalPrint] = useState({
+    type: "",
+    modal: false,
+  });
 
   useEffect(() => {
     // Get semua pegawai
@@ -150,7 +153,10 @@ const SemuaPegawai = () => {
           type="button"
           color="info"
           className="ml-2"
-          onClick={() => printDaftarPegawai("semua-pegawai")}
+          onClick={() =>
+            setModalPrint({ ...modalPrint, type: "print", modal: true })
+          }
+          // onClick={() => printDaftarPegawai("semua-pegawai")}
         >
           PDF <CIcon content={cilPrint} />
         </CButton>
@@ -159,13 +165,19 @@ const SemuaPegawai = () => {
           type="button"
           color="success"
           className="ml-2"
-          onClick={() => exportExcel("semua-pegawai")}
+          onClick={() =>
+            setModalPrint({
+              ...modalPrint,
+              type: "excel",
+              modal: true,
+            })
+          }
         >
           Excel <CIcon content={cilPrint} />
         </CButton>
       </>
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, modalPrint]);
 
   const goToDetail = (id) => {
     history.push(`/epekerja/admin/pegawai-detail/${id}`);
@@ -249,6 +261,9 @@ const SemuaPegawai = () => {
           )}
         </CCardBody>
       </CCard>
+
+      {/* Modal Print */}
+      <FilterPrint modal={modalPrint} setModal={setModalPrint} />
     </>
   );
 };

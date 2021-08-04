@@ -10,7 +10,7 @@ import {
   CLabel,
   CSelect,
 } from "@coreui/react";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { exportExcel } from "src/context/actions/DownloadFile";
 import printDaftarPegawai from "src/context/actions/DownloadFile/printDaftarPegawai";
 import { getJenjangPendidikan } from "src/context/actions/Pegawai/Pendidikan/getJenjangPendidikan";
@@ -18,9 +18,10 @@ import { getJenjangPendidikan } from "src/context/actions/Pegawai/Pendidikan/get
 const FilterPrint = ({ modal, setModal }) => {
   const [pendidikan, setPendidikan] = useState([]);
   const [filter, setFilter] = useState({
-    jenjang: "",
+    kolom: "",
     order: "asc",
   });
+  const [jenjang, setJenjang] = useState("");
 
   // Get Jenjang Pendidikan
   useEffect(() => {
@@ -28,19 +29,75 @@ const FilterPrint = ({ modal, setModal }) => {
   }, [modal]);
 
   // Handle Print pdf dan excel
-  const handlePrint = () => {
-    if (modal.type === "print") {
-      printDaftarPegawai(
-        `ptth?pendidikan=${filter.jenjang}&order=${filter.order}`
-      );
+  const handlePrint = (e) => {
+    e.preventDefault();
+
+    let url = "";
+    let request = {};
+
+    if (jenjang) {
+      request = {
+        jenjang: jenjang,
+        order: filter.order,
+      };
+      filter.kolom = {
+        jenjang: jenjang,
+      };
+      url = `ptth?jenjang=${filter.kolom.jenjang}&order=${filter.order}`;
     } else {
-      exportExcel(
-        "ptth",
-        { pendidikan: filter.jenjang, order: filter.order },
-        "filter_pegawai"
-      );
+      request = {
+        kolom: filter.kolom,
+        order: filter.order,
+      };
+      url = `ptth?kolom=${filter.kolom}&order=${filter.order}`;
     }
+
+    // console.log(filter);
+    if (modal.type === "print") {
+      printDaftarPegawai(url);
+    } else {
+      exportExcel("ptth", request, "filter_pegawai");
+    }
+
+    setModal({ ...modal, type: "", modal: false });
   };
+
+  // Handle Change Sorting by Column
+  const handleChangeColumn = (e) => {
+    setFilter({ ...filter, [e.target.name]: e.target.value });
+  };
+
+  // Component Form Jenjang Memo
+  const FormJenjang = memo(({ filter }) => {
+    if (filter.kolom !== "jenjang") {
+      setJenjang("");
+    }
+    return (
+      <>
+        {filter.kolom === "jenjang" && (
+          <CFormGroup>
+            <CLabel>Jenjang Pendidikan</CLabel>
+            <CSelect
+              required
+              value={jenjang}
+              onChange={(e) => setJenjang(e.target.value)}
+              className={!jenjang ? "is-invalid" : null}
+            >
+              <option value="">-- Pilih Jenjang --</option>
+              {pendidikan.map((item, index) => (
+                <option value={item.jenjang} key={index}>
+                  {item.jenjang}
+                </option>
+              ))}
+            </CSelect>
+            {!jenjang && (
+              <div className="invalid-feedback">Jenjang harus diisi!</div>
+            )}
+          </CFormGroup>
+        )}
+      </>
+    );
+  });
 
   return (
     <CModal
@@ -72,25 +129,28 @@ const FilterPrint = ({ modal, setModal }) => {
             </CSelect>
           </CFormGroup>
           <CFormGroup>
-            <CLabel>Pendidikan</CLabel>
+            <CLabel>Kolom</CLabel>
             <CSelect
-              name="jenjang"
-              value={filter.jenjang}
-              onChange={(e) =>
-                setFilter({ ...filter, [e.target.name]: e.target.value })
-              }
+              name="kolom"
+              value={filter.kolom}
+              onChange={(e) => handleChangeColumn(e)}
             >
               <option value="">Semua</option>
-              {pendidikan.map((item, index) => (
-                <option value={item.jenjang} key={index}>
-                  {item.jenjang}
-                </option>
-              ))}
+              <option value="nama">Nama</option>
+              <option value="bidang">Bidang</option>
+              <option value="jabatan">Jabatan</option>
+              <option value="pangkat">Golongan</option>
+              <option value="jenjang">Jenjang Pendidikan</option>
             </CSelect>
           </CFormGroup>
+          <FormJenjang filter={filter} />
         </CModalBody>
         <CModalFooter>
-          <CButton color="primary" onClick={handlePrint}>
+          <CButton
+            color="primary"
+            onClick={handlePrint}
+            disabled={filter.kolom === "jenjang" && !jenjang ? true : false}
+          >
             Print
           </CButton>
           <CButton
