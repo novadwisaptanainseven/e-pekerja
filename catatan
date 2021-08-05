@@ -1,5 +1,6 @@
 Updated tabel
 1. struktur_org
+2. users -> name default null
 
 Perbaikan
 1. Tambahkan fitur validasi kelengkapan berkas pegawai untuk kenaikan pangkat
@@ -15,4 +16,7 @@ Key Password: disperkim2k21
 
 6472051012980003
 10 December 1998
+
+AddHandler application/x-httpd-php72 .php
+
 

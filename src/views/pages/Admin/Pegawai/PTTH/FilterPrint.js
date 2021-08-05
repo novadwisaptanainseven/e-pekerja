@@ -139,7 +139,6 @@ const FilterPrint = ({ modal, setModal }) => {
               <option value="nama">Nama</option>
               <option value="bidang">Bidang</option>
               <option value="jabatan">Jabatan</option>
-              <option value="pangkat">Golongan</option>
               <option value="jenjang">Jenjang Pendidikan</option>
             </CSelect>
           </CFormGroup>

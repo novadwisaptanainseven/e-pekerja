@@ -22,6 +22,7 @@ import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
 import { insertGolongan } from "src/context/actions/RiwayatGolongan";
+import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 
 const MySwal = withReactContent(swal2);
 
@@ -31,6 +32,7 @@ const ModalTambah = ({
   setModal,
   setDataGolongan,
   setLoadingGolongan,
+  setPegawai,
 }) => {
   const [loading, setLoading] = useState(false);
   const [pangkat, setPangkat] = useState([]);
@@ -64,8 +66,8 @@ const ModalTambah = ({
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      // history.push("/epekerja/admin/kenaikan-pangkat");
       setModal(false);
+      getPNSById(idPegawai, setPegawai);
     });
   };
 
@@ -98,9 +100,7 @@ const ModalTambah = ({
     pangkat_baru: Yup.string().required("Pangkat golongan harus diisi"),
     no_sk: Yup.string().required("No. SK harus diisi"),
     tanggal: Yup.string().required("Tanggal kenaikan pangkat harus diisi"),
-    tmt_kenaikan_pangkat: Yup.string().required(
-      "TMT. Kenaikan pangkat harus diisi"
-    ),
+    tmt_kenaikan_pangkat: Yup.string().required("TMT. Golongan harus diisi"),
     pejabat_penetap: Yup.string().required("Pejabata penetap harus diisi"),
     mk_tahun: Yup.string().required("Tahun harus diisi"),
     mk_bulan: Yup.string().required("Bulan harus diisi"),
@@ -287,7 +287,7 @@ const ModalTambah = ({
                 </CRow>
               </CFormGroup>
               <CFormGroup>
-                <CLabel>TMT. Kenaikan Pangkat</CLabel>
+                <CLabel>TMT. Golongan</CLabel>
                 <CInput
                   type="date"
                   name="tmt_kenaikan_pangkat"

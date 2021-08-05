@@ -21,6 +21,7 @@ import { useHistory } from "react-router-dom";
 import Penghargaan from "./Penghargaan/Penghargaan";
 import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 import RiwayatGolongan from "./RiwayatGolongan/RiwayatGolongan";
+import RiwayatSK from "./RiwayatSK/RiwayatSK";
 
 const DetailPegawai = ({ match }) => {
   const params = match.params;
@@ -78,9 +79,13 @@ const DetailPegawai = ({ match }) => {
               <CNavItem>
                 <CNavLink data-tab="riwayat-kerja">Riwayat Kerja</CNavLink>
               </CNavItem>
-              {data && data.id_status_pegawai === 1 && (
+              {data && data.id_status_pegawai === 1 ? (
                 <CNavItem>
                   <CNavLink data-tab="riwayat-golongan">Golongan</CNavLink>
+                </CNavItem>
+              ) : (
+                <CNavItem>
+                  <CNavLink data-tab="riwayat-sk">Riwayat SK</CNavLink>
                 </CNavItem>
               )}
               <CNavItem>
@@ -108,7 +113,31 @@ const DetailPegawai = ({ match }) => {
               </CTabPane>
               {data && data.id_status_pegawai === 1 && (
                 <CTabPane data-tab="riwayat-golongan">
-                  <RiwayatGolongan id={params.id} dataActive={activeTab} />
+                  <RiwayatGolongan
+                    id={params.id}
+                    dataActive={activeTab}
+                    setPegawai={setData}
+                  />
+                </CTabPane>
+              )}
+              {data && data.id_status_pegawai === 2 && (
+                <CTabPane data-tab="riwayat-sk">
+                  <RiwayatSK
+                    id={params.id}
+                    dataActive={activeTab}
+                    setPegawai={setData}
+                    pegawai={data}
+                  />
+                </CTabPane>
+              )}
+              {data && data.id_status_pegawai === 3 && (
+                <CTabPane data-tab="riwayat-sk">
+                  <RiwayatSK
+                    id={params.id}
+                    dataActive={activeTab}
+                    setPegawai={setData}
+                    pegawai={data}
+                  />
                 </CTabPane>
               )}
               <CTabPane data-tab="penghargaan">

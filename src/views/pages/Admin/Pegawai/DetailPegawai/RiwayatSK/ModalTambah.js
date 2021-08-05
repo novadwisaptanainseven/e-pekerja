@@ -15,15 +15,24 @@ import {
   CModalFooter,
   CForm,
   CButton,
+  CFormText,
 } from "@coreui/react";
 import Select from "react-select";
 
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { insertPembaruanSK } from "src/context/actions/PembaruanSK/insertPembaruanSK";
+import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 
 const MySwal = withReactContent(swal2);
 
-const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
+const ModalTambah = ({
+  modalTambah,
+  setModalTambah,
+  id_pegawai,
+  setData,
+  setPegawai,
+}) => {
+  // const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [formatGaji, setFormatGaji] = useState("");
   const [jabatan, setJabatan] = useState([]);
@@ -57,10 +66,8 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
     tgl_penetapan_sk: "",
     tgl_mulai_tugas: "",
     tugas: "",
-    kontrak_ke: "",
-    masa_kerja_tahun: "",
-    masa_kerja_bulan: "",
     gaji_pokok: "",
+    sk_terkini: "",
     file: undefined,
   };
 
@@ -87,7 +94,8 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
       timer: 1500,
     }).then((res) => {
       setModalTambah(!modalTambah);
-      // history.push(`/epekerja/admin/pembaruan-sk/pttb/${id_pegawai}`);
+      getPNSById(id_pegawai, setPegawai);
+      // history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
     });
   };
 
@@ -122,9 +130,6 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
     tgl_penetapan_sk: Yup.string().required("Tgl penatapan harus diisi!"),
     tgl_mulai_tugas: Yup.string().required("Tgl mulai tugas harus diisi!"),
     tugas: Yup.string().required("Tugas pokok (jabatan) harus diisi!"),
-    kontrak_ke: Yup.string().required("Kontrak baru harus diisi!"),
-    masa_kerja_tahun: Yup.string().required("Tahun harus diisi!"),
-    masa_kerja_bulan: Yup.string().required("Bulan harus diisi!"),
     gaji_pokok: Yup.number()
       .typeError("Gaji pokok baru harus berupa bilangan")
       .integer()
@@ -154,19 +159,19 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
-    const masaKerja = `${values.masa_kerja_tahun} Tahun ${values.masa_kerja_bulan} Bulan`;
+    const skTerkini =
+      values.sk_terkini === 1 || values.sk_terkini[0] === "on" ? 1 : 0;
 
-    for (const item in values) {
-      if (item !== "file") {
-        formData.append(item, values[item]);
-      } else {
-        if (values.file) {
-          formData.append("file", values.file);
-        }
-      }
+    formData.append("no_sk", values.no_sk);
+    formData.append("penetap_sk", values.penetap_sk);
+    formData.append("tgl_penetapan_sk", values.tgl_penetapan_sk);
+    formData.append("tgl_mulai_tugas", values.tgl_mulai_tugas);
+    formData.append("tugas", values.tugas);
+    formData.append("gaji_pokok", values.gaji_pokok);
+    formData.append("sk_terkini", skTerkini);
+    if (values.file) {
+      formData.append("file", values.file);
     }
-    formData.append("sk_terkini", 1);
-    formData.append("masa_kerja", masaKerja);
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -192,6 +197,26 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
       border: !touchedSelect ? provided.border : "1px solid #e55353",
     }),
   };
+
+  // Component Input Checkbox Memo
+  const InputCheckbox = React.memo(({ values, handleChange, handleBlur }) => {
+    return (
+      <>
+        <input
+          type="checkbox"
+          name="sk_terkini"
+          checked={
+            values.sk_terkini === 1 || values.sk_terkini[0] === "on"
+              ? true
+              : false
+          }
+          className="ml-2"
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </>
+    );
+  });
 
   return (
     <>
@@ -300,7 +325,7 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
                     type="text"
                     name="tgl_mulai_tugas"
                     id="tgl_mulai_tugas"
-                    placeholder="Contoh: 01 Januari s/d 31 Desember 2021"
+                    placeholder="Contoh: 4 JAN s/d 31 DES 2021"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.tgl_mulai_tugas}
@@ -355,82 +380,6 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
 
               <CFormGroup row>
                 <CCol md="3">
-                  <CLabel>Kontrak Ke</CLabel>
-                </CCol>
-                <CCol>
-                  <CInput
-                    type="number"
-                    name="kontrak_ke"
-                    id="kontrak_ke"
-                    placeholder="Masukkan kontrak baru"
-                    min="0"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.kontrak_ke || 0}
-                    className={
-                      errors.kontrak_ke && touched.kontrak_ke
-                        ? "is-invalid"
-                        : null
-                    }
-                  />
-                  {errors.kontrak_ke && touched.kontrak_ke && (
-                    <div className="invalid-feedback">{errors.kontrak_ke}</div>
-                  )}
-                </CCol>
-              </CFormGroup>
-
-              <CFormGroup row>
-                <CCol md="3">
-                  <CLabel>Masa Kerja</CLabel>
-                </CCol>
-                <CCol>
-                  <CInput
-                    type="number"
-                    name="masa_kerja_tahun"
-                    id="masa_kerja_tahun"
-                    min="0"
-                    placeholder="Masukkan tahun"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.masa_kerja_tahun || 0}
-                    className={
-                      errors.masa_kerja_tahun && touched.masa_kerja_tahun
-                        ? "is-invalid"
-                        : null
-                    }
-                  />
-                  {errors.masa_kerja_tahun && touched.masa_kerja_tahun && (
-                    <div className="invalid-feedback">
-                      {errors.masa_kerja_tahun}
-                    </div>
-                  )}
-                </CCol>
-                <CCol>
-                  <CInput
-                    type="number"
-                    name="masa_kerja_bulan"
-                    id="masa_kerja_bulan"
-                    min="0"
-                    placeholder="Masukkan bulan"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.masa_kerja_bulan || 0}
-                    className={
-                      errors.masa_kerja_bulan && touched.masa_kerja_bulan
-                        ? "is-invalid"
-                        : null
-                    }
-                  />
-                  {errors.masa_kerja_bulan && touched.masa_kerja_bulan && (
-                    <div className="invalid-feedback">
-                      {errors.masa_kerja_bulan}
-                    </div>
-                  )}
-                </CCol>
-              </CFormGroup>
-
-              <CFormGroup row>
-                <CCol md="3">
                   <CLabel>Gaji Pokok Baru</CLabel>
                 </CCol>
                 <CCol>
@@ -455,17 +404,25 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
                   )}
                 </CCol>
               </CFormGroup>
-
+              <CFormGroup>
+                <CLabel>SK Terkini</CLabel>
+                <InputCheckbox
+                  values={values}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                />
+                <CFormText>Cek apabila merupakan SK Anda saat ini</CFormText>
+              </CFormGroup>
               <CFormGroup row>
                 <CCol md="3">
-                  <CLabel>File SK Baru</CLabel>
+                  <CLabel>File SK</CLabel>
                 </CCol>
                 <CCol>
                   <CInput
                     type="file"
                     name="file"
                     id="file"
-                    placeholder="Masukkan file SK baru"
+                    placeholder="Masukkan file SK"
                     onChange={(e) => setFieldValue("file", e.target.files[0])}
                     onBlur={handleBlur}
                     className={
@@ -524,4 +481,4 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
   );
 };
 
-export default PerbaruiSK;
+export default ModalTambah;

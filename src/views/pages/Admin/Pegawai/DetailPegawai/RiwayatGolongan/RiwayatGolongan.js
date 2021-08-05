@@ -25,7 +25,7 @@ import ModalTambah from "./ModalTambah";
 
 const MySwal = withReactContent(swal2);
 
-const RiwayatGolongan = ({ id, dataActive }) => {
+const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
@@ -253,14 +253,17 @@ const RiwayatGolongan = ({ id, dataActive }) => {
         setModal={setModalTambah}
         setDataGolongan={setRwg}
         setLoadingGolongan={setLoading}
+        setPegawai={setPegawai}
       />
 
       {/* Modal Edit */}
       <ModalEdit
+        idPegawai={id}
         modalEdit={modalEdit}
         setModalEdit={setModalEdit}
         setLoadingGolongan={setLoading}
         setDataGolongan={setRwg}
+        setPegawai={setPegawai}
       />
     </div>
   );

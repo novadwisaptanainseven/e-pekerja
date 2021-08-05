@@ -14,6 +14,7 @@ import {
   CRow,
   CCol,
   CButtonGroup,
+  CBadge,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 // import styled from "styled-components";
@@ -78,21 +79,21 @@ const RiwayatSK = ({ match }) => {
   const columns = [
     {
       name: "No. SK",
-      selector: "no_sk",
+      selector: (row) => row.no_sk,
       sortable: true,
       // maxWidth: "200px",
       wrap: true,
     },
     {
       name: "Penetap SK",
-      selector: "penetap_sk",
+      selector: (row) => row.penetap_sk,
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
     },
     {
       name: "Tgl. Penetapan SK",
-      selector: "tgl_penetapan_sk",
+      selector: (row) => row.tgl_penetapan_sk,
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
@@ -102,10 +103,27 @@ const RiwayatSK = ({ match }) => {
     },
     {
       name: "Tgl. Mulai Tugas",
-      selector: "tgl_mulai_tugas",
+      selector: (row) => row.tgl_mulai_tugas,
       sortable: true,
       wrap: true,
       cell: (row) => <div>{row.tgl_mulai_tugas}</div>,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.sk_terkini,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div>
+          {row.sk_terkini === 1 ? (
+            <CBadge className="p-1" color="success">
+              SK Terkini
+            </CBadge>
+          ) : (
+            ""
+          )}
+        </div>
+      ),
     },
     {
       // maxWidth: "150px",
@@ -144,6 +162,7 @@ const RiwayatSK = ({ match }) => {
                 <CIcon content={cilPen} />
               </CButton>
               <CButton
+                disabled={row.sk_terkini === 1 ? true : false}
                 color="danger"
                 size="sm"
                 onClick={() => handleDelete(row.id_riwayat_sk)}
@@ -247,9 +266,13 @@ const RiwayatSK = ({ match }) => {
             <strong>File SK</strong>
           </CCol>
           <CCol>
-            <a href={getSK(data.file)} target="_blank" rel="noreferrer">
-              {getFilename(data.file)}
-            </a>
+            {data.file ? (
+              <a href={getSK(data.file)} target="_blank" rel="noreferrer">
+                {getFilename(data.file)}
+              </a>
+            ) : (
+              "Belum ada file"
+            )}
           </CCol>
         </CRow>
       </div>

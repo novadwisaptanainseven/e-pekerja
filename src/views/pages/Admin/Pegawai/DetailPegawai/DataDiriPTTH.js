@@ -98,9 +98,7 @@ const DataDiriPTTH = ({ data }) => {
                     </tr>
                     <tr>
                       <th>Tgl. Mulai Tugas</th>
-                      <td>
-                        {data.tmt_mulai_tugas}
-                      </td>
+                      <td>{data.tgl_mulai_tugas}</td>
                     </tr>
 
                     <tr>

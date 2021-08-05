@@ -48,30 +48,29 @@ const DataPTTH = () => {
   const columns = [
     {
       name: "No",
-      selector: "no",
+      selector: (row) => row.no,
       sortable: true,
       width: "50px",
     },
     {
       name: "Nama",
-      selector: "nama",
+      selector: (row) => row.nama,
       sortable: true,
       // maxWidth: "200px",
       wrap: true,
     },
     {
       name: "Penetap SK",
-      selector: "penetap_sk",
+      selector: (row) => row.penetap_sk,
       sortable: true,
       wrap: true,
     },
     {
       name: "Tugas Pokok",
-      selector: "jabatan",
+      selector: (row) => row.jabatan,
       sortable: true,
       wrap: true,
     },
-
     {
       // maxWidth: "150px",
       name: "Action",

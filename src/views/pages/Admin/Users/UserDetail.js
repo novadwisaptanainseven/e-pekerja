@@ -60,7 +60,13 @@ const UserDetail = ({ match }) => {
                     alt="bg-profil"
                   />
                   <img
-                    src={data ? getImage(data.foto_profil) : ""}
+                    src={
+                      data && data.level === 1
+                        ? getImage(data.foto_profil)
+                        : data.foto
+                        ? getImage(data.foto)
+                        : ""
+                    }
                     alt="foto-profil"
                     className="rounded-circle mx-auto shadow"
                     height={200}

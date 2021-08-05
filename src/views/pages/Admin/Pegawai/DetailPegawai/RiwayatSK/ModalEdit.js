@@ -24,15 +24,17 @@ import Select from "react-select";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getRiwayatSKById } from "src/context/actions/PembaruanSK/getRiwayatSKById";
 import { editRiwayatSK } from "src/context/actions/PembaruanSK/editRiwayatSK";
+import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 
 const MySwal = withReactContent(swal2);
 
-const EditSK = ({
+const ModalEdit = ({
   modalEdit,
   setModalEdit,
   id_pegawai,
   id_riwayat_sk,
   setDataRiwayat,
+  setPegawai,
 }) => {
   // const history = useHistory();
   const [loading, setLoading] = useState(false);
@@ -116,7 +118,7 @@ const EditSK = ({
         modal: !modalEdit.modal,
         id: null,
       });
-      // history.push(`/epekerja/admin/pembaruan-sk/ptth/${id_pegawai}`);
+      getPNSById(id_pegawai, setPegawai);
     });
   };
 
@@ -432,7 +434,7 @@ const EditSK = ({
                 </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
-                    <CLabel>File SK Baru</CLabel>
+                    <CLabel>File SK</CLabel>
                   </CCol>
                   <CCol>
                     <CInput
@@ -516,4 +518,4 @@ const EditSK = ({
   );
 };
 
-export default EditSK;
+export default ModalEdit;

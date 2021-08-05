@@ -12,11 +12,16 @@ import DataTable from "react-data-table-component";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import CIcon from "@coreui/icons-react";
-import { cilInfo, cilPen } from "@coreui/icons";
+import { cilInfo, cilPen, cilTrash } from "@coreui/icons";
 import { LoadAnimationBlue } from "src/assets";
 import { GlobalContext } from "src/context/Provider";
 import { getUser } from "src/context/actions/User/getUser";
 import { getImage } from "src/context/actions/DownloadFile";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { deleteUser } from "src/context/actions/User/deleteUser";
+const MySwal = withReactContent(swal2);
 
 const TextField = styled.input`
   height: 37px;
@@ -104,12 +109,35 @@ const Users = () => {
     }
   );
 
+  // Menangani tombol hapus
+  const handleDelete = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        deleteUser(id, usersDispatch);
+        MySwal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Data berhasil dihapus",
+        });
+      }
+    });
+  };
+
   const columns = [
     {
       name: "No",
       selector: "no",
       sortable: true,
-      width: "50px",
+      width: "75px",
     },
     // {
     //   name: "NIP / NIK",
@@ -120,10 +148,10 @@ const Users = () => {
     // },
     {
       name: "Nama",
-      selector: "name",
       sortable: true,
       // maxWidth: "200px",
       wrap: true,
+      cell: (row) => <div>{row.level === 1 ? row.name : row.nama_pegawai}</div>,
     },
     {
       name: "Username",
@@ -174,16 +202,15 @@ const Users = () => {
                 <CIcon content={cilPen} color="white" />
               </CButton>
             )}
-
-            {/* <CButton
-              color="danger"
-              className="btn btn-sm"
-              onClick={() =>
-                window.confirm("Anda yakin ingin menghapus data ini ?")
-              }
-            >
-              <CIcon content={cilTrash} color="white" />
-            </CButton> */}
+            {parseInt(localStorage.id_user) !== row.id && (
+              <CButton
+                color="danger"
+                className="btn btn-sm"
+                onClick={() => handleDelete(row.id)}
+              >
+                <CIcon content={cilTrash} color="white" />
+              </CButton>
+            )}
           </CButtonGroup>
         </div>
       ),
@@ -221,10 +248,6 @@ const Users = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
-  // const goToTambah = (id) => {
-  //   history.push(`/epekerja/admin/pensiun-tambah`);
-  // };
-
   const goToEdit = (id) => {
     history.push(`/epekerja/admin/akun/edit/${id}`);
   };
@@ -233,6 +256,9 @@ const Users = () => {
   };
   const goToTambah = () => {
     history.push(`/epekerja/admin/users/tambah`);
+  };
+  const goToTambahAkunPegawai = () => {
+    history.push(`/epekerja/admin/users/tambah-akun-pegawai`);
   };
 
   const goToDetail = (id) => {
@@ -251,7 +277,13 @@ const Users = () => {
               <img
                 className="img-thumbnail"
                 width={100}
-                src={getImage(data.foto_profil)}
+                src={
+                  data.level === 1
+                    ? getImage(data.foto_profil)
+                    : data.foto_pegawai
+                    ? getImage(data.foto_pegawai)
+                    : ""
+                }
                 alt="foto-profil"
               />
             </CCol>
@@ -268,8 +300,20 @@ const Users = () => {
           <h3>Data Users</h3>
         </CCardHeader>
         <CCardBody>
-          <CButton type="button" color="primary" onClick={goToTambah}>
-            Tambah Administrator
+          <CButton
+            className="mr-2"
+            type="button"
+            color="primary"
+            onClick={goToTambah}
+          >
+            Tambah Akun Administrator
+          </CButton>
+          <CButton
+            type="button"
+            color="primary"
+            onClick={goToTambahAkunPegawai}
+          >
+            Tambah Akun Pegawai
           </CButton>
           {data.length > 0 ? (
             <DataTable

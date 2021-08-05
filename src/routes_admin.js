@@ -248,6 +248,9 @@ const Users = React.lazy(() => import("./views/pages/Admin/Users/Users"));
 const TambahUser = React.lazy(() =>
   import("./views/pages/Admin/Users/TambahUser")
 );
+const TambahAkunPegawai = React.lazy(() =>
+  import("./views/pages/Admin/Users/TambahAkunPegawai")
+);
 const UserDetail = React.lazy(() =>
   import("./views/pages/Admin/Users/UserDetail")
 );
@@ -717,6 +720,12 @@ const routes = [
     path: "/epekerja/admin/users/tambah",
     name: "Tambah User",
     component: TambahUser,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/users/tambah-akun-pegawai",
+    name: "Tambah Akun Pegawai",
+    component: TambahAkunPegawai,
     exact: true,
   },
   {

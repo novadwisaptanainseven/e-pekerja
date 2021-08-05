@@ -4,9 +4,6 @@ import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 import {
-  CCard,
-  CCardHeader,
-  CCardBody,
   CButton,
   CModal,
   CModalHeader,
@@ -19,30 +16,29 @@ import {
 import DataTable from "react-data-table-component";
 // import styled from "styled-components";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilPrint, cilInfo, cilUser } from "@coreui/icons";
-import { useHistory } from "react-router-dom";
-import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
-import { LoadAnimationBlue } from "src/assets";
+import { cilPen, cilTrash, cilPrint, cilInfo } from "@coreui/icons";
 import { format } from "date-fns";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
-import PerbaruiSK from "./PerbaruiSK";
 import { getRiwayatSK } from "src/context/actions/PembaruanSK/getRiwayatSK";
 import getSK from "src/context/actions/DownloadFile/getSK";
-import EditSK from "./EditSK";
-import DetailSK from "./DetailSK";
 import getFilename from "src/helpers/getFilename";
 import { deleteRiwayatSK } from "src/context/actions/PembaruanSK/deleteRiwayatSK";
 import printSK from "src/context/actions/DownloadFile/printSK";
+import ModalEdit from "./ModalEdit";
+import ModalTambah from "./ModalTambah";
+import ModalDetail from "./ModalDetail";
+import Loading from "src/reusable/Loading";
+import ModalTambahPTTB from "./ModalTambahPTTB";
+import ModalEditPTTB from "./ModalEditPTTB";
 
 const MySwal = withReactContent(swal2);
 
-const RiwayatSK = ({ match }) => {
-  const params = match.params;
+const RiwayatSK = ({ id, dataActive, setPegawai, pegawai }) => {
   const [modalTambah, setModalTambah] = useState(false);
-  const [data, setData] = useState([]);
-  const [pegawai, setPegawai] = useState("");
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
+
+  console.log(loading);
 
   const [modalEdit, setModalEdit] = useState({
     modal: false,
@@ -53,47 +49,33 @@ const RiwayatSK = ({ match }) => {
     id: null,
   });
 
-  const goToDetailPegawai = (id) => {
-    history.push(`/epekerja/admin/pegawai-detail/${id}`);
-  };
-
-  const goBackToParent = () => {
-    history.goBack();
-  };
-
-  // Get Pegawai by Id Pegawai
-  useEffect(() => {
-    getPNSById(params.id, setPegawai);
-
-    // Unmount
-    return () => {
-      setPegawai("");
-    };
-  }, [params]);
-
   // Get Riwayat SK
   useEffect(() => {
-    getRiwayatSK(params.id, setLoading, setData);
-  }, [params]);
+    if (!data) {
+      if (dataActive === "riwayat-sk") {
+        getRiwayatSK(id, setLoading, setData);
+      }
+    }
+  }, [id, data, dataActive]);
 
   const columns = [
     {
       name: "No. SK",
-      selector: (row) => row.no_sk,
+      selector: "no_sk",
       sortable: true,
       // maxWidth: "200px",
       wrap: true,
     },
     {
       name: "Penetap SK",
-      selector: (row) => row.penetap_sk,
+      selector: "penetap_sk",
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
     },
     {
       name: "Tgl. Penetapan SK",
-      selector: (row) => row.tgl_penetapan_sk,
+      selector: "tgl_penetapan_sk",
       sortable: true,
       wrap: true,
       // maxWidth: "150px",
@@ -103,7 +85,7 @@ const RiwayatSK = ({ match }) => {
     },
     {
       name: "Tgl. Mulai Tugas",
-      selector: (row) => row.tgl_mulai_tugas,
+      selector: "tgl_mulai_tugas",
       sortable: true,
       wrap: true,
       cell: (row) => <div>{row.tgl_mulai_tugas}</div>,
@@ -197,7 +179,7 @@ const RiwayatSK = ({ match }) => {
       confirmButtonText: "YA",
     }).then((res) => {
       if (res.isConfirmed) {
-        deleteRiwayatSK(params.id, id_riwayat_sk, setLoading, setData);
+        deleteRiwayatSK(id, id_riwayat_sk, setLoading, setData);
         MySwal.fire({
           icon: "success",
           title: "Terhapus",
@@ -209,32 +191,34 @@ const RiwayatSK = ({ match }) => {
 
   const SubHeaderComponentMemo = () => {
     return (
-      <>
+      <div style={{ width: "100%" }} className="d-flex justify-content-between">
         <CButton
           type="button"
-          color="secondary"
+          color="primary"
           className="ml-2"
-          onClick={() => goToDetailPegawai(params.id)}
+          onClick={() => setModalTambah(true)}
         >
-          Detail Pegawai <CIcon content={cilUser} />
+          Tambah Riwayat SK
         </CButton>
-        <CButton
-          type="button"
-          color="info"
-          className="ml-2"
-          onClick={() => printSK(params.id)}
-        >
-          PDF <CIcon content={cilPrint} />
-        </CButton>
-        <CButton
-          type="button"
-          color="success"
-          className="ml-2"
-          onClick={() => exportExcel(`riwayat-sk/` + params.id)}
-        >
-          Excel <CIcon content={cilPrint} />
-        </CButton>
-      </>
+        <div>
+          <CButton
+            type="button"
+            color="info"
+            className="ml-2"
+            onClick={() => printSK(id)}
+          >
+            PDF <CIcon content={cilPrint} />
+          </CButton>
+          <CButton
+            type="button"
+            color="success"
+            className="ml-2"
+            onClick={() => exportExcel(`riwayat-sk/` + id)}
+          >
+            Excel <CIcon content={cilPrint} />
+          </CButton>
+        </div>
+      </div>
     );
   };
 
@@ -263,20 +247,6 @@ const RiwayatSK = ({ match }) => {
 
         <CRow className="mb-1">
           <CCol md="2">
-            <strong>Kontrak Ke</strong>
-          </CCol>
-          <CCol>{data.kontrak_ke}</CCol>
-        </CRow>
-
-        <CRow className="mb-1">
-          <CCol md="2">
-            <strong>Masa Kerja</strong>
-          </CCol>
-          <CCol>{data.masa_kerja}</CCol>
-        </CRow>
-
-        <CRow className="mb-1">
-          <CCol md="2">
             <strong>File SK</strong>
           </CCol>
           <CCol>
@@ -295,77 +265,26 @@ const RiwayatSK = ({ match }) => {
 
   return (
     <>
-      <CCard>
-        <CCardHeader className="d-flex justify-content-between my-card-header">
-          <div className="title mb-2">
-            <h3>Pembaruan SK Pegawai</h3>
-            <h5 className="font-weight-normal">{pegawai.nama}</h5>
-          </div>
-          <CButton
-            color="warning"
-            className="text-white"
-            style={{ height: "40px", width: "100px" }}
-            onClick={goBackToParent}
-          >
-            Kembali
-          </CButton>
-        </CCardHeader>
-        <CCardBody>
-          <CButton
-            color="primary"
-            className="btn btn-md"
-            onClick={() => setModalTambah(!modalTambah)}
-          >
-            Perbarui SK
-          </CButton>
-          <h3 className="font-weight-normal text-center">Riwayat SK Pegawai</h3>
-          {data.length > 0 ? (
-            <DataTable
-              columns={columns}
-              data={data}
-              responsive={true}
-              customStyles={customStyles}
-              pagination
-              // paginationResetDefaultPage={resetPaginationToggle}
-              subHeader
-              subHeaderComponent={<SubHeaderComponentMemo />}
-              highlightOnHover
-              expandableRows
-              expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
-            />
-          ) : loading ? (
-            <div>
-              <CRow>
-                <CCol className="text-center">
-                  <img
-                    className="mt-4 ml-3"
-                    width={30}
-                    src={LoadAnimationBlue}
-                    alt="load-animation"
-                  />
-                </CCol>
-              </CRow>
-            </div>
-          ) : (
-            <DataTable
-              columns={columns}
-              data={data}
-              noHeader
-              responsive={true}
-              customStyles={customStyles}
-              pagination
-              // paginationResetDefaultPage={resetPaginationToggle}
-              subHeader
-              subHeaderComponent={<SubHeaderComponentMemo />}
-              highlightOnHover
-              expandableRows
-              expandOnRowClicked
-              expandableRowsComponent={<ExpandableComponent />}
-            />
-          )}
-        </CCardBody>
-      </CCard>
+      <div className="mt-2">
+        {data ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            responsive={true}
+            customStyles={customStyles}
+            pagination
+            // paginationResetDefaultPage={resetPaginationToggle}
+            subHeader
+            subHeaderComponent={<SubHeaderComponentMemo />}
+            highlightOnHover
+            expandableRows
+            expandOnRowClicked
+            expandableRowsComponent={<ExpandableComponent />}
+          />
+        ) : (
+          <Loading />
+        )}
+      </div>
 
       {/* Modal Tambah */}
       <CModal
@@ -377,12 +296,23 @@ const RiwayatSK = ({ match }) => {
           <CModalTitle>Perbarui SK</CModalTitle>
         </CModalHeader>
 
-        <PerbaruiSK
-          modalTambah={modalTambah}
-          setModalTambah={setModalTambah}
-          id_pegawai={params.id}
-          setData={setData}
-        />
+        {pegawai.id_status_pegawai === 2 ? (
+          <ModalTambah
+            modalTambah={modalTambah}
+            setModalTambah={setModalTambah}
+            setData={setData}
+            id_pegawai={id}
+            setPegawai={setPegawai}
+          />
+        ) : (
+          <ModalTambahPTTB
+            modalTambah={modalTambah}
+            setModalTambah={setModalTambah}
+            setData={setData}
+            id_pegawai={id}
+            setPegawai={setPegawai}
+          />
+        )}
       </CModal>
 
       {/* Modal Edit Riwayat SK */}
@@ -401,13 +331,25 @@ const RiwayatSK = ({ match }) => {
           <CModalTitle>Edit Riwayat SK</CModalTitle>
         </CModalHeader>
 
-        <EditSK
-          id_riwayat_sk={modalEdit.id}
-          id_pegawai={params.id}
-          modalEdit={modalEdit}
-          setModalEdit={setModalEdit}
-          setDataRiwayat={setData}
-        />
+        {pegawai.id_status_pegawai === 2 ? (
+          <ModalEdit
+            id_riwayat_sk={modalEdit.id}
+            id_pegawai={id}
+            modalEdit={modalEdit}
+            setDataRiwayat={setData}
+            setModalEdit={setModalEdit}
+            setPegawai={setPegawai}
+          />
+        ) : (
+          <ModalEditPTTB
+            id_riwayat_sk={modalEdit.id}
+            id_pegawai={id}
+            modalEdit={modalEdit}
+            setDataRiwayat={setData}
+            setModalEdit={setModalEdit}
+            setPegawai={setPegawai}
+          />
+        )}
       </CModal>
 
       {/* Detail Riwayat SK */}
@@ -426,9 +368,9 @@ const RiwayatSK = ({ match }) => {
           <CModalTitle>Detail Riwayat SK</CModalTitle>
         </CModalHeader>
 
-        <DetailSK
+        <ModalDetail
           id_riwayat_sk={modalDetail.id}
-          id_pegawai={params.id}
+          id_pegawai={id}
           modalDetail={modalDetail}
           setModalDetail={setModalDetail}
         />

@@ -25,13 +25,16 @@ import initState from "./Formik/initState";
 import validationSchema from "./Formik/validationSchema";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
 const MySwal = withReactContent(swal2);
 
 const ModalEdit = ({
+  idPegawai,
   modalEdit,
   setModalEdit,
   setLoadingGolongan,
   setDataGolongan,
+  setPegawai,
 }) => {
   const [preview, setPreview] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
@@ -97,8 +100,8 @@ const ModalEdit = ({
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      // history.push("/epekerja/admin/pegawai");
       setModalEdit({ ...modalEdit, id: "", modal: false, data: "" });
+      getPNSById(idPegawai, setPegawai);
     });
   };
 

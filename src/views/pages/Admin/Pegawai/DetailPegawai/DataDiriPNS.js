@@ -83,7 +83,7 @@ const DataDiriPNS = ({ data }) => {
                 <tr>
                   <th>Pangkat / Golongan</th>
                   <td>
-                    {data.ket_golongan} / {data.golongan}
+                    {data.ket_golongan} ({data.golongan})
                   </td>
                 </tr>
                 <tr>

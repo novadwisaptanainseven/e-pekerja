@@ -151,8 +151,15 @@ const PerbaruiSK = ({ modalTambah, setModalTambah, id_pegawai, setData }) => {
     const formData = new FormData();
 
     for (const item in values) {
-      formData.append(item, values[item]);
+      if (item !== "file") {
+        formData.append(item, values[item]);
+      } else {
+        if (values.file) {
+          formData.append("file", values.file);
+        }
+      }
     }
+    formData.append("sk_terkini", 1);
 
     for (var pair of formData.entries()) {
       console.log(pair);

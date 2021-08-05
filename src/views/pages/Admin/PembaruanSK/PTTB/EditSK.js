@@ -16,6 +16,7 @@ import {
   CForm,
   CButton,
   CRow,
+  CFormText,
 } from "@coreui/react";
 import Select from "react-select";
 
@@ -94,6 +95,7 @@ const EditSK = ({
     masa_kerja_tahun: data ? getMasaKerja(data.masa_kerja).tahun : "",
     masa_kerja_bulan: data ? getMasaKerja(data.masa_kerja).bulan : "",
     gaji_pokok: data ? data.gaji_pokok : "",
+    sk_terkini: data ? data.sk_terkini : "",
     file: undefined,
   };
 
@@ -189,18 +191,21 @@ const EditSK = ({
   const handleFormSubmit = (values) => {
     const formData = new FormData();
     const masaKerja = `${values.masa_kerja_tahun} Tahun ${values.masa_kerja_bulan} Bulan`;
+    const skTerkini =
+      values.sk_terkini === 1 || values.sk_terkini[0] === "on" ? 1 : 0;
 
-    for (const item in values) {
-      if (item !== "file") {
-        formData.append(item, values[item]);
-      } else {
-        if (values.file) {
-          formData.append("file", values.file);
-        }
-      }
-    }
-
+    formData.append("no_sk", values.no_sk);
+    formData.append("penetap_sk", values.penetap_sk);
+    formData.append("tgl_penetapan_sk", values.tgl_penetapan_sk);
+    formData.append("tgl_mulai_tugas", values.tgl_mulai_tugas);
+    formData.append("tugas", values.tugas);
+    formData.append("kontrak_ke", values.kontrak_ke);
     formData.append("masa_kerja", masaKerja);
+    formData.append("gaji_pokok", values.gaji_pokok);
+    formData.append("sk_terkini", skTerkini);
+    if (values.file) {
+      formData.append("file", values.file);
+    }
 
     for (var pair of formData.entries()) {
       console.log(pair);
@@ -227,6 +232,26 @@ const EditSK = ({
       border: !touchedSelect ? provided.border : "1px solid #e55353",
     }),
   };
+
+  // Component Input Checkbox Memo
+  const InputCheckbox = React.memo(({ values, handleChange, handleBlur }) => {
+    return (
+      <>
+        <input
+          type="checkbox"
+          name="sk_terkini"
+          checked={
+            values.sk_terkini === 1 || values.sk_terkini[0] === "on"
+              ? true
+              : false
+          }
+          className="ml-2"
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </>
+    );
+  });
 
   return (
     <>
@@ -490,7 +515,15 @@ const EditSK = ({
                     )}
                   </CCol>
                 </CFormGroup>
-
+                <CFormGroup>
+                  <CLabel>SK Terkini</CLabel>
+                  <InputCheckbox
+                    values={values}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                  />
+                  <CFormText>Cek apabila merupakan SK Anda saat ini</CFormText>
+                </CFormGroup>
                 <CFormGroup row>
                   <CCol md="3">
                     <CLabel>File SK Baru</CLabel>

@@ -164,6 +164,11 @@ const TambahPensiun = () => {
                         setTouchedSelect(false);
                         setFieldValue("id_pegawai", opt ? opt.value : "");
                       }}
+                      onBlur={() =>
+                        values.id_pegawai
+                          ? setTouchedSelect(false)
+                          : setTouchedSelect(true)
+                      }
                       onFocus={() => setTouchedSelect(true)}
                       placeholder="-- Pilih Pegawai --"
                       isSearchable
