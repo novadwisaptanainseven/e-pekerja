@@ -3,6 +3,7 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
+  CCardTitle,
   CCol,
   CNav,
   CNavItem,
@@ -25,13 +26,13 @@ import capitalizeFirst from "src/helpers/capitalizeFirst";
 
 const Dashboard = () => {
   const {
-    userState,
+    // userState,
     dashboardState,
     dashboardDispatch,
     strukturState,
     strukturDispatch,
   } = useContext(GlobalContext);
-  const { data } = userState;
+  // const { data } = userState;
   const { data: dataDashboard } = dashboardState;
   const { data: dataStruktur } = strukturState;
   const [activeTab, setActiveTab] = useState("1");
@@ -50,7 +51,10 @@ const Dashboard = () => {
 
   return (
     <>
-      <h1>Selamat Datang {data && data.name} di E-Pekerja</h1>
+      <h1>
+        Selamat Datang {dataDashboard && dataDashboard.nama_pegawai} di
+        E-Pekerja
+      </h1>
       <hr />
       <CRow>
         <CCol xs="12" sm="4" lg="4">
@@ -63,7 +67,7 @@ const Dashboard = () => {
         </CCol>
         <CCol>
           <CRow>
-            <CCol>
+            <CCol md="4">
               <CWidgetIcon
                 text="Jumlah Keluarga"
                 header={
@@ -77,7 +81,7 @@ const Dashboard = () => {
                 <CIcon width={24} content={cilGroup} />
               </CWidgetIcon>
             </CCol>
-            <CCol>
+            <CCol md="4">
               <CWidgetIcon
                 text="Gaji Pokok"
                 header={
@@ -94,7 +98,7 @@ const Dashboard = () => {
                 <CIcon width={24} content={cilMoney} />
               </CWidgetIcon>
             </CCol>
-            <CCol>
+            <CCol md="4">
               <CWidgetIcon
                 text="Status Pegawai"
                 header={dataDashboard ? dataDashboard.status_pegawai : "..."}
@@ -103,6 +107,41 @@ const Dashboard = () => {
               >
                 <CIcon width={24} name="cil-user" />
               </CWidgetIcon>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol>
+              <CCard>
+                <CCardHeader>
+                  <CCardTitle>Biodata Singkat</CCardTitle>
+                </CCardHeader>
+                <CCardBody>
+                  <table className="table">
+                    <tbody>
+                      <tr>
+                        <th>Nama</th>
+                        <th>:</th>
+                        <td>{dataDashboard && dataDashboard.pegawai.nama}</td>
+                      </tr>
+                      <tr>
+                        <th>Alamat</th>
+                        <th>:</th>
+                        <td>{dataDashboard && dataDashboard.pegawai.alamat}</td>
+                      </tr>
+                      <tr>
+                        <th>No. HP</th>
+                        <th>:</th>
+                        <td>{dataDashboard && dataDashboard.pegawai.no_hp}</td>
+                      </tr>
+                      <tr>
+                        <th>Email</th>
+                        <th>:</th>
+                        <td>{dataDashboard && dataDashboard.pegawai.email}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </CCardBody>
+              </CCard>
             </CCol>
           </CRow>
           {/* <CRow>

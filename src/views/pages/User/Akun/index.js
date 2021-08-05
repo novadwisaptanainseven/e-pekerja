@@ -43,7 +43,7 @@ const Akun = () => {
                   alt="bg-profil"
                 />
                 <img
-                  src={data ? getImage(data.foto_profil) : ""}
+                  src={data ? getImage(data.pegawai.foto) : ""}
                   alt="foto-profil"
                   className="rounded-circle mx-auto shadow"
                   height={200}
@@ -54,7 +54,7 @@ const Akun = () => {
                   <h5 className="card-title">
                     ({data && data.level === 2 ? "User" : "Administrator"})
                   </h5>
-                  <h5 className="card-title">{data && data.name}</h5>
+                  <h5 className="card-title">{data && data.pegawai.nama}</h5>
                   <h5 className="text-muted font-weight-normal">
                     {data && data.username}
                   </h5>

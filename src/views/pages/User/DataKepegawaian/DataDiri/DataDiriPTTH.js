@@ -69,9 +69,7 @@ const DataDiriPTTH = ({ data }) => {
                     </tr>
                     <tr>
                       <th>Tgl. Mulai Tugas</th>
-                      <td>
-                        {format(new Date(data.tgl_mulai_tugas), "d/MM/Y")}
-                      </td>
+                      <td>{data.tgl_mulai_tugas}</td>
                     </tr>
 
                     <tr>

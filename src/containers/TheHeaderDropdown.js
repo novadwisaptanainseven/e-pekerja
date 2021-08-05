@@ -19,7 +19,7 @@ const MySwal = withReactContent(Swal);
 
 const TheHeaderDropdown = () => {
   const history = useHistory();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState("");
   const { userDispatch } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -51,14 +51,21 @@ const TheHeaderDropdown = () => {
   return (
     <CDropdown inNav className="c-header-nav-items mx-2" direction="down">
       <CDropdownToggle className="c-header-nav-link" caret={false}>
-        <div className="c-avatar">
+        <span>{currentUser && currentUser.username}</span>
+        <div className="c-avatar ml-2">
           <CImg
-            src={currentUser ? getImage(currentUser.foto_profil) : ""}
+            src={
+              currentUser && currentUser.level === 1
+                ? getImage(currentUser.foto_profil)
+                : currentUser.pegawai
+                ? getImage(currentUser.pegawai.foto)
+                : ""
+            }
             style={{
               height: "36px",
             }}
             className="c-avatar-img"
-            alt="admin@bootstrapmaster.com"
+            alt="foto-pegawai"
           />
         </div>
       </CDropdownToggle>
