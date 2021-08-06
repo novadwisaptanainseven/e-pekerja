@@ -2,7 +2,7 @@ import axiosInstance from "src/helpers/axios";
 
 export const getSelectAgama = (setAgama) => {
   axiosInstance
-    .get("admin/master-data/agama")
+    .get("agama")
     .then((res) => {
       setAgama(res.data.data);
       // console.log(res.data);

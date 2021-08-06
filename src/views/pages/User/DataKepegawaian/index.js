@@ -11,7 +11,7 @@ import {
   CNavLink,
 } from "@coreui/react";
 import DataDiri from "./DataDiri/DataDiri";
-import DataKeluarga from "./DataKeluarga";
+import DataKeluarga from "./Keluarga/DataKeluarga";
 import DataPendidikan from "./DataPendidikan";
 import DataDiklat from "./DataDiklat";
 import RiwayatKerja from "./RiwayatKerja";
@@ -20,6 +20,7 @@ import Penghargaan from "./Penghargaan/Penghargaan";
 import { GlobalContext } from "src/context/Provider";
 import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDataDiri";
 import RiwayatGolongan from "./RiwayatGolongan";
+import RiwayatSK from "./RiwayatSK/RiwayatSK";
 
 const DetailPegawai = () => {
   const { dataDiriState, dataDiriDispatch } = useContext(GlobalContext);
@@ -65,6 +66,13 @@ const DetailPegawai = () => {
                   <CNavLink data-tab="riwayat-golongan">Golongan</CNavLink>
                 </CNavItem>
               )}
+              {data &&
+                (data.id_status_pegawai === 2 ||
+                  data.id_status_pegawai === 3) && (
+                  <CNavItem>
+                    <CNavLink data-tab="riwayat-sk">Riwayat SK</CNavLink>
+                  </CNavItem>
+                )}
               <CNavItem>
                 <CNavLink data-tab="penghargaan">Penghargaan</CNavLink>
               </CNavItem>
@@ -93,9 +101,22 @@ const DetailPegawai = () => {
                   <RiwayatGolongan
                     id={localStorage.id_user}
                     dataActive={activeTab}
+                    dataDiriDispatch={dataDiriDispatch}
                   />
                 </CTabPane>
               )}
+              {data &&
+                (data.id_status_pegawai === 2 ||
+                  data.id_status_pegawai === 3) && (
+                  <CTabPane data-tab="riwayat-sk">
+                    <RiwayatSK
+                      id={localStorage.id_user}
+                      dataActive={activeTab}
+                      dataDiriDispatch={dataDiriDispatch}
+                      pegawai={data}
+                    />
+                  </CTabPane>
+                )}
               <CTabPane data-tab="penghargaan">
                 <Penghargaan dataActive={activeTab} />
               </CTabPane>

@@ -1,7 +1,7 @@
 const initStateUser = {
   loading: false,
-  data: null,
+  data: "",
   error: null,
-}
+};
 
 export default initStateUser;

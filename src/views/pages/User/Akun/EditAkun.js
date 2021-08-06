@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -16,11 +16,9 @@ import {
   CButton,
   CCardFooter,
   CForm,
-  CFormText,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
 import { GlobalContext } from "src/context/Provider";
-import { getImage } from "src/context/actions/DownloadFile";
 import { Formik } from "formik";
 import { LoadAnimationWhite } from "src/assets";
 import { editAkun } from "src/context/actions/UserPage/Akun/editAkun";
@@ -31,32 +29,33 @@ const EditAkun = ({ match }) => {
   // const params = match.params;
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState();
-  const [preview, setPreview] = useState();
+  // const [selectedFile, setSelectedFile] = useState();
+  // const [preview, setPreview] = useState();
   const { userState, userDispatch } = useContext(GlobalContext);
   const { data } = userState;
+  const [currentUser, setCurrentUser] = useState("");
 
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreview(data ? getImage(data.foto_profil) : "");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedFile) {
+  //     setPreview(data ? getImage(data.foto_profil) : "");
+  //     return;
+  //   }
 
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreview(objectUrl);
+  //   const objectUrl = URL.createObjectURL(selectedFile);
+  //   setPreview(objectUrl);
 
-    // Free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile, data]);
+  //   // Free memory when ever this component is unmounted
+  //   return () => URL.revokeObjectURL(objectUrl);
+  // }, [selectedFile, data]);
 
-  const onSelectFile = (e) => {
-    if (!e.target.files || e.target.files.length === 0) {
-      setSelectedFile(undefined);
-      return;
-    }
+  // const onSelectFile = (e) => {
+  //   if (!e.target.files || e.target.files.length === 0) {
+  //     setSelectedFile(undefined);
+  //     return;
+  //   }
 
-    setSelectedFile(e.target.files[0]);
-  };
+  //   setSelectedFile(e.target.files[0]);
+  // };
 
   const goBackToParent = () => {
     history.goBack();
@@ -64,10 +63,9 @@ const EditAkun = ({ match }) => {
 
   // Inisialisasi State Formik
   const initState = {
-    name: data ? data.name : "",
+    // name: data ? data.name : "",
     username: data ? data.username : "",
-    password: data ? data.password : "",
-    foto_profil: undefined,
+    // foto_profil: undefined,
   };
 
   // Fungsi untuk menampilkan alert success edit data
@@ -78,7 +76,8 @@ const EditAkun = ({ match }) => {
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
-      history.push("/epekerja/user/akun");
+      // history.push("/epekerja/user/akun");
+      window.location.href = "/epekerja/user/akun";
     });
   };
 
@@ -100,53 +99,56 @@ const EditAkun = ({ match }) => {
   };
 
   // Setting validasi form menggunakan YUP & FORMIK
-  const FOTO_PROFIL_SIZE = 2048000; // Bytes => 2 mb x 1000 kb x 1000 bytes
-  const FOTO_PROFIL_SUPPORTED_FORMATS = [
-    "image/jpg",
-    "image/jpeg",
-    "image/png",
-  ];
+  // const FOTO_PROFIL_SIZE = 2048000; // Bytes => 2 mb x 1000 kb x 1000 bytes
+  // const FOTO_PROFIL_SUPPORTED_FORMATS = [
+  //   "image/jpg",
+  //   "image/jpeg",
+  //   "image/png",
+  // ];
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Nama harus diisi"),
+    // name: Yup.string().required("Nama harus diisi"),
     username: Yup.string().required("Username harus diisi"),
-    foto_profil: Yup.mixed()
-      .test("size", "Kapasitas file maksimal 2 mb", (value) => {
-        if (value) {
-          return value && value.size <= FOTO_PROFIL_SIZE;
-        }
-        return true;
-      })
-      .test(
-        "type",
-        "Ekstensi yang diperbolehkan hanya jpg, jpeg, dan png",
-        (value) => {
-          if (value) {
-            return value && FOTO_PROFIL_SUPPORTED_FORMATS.includes(value.type);
-          }
-          return true;
-        }
-      ),
+    // foto_profil: Yup.mixed()
+    //   .test("size", "Kapasitas file maksimal 2 mb", (value) => {
+    //     if (value) {
+    //       return value && value.size <= FOTO_PROFIL_SIZE;
+    //     }
+    //     return true;
+    //   })
+    //   .test(
+    //     "type",
+    //     "Ekstensi yang diperbolehkan hanya jpg, jpeg, dan png",
+    //     (value) => {
+    //       if (value) {
+    //         return value && FOTO_PROFIL_SUPPORTED_FORMATS.includes(value.type);
+    //       }
+    //       return true;
+    //     }
+    //   ),
   });
 
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
-    formData.append("name", values.name);
     formData.append("username", values.username);
-    if (values.foto_profil) {
-      formData.append("foto_profil", values.foto_profil);
-    }
+    // formData.append("name", values.name);
+    // if (values.foto_profil) {
+    //   formData.append("foto_profil", values.foto_profil);
+    // }
 
     for (var pair of formData.entries()) {
       console.log(pair);
     }
+
+    console.log(currentUser);
 
     editAkun(
       formData,
       setLoading,
       showAlertSuccess,
       showAlertError,
-      userDispatch
+      userDispatch,
+      setCurrentUser
     );
   };
 
@@ -182,7 +184,7 @@ const EditAkun = ({ match }) => {
               <CCardBody>
                 <CRow>
                   <CCol md="6">
-                    <CFormGroup>
+                    {/* <CFormGroup>
                       <CLabel>Nama</CLabel>
                       <CInput
                         type="text"
@@ -199,7 +201,7 @@ const EditAkun = ({ match }) => {
                       {errors.name && touched.name && (
                         <div className="invalid-feedback">{errors.name}</div>
                       )}
-                    </CFormGroup>
+                    </CFormGroup> */}
                     <CFormGroup>
                       <CLabel>Username</CLabel>
                       <CInput
@@ -223,7 +225,7 @@ const EditAkun = ({ match }) => {
                       )}
                     </CFormGroup>
 
-                    <CFormGroup>
+                    {/* <CFormGroup>
                       <CLabel>Foto Profil</CLabel>
                       <CInput
                         type="file"
@@ -258,7 +260,7 @@ const EditAkun = ({ match }) => {
                         File harus bertipe jpg, jpeg, atau png dengan ukuran
                         kurang dari 2 MB
                       </CFormText>
-                    </CFormGroup>
+                    </CFormGroup> */}
                   </CCol>
                 </CRow>
               </CCardBody>

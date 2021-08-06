@@ -1,25 +1,25 @@
 import axiosInstance from "src/helpers/axios";
-import { cekUser } from "../../Auth/cekUser";
+import { getRiwayatSK } from "./getRiwayatSK";
 
-export const editAkun = (
+export const insertRiwayatSK = (
+  id_pegawai,
   values,
   setLoading,
+  setData,
   showAlertSuccess,
-  showAlertError,
-  userDispatch,
-  setCurrentUser
+  showAlertError
 ) => {
   setLoading(true);
 
   axiosInstance
-    .post(`user/akun`, values, {
+    .post(`user/data-kepegawaian/${id_pegawai}/riwayat-sk`, values, {
       header: {
         "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
       },
     })
     .then((res) => {
       console.log(res.data);
-      cekUser(setCurrentUser, userDispatch);
+      getRiwayatSK(id_pegawai, setLoading, setData);
       setLoading(false);
       showAlertSuccess();
     })

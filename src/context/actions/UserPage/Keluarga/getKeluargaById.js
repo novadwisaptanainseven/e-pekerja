@@ -1,10 +1,10 @@
 import axiosInstance from "src/helpers/axios";
 
-export const getSelectJabatan = (setJabatan) => {
+export const getKeluargaById = (id_pegawai, id_keluarga, setData) => {
   axiosInstance
-    .get("jabatan")
+    .get(`user/data-kepegawaian/${id_pegawai}/keluarga/${id_keluarga}`)
     .then((res) => {
-      setJabatan(res.data.data);
+      setData(res.data.data);
       // console.log(res.data);
     })
     .catch((err) => {
