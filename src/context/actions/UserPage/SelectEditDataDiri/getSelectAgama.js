@@ -1,10 +1,10 @@
 import axiosInstance from "src/helpers/axios";
 
-export const getSelectBidang = (setBidang) => {
+export const getSelectAgama = (setAgama) => {
   axiosInstance
-    .get("admin/master-data/bidang")
+    .get("user/master-data/agama")
     .then((res) => {
-      setBidang(res.data.data);
+      setAgama(res.data.data);
       // console.log(res.data);
     })
     .catch((err) => {

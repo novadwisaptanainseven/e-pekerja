@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -25,49 +25,50 @@ import {
   CFormText,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-import { getPNSById } from "src/context/actions/Pegawai/PNS/getPNSById";
-import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
-import { getSelectGolongan } from "src/context/actions/MasterData/PangkatGolongan/getSelectGolongan";
-import { getSelectEselon } from "src/context/actions/MasterData/PangkatEselon/getSelectEselon";
-import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { editPNS } from "src/context/actions/Pegawai/PNS/editPNS";
 import { getImage } from "src/context/actions/DownloadFile";
-import { getSelectBidang } from "src/context/actions/MasterData/Bidang/getSelectBidang";
+import { GlobalContext } from "src/context/Provider";
+import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDataDiri";
+import {
+  getSelectAgama,
+  getSelectBidang,
+  getSelectEselon,
+  getSelectJabatan,
+} from "src/context/actions/UserPage/SelectEditDataDiri";
 
 const MySwal = withReactContent(swal2);
 
 const EditPegawai = ({ match }) => {
   const history = useHistory();
   const params = match.params;
-  const [pns, setPNS] = useState();
+  // const [pns, setPNS] = useState();
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
   const [loading, setLoading] = useState(false);
   const [jabatan, setJabatan] = useState([]);
   const [bidang, setBidang] = useState([]);
-  const [golongan, setGolongan] = useState([]);
   const [eselon, setEselon] = useState([]);
   const [agama, setAgama] = useState([]);
   const [formatGaji, setFormatGaji] = useState("");
+  const { dataDiriState, dataDiriDispatch } = useContext(GlobalContext);
+  const { data: pns } = dataDiriState;
 
   const goBackToParent = () => {
     history.goBack();
   };
 
   useEffect(() => {
-    // Get PNS By ID
-    getPNSById(params.id, setPNS);
+    // Get data diri
+    getDataDiri(dataDiriDispatch);
     // Get Bidang
     getSelectBidang(setBidang);
     // Get Jabatan
     getSelectJabatan(setJabatan);
-    // Get Golongan
-    getSelectGolongan(setGolongan);
-    // Get Eselon
-    getSelectEselon(setEselon);
     // Get Agama
     getSelectAgama(setAgama);
-  }, [params]);
+    // Get Eselon
+    getSelectEselon(setEselon);
+  }, [dataDiriDispatch]);
 
   useEffect(() => {
     if (pns) {
@@ -261,7 +262,7 @@ const EditPegawai = ({ match }) => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Edit Pegawai</h3>
+          <h3>Edit Data Diri</h3>
           <CButton
             type="button"
             color="warning"
@@ -407,41 +408,7 @@ const EditPegawai = ({ match }) => {
                             )}
                           </CCol>
                         </CFormGroup>
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>Golongan</CLabel>
-                          </CCol>
-                          <CCol md="9" sm="12">
-                            <CSelect
-                              custom
-                              name="id_golongan"
-                              id="id_golongan"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.id_golongan}
-                              className={
-                                errors.id_golongan && touched.id_golongan
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            >
-                              <option value="">-- Pilih Golongan --</option>
-                              {golongan.map((item, index) => (
-                                <option
-                                  key={index}
-                                  value={item.id_pangkat_golongan}
-                                >
-                                  {item.keterangan} ({item.golongan})
-                                </option>
-                              ))}
-                            </CSelect>
-                            {errors.id_golongan && touched.id_golongan && (
-                              <div className="invalid-feedback">
-                                {errors.id_golongan}
-                              </div>
-                            )}
-                          </CCol>
-                        </CFormGroup>
+
                         <CFormGroup row>
                           <CCol>
                             <CLabel>Eselon</CLabel>
@@ -842,32 +809,7 @@ const EditPegawai = ({ match }) => {
                             )}
                           </CCol>
                         </CFormGroup>
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>TMT. Golongan</CLabel>
-                          </CCol>
-                          <CCol md="9" sm="12">
-                            <CInput
-                              type="date"
-                              name="tmt_golongan"
-                              id="tmt_golongan"
-                              placeholder="Masukkan tmt golongan"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.tmt_golongan}
-                              className={
-                                errors.tmt_golongan && touched.tmt_golongan
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            />
-                            {errors.tmt_golongan && touched.tmt_golongan && (
-                              <div className="invalid-feedback">
-                                {errors.tmt_golongan}
-                              </div>
-                            )}
-                          </CCol>
-                        </CFormGroup>
+
                         <CFormGroup row>
                           <CCol>
                             <CLabel>TMT. CPNS</CLabel>

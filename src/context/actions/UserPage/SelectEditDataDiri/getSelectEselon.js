@@ -1,10 +1,10 @@
 import axiosInstance from "src/helpers/axios";
 
-export const getSelectBidang = (setBidang) => {
+export const getSelectEselon = (setEselon) => {
   axiosInstance
-    .get("admin/master-data/bidang")
+    .get("user/master-data/eselon")
     .then((res) => {
-      setBidang(res.data.data);
+      setEselon(res.data.data);
       // console.log(res.data);
     })
     .catch((err) => {

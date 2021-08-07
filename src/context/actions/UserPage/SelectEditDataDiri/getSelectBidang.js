@@ -2,7 +2,7 @@ import axiosInstance from "src/helpers/axios";
 
 export const getSelectBidang = (setBidang) => {
   axiosInstance
-    .get("admin/master-data/bidang")
+    .get("user/master-data/bidang")
     .then((res) => {
       setBidang(res.data.data);
       // console.log(res.data);
