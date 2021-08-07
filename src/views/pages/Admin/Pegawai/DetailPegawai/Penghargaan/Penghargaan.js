@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { LoadAnimationBlue } from "src/assets";
 
 import {
   CButton,
@@ -28,6 +27,7 @@ import { deletePenghargaan } from "src/context/actions/Pegawai/Penghargaan/delet
 import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
 import printLaporan from "src/context/actions/DownloadFile/printLaporan";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
+import Loading from "src/reusable/Loading";
 
 const MySwal = withReactContent(swal2);
 
@@ -192,7 +192,7 @@ const Penghargaan = ({ id, dataActive }) => {
                   onClick={() => handlePreviewImage(data.dokumentasi)}
                   style={{ cursor: "pointer" }}
                 />
-              ) : (
+              ) : data.dokumentasi ? (
                 <a
                   href={getDokPenghargaan(data.dokumentasi)}
                   target="_blank"
@@ -200,6 +200,8 @@ const Penghargaan = ({ id, dataActive }) => {
                 >
                   {filename}
                 </a>
+              ) : (
+                "Belum ada file"
               )}
             </CCol>
           </CRow>
@@ -259,20 +261,7 @@ const Penghargaan = ({ id, dataActive }) => {
       )}
 
       {loading && (
-        <>
-          <div>
-            <CRow>
-              <CCol className="text-center">
-                <img
-                  className="mt-4 ml-3"
-                  width={30}
-                  src={LoadAnimationBlue}
-                  alt="load-animation"
-                />
-              </CCol>
-            </CRow>
-          </div>
-        </>
+        <Loading />
       )}
 
       {/* Modal Tambah */}

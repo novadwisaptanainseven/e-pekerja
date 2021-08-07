@@ -1,11 +1,5 @@
-import { deletePendidikan } from "./deletePenghargaan";
-import { insertPendidikan } from "./insertPendidikan";
-import { getPendidikanById } from "./getPendidikanById";
-import { editPendidikan } from "./editPendidikan";
+import { deletePenghargaan } from "./deletePenghargaan";
+import { insertPenghargaan } from "./insertPenghargaan";
+import { editPenghargaan } from "./editPenghargaan";
 
-export {
-  deletePendidikan,
-  insertPendidikan,
-  getPendidikanById,
-  editPendidikan,
-};
+export { deletePenghargaan, insertPenghargaan, editPenghargaan };

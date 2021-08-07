@@ -12,15 +12,20 @@ import {
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import CIcon from "@coreui/icons-react";
-import { cilInfo, cilPen, cilTrash } from "@coreui/icons";
+import { cilInfo, cilPen, cilPrint, cilTrash } from "@coreui/icons";
 import DetailPenghargaan from "./DetailPenghargaan";
 import { GlobalContext } from "src/context/Provider";
 import { getPenghargaan } from "src/context/actions/UserPage/DataKepegawaian/getPenghargaan";
 import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
-import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { deletePenghargaan } from "src/context/actions/UserPage/Penghargaan";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import { exportExcel } from "src/context/actions/DownloadFile";
+import Loading from "src/reusable/Loading";
+import TambahPenghargaan from "./TambahPenghargaan";
+import EditPenghargaan from "./EditPenghargaan";
 const MySwal = withReactContent(swal2);
 
 const Penghargaan = ({ dataActive }) => {
@@ -133,7 +138,12 @@ const Penghargaan = ({ dataActive }) => {
     }).then((res) => {
       if (res.isConfirmed) {
         // Memanggil method deletePenghargaan untuk menghapus data Penghargaan
-        
+        deletePenghargaan(
+          id_pegawai,
+          id_penghargaan,
+          penghargaanUserDispatch,
+          MySwal
+        );
       }
     });
   };
@@ -179,7 +189,7 @@ const Penghargaan = ({ dataActive }) => {
                   onClick={() => handlePreviewImage(data.dokumentasi)}
                   style={{ cursor: "pointer" }}
                 />
-              ) : (
+              ) : data.dokumentasi ? (
                 <a
                   href={getDokPenghargaan(data.dokumentasi)}
                   target="_blank"
@@ -187,6 +197,8 @@ const Penghargaan = ({ dataActive }) => {
                 >
                   {filename}
                 </a>
+              ) : (
+                "Belum ada file"
               )}
             </CCol>
           </CRow>
@@ -197,6 +209,34 @@ const Penghargaan = ({ dataActive }) => {
 
   return (
     <>
+      <div className="button-control mb-2 mt-4">
+        <CButton
+          color="primary"
+          className="btn btn-md"
+          onClick={() => setModalTambah(!modalTambah)}
+        >
+          Tambah Penghargaan
+        </CButton>
+        <div>
+          <CButton
+            type="button"
+            color="info"
+            onClick={() => printLaporan(user.id_pegawai, "penghargaan")}
+          >
+            Cetak <CIcon content={cilPrint} />
+          </CButton>
+          <CButton
+            type="button"
+            className="ml-2"
+            color="success"
+            onClick={() =>
+              exportExcel("laporan-pegawai/" + user.id_pegawai + "/penghargaan")
+            }
+          >
+            Excel <CIcon content={cilPrint} />
+          </CButton>
+        </div>
+      </div>
       {data.length > 0 ? (
         <DataTable
           columns={columns}
@@ -213,18 +253,7 @@ const Penghargaan = ({ dataActive }) => {
           highlightOnHover
         />
       ) : loading ? (
-        <div>
-          <CRow>
-            <CCol className="text-center">
-              <img
-                className="mt-4 ml-3"
-                width={30}
-                src={LoadAnimationBlue}
-                alt="load-animation"
-              />
-            </CCol>
-          </CRow>
-        </div>
+        <Loading />
       ) : (
         <DataTable
           columns={columns}
@@ -281,6 +310,45 @@ const Penghargaan = ({ dataActive }) => {
             <DetailPenghargaan id={modalDetail.id} />
           </CModalBody>
         </CForm>
+      </CModal>
+
+      {/* Modal Tambah */}
+      <CModal
+        show={modalTambah}
+        onClose={() => setModalTambah(!modalTambah)}
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Tambah Data</CModalTitle>
+        </CModalHeader>
+
+        <TambahPenghargaan
+          id={user.id_pegawai}
+          modal={modalTambah}
+          setModal={setModalTambah}
+          dispatch={penghargaanUserDispatch}
+        />
+      </CModal>
+
+      {/* Modal Edit */}
+      <CModal
+        show={modalEdit.modal}
+        onClose={() =>
+          setModalEdit({ ...modalEdit, modal: !modalEdit.modal, id: null })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Edit Data</CModalTitle>
+        </CModalHeader>
+
+        <EditPenghargaan
+          idPegawai={user.id_pegawai}
+          idPenghargaan={modalEdit.id}
+          modal={modalEdit}
+          setModal={setModalEdit}
+          dispatch={penghargaanUserDispatch}
+        />
       </CModal>
     </>
   );

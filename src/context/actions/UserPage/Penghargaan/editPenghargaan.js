@@ -1,9 +1,9 @@
 import axiosInstance from "src/helpers/axios";
-import { getPendidikan } from "../DataKepegawaian/getPendidikan";
+import { getPenghargaan } from "../DataKepegawaian/getPenghargaan";
 
-export const editPendidikan = (
+export const editPenghargaan = (
   id_pegawai,
-  id_pendidikan,
+  id_penghargaan,
   values,
   setLoading,
   showAlertSuccess,
@@ -14,7 +14,7 @@ export const editPendidikan = (
 
   axiosInstance
     .post(
-      `user/data-kepegawaian/${id_pegawai}/pendidikan/${id_pendidikan}`,
+      `user/data-kepegawaian/${id_pegawai}/penghargaan/${id_penghargaan}`,
       values,
       {
         header: {
@@ -25,7 +25,7 @@ export const editPendidikan = (
     .then((res) => {
       // console.log(res.data);
       setLoading(false);
-      getPendidikan(dispatch);
+      getPenghargaan(dispatch);
       showAlertSuccess();
     })
     .catch((err) => {

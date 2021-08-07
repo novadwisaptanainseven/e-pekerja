@@ -1,7 +1,7 @@
 import axiosInstance from "src/helpers/axios";
-import { getPendidikan } from "../DataKepegawaian/getPendidikan";
+import { getPenghargaan } from "../DataKepegawaian/getPenghargaan";
 
-export const insertPendidikan = (
+export const insertPenghargaan = (
   id_pegawai,
   values,
   setLoading,
@@ -12,7 +12,7 @@ export const insertPendidikan = (
   setLoading(true);
 
   axiosInstance
-    .post(`user/data-kepegawaian/${id_pegawai}/pendidikan`, values, {
+    .post(`user/data-kepegawaian/${id_pegawai}/penghargaan`, values, {
       header: {
         "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
       },
@@ -20,7 +20,7 @@ export const insertPendidikan = (
     .then((res) => {
       console.log(res.data);
       setLoading(false);
-      getPendidikan(dispatch);
+      getPenghargaan(dispatch);
       showAlertSuccess();
     })
     .catch((err) => {
