@@ -1,9 +1,9 @@
 import axiosInstance from "src/helpers/axios";
-import { getKeluarga } from "../DataKepegawaian/getKeluarga";
+import { getRiwayatKerja } from "../DataKepegawaian/getRiwayatKerja";
 
-export const editKeluarga = (
+export const editRiwayatKerja = (
   id_pegawai,
-  id_keluarga,
+  id_riwayat_kerja,
   values,
   setLoading,
   showAlertSuccess,
@@ -13,11 +13,14 @@ export const editKeluarga = (
   setLoading(true);
 
   axiosInstance
-    .put(`user/data-kepegawaian/${id_pegawai}/keluarga/${id_keluarga}`, values)
+    .put(
+      `user/data-kepegawaian/${id_pegawai}/riwayat-kerja/${id_riwayat_kerja}`,
+      values
+    )
     .then((res) => {
       // console.log(res.data);
       setLoading(false);
-      getKeluarga(dispatch);
+      getRiwayatKerja(dispatch);
       showAlertSuccess();
     })
     .catch((err) => {

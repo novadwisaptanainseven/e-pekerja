@@ -8,21 +8,31 @@ import {
   CModalTitle,
   CForm,
   CModalBody,
+  CButtonGroup,
 } from "@coreui/react";
 import DataTable from "react-data-table-component";
 import CIcon from "@coreui/icons-react";
-import { cilInfo } from "@coreui/icons";
+import { cilInfo, cilPen, cilTrash } from "@coreui/icons";
 import DetailPenghargaan from "./DetailPenghargaan";
 import { GlobalContext } from "src/context/Provider";
 import { getPenghargaan } from "src/context/actions/UserPage/DataKepegawaian/getPenghargaan";
 import getDokPenghargaan from "src/context/actions/DownloadFile/getDokPenghargaan";
 import { LoadAnimationBlue } from "src/assets";
 import { format } from "date-fns";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(swal2);
 
 const Penghargaan = ({ dataActive }) => {
-  const { penghargaanUserState, penghargaanUserDispatch } =
+  const { penghargaanUserState, penghargaanUserDispatch, userState } =
     useContext(GlobalContext);
+  const [modalTambah, setModalTambah] = useState(false);
+  const [modalEdit, setModalEdit] = useState({
+    modal: false,
+    id: null,
+  });
   const { data, loading } = penghargaanUserState;
+  const { data: user } = userState;
   const [modalDetail, setModalDetail] = useState({
     modal: false,
     id: null,
@@ -69,23 +79,64 @@ const Penghargaan = ({ dataActive }) => {
       sortable: true,
       cell: (row) => (
         <div data-tag="allowRowEvents">
-          <CButton
-            color="info"
-            className="btn btn-sm"
-            onClick={() =>
-              setModalDetail({
-                ...modalDetail,
-                modal: !modalDetail.modal,
-                id: row.id_penghargaan,
-              })
-            }
-          >
-            <CIcon content={cilInfo} color="white" />
-          </CButton>
+          <CButtonGroup>
+            <CButton
+              color="info"
+              className="btn btn-sm"
+              onClick={() =>
+                setModalDetail({
+                  ...modalDetail,
+                  modal: !modalDetail.modal,
+                  id: row.id_penghargaan,
+                })
+              }
+            >
+              <CIcon content={cilInfo} color="white" />
+            </CButton>
+            <CButton
+              color="success"
+              className="btn btn-sm"
+              onClick={() =>
+                setModalEdit({
+                  ...modalEdit,
+                  modal: !modalEdit.modal,
+                  id: row.id_penghargaan,
+                })
+              }
+            >
+              <CIcon content={cilPen} color="white" />
+            </CButton>
+            <CButton
+              color="danger"
+              className="btn btn-sm"
+              onClick={() => handleDelete(user.id_pegawai, row.id_penghargaan)}
+            >
+              <CIcon content={cilTrash} color="white" />
+            </CButton>
+          </CButtonGroup>
         </div>
       ),
     },
   ];
+
+  // Menangani tombol hapus
+  const handleDelete = (id_pegawai, id_penghargaan) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Memanggil method deletePenghargaan untuk menghapus data Penghargaan
+        
+      }
+    });
+  };
 
   const customStyles = {
     headCells: {

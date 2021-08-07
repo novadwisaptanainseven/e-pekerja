@@ -1,53 +1,51 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-
 import {
-  CButtonGroup,
-  CButton,
+  CRow,
+  CCol,
   CModal,
   CModalHeader,
   CModalTitle,
   CModalBody,
-  CCol,
-  CRow,
+  CButtonGroup,
+  CButton,
 } from "@coreui/react";
+import { GlobalContext } from "src/context/Provider";
+import { getDiklat } from "src/context/actions/UserPage/DataKepegawaian/getDiklat";
+import getDokDiklat from "src/context/actions/DownloadFile/getDokDiklat";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
+import { cilPen, cilPrint, cilTrash } from "@coreui/icons";
+import { deleteDiklat } from "src/context/actions/UserPage/Diklat";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import { exportExcel } from "src/context/actions/DownloadFile";
+import Loading from "src/reusable/Loading";
 import TambahDataDiklat from "./TambahDataDiklat";
 import EditDataDiklat from "./EditDataDiklat";
-import { getDiklat } from "src/context/actions/Pegawai/Diklat/getDiklat";
-import { deleteDiklat } from "src/context/actions/Pegawai/Diklat/deleteDiklat";
-import getDokDiklat from "src/context/actions/DownloadFile/getDokDiklat";
-import printLaporan from "src/context/actions/DownloadFile/printLaporan";
-import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
-import Loading from "src/reusable/Loading";
-
 const MySwal = withReactContent(swal2);
 
-const DataDiklat = ({ id, dataActive }) => {
+const DataDiklat = ({ dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
+  const { diklatState, diklatDispatch, userState } = useContext(GlobalContext);
+  const { data, loading } = diklatState;
+  const { data: user } = userState;
   const [previewImage, setPreviewImage] = useState({
     modal: false,
     image: null,
   });
-  const [diklat, setDiklat] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!diklat) {
+    if (!data) {
       if (dataActive === "diklat") {
-        // Get Diklat by Id Pegawai
-        getDiklat(id, setDiklat, setLoading);
+        getDiklat(diklatDispatch);
       }
     }
-  }, [id, dataActive, diklat]);
+  }, [diklatDispatch, dataActive, data]);
 
   const columns = [
     {
@@ -106,7 +104,7 @@ const DataDiklat = ({ id, dataActive }) => {
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() => handleDelete(id, row.id_diklat)}
+              onClick={() => handleDelete(user.id_pegawai, row.id_diklat)}
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -115,15 +113,6 @@ const DataDiklat = ({ id, dataActive }) => {
       ),
     },
   ];
-
-  const customStyles = {
-    headCells: {
-      style: {
-        fontSize: "1.15em",
-      },
-    },
-  };
-
   // Menangani tombol hapus
   const handleDelete = (id_pegawai, id_diklat) => {
     MySwal.fire({
@@ -138,16 +127,17 @@ const DataDiklat = ({ id, dataActive }) => {
     }).then((res) => {
       if (res.isConfirmed) {
         // Memanggil method deleteDiklat untuk menghapus data Diklat
-        deleteDiklat(id_pegawai, id_diklat, setDiklat);
-        MySwal.fire({
-          icon: "success",
-          title: "Terhapus",
-          text: "Data berhasil dihapus",
-        }).then((res) => {
-          getDiklat(id_pegawai, setDiklat, setLoading);
-        });
+        deleteDiklat(id_pegawai, id_diklat, diklatDispatch, MySwal);
       }
     });
+  };
+
+  const customStyles = {
+    headCells: {
+      style: {
+        fontSize: "1.15em",
+      },
+    },
   };
 
   // Menangani preview gambar
@@ -237,102 +227,59 @@ const DataDiklat = ({ id, dataActive }) => {
 
   return (
     <>
-      {!loading && (
-        <>
-          <div className="my-3">
-            <div className="button-control mb-2">
-              <CButton
-                color="primary"
-                className="btn btn-md"
-                onClick={() => setModalTambah(!modalTambah)}
-              >
-                Tambah Data
-              </CButton>
-              <div>
-                <CButton
-                  type="button"
-                  color="info"
-                  onClick={() => printLaporan(id, "diklat")}
-                >
-                  Cetak <CIcon content={cilPrint} />
-                </CButton>
-                <CButton
-                  type="button"
-                  className="ml-2"
-                  color="success"
-                  onClick={() =>
-                    exportExcel("laporan-pegawai/" + id + "/diklat")
-                  }
-                >
-                  Excel <CIcon content={cilPrint} />
-                </CButton>
-              </div>
-            </div>
-            <DataTable
-              columns={columns}
-              data={diklat || []}
-              noHeader
-              responsive={true}
-              customStyles={customStyles}
-              expandableRows
-              expandableRowsComponent={<ExpandableComponent />}
-              expandOnRowClicked
-              highlightOnHover
-            />
+      <div className="my-3">
+        <div className="button-control mb-2">
+          <CButton
+            color="primary"
+            className="btn btn-md"
+            onClick={() => setModalTambah(!modalTambah)}
+          >
+            Tambah Data
+          </CButton>
+          <div>
+            <CButton
+              type="button"
+              color="info"
+              onClick={() => printLaporan(user.id_pegawai, "diklat")}
+            >
+              Cetak <CIcon content={cilPrint} />
+            </CButton>
+            <CButton
+              type="button"
+              className="ml-2"
+              color="success"
+              onClick={() =>
+                exportExcel("laporan-pegawai/" + user.id_pegawai + "/diklat")
+              }
+            >
+              Excel <CIcon content={cilPrint} />
+            </CButton>
           </div>
-        </>
-      )}
-
-      {loading && (
-        <Loading />
-      )}
-
-      {/* Modal Tambah */}
-      <CModal
-        show={modalTambah}
-        onClose={() => setModalTambah(!modalTambah)}
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Tambah Data</CModalTitle>
-        </CModalHeader>
-
-        <TambahDataDiklat
-          id={id}
-          modalTambah={modalTambah}
-          setModalTambah={setModalTambah}
-          diklat={{
-            setLoadingDiklat: setLoading,
-            data: diklat,
-            setData: setDiklat,
-          }}
-        />
-      </CModal>
-
-      {/* Modal Edit */}
-      <CModal
-        show={modalEdit.modal}
-        onClose={() =>
-          setModalEdit({ ...modalEdit, modal: !modalEdit.modal, id: null })
-        }
-        size="lg"
-      >
-        <CModalHeader closeButton>
-          <CModalTitle>Edit Data</CModalTitle>
-        </CModalHeader>
-
-        <EditDataDiklat
-          idPegawai={id}
-          idDiklat={modalEdit.id}
-          modalEdit={modalEdit.modal}
-          setModalEdit={setModalEdit}
-          diklat={{
-            setLoadingDiklat: setLoading,
-            data: diklat,
-            setData: setDiklat,
-          }}
-        />
-      </CModal>
+        </div>
+        {data.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+            expandableRows
+            expandableRowsComponent={<ExpandableComponent />}
+            expandOnRowClicked
+            highlightOnHover
+          />
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+          />
+        )}
+      </div>
 
       {/* Modal Preview Image */}
       <CModal
@@ -358,6 +305,45 @@ const DataDiklat = ({ id, dataActive }) => {
             />
           )}
         </CModalBody>
+      </CModal>
+
+      {/* Modal Tambah */}
+      <CModal
+        show={modalTambah}
+        onClose={() => setModalTambah(!modalTambah)}
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Tambah Data</CModalTitle>
+        </CModalHeader>
+
+        <TambahDataDiklat
+          id={user.id_pegawai}
+          modalTambah={modalTambah}
+          setModalTambah={setModalTambah}
+          dispatch={diklatDispatch}
+        />
+      </CModal>
+
+      {/* Modal Edit */}
+      <CModal
+        show={modalEdit.modal}
+        onClose={() =>
+          setModalEdit({ ...modalEdit, modal: !modalEdit.modal, id: null })
+        }
+        size="lg"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Edit Data</CModalTitle>
+        </CModalHeader>
+
+        <EditDataDiklat
+          idPegawai={user.id_pegawai}
+          idDiklat={modalEdit.id}
+          modalEdit={modalEdit.modal}
+          setModalEdit={setModalEdit}
+          dispatch={diklatDispatch}
+        />
       </CModal>
     </>
   );

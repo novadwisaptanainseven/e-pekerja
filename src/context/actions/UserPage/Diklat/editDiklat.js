@@ -1,9 +1,9 @@
 import axiosInstance from "src/helpers/axios";
-import { getKeluarga } from "../DataKepegawaian/getKeluarga";
+import { getDiklat } from "../DataKepegawaian/getDiklat";
 
-export const editKeluarga = (
+export const editDiklat = (
   id_pegawai,
-  id_keluarga,
+  id_diklat,
   values,
   setLoading,
   showAlertSuccess,
@@ -13,11 +13,15 @@ export const editKeluarga = (
   setLoading(true);
 
   axiosInstance
-    .put(`user/data-kepegawaian/${id_pegawai}/keluarga/${id_keluarga}`, values)
+    .post(`user/data-kepegawaian/${id_pegawai}/diklat/${id_diklat}`, values, {
+      header: {
+        "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
+      },
+    })
     .then((res) => {
       // console.log(res.data);
       setLoading(false);
-      getKeluarga(dispatch);
+      getDiklat(dispatch);
       showAlertSuccess();
     })
     .catch((err) => {

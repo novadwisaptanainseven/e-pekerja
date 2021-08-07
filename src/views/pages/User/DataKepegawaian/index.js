@@ -12,9 +12,9 @@ import {
 } from "@coreui/react";
 import DataDiri from "./DataDiri/DataDiri";
 import DataKeluarga from "./Keluarga/DataKeluarga";
-import DataPendidikan from "./DataPendidikan";
-import DataDiklat from "./DataDiklat";
-import RiwayatKerja from "./RiwayatKerja";
+import DataPendidikan from "./Pendidikan/DataPendidikan";
+import DataDiklat from "./Diklat/DataDiklat";
+import RiwayatKerja from "./RiwayatKerja/RiwayatKerja";
 import DataBerkas from "./DataBerkas/DataBerkas";
 import Penghargaan from "./Penghargaan/Penghargaan";
 import { GlobalContext } from "src/context/Provider";

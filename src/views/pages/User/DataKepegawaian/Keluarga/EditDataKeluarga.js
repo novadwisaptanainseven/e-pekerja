@@ -20,7 +20,6 @@ import {
   CModalFooter,
   CButton,
 } from "@coreui/react";
-import { useHistory } from "react-router";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import {
   getKeluargaById,
@@ -36,7 +35,6 @@ const EditDataKeluarga = ({
   setModalEdit,
   dispatch,
 }) => {
-  const history = useHistory();
   const [agama, setAgama] = useState([]);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -79,7 +77,6 @@ const EditDataKeluarga = ({
       timer: 1500,
     }).then((res) => {
       setModalEdit(!modalEdit);
-      history.push(`/epekerja/admin/pegawai-detail/${idPegawai}`);
     });
   };
 

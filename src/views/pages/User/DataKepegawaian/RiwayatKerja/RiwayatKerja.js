@@ -1,48 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import {
+  CRow,
+  CCol,
+  CButtonGroup,
+  CButton,
+  CModalTitle,
+  CModalHeader,
+  CModal,
+} from "@coreui/react";
+import { GlobalContext } from "src/context/Provider";
+import { getRiwayatKerja } from "src/context/actions/UserPage/DataKepegawaian/getRiwayatKerja";
+import { format } from "date-fns";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import {
-  CButtonGroup,
-  CButton,
-  CRow,
-  CCol,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-} from "@coreui/react";
+import { cilPen, cilPrint, cilTrash } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
+import { deleteRiwayatKerja } from "src/context/actions/UserPage/RiwayatKerja";
+import printLaporan from "src/context/actions/DownloadFile/printLaporan";
+import { exportExcel } from "src/context/actions/DownloadFile";
+import Loading from "src/reusable/Loading";
 import TambahRiwayatKerja from "./TambahRiwayatKerja";
 import EditRiwayatKerja from "./EditRiwayatKerja";
-import { deleteRiwayatKerja } from "src/context/actions/Pegawai/RiwayatKerja/deleteRiwayatKerja";
-import { getRiwayatKerja } from "src/context/actions/Pegawai/RiwayatKerja/getRiwayatKerja";
-import { format } from "date-fns/esm";
-import printLaporan from "src/context/actions/DownloadFile/printLaporan";
-import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
-import Loading from "src/reusable/Loading";
-
 const MySwal = withReactContent(swal2);
 
-const DataRiwayatKerja = ({ id, dataActive }) => {
+const RiwayatKerja = ({ dataActive }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
-
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { riwayatKerjaState, riwayatKerjaDispatch, userState } =
+    useContext(GlobalContext);
+  const { data, loading } = riwayatKerjaState;
+  const { data: user } = userState;
 
   useEffect(() => {
     if (!data) {
       if (dataActive === "riwayat-kerja") {
-        // Get Riwayat Kerja by Id Pegawai
-        getRiwayatKerja(id, setData, setLoading);
+        // Get data riwayat kerja
+        getRiwayatKerja(riwayatKerjaDispatch);
       }
     }
-  }, [id, dataActive, data]);
+  }, [riwayatKerjaDispatch, dataActive, data]);
 
   const columns = [
     {
@@ -62,21 +63,16 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
       selector: "tgl_masuk",
       wrap: true,
       sortable: true,
-      cell: (row) => {
-        // Ubah format tanggal
-        const formattedDate = format(new Date(row.tgl_masuk), "dd/MM/y");
-        return formattedDate;
-      },
+      cell: (row) => <div>{format(new Date(row.tgl_masuk), "dd/MM/yyyy")}</div>,
     },
     {
       name: "Tgl. Keluar Kerja",
       selector: "tgl_keluar",
       wrap: true,
       sortable: true,
-      cell: (row) => {
-        const formattedDate = format(new Date(row.tgl_keluar), "dd/MM/y");
-        return formattedDate;
-      },
+      cell: (row) => (
+        <div>{format(new Date(row.tgl_keluar), "dd/MM/yyyy")}</div>
+      ),
     },
     {
       name: "Aksi",
@@ -102,7 +98,9 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() => handleDelete(id, row.id_riwayat_kerja)}
+              onClick={() =>
+                handleDelete(user.id_pegawai, row.id_riwayat_kerja)
+              }
             >
               <CIcon content={cilTrash} color="white" />
             </CButton>
@@ -111,14 +109,6 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
       ),
     },
   ];
-
-  const customStyles = {
-    headCells: {
-      style: {
-        fontSize: "1.15em",
-      },
-    },
-  };
 
   // Menangani tombol hapus
   const handleDelete = (id_pegawai, id_riwayat_kerja) => {
@@ -134,16 +124,22 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
     }).then((res) => {
       if (res.isConfirmed) {
         // Memanggil method deleteRiwayatKerja untuk menghapus data RiwayatKerja
-        deleteRiwayatKerja(id_pegawai, id_riwayat_kerja, setData);
-        MySwal.fire({
-          icon: "success",
-          title: "Terhapus",
-          text: "Data berhasil dihapus",
-        }).then((res) => {
-          getRiwayatKerja(id_pegawai, setData, setLoading);
-        });
+        deleteRiwayatKerja(
+          id_pegawai,
+          id_riwayat_kerja,
+          riwayatKerjaDispatch,
+          MySwal
+        );
       }
     });
+  };
+
+  const customStyles = {
+    headCells: {
+      style: {
+        fontSize: "1.15em",
+      },
+    },
   };
 
   const ExpandableComponent = ({ data }) => (
@@ -161,54 +157,61 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
 
   return (
     <>
-      {!loading && (
-        <>
-          <div className="my-3">
-            <div className="button-control mb-2">
-              <CButton
-                color="primary"
-                className="btn btn-md"
-                onClick={() => setModalTambah(!modalTambah)}
-              >
-                Tambah Data
-              </CButton>
-              <div>
-                <CButton
-                  type="button"
-                  color="info"
-                  onClick={() => printLaporan(id, "riwayat-kerja")}
-                >
-                  Cetak <CIcon content={cilPrint} />
-                </CButton>
-                <CButton
-                  type="button"
-                  className="ml-2"
-                  color="success"
-                  onClick={() =>
-                    exportExcel("laporan-pegawai/" + id + "/riwayat-kerja")
-                  }
-                >
-                  Excel <CIcon content={cilPrint} />
-                </CButton>
-              </div>
-            </div>
-            <DataTable
-              columns={columns}
-              data={data || []}
-              noHeader
-              responsive={true}
-              customStyles={customStyles}
-              expandableRows
-              expandOnRowClicked
-              highlightOnHover
-              expandableRowsComponent={<ExpandableComponent />}
-            />
+      <div className="my-3">
+        <div className="button-control mb-2">
+          <CButton
+            color="primary"
+            className="btn btn-md"
+            onClick={() => setModalTambah(!modalTambah)}
+          >
+            Tambah Data
+          </CButton>
+          <div>
+            <CButton
+              type="button"
+              color="info"
+              onClick={() => printLaporan(user.id_pegawai, "riwayat-kerja")}
+            >
+              Cetak <CIcon content={cilPrint} />
+            </CButton>
+            <CButton
+              type="button"
+              className="ml-2"
+              color="success"
+              onClick={() =>
+                exportExcel(
+                  "laporan-pegawai/" + user.id_pegawai + "/riwayat-kerja"
+                )
+              }
+            >
+              Excel <CIcon content={cilPrint} />
+            </CButton>
           </div>
-        </>
-      )}
-
-      {loading && <Loading />}
-
+        </div>
+        {data.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+            expandableRows
+            expandableRowsComponent={<ExpandableComponent />}
+            expandOnRowClicked
+            highlightOnHover
+          />
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <DataTable
+            columns={columns}
+            data={data}
+            noHeader
+            responsive={true}
+            customStyles={customStyles}
+          />
+        )}
+      </div>
       {/* Modal Tambah */}
       <CModal
         show={modalTambah}
@@ -220,14 +223,10 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
         </CModalHeader>
 
         <TambahRiwayatKerja
-          id={id}
+          id={user.id_pegawai}
           modal={modalTambah}
           setModal={setModalTambah}
-          riwayatKerja={{
-            setLoadingRiwayatKerja: setLoading,
-            data: data,
-            setData: setData,
-          }}
+          dispatch={riwayatKerjaDispatch}
         />
       </CModal>
 
@@ -244,19 +243,15 @@ const DataRiwayatKerja = ({ id, dataActive }) => {
         </CModalHeader>
 
         <EditRiwayatKerja
-          idPegawai={id}
+          idPegawai={user.id_pegawai}
           idRiwayatKerja={modalEdit.id}
           modal={modalEdit.modal}
           setModal={setModalEdit}
-          riwayatKerja={{
-            setLoadingRiwayatKerja: setLoading,
-            data: data,
-            setData: setData,
-          }}
+          dispatch={riwayatKerjaDispatch}
         />
       </CModal>
     </>
   );
 };
 
-export default DataRiwayatKerja;
+export default RiwayatKerja;
