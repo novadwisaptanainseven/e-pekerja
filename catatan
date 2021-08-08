@@ -5,7 +5,18 @@ Updated tabel
 Perbaikan
 1. Tambahkan fitur validasi kelengkapan berkas pegawai untuk kenaikan pangkat
 2. Perlengkapi data pegawai yang kurang
-3. Atasi perubahan data secara realtime di dashboard user ketika ada perubahan data baru
+3. Memperbaiki alur kenaikan pangkat
+   - Alur Kenaikan pangkat halaman Admin
+     1. Admin memberikan peringatan kenaikan pangkat pada PNS via whatsapp / gmail
+     2. Admin memberitahu pns untuk mempersiapkan berkas - berkas kenaikan pangkat
+     3. Admin mengecek / validasi apakah berkas sudah sesuai persyaratan atau belum
+     4. Jika belum, maka proses kenaikan pangkat belum bisa dilakukan dan status menjadi "Belum Divalidasi". Jika iya, kenaikan pangkat bisa dilakukan dan status menjadi "Tervalidasi"
+     5. Admin bisa memberikan pesan kepada pns mengenai kekurangan apa saja yang belum (gmail / wa / aplikasi epekerja).
+
+    - Alur Kenaikan Pangkat halaman User
+      1. PNS mendapatkan notif via wa / gmail ttg kenaikan pangkat.
+      2. PNS mempersiapkan berkas - berkas persyaratan kenaikan pangkat lalu menguploadnya ke aplikasi e-pekerja.
+      3. PNS menunggu persetujuan admin apakah berkasnya diterima atau tidak. Jika diterima (tervalidasi) maka PNS akan dilakukan kenaikan pangkat. Jika tidak, maka PNS perlu melengkapi berkas sesuai dengan pesan admin via aplikasi e-pekerja, wa, gmail.
 
 Data yang blm ada sk nya
 1. H. Muhammad
