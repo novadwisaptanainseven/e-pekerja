@@ -1,29 +1,26 @@
 import axiosInstance from "src/helpers/axios";
-import { getDashboardInformation } from "../Dashboard/getDashboardInformation";
-import { getKeluarga } from "../DataKepegawaian/getKeluarga";
+import { getRiwayatGolongan } from "../DataKepegawaian/getRiwayatGolongan";
 
-export const insertKeluarga = (
+export const insertRiwayatGolongan = (
   id_pegawai,
   values,
   setLoading,
   showAlertSuccess,
   showAlertError,
-  dispatch,
-  dashboardDispatch
+  dispatch
 ) => {
   setLoading(true);
 
   axiosInstance
-    .post(`user/data-kepegawaian/${id_pegawai}/keluarga`, values, {
+    .post(`user/data-kepegawaian/${id_pegawai}/riwayat-golongan`, values, {
       header: {
         "Content-Type": `multipart/form-data; boundary=${values._boundary}`,
       },
     })
     .then((res) => {
       console.log(res.data);
+      getRiwayatGolongan(id_pegawai, dispatch);
       setLoading(false);
-      getKeluarga(dispatch);
-      getDashboardInformation(dashboardDispatch);
       showAlertSuccess();
     })
     .catch((err) => {

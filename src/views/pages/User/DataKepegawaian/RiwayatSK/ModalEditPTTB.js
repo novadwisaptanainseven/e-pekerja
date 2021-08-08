@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -26,6 +26,8 @@ import {
   getRiwayatSKById,
   editRiwayatSK,
 } from "src/context/actions/UserPage/RiwayatSK";
+import { GlobalContext } from "src/context/Provider";
+import { getDashboardInformation } from "src/context/actions/UserPage/Dashboard/getDashboardInformation";
 
 const MySwal = withReactContent(swal2);
 
@@ -42,6 +44,7 @@ const ModalEditPTTB = ({
   const [jabatan, setJabatan] = useState([]);
   const [touchedSelect, setTouchedSelect] = useState(false);
   const [data, setData] = useState("");
+  const { dashboardDispatch } = useContext(GlobalContext);
 
   // Get Riwayat SK By ID
   useEffect(() => {
@@ -130,7 +133,9 @@ const ModalEditPTTB = ({
         modal: !modalEdit.modal,
         id: null,
       });
+      // Update data secara realtime di halaman lain
       getDataDiri(dataDiriDispatch);
+      getDashboardInformation(dashboardDispatch);
     });
   };
 

@@ -1,17 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import DataTable from "react-data-table-component";
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 
-import { CButtonGroup, CButton, CRow, CCol, CBadge } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilPrint } from "@coreui/icons";
-import ModalEdit from "./ModalEdit";
-import {
-  getRiwayatGolongan,
-  deleteRiwayatGolongan,
-} from "src/context/actions/RiwayatGolongan";
+import { CRow, CCol, CBadge, CButtonGroup, CButton } from "@coreui/react";
 import { format } from "date-fns";
 import customStyles from "src/reusable/customStyles";
 import {
@@ -21,18 +12,27 @@ import {
 } from "src/context/actions/DownloadFile";
 import getFilename from "src/helpers/getFilename";
 import Loading from "src/reusable/Loading";
+import { GlobalContext } from "src/context/Provider";
+import { getRiwayatGolongan } from "src/context/actions/UserPage/DataKepegawaian/getRiwayatGolongan";
+import CIcon from "@coreui/icons-react";
+import { cilPen, cilPrint, cilTrash } from "@coreui/icons";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { deleteRiwayatGolongan } from "src/context/actions/UserPage/RiwayatGolongan/deleteRiwayatGolongan";
 import ModalTambah from "./ModalTambah";
-
+import ModalEdit from "./ModalEdit";
 const MySwal = withReactContent(swal2);
 
-const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
+const RiwayatGolongan = ({ id, dataActive, dataDiriDispatch, pegawai }) => {
   const [modalTambah, setModalTambah] = useState(false);
   const [modalEdit, setModalEdit] = useState({
     modal: false,
     id: null,
   });
-  const [rwg, setRwg] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { riwayatGolonganState, riwayatGolonganDispatch, userState } =
+    useContext(GlobalContext);
+  const { data: rwg, loading } = riwayatGolonganState;
+  const { data: user } = userState;
 
   console.log(loading);
 
@@ -40,9 +40,9 @@ const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
     if (!rwg) {
       if (dataActive === "riwayat-golongan")
         // Get Riwayat Golongan by Id Pegawai
-        getRiwayatGolongan(id, setRwg, setLoading);
+        getRiwayatGolongan(user.id_pegawai, riwayatGolonganDispatch);
     }
-  }, [id, dataActive, rwg]);
+  }, [user, riwayatGolonganDispatch, dataActive, rwg]);
 
   // Columns Data Table
   const columns = [
@@ -132,6 +132,30 @@ const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
     },
   ];
 
+  // hapus data
+  const handleDelete = (idRiwayatGolongan) => {
+    MySwal.fire({
+      icon: "warning",
+      title: "Anda yakin ingin menghapus data ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Delete riwayat golongan
+        deleteRiwayatGolongan(
+          user.id_pegawai,
+          idRiwayatGolongan,
+          riwayatGolonganDispatch,
+          MySwal
+        );
+      }
+    });
+  };
+
   // Expandable Component
   const ExpandableComponent = ({ data }) => {
     return (
@@ -172,31 +196,6 @@ const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
     );
   };
 
-  // hapus data
-  const handleDelete = (idRiwayatGolongan) => {
-    MySwal.fire({
-      icon: "warning",
-      title: "Anda yakin ingin menghapus data ini ?",
-      text: "Jika yakin, klik YA",
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "YA",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        // Delete pesan
-        deleteRiwayatGolongan(
-          id,
-          idRiwayatGolongan,
-          setRwg,
-          setLoading,
-          MySwal
-        );
-      }
-    });
-  };
-
   // Sub header component memo
   const SubHeaderComponentMemo = () => {
     return (
@@ -213,7 +212,7 @@ const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
               type="button"
               color="info"
               className="ml-2"
-              onClick={() => printRiwayatGolongan(id)}
+              onClick={() => printRiwayatGolongan(user.id_pegawai)}
             >
               PDF <CIcon content={cilPrint} />
             </CButton>
@@ -221,7 +220,7 @@ const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
               type="button"
               color="success"
               className="ml-2"
-              onClick={() => exportExcel("riwayat-golongan/" + id)}
+              onClick={() => exportExcel("riwayat-golongan/" + user.id_pegawai)}
             >
               Excel <CIcon content={cilPrint} />
             </CButton>
@@ -254,22 +253,18 @@ const RiwayatGolongan = ({ id, dataActive, setPegawai }) => {
 
       {/* Modal Tambah */}
       <ModalTambah
-        idPegawai={id}
         modal={modalTambah}
         setModal={setModalTambah}
-        setDataGolongan={setRwg}
-        setLoadingGolongan={setLoading}
-        setPegawai={setPegawai}
+        idPegawai={user.id_pegawai}
+        dispatch={riwayatGolonganDispatch}
       />
 
       {/* Modal Edit */}
       <ModalEdit
-        idPegawai={id}
+        idPegawai={user.id_pegawai}
         modalEdit={modalEdit}
         setModalEdit={setModalEdit}
-        setLoadingGolongan={setLoading}
-        setDataGolongan={setRwg}
-        setPegawai={setPegawai}
+        dispatch={riwayatGolonganDispatch}
       />
     </div>
   );

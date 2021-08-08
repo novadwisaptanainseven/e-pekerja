@@ -10,6 +10,12 @@ const DataKepegawaian = React.lazy(() =>
 const EditPegawai = React.lazy(() =>
   import("./views/pages/User/DataKepegawaian/DataDiri/PNS/EditPegawai")
 );
+const EditPTTH = React.lazy(() =>
+  import("./views/pages/User/DataKepegawaian/DataDiri/PTTH/EditPTTH")
+);
+const EditPTTB = React.lazy(() =>
+  import("./views/pages/User/DataKepegawaian/DataDiri/PTTB/EditPTTB")
+);
 
 // Import Akun
 const Akun = React.lazy(() => import("./views/pages/User/Akun"));
@@ -35,9 +41,21 @@ const routes = [
     exact: true,
   },
   {
-    path: "/epekerja/user/data-kepegawaian/edit-data-diri/:id",
+    path: "/epekerja/user/data-kepegawaian/edit-data-diri/pns",
     name: "Edit Data Diri",
     component: EditPegawai,
+    exact: true,
+  },
+  {
+    path: "/epekerja/user/data-kepegawaian/edit-data-diri/ptth",
+    name: "Edit Data Diri",
+    component: EditPTTH,
+    exact: true,
+  },
+  {
+    path: "/epekerja/user/data-kepegawaian/edit-data-diri/pttb",
+    name: "Edit Data Diri",
+    component: EditPTTB,
     exact: true,
   },
 

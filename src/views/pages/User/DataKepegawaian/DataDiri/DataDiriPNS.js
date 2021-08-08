@@ -1,5 +1,12 @@
 import React from "react";
-import { CRow, CCol, CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
+import {
+  CRow,
+  CCol,
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+} from "@coreui/react";
 import { format } from "date-fns";
 import { getImage } from "src/context/actions/DownloadFile";
 import formatTanggal from "src/helpers/formatTanggal";
@@ -9,7 +16,7 @@ const DataDiriPNS = ({ data }) => {
   const history = useHistory();
 
   const goToEdit = (id) => {
-    history.push(`/epekerja/user/data-kepegawaian/edit-data-diri/${id}`);
+    history.push(`/epekerja/user/data-kepegawaian/edit-data-diri/pns`);
   };
   return (
     <>
@@ -67,7 +74,7 @@ const DataDiriPNS = ({ data }) => {
                 <tr>
                   <th>Pangkat / Golongan</th>
                   <td>
-                    {data.ket_golongan} / {data.golongan}
+                    {data.ket_golongan} ({data.golongan})
                   </td>
                 </tr>
                 <tr>
@@ -107,7 +114,7 @@ const DataDiriPNS = ({ data }) => {
                   }`}</td>
                 </tr>
                 <tr>
-                  <th>TMT. jabatan</th>
+                  <th>TMT. Jabatan</th>
                   <td>{`${
                     data.tgl_lahir &&
                     format(new Date(data.tmt_jabatan), "dd/MM/yyyy")

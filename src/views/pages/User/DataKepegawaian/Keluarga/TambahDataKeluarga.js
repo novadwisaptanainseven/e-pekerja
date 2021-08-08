@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -22,12 +22,14 @@ import {
 } from "@coreui/react";
 import { getSelectAgama } from "src/context/actions/MasterData/Agama/getSelectAgama";
 import { insertKeluarga } from "src/context/actions/UserPage/Keluarga";
+import { GlobalContext } from "src/context/Provider";
 
 const MySwal = withReactContent(swal2);
 
 const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, dispatch }) => {
   const [agama, setAgama] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { dashboardDispatch } = useContext(GlobalContext);
 
   useEffect(() => {
     if (modalTambah) {
@@ -118,7 +120,8 @@ const TambahDataKeluarga = ({ id, modalTambah, setModalTambah, dispatch }) => {
       setLoading,
       showAlertSuccess,
       showAlertError,
-      dispatch
+      dispatch,
+      dashboardDispatch
     );
 
     resetForm({});

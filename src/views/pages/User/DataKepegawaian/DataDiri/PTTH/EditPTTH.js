@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import { LoadAnimationBlue, LoadAnimationWhite } from "src/assets";
+import { LoadAnimationWhite } from "src/assets";
 
 import {
   CCard,
@@ -25,34 +25,33 @@ import {
   CFormText,
 } from "@coreui/react";
 import { useHistory } from "react-router-dom";
-
 import { getImage } from "src/context/actions/DownloadFile";
-import { GlobalContext } from "src/context/Provider";
+import Select from "react-select";
+import Loading from "src/reusable/Loading";
 import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDataDiri";
 import {
   getSelectAgama,
   getSelectBidang,
-  getSelectEselon,
   getSelectJabatan,
 } from "src/context/actions/UserPage/SelectEditDataDiri";
-import { editPNS } from "src/context/actions/UserPage/DataDiri";
+import { editPTTH } from "src/context/actions/UserPage/DataDiri";
+import { GlobalContext } from "src/context/Provider";
 import { getDashboardInformation } from "src/context/actions/UserPage/Dashboard/getDashboardInformation";
 
 const MySwal = withReactContent(swal2);
 
-const EditPegawai = () => {
+const EditPTTH = () => {
   const history = useHistory();
-  const [selectedFile, setSelectedFile] = useState();
-  const [preview, setPreview] = useState();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [jabatan, setJabatan] = useState([]);
   const [bidang, setBidang] = useState([]);
-  const [eselon, setEselon] = useState([]);
   const [agama, setAgama] = useState([]);
-  const [formatGaji, setFormatGaji] = useState("");
+  const [touchedSelect, setTouchedSelect] = useState(false);
   const { dataDiriState, dataDiriDispatch, userState, dashboardDispatch } =
     useContext(GlobalContext);
-  const { data: pns } = dataDiriState;
+  const { data } = dataDiriState;
   const { data: user } = userState;
 
   const goBackToParent = () => {
@@ -60,7 +59,7 @@ const EditPegawai = () => {
   };
 
   useEffect(() => {
-    // Get data diri
+    // Get Data Diri
     getDataDiri(dataDiriDispatch);
     // Get Bidang
     getSelectBidang(setBidang);
@@ -68,19 +67,25 @@ const EditPegawai = () => {
     getSelectJabatan(setJabatan);
     // Get Agama
     getSelectAgama(setAgama);
-    // Get Eselon
-    getSelectEselon(setEselon);
   }, [dataDiriDispatch]);
 
-  useEffect(() => {
-    if (pns) {
-      convertToCurrency(pns.gaji_pokok);
-    }
-  }, [pns]);
+  const getDataOptions = (jabatan) => {
+    let options = [];
+
+    jabatan.forEach((item) => {
+      options.push({
+        value: item.id_jabatan,
+        label: item.nama_jabatan,
+      });
+    });
+    return options;
+  };
+
+  const optionsData = React.useMemo(() => getDataOptions(jabatan), [jabatan]);
 
   useEffect(() => {
     if (!selectedFile) {
-      setPreview(pns ? getImage(pns.foto) : "");
+      setPreview(data ? getImage(data.foto) : "");
       return;
     }
 
@@ -91,7 +96,7 @@ const EditPegawai = () => {
     return () => {
       URL.revokeObjectURL(objectUrl);
     };
-  }, [pns, selectedFile]);
+  }, [data, selectedFile]);
 
   const onSelectFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -102,42 +107,27 @@ const EditPegawai = () => {
     setSelectedFile(e.target.files[0]);
   };
 
-  // Mengubah format gaji dari number ke currency
-  const convertToCurrency = (gaji) => {
-    let formattedGaji = parseInt(gaji).toLocaleString("id", {
-      style: "currency",
-      currency: "IDR",
-    });
-    if (formattedGaji !== "RpNaN") {
-      setFormatGaji(formattedGaji);
-    } else {
-      setFormatGaji("");
-    }
-  };
-
   // Inisialisasi State Formik
   const initState = {
-    nip: pns ? pns.nip : "",
-    nama: pns ? pns.nama : "",
-    id_jabatan: pns ? pns.id_jabatan : "",
-    id_bidang: pns ? pns.id_bidang : "",
-    id_golongan: pns ? pns.id_golongan : "",
-    id_eselon: pns ? pns.id_eselon : "",
-    id_agama: pns ? pns.id_agama : "",
-    tempat_lahir: pns ? pns.tempat_lahir : "",
-    tgl_lahir: pns ? pns.tgl_lahir : "",
-    alamat: pns ? pns.alamat : "",
-    jenis_kelamin: pns ? pns.jenis_kelamin : "",
-    karpeg: pns ? pns.karpeg : "",
-    bpjs: pns ? pns.bpjs : "",
-    npwp: pns ? pns.npwp : "",
-    tmt_golongan: pns ? pns.tmt_golongan : "",
-    tmt_cpns: pns ? pns.tmt_cpns : "",
-    tmt_jabatan: pns ? pns.tmt_jabatan : "",
-    no_hp: pns ? pns.no_hp : "",
-    email: pns ? pns.email : "",
-    no_ktp: pns ? pns.no_ktp : "",
-    gaji_pokok: pns ? pns.gaji_pokok : "",
+    nik: data ? data.nik : "",
+    nama: data ? data.nama : "",
+    penetap_sk: data ? data.penetap_sk : "",
+    tgl_penetapan_sk: data ? data.tgl_penetapan_sk : "",
+    no_sk: data ? data.no_sk : "",
+    tgl_mulai_tugas: data ? data.tgl_mulai_tugas : "",
+    id_jabatan: data ? data.id_jabatan : "",
+    id_bidang: data ? data.id_bidang : "",
+    id_agama: data ? data.id_agama : "",
+    tempat_lahir: data ? data.tempat_lahir : "",
+    tgl_lahir: data ? data.tgl_lahir : "",
+    alamat: data ? data.alamat : "",
+    jenis_kelamin: data ? data.jenis_kelamin : "",
+    bpjs: data ? data.bpjs : "",
+    npwp: data ? data.npwp : "",
+    no_hp: data ? data.no_hp : "",
+    email: data ? data.email : "",
+    no_ktp: data ? data.no_ktp : "",
+    gaji_pokok: data ? data.gaji_pokok : "",
     foto: undefined,
   };
 
@@ -181,32 +171,30 @@ const EditPegawai = () => {
   ];
 
   const validationSchema = Yup.object().shape({
-    nip: Yup.string().required("NIP harus diisi!"),
+    nik: Yup.string().required("NIK harus diisi!"),
     nama: Yup.string().required("Nama harus diisi!"),
-    id_jabatan: Yup.string().required("Jabatan harus diisi!"),
+    penetap_sk: Yup.string().required("Penetap SK harus diisi!"),
+    tgl_penetapan_sk: Yup.string().required("Tgl. penetapan SK harus diisi!"),
+    no_sk: Yup.string().required("No. SK harus diisi!"),
+    tgl_mulai_tugas: Yup.string().required("Tgl. mulai tugas harus diisi!"),
+    id_jabatan: Yup.string().required("Tugas harus diisi!"),
     id_bidang: Yup.string().required("Bidang harus diisi!"),
-    id_golongan: Yup.string().required("Golongan harus diisi!"),
-    // id_eselon: Yup.string().required("Eselon harus diisi!"),
     id_agama: Yup.string().required("Agama harus diisi!"),
     tempat_lahir: Yup.string().required("Tempat lahir harus diisi!"),
-    tgl_lahir: Yup.string().required("Tanggal lahir harus diisi!"),
+    tgl_lahir: Yup.string().required("Tgl lahir harus diisi!"),
     alamat: Yup.string().required("Alamat harus diisi!"),
     jenis_kelamin: Yup.string().required("Jenis kelamin harus diisi!"),
-    karpeg: Yup.string().required("Karpeg harus diisi!"),
     bpjs: Yup.string().required("BPJS harus diisi!"),
     npwp: Yup.string().required("NPWP harus diisi!"),
-    tmt_golongan: Yup.string().required("TMT. Golongan harus diisi!"),
-    tmt_cpns: Yup.string().required("TMT. CPNS harus diisi!"),
-    tmt_jabatan: Yup.string().required("TMT. Jabatan harus diisi!"),
-    no_hp: Yup.string().required("No. HP harus diisi!"),
-    email: Yup.string()
-      .email("Email tidak valid")
-      .required("No. HP harus diisi!"),
-    no_ktp: Yup.string().required("No. KTP harus diisi!"),
     gaji_pokok: Yup.number()
       .typeError("Gaji pokok harus berupa bilangan")
       .integer("Gaji pokok harus berupa bilangan")
       .required("Gaji pokok harus diisi!"),
+    no_hp: Yup.string().required("No. HP harus diisi!"),
+    no_ktp: Yup.string().required("No. KTP harus diisi!"),
+    email: Yup.string()
+      // .email("Email tidak valid")
+      .required("No. email harus diisi!"),
     foto: Yup.mixed()
       .test("size", "Kapasitas file maksimal 2 mb", (value) => {
         if (value) {
@@ -229,50 +217,57 @@ const EditPegawai = () => {
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
-    formData.append("nip", values.nip);
+    formData.append("nik", values.nik);
     formData.append("nama", values.nama);
+    formData.append("penetap_sk", values.penetap_sk);
+    formData.append("tgl_penetapan_sk", values.tgl_penetapan_sk);
+    formData.append("no_sk", values.no_sk);
+    formData.append("tgl_mulai_tugas", values.tgl_mulai_tugas);
     formData.append("id_jabatan", values.id_jabatan);
+    formData.append("tugas", values.id_jabatan);
     formData.append("id_bidang", values.id_bidang);
-    formData.append("id_golongan", values.id_golongan);
-    formData.append("id_eselon", values.id_eselon);
     formData.append("id_agama", values.id_agama);
     formData.append("tempat_lahir", values.tempat_lahir);
     formData.append("tgl_lahir", values.tgl_lahir);
     formData.append("alamat", values.alamat);
     formData.append("jenis_kelamin", values.jenis_kelamin);
-    formData.append("karpeg", values.karpeg);
     formData.append("bpjs", values.bpjs);
     formData.append("npwp", values.npwp);
-    formData.append("tmt_golongan", values.tmt_golongan);
-    formData.append("tmt_cpns", values.tmt_cpns);
-    formData.append("tmt_jabatan", values.tmt_jabatan);
+    formData.append("gaji_pokok", values.gaji_pokok);
     formData.append("no_hp", values.no_hp);
     formData.append("email", values.email);
     formData.append("no_ktp", values.no_ktp);
-    formData.append("gaji_pokok", values.gaji_pokok);
     if (values.foto) {
       formData.append("foto", values.foto);
     }
 
-    // for (var pair of formData.entries()) {
-    //   console.log(pair);
-    // }
+    for (var pair of formData.entries()) {
+      console.log(pair);
+    }
 
-    // Memanggil method edit PNS untuk menambah data PNS ke database
-    editPNS(
+    // Memanggil method edit PTTH untuk menambah data PTTH ke database
+    editPTTH(
       user.id_pegawai,
       formData,
       setLoading,
       showAlertSuccess,
-      showAlertError,
+      showAlertError
     );
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      // none of react-select's styles are passed to <Control />
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Edit Data Diri</h3>
+          <h3>Edit PTTH</h3>
           <CButton
             type="button"
             color="warning"
@@ -283,7 +278,7 @@ const EditPegawai = () => {
           </CButton>
         </CCardHeader>
 
-        {pns ? (
+        {data ? (
           <>
             <Formik
               initialValues={initState}
@@ -306,24 +301,24 @@ const EditPegawai = () => {
                       <CCol md="6" sm="12">
                         <CFormGroup row>
                           <CCol>
-                            <CLabel>NIP</CLabel>
+                            <CLabel>NIK</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
                             <CInput
                               type="text"
-                              name="nip"
-                              id="nip"
-                              placeholder="Masukkan NIP"
+                              name="nik"
+                              id="nik"
+                              placeholder="Masukkan NIK"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              value={values.nip}
+                              value={values.nik}
                               className={
-                                errors.nip && touched.nip ? "is-invalid" : null
+                                errors.nik && touched.nik ? "is-invalid" : null
                               }
                             />
-                            {errors.nip && touched.nip && (
+                            {errors.nik && touched.nik && (
                               <div className="invalid-feedback">
-                                {errors.nip}
+                                {errors.nik}
                               </div>
                             )}
                           </CCol>
@@ -354,12 +349,13 @@ const EditPegawai = () => {
                             )}
                           </CCol>
                         </CFormGroup>
+
                         <CFormGroup row>
                           <CCol>
-                            <CLabel>Jabatan</CLabel>
+                            <CLabel>Tugas</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
-                            <CSelect
+                            {/* <CSelect
                               custom
                               name="id_jabatan"
                               id="id_jabatan"
@@ -372,7 +368,7 @@ const EditPegawai = () => {
                                   : null
                               }
                             >
-                              <option value="">-- Pilih Jabatan --</option>
+                              <option value="">-- Pilih Tugas --</option>
                               {jabatan.map((item, index) => (
                                 <option key={index} value={item.id_jabatan}>
                                   {item.nama_jabatan}
@@ -383,7 +379,34 @@ const EditPegawai = () => {
                               <div className="invalid-feedback">
                                 {errors.id_jabatan}
                               </div>
-                            )}
+                            )} */}
+                            <Select
+                              isDisabled
+                              styles={customStyles}
+                              name="id_jabatan"
+                              id="id_jabatan"
+                              onChange={(opt) => {
+                                setTouchedSelect(false);
+                                setFieldValue(
+                                  "id_jabatan",
+                                  opt ? opt.value : ""
+                                );
+                              }}
+                              onBlur={() =>
+                                values.id_jabatan
+                                  ? setTouchedSelect(false)
+                                  : setTouchedSelect(true)
+                              }
+                              onFocus={() => setTouchedSelect(true)}
+                              placeholder="-- Pilih Tugas --"
+                              isSearchable
+                              isClearable
+                              defaultValue={{
+                                value: data ? data.id_jabatan : "",
+                                label: data ? data.nama_jabatan : "",
+                              }}
+                              options={optionsData}
+                            />
                           </CCol>
                         </CFormGroup>
                         <CFormGroup row>
@@ -404,7 +427,7 @@ const EditPegawai = () => {
                                   : null
                               }
                             >
-                              <option value="">-- Pilih Bidang --</option>
+                              <option value="">-- Bidang --</option>
                               {bidang.map((item, index) => (
                                 <option key={index} value={item.id_bidang}>
                                   {item.nama_bidang}
@@ -418,58 +441,6 @@ const EditPegawai = () => {
                             )}
                           </CCol>
                         </CFormGroup>
-
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>Eselon</CLabel>
-                          </CCol>
-                          <CCol md="9" sm="12">
-                            <CSelect
-                              custom
-                              name="id_eselon"
-                              id="id_eselon"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.id_eselon}
-                              className={
-                                errors.id_eselon && touched.id_eselon
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            >
-                              <option value="">-- Pilih Eselon --</option>
-                              {eselon.map((item, index) => (
-                                <option
-                                  key={index}
-                                  value={item.id_pangkat_eselon}
-                                >
-                                  {item.keterangan} {item.eselon}
-                                </option>
-                              ))}
-                            </CSelect>
-                            {errors.id_eselon && touched.id_eselon && (
-                              <div className="invalid-feedback">
-                                {errors.id_eselon}
-                              </div>
-                            )}
-                            <CFormText className="help-block">
-                              Isi eselon jika ada
-                            </CFormText>
-                          </CCol>
-                        </CFormGroup>
-                        {/* <CFormGroup row>
-                  <CCol>
-                    <CLabel>Status Pegawai</CLabel>
-                  </CCol>
-                  <CCol md="9" sm="12">
-                    <CSelect custom name="status_pegawai" id="status_pegawai">
-                      <option value="0">-- Pilih Status Pegawai --</option>
-                      <option value="1">Option #1</option>
-                      <option value="2">Option #2</option>
-                      <option value="3">Option #3</option>
-                    </CSelect>
-                  </CCol>
-                </CFormGroup> */}
                         <CFormGroup row>
                           <CCol>
                             <CLabel>Agama</CLabel>
@@ -502,6 +473,7 @@ const EditPegawai = () => {
                             )}
                           </CCol>
                         </CFormGroup>
+
                         <CFormGroup row>
                           <CCol>
                             <CLabel>Tempat Lahir</CLabel>
@@ -530,14 +502,14 @@ const EditPegawai = () => {
                         </CFormGroup>
                         <CFormGroup row>
                           <CCol>
-                            <CLabel>Tgl. Lahir</CLabel>
+                            <CLabel>Tgl Lahir</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
                             <CInput
                               type="date"
                               id="tgl_lahir"
                               name="tgl_lahir"
-                              placeholder="Masukkan tgl lahir"
+                              placeholder="Masukkan tanggal lahir"
                               onChange={handleChange}
                               onBlur={handleBlur}
                               value={values.tgl_lahir}
@@ -554,166 +526,6 @@ const EditPegawai = () => {
                             )}
                           </CCol>
                         </CFormGroup>
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>Jenis Kelamin</CLabel>
-                          </CCol>
-                          <CCol sm="12" md="9">
-                            <CFormGroup variant="custom-radio" inline>
-                              <CInputRadio
-                                custom
-                                id="jenis_kelamin"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                name="jenis_kelamin"
-                                value="Laki-Laki"
-                                checked={
-                                  values.jenis_kelamin === "Laki-Laki"
-                                    ? true
-                                    : false
-                                }
-                                required
-                              />
-                              <CLabel
-                                variant="custom-checkbox"
-                                htmlFor="jenis_kelamin"
-                              >
-                                Laki - Laki
-                              </CLabel>
-                            </CFormGroup>
-                            <CFormGroup variant="custom-radio" inline>
-                              <CInputRadio
-                                custom
-                                id="jenis_kelamin2"
-                                name="jenis_kelamin"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value="Perempuan"
-                                checked={
-                                  values.jenis_kelamin === "Perempuan"
-                                    ? true
-                                    : false
-                                }
-                                required
-                              />
-                              <CLabel
-                                variant="custom-checkbox"
-                                htmlFor="jenis_kelamin2"
-                              >
-                                Perempuan
-                              </CLabel>
-                            </CFormGroup>
-                          </CCol>
-                        </CFormGroup>
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>No. HP</CLabel>
-                          </CCol>
-                          <CCol md="9" sm="12">
-                            <CInput
-                              type="text"
-                              name="no_hp"
-                              id="no_hp"
-                              placeholder="Masukkan no hp"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.no_hp}
-                              className={
-                                errors.no_hp && touched.no_hp
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            />
-                            {errors.no_hp && touched.no_hp && (
-                              <div className="invalid-feedback">
-                                {errors.no_hp}
-                              </div>
-                            )}
-                          </CCol>
-                        </CFormGroup>
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>Email</CLabel>
-                          </CCol>
-                          <CCol md="9" sm="12">
-                            <CInput
-                              type="text"
-                              name="email"
-                              id="email"
-                              placeholder="Masukkan email"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.email}
-                              className={
-                                errors.email && touched.email
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            />
-                            {errors.email && touched.email && (
-                              <div className="invalid-feedback">
-                                {errors.email}
-                              </div>
-                            )}
-                          </CCol>
-                        </CFormGroup>
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>No. KTP</CLabel>
-                          </CCol>
-                          <CCol md="9" sm="12">
-                            <CInput
-                              type="text"
-                              name="no_ktp"
-                              id="no_ktp"
-                              placeholder="Masukkan no. ktp"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.no_ktp}
-                              className={
-                                errors.no_ktp && touched.no_ktp
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            />
-                            {errors.no_ktp && touched.no_ktp && (
-                              <div className="invalid-feedback">
-                                {errors.no_ktp}
-                              </div>
-                            )}
-                          </CCol>
-                        </CFormGroup>
-
-                        <CFormGroup row>
-                          <CCol>
-                            <CLabel>Gaji Pokok</CLabel>
-                          </CCol>
-                          <CCol md="9" sm="12">
-                            <CInput
-                              type="text"
-                              name="gaji_pokok"
-                              id="gaji_pokok"
-                              placeholder="Masukkan gaji pokok"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              onKeyUp={(e) => convertToCurrency(e.target.value)}
-                              value={values.gaji_pokok}
-                              className={
-                                errors.gaji_pokok && touched.gaji_pokok
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            />
-                            <div className="mt-1">{formatGaji}</div>
-                            {errors.gaji_pokok && touched.gaji_pokok && (
-                              <div className="invalid-feedback">
-                                {errors.gaji_pokok}
-                              </div>
-                            )}
-                          </CCol>
-                        </CFormGroup>
-                      </CCol>
-                      <CCol md="6">
                         <CFormGroup row>
                           <CCol>
                             <CLabel htmlFor="alamat">Alamat</CLabel>
@@ -740,33 +552,58 @@ const EditPegawai = () => {
                             )}
                           </CCol>
                         </CFormGroup>
-
                         <CFormGroup row>
                           <CCol>
-                            <CLabel>Karpeg</CLabel>
+                            <CLabel>Jenis Kelamin</CLabel>
                           </CCol>
-                          <CCol md="9" sm="12">
-                            <CInput
-                              type="text"
-                              name="karpeg"
-                              id="karpeg"
-                              placeholder="Masukkan karpeg"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.karpeg}
-                              className={
-                                errors.karpeg && touched.karpeg
-                                  ? "is-invalid"
-                                  : null
-                              }
-                            />
-                            {errors.karpeg && touched.karpeg && (
-                              <div className="invalid-feedback">
-                                {errors.karpeg}
-                              </div>
-                            )}
+                          <CCol sm="12" md="9">
+                            <CFormGroup variant="custom-radio" inline>
+                              <CInputRadio
+                                custom
+                                id="jenis_kelamin"
+                                name="jenis_kelamin"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                checked={
+                                  values.jenis_kelamin === "Laki-Laki"
+                                    ? true
+                                    : false
+                                }
+                                value="Laki-Laki"
+                                required
+                              />
+                              <CLabel
+                                variant="custom-checkbox"
+                                htmlFor="jenis_kelamin"
+                              >
+                                Laki - Laki
+                              </CLabel>
+                            </CFormGroup>
+                            <CFormGroup variant="custom-radio" inline>
+                              <CInputRadio
+                                custom
+                                id="jenis_kelamin2"
+                                name="jenis_kelamin"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                checked={
+                                  values.jenis_kelamin === "Perempuan"
+                                    ? true
+                                    : false
+                                }
+                                value="Perempuan"
+                              />
+                              <CLabel
+                                variant="custom-checkbox"
+                                htmlFor="jenis_kelamin2"
+                              >
+                                Perempuan
+                              </CLabel>
+                            </CFormGroup>
                           </CCol>
                         </CFormGroup>
+                      </CCol>
+                      <CCol md="6">
                         <CFormGroup row>
                           <CCol>
                             <CLabel>BPJS</CLabel>
@@ -822,52 +659,80 @@ const EditPegawai = () => {
 
                         <CFormGroup row>
                           <CCol>
-                            <CLabel>TMT. CPNS</CLabel>
+                            <CLabel>No. HP</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
                             <CInput
-                              type="date"
-                              name="tmt_cpns"
-                              id="tmt_cpns"
-                              placeholder="Masukkan tmt cpns"
+                              type="text"
+                              name="no_hp"
+                              id="no_hp"
+                              placeholder="Masukkan no hp"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              value={values.tmt_cpns}
+                              value={values.no_hp}
                               className={
-                                errors.tmt_cpns && touched.tmt_cpns
+                                errors.no_hp && touched.no_hp
                                   ? "is-invalid"
                                   : null
                               }
                             />
-                            {errors.tmt_cpns && touched.tmt_cpns && (
+                            {errors.no_hp && touched.no_hp && (
                               <div className="invalid-feedback">
-                                {errors.tmt_cpns}
+                                {errors.no_hp}
                               </div>
                             )}
                           </CCol>
                         </CFormGroup>
+
                         <CFormGroup row>
                           <CCol>
-                            <CLabel>TMT. Jabatan</CLabel>
+                            <CLabel>Email</CLabel>
                           </CCol>
                           <CCol md="9" sm="12">
                             <CInput
-                              type="date"
-                              name="tmt_jabatan"
-                              id="tmt_jabatan"
-                              placeholder="Masukkan tmt jabatan"
+                              type="text"
+                              name="email"
+                              id="email"
+                              placeholder="Masukkan no hp"
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              value={values.tmt_jabatan}
+                              value={values.email}
                               className={
-                                errors.tmt_jabatan && touched.tmt_jabatan
+                                errors.email && touched.email
                                   ? "is-invalid"
                                   : null
                               }
                             />
-                            {errors.tmt_jabatan && touched.tmt_jabatan && (
+                            {errors.email && touched.email && (
                               <div className="invalid-feedback">
-                                {errors.tmt_jabatan}
+                                {errors.email}
+                              </div>
+                            )}
+                          </CCol>
+                        </CFormGroup>
+
+                        <CFormGroup row>
+                          <CCol>
+                            <CLabel>No. KTP</CLabel>
+                          </CCol>
+                          <CCol md="9" sm="12">
+                            <CInput
+                              type="text"
+                              name="no_ktp"
+                              id="no_ktp"
+                              placeholder="Masukkan no. ktp"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.no_ktp}
+                              className={
+                                errors.no_ktp && touched.no_ktp
+                                  ? "is-invalid"
+                                  : null
+                              }
+                            />
+                            {errors.no_ktp && touched.no_ktp && (
+                              <div className="invalid-feedback">
+                                {errors.no_ktp}
                               </div>
                             )}
                           </CCol>
@@ -878,7 +743,6 @@ const EditPegawai = () => {
                           <CCol xs="12" md="9">
                             <CInputFile
                               custom
-                              name="foto"
                               id="custom-file-input"
                               onChange={(e) => {
                                 onSelectFile(e);
@@ -924,7 +788,7 @@ const EditPegawai = () => {
                     <CButton
                       color="primary"
                       type="submit"
-                      className="mr-3"
+                      className="mr-1"
                       disabled={loading ? true : false}
                     >
                       {loading ? (
@@ -943,24 +807,11 @@ const EditPegawai = () => {
             </Formik>
           </>
         ) : (
-          <>
-            <div className="mb-3">
-              <CRow>
-                <CCol className="text-center">
-                  <img
-                    className="mt-4 ml-3"
-                    width={30}
-                    src={LoadAnimationBlue}
-                    alt="load-animation"
-                  />
-                </CCol>
-              </CRow>
-            </div>
-          </>
+          <Loading />
         )}
       </CCard>
     </>
   );
 };
 
-export default EditPegawai;
+export default EditPTTH;

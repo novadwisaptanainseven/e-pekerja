@@ -19,7 +19,7 @@ import DataBerkas from "./DataBerkas/DataBerkas";
 import Penghargaan from "./Penghargaan/Penghargaan";
 import { GlobalContext } from "src/context/Provider";
 import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDataDiri";
-import RiwayatGolongan from "./RiwayatGolongan";
+import RiwayatGolongan from "./RiwayatGolongan/RiwayatGolongan";
 import RiwayatSK from "./RiwayatSK/RiwayatSK";
 
 const DetailPegawai = () => {
@@ -102,6 +102,7 @@ const DetailPegawai = () => {
                     id={localStorage.id_user}
                     dataActive={activeTab}
                     dataDiriDispatch={dataDiriDispatch}
+                    pegawai={data}
                   />
                 </CTabPane>
               )}

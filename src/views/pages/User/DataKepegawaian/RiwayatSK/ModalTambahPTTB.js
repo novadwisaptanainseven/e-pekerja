@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -22,6 +22,8 @@ import Select from "react-select";
 import { getSelectJabatan } from "src/context/actions/MasterData/Jabatan/getSelectJabatan";
 import { getDataDiri } from "src/context/actions/UserPage/DataKepegawaian/getDataDiri";
 import { insertRiwayatSK } from "src/context/actions/UserPage/RiwayatSK";
+import { GlobalContext } from "src/context/Provider";
+import { getDashboardInformation } from "src/context/actions/UserPage/Dashboard/getDashboardInformation";
 
 const MySwal = withReactContent(swal2);
 
@@ -36,6 +38,7 @@ const ModalTambahPTTB = ({
   const [formatGaji, setFormatGaji] = useState("");
   const [jabatan, setJabatan] = useState([]);
   const [touchedSelect, setTouchedSelect] = useState(false);
+  const { dashboardDispatch } = useContext(GlobalContext);
 
   // Get All Jabatan
   useEffect(() => {
@@ -96,7 +99,9 @@ const ModalTambahPTTB = ({
       timer: 1500,
     }).then((res) => {
       setModalTambah(!modalTambah);
+      // Update data secara realtime di halaman lain
       getDataDiri(dataDiriDispatch);
+      getDashboardInformation(dashboardDispatch);
     });
   };
 
