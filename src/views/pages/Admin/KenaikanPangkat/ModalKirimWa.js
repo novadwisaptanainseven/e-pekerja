@@ -38,7 +38,7 @@ const ModalKirimWa = ({ modal, setModal }) => {
           }, Anda akan mengalami kenaikan pangkat pada tanggal ${format(
             new Date(modal.data.tmt_kenaikan_pangkat),
             "dd/MM/y"
-          )}. Terimakasih`
+          )}. Silahkan untuk melengkapi berkas - berkasnya. Terimakasih`
         );
       }
     }

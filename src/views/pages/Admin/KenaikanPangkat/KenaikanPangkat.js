@@ -26,6 +26,8 @@ import { updatePangkatPegawai } from "src/context/actions/KenaikanPangkat/update
 import printKenaikanPangkat from "src/context/actions/DownloadFile/printKenaikanPangkat";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import ModalGmail from "./ModalGmail";
+import PenjagaanKP from "./PenjagaanKP";
 
 const MySwal = withReactContent(swal2);
 
@@ -43,8 +45,18 @@ const KenaikanPangkat = () => {
     data: null,
     type: null,
   });
+  const [penjagaanKP, setPenjagaanKP] = useState({
+    modal: false,
+    data: null,
+    type: null,
+  });
   const [modalKirimWa, setModalKirimWa] = useState({
     modal: false,
+  });
+  const [modalGmail, setModalGmail] = useState({
+    modal: false,
+    data: "",
+    type: "",
   });
 
   useEffect(() => {
@@ -98,7 +110,7 @@ const KenaikanPangkat = () => {
             {row.pangkat_baru && (
               <span>
                 {row.pangkat_baru} <br />
-                {format(new Date(row.tmt_kenaikan_pangkat), "dd/MM/y")}
+                Tgl. {format(new Date(row.tanggal), "dd/MM/y")}
               </span>
             )}
             {!row.pangkat_baru && (
@@ -106,8 +118,8 @@ const KenaikanPangkat = () => {
                 className="my-1"
                 color="danger"
                 onClick={() =>
-                  setModalKenaikanPangkat({
-                    ...modalKenaikanPangkat,
+                  setPenjagaanKP({
+                    ...penjagaanKP,
                     modal: true,
                     id: row.id,
                     data: row,
@@ -246,12 +258,14 @@ const KenaikanPangkat = () => {
   const ExpandableComponent = ({ data }) => {
     let status = "";
     let currentTimestamp = Date.parse(new Date());
-    let tmtKenaikanPangkat = data.tmt_kenaikan_pangkat
-      ? Date.parse(new Date(data.tmt_kenaikan_pangkat))
+    let tglKenaikanPangkat = data.tanggal
+      ? Date.parse(new Date(data.tanggal))
       : "";
 
-    if (tmtKenaikanPangkat) {
-      if (currentTimestamp < tmtKenaikanPangkat) {
+    console.log(tglKenaikanPangkat);
+
+    if (tglKenaikanPangkat) {
+      if (currentTimestamp < tglKenaikanPangkat) {
         status = "akan-naik-pangkat";
       } else {
         status = "naik-pangkat";
@@ -265,51 +279,153 @@ const KenaikanPangkat = () => {
             <strong>Status Kenaikan Pangkat</strong>
           </CCol>
           <CCol>
-            {status === "akan-naik-pangkat" && (
-              <CBadge color="primary">Akan Naik Pangkat</CBadge>
-            )}
-            {status === "naik-pangkat" && (
-              <CButton color="info" onClick={() => handleUpdatePangkat(data)}>
-                Update Pangkat dan Simpan Ke Riwayat
-              </CButton>
-            )}
-            {!status && (
-              <CBadge color="danger">Tidak ada kenaikan pangkat</CBadge>
+            {data.status_updated === 0 ? (
+              <>
+                {status === "akan-naik-pangkat" && (
+                  <CBadge color="primary">Akan Naik Pangkat</CBadge>
+                )}
+                {status === "naik-pangkat" && (
+                  <CButton
+                    disabled={data.status_validasi === 0 ? true : false}
+                    color="info"
+                    onClick={() =>
+                      setModalKenaikanPangkat({
+                        ...modalKenaikanPangkat,
+                        modal: true,
+                        id: data.id,
+                        data: data,
+                      })
+                    }
+                  >
+                    Update Pangkat
+                  </CButton>
+                )}
+                {!status && (
+                  <CBadge color="danger">Tidak ada kenaikan pangkat</CBadge>
+                )}
+              </>
+            ) : (
+              <>
+                <CBadge color="success">Pangkat telah diperbarui</CBadge>
+              </>
             )}
           </CCol>
         </CRow>
 
-        <CRow className="mb-1">
-          <CCol md="3">
-            <strong>Pemberitahuan</strong>
-          </CCol>
-          <CCol>
-            {status === "akan-naik-pangkat" && (
-              <span>
-                Pegawai ini akan mengalami kenaikan pangkat menjadi{" "}
-                {data.pangkat_baru} pada tanggal{" "}
-                {format(new Date(data.tmt_kenaikan_pangkat), "dd/MM/y")} <br />
-                <CButton
-                  color="success"
-                  className="mt-1"
-                  onClick={() =>
-                    setModalKirimWa({
-                      ...modalKirimWa,
-                      modal: true,
-                      data: data,
-                      type: "akan-naik-pangkat",
-                    })
-                  }
-                >
-                  Notifikasi WA <CIcon content={cilSend} />
-                </CButton>
-              </span>
-            )}
-            {status === "naik-pangkat" && (
-              <span>Pegawai ini pangkatnya sudah bisa diupdate</span>
-            )}
-          </CCol>
-        </CRow>
+        {status && (
+          <>
+            <CRow className="mb-1">
+              <CCol md="3">
+                <strong>Pemberitahuan</strong>
+              </CCol>
+              <CCol>
+                {data.status_updated === 0 ? (
+                  <>
+                    {status === "akan-naik-pangkat" && (
+                      <span>
+                        Pegawai ini akan mengalami kenaikan pangkat menjadi{" "}
+                        {data.pangkat_baru} pada tanggal{" "}
+                        {format(new Date(data.tanggal), "dd/MM/y")} <br />
+                        <CButton
+                          color="warning"
+                          className="mt-1"
+                          size="sm"
+                          onClick={() =>
+                            setModalKirimWa({
+                              ...modalKirimWa,
+                              modal: true,
+                              data: data,
+                              type: "akan-naik-pangkat",
+                            })
+                          }
+                        >
+                          Notifikasi WA <CIcon content={cilSend} />
+                        </CButton>
+                        <CButton
+                          color="warning"
+                          className="mt-1 ml-1"
+                          size="sm"
+                          onClick={() =>
+                            setModalGmail({
+                              ...modalGmail,
+                              modal: true,
+                              data: data,
+                              type: "akan-naik-pangkat",
+                            })
+                          }
+                        >
+                          GMAIL <CIcon content={cilSend} />
+                        </CButton>
+                      </span>
+                    )}
+                    {status === "naik-pangkat" && (
+                      <span>Pegawai ini pangkatnya sudah bisa diupdate</span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span className="mr-2">
+                      Pegawai ini pangkat golongannya telah diperbarui
+                    </span>{" "}
+                    <CButton
+                      color="warning"
+                      size="sm"
+                      className="mt-1"
+                      onClick={() =>
+                        setModalKirimWa({
+                          ...modalKirimWa,
+                          modal: true,
+                          data: data,
+                          type: "pangkat-updated",
+                        })
+                      }
+                    >
+                      Notifikasi WA <CIcon content={cilSend} />
+                    </CButton>
+                    <CButton
+                      color="warning"
+                      size="sm"
+                      className="mt-1 ml-1"
+                      onClick={() =>
+                        setModalGmail({
+                          ...modalGmail,
+                          modal: true,
+                          data: data,
+                          type: "pangkat-updated",
+                        })
+                      }
+                    >
+                      GMAIL <CIcon content={cilSend} />
+                    </CButton>
+                    <br />
+                  </>
+                )}
+              </CCol>
+            </CRow>
+            <CRow className="mb-1">
+              <CCol md="3">
+                <strong>Status</strong>
+              </CCol>
+              <CCol>
+                {data.status_validasi === 1 ? (
+                  <>
+                    <CBadge className="mr-2" color="success">
+                      Tervalidasi
+                    </CBadge>
+                    <a href=".">Cek Berkas</a>
+                  </>
+                ) : (
+                  <>
+                    <CBadge className="mr-2" color="danger">
+                      Belum Divalidasi
+                    </CBadge>
+                    <a href=".">Cek Berkas</a>
+                  </>
+                )}
+              </CCol>
+            </CRow>
+          </>
+        )}
         <CRow className="mb-1">
           <CCol md="3">
             <strong>Riwayat Golongan</strong>
@@ -365,6 +481,13 @@ const KenaikanPangkat = () => {
         </CCardBody>
       </CCard>
 
+      {/* Modal Penjagaan Kenaikan Pangkat */}
+      <PenjagaanKP
+        modal={penjagaanKP}
+        setModal={setPenjagaanKP}
+        dispatch={kenaikanPangkatDispatch}
+      />
+
       {/* Modal Kenaikan Pangkat */}
       <ModalKenaikanPangkat
         modal={modalKenaikanPangkat}
@@ -373,6 +496,7 @@ const KenaikanPangkat = () => {
       />
 
       <ModalKirimWa modal={modalKirimWa} setModal={setModalKirimWa} />
+      <ModalGmail modal={modalGmail} setModal={setModalGmail} />
     </div>
   );
 };

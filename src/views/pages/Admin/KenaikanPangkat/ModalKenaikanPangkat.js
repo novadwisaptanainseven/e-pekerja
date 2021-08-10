@@ -180,6 +180,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
               <CFormGroup>
                 <CLabel>Jenis Kenaikan Pangkat</CLabel>
                 <CSelect
+                  readOnly
                   name="jenis_kp"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -202,6 +203,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
               <CFormGroup>
                 <CLabel>Pangkat / Golongan Baru</CLabel>
                 <CSelect
+                  readOnly
                   name="pangkat_baru"
                   onChange={handleChange}
                   onBlur={handleBlur}
