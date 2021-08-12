@@ -8,6 +8,7 @@ import LoadAnimationWhite from "./img/load_animation_white.gif";
 import LogoKotaSamarinda from "./img/logo-kota-samarinda.png";
 import IconExcel from "./img/icon-excel.png";
 import StrukturSample from "./img/struktur_jabatan.jpg";
+import IconDocument from "./img/icon-document.png";
 
 export {
   SampleAvatar,
@@ -20,4 +21,5 @@ export {
   LogoKotaSamarinda,
   IconExcel,
   StrukturSample,
+  IconDocument,
 };

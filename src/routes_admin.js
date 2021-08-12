@@ -167,6 +167,9 @@ const KenaikanPangkat = React.lazy(() =>
 const RiwayatGolongan = React.lazy(() =>
   import("./views/pages/Admin/KenaikanPangkat/RiwayatGolongan/RiwayatGolongan")
 );
+const CekBerkas = React.lazy(() =>
+  import("./views/pages/Admin/KenaikanPangkat/CekBerkas/CekBerkas")
+);
 
 // Kenaikan Gaji Berkala
 const KGB = React.lazy(() => import("./views/pages/Admin/KGB/KGB"));
@@ -545,6 +548,12 @@ const routes = [
     path: "/epekerja/admin/kenaikan-pangkat/riwayat/:id",
     name: "Riwayat Golongan",
     component: RiwayatGolongan,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/kenaikan-pangkat/pegawai/:id_pegawai/berkas",
+    name: "Berkas Kenaikan Pangkat PNS",
+    component: CekBerkas,
     exact: true,
   },
 

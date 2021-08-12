@@ -1,6 +1,6 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
-import { cilUser } from "@coreui/icons";
+import { cilBadge, cilUser } from "@coreui/icons";
 
 const _nav = [
   {
@@ -14,6 +14,12 @@ const _nav = [
     name: "Data Kepegawaian Saya",
     to: "/epekerja/user/data-kepegawaian",
     icon: <CIcon content={cilUser} customClasses="c-sidebar-nav-icon" />,
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Kenaikan Pangkat",
+    to: "/epekerja/user/kenaikan-pangkat",
+    icon: <CIcon content={cilBadge} customClasses="c-sidebar-nav-icon" />,
   },
   {
     _tag: "CSidebarNavItem",

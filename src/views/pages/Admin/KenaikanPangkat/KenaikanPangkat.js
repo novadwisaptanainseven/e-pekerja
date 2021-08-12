@@ -59,6 +59,13 @@ const KenaikanPangkat = () => {
     type: "",
   });
 
+  // Go To Cek Berkas PNS
+  const goToCekBerkas = (e, idPegawai) => {
+    e.preventDefault();
+
+    history.push(`${path}/pegawai/${idPegawai}/berkas`);
+  };
+
   useEffect(() => {
     getKenaikanPangkat(kenaikanPangkatDispatch);
   }, [kenaikanPangkatDispatch]);
@@ -110,7 +117,8 @@ const KenaikanPangkat = () => {
             {row.pangkat_baru && (
               <span>
                 {row.pangkat_baru} <br />
-                Tgl. {format(new Date(row.tanggal), "dd/MM/y")}
+                Tgl. {format(new Date(row.tanggal), "dd/MM/y")} <br />(
+                {row.jenis_kp})
               </span>
             )}
             {!row.pangkat_baru && (
@@ -143,7 +151,7 @@ const KenaikanPangkat = () => {
               onClick={() => handleBatalkanKenaikan(row.id)}
               disabled={!row.pangkat_baru ? true : false}
             >
-              Batalkan Kenaikan
+              {row.status_updated === 0 ? "Batalkan KP" : "Reset"}
             </CButton>
           )}
         </div>
@@ -359,7 +367,15 @@ const KenaikanPangkat = () => {
                       </span>
                     )}
                     {status === "naik-pangkat" && (
-                      <span>Pegawai ini pangkatnya sudah bisa diupdate</span>
+                      <>
+                        <span>
+                          Pegawai ini pangkat golongannya sudah bisa diupdate.{" "}
+                          <b>Note: </b> harus sudah{" "}
+                          <span style={{ textDecoration: "underline" }}>
+                            tervalidasi
+                          </span>
+                        </span>
+                      </>
                     )}
                   </>
                 ) : (
@@ -412,14 +428,24 @@ const KenaikanPangkat = () => {
                     <CBadge className="mr-2" color="success">
                       Tervalidasi
                     </CBadge>
-                    <a href=".">Cek Berkas</a>
+                    <a
+                      href="."
+                      onClick={(e) => goToCekBerkas(e, data.id_pegawai)}
+                    >
+                      Cek Berkas
+                    </a>
                   </>
                 ) : (
                   <>
                     <CBadge className="mr-2" color="danger">
                       Belum Divalidasi
                     </CBadge>
-                    <a href=".">Cek Berkas</a>
+                    <a
+                      href="."
+                      onClick={(e) => goToCekBerkas(e, data.id_pegawai)}
+                    >
+                      Cek Berkas
+                    </a>
                   </>
                 )}
               </CCol>

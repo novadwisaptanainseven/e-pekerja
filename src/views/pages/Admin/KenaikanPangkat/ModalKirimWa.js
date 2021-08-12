@@ -27,7 +27,7 @@ const ModalKirimWa = ({ modal, setModal }) => {
           }, pangkat Anda telah diperbarui menjadi ${
             modal.data.pangkat_baru
           } terhitung mulai tanggal ${format(
-            new Date(modal.data.tmt_kenaikan_pangkat),
+            new Date(modal.data.tanggal),
             "dd/MM/y"
           )}. Terimakasih`
         );
@@ -35,8 +35,10 @@ const ModalKirimWa = ({ modal, setModal }) => {
         setIsiPesan(
           `Kepada Yth. ${
             modal.data.nama
-          }, Anda akan mengalami kenaikan pangkat pada tanggal ${format(
-            new Date(modal.data.tmt_kenaikan_pangkat),
+          }, Anda akan mengalami kenaikan pangkat (${
+            modal.data.jenis_kp
+          }) pada tanggal ${format(
+            new Date(modal.data.tanggal),
             "dd/MM/y"
           )}. Silahkan untuk melengkapi berkas - berkasnya. Terimakasih`
         );
@@ -85,7 +87,12 @@ const ModalKirimWa = ({ modal, setModal }) => {
               </CFormGroup>
               <CFormGroup>
                 <CLabel>Pesan</CLabel>
-                <CTextarea name="pesan" rows={5} readOnly value={isiPesan} />
+                <CTextarea
+                  name="pesan"
+                  rows={5}
+                  onChange={(e) => setIsiPesan(e.target.value)}
+                  value={isiPesan}
+                />
               </CFormGroup>
             </>
           )}

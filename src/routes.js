@@ -17,6 +17,11 @@ const EditPTTB = React.lazy(() =>
   import("./views/pages/User/DataKepegawaian/DataDiri/PTTB/EditPTTB")
 );
 
+// Kenaikan Pangkat
+const KenaikanPangkat = React.lazy(() =>
+  import("./views/pages/User/KenaikanPangkat")
+);
+
 // Import Akun
 const Akun = React.lazy(() => import("./views/pages/User/Akun"));
 const EditAkun = React.lazy(() => import("./views/pages/User/Akun/EditAkun"));
@@ -56,6 +61,14 @@ const routes = [
     path: "/epekerja/user/data-kepegawaian/edit-data-diri/pttb",
     name: "Edit Data Diri",
     component: EditPTTB,
+    exact: true,
+  },
+
+  // Kenaikan Pangkat
+  {
+    path: "/epekerja/user/kenaikan-pangkat",
+    name: "Kenaikan Pangkat",
+    component: KenaikanPangkat,
     exact: true,
   },
 
