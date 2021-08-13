@@ -13,7 +13,7 @@ import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IconDocument } from "src/assets";
-import { getBerkasKp } from "src/context/actions/BerkasKp";
+import { getBerkasKp, validasiKP } from "src/context/actions/BerkasKp";
 import { getImage } from "src/context/actions/DownloadFile";
 import getFileBerkasKp from "src/context/actions/DownloadFile/getFileBerkasKp";
 import getFilename from "src/helpers/getFilename";
@@ -53,12 +53,18 @@ const CekBerkas = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "YA",
     }).then((res) => {
+      const statusValidasi = {
+        status_validasi: 1,
+      };
       if (res.isConfirmed) {
-        Swal.fire({
-          icon: "success",
-          title: "Sukses",
-          text: "Berkas Kenaikan Pangkat Tervalidasi",
-        });
+        validasiKP(
+          params.id_pegawai,
+          data.kenaikan_pangkat.id,
+          statusValidasi,
+          setData,
+          setLoading,
+          Swal
+        );
       }
     });
   };
@@ -121,17 +127,23 @@ const CekBerkas = () => {
                       <tr>
                         <th>Status Validasi</th>
                         <td>
-                          {data.kenaikan_pangkat.status_validasi == 0 && (
+                          {data.kenaikan_pangkat.status_validasi === 0 && (
                             <CBadge color="danger">Belum Divalidasi</CBadge>
                           )}
-                          {data.kenaikan_pangkat.status_validasi == 1 && (
+                          {data.kenaikan_pangkat.status_validasi === 1 && (
                             <CBadge color="success">Tervalidasi</CBadge>
                           )}
-                          {data.kenaikan_pangkat.status_validasi == 2 && (
+                          {data.kenaikan_pangkat.status_validasi === 2 && (
                             <CBadge color="danger">Tidak Disetujui</CBadge>
                           )}
                         </td>
                       </tr>
+                      {data.kenaikan_pangkat.status_validasi === 2 && (
+                        <tr>
+                          <th>Keterangan Validasi</th>
+                          <td>{data.kenaikan_pangkat.ket_status_validasi}</td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </CCol>
@@ -145,12 +157,22 @@ const CekBerkas = () => {
                       className="mr-2"
                       color="success"
                       onClick={handleKelengkapanBerkas}
+                      disabled={
+                        data.kenaikan_pangkat.status_validasi === 1
+                          ? true
+                          : false
+                      }
                     >
                       Validasi
                     </CButton>
                     <CButton
                       color="danger"
                       onClick={() => setModalKirimPesan(true)}
+                      disabled={
+                        data.kenaikan_pangkat.status_validasi === 2
+                          ? true
+                          : false
+                      }
                     >
                       Tidak Disetujui
                     </CButton>
@@ -217,11 +239,17 @@ const CekBerkas = () => {
       </CCard>
 
       {/* Modal Kirim Pesan */}
-      <KirimPesan
-        idPegawai={params.id_pegawai}
-        modal={modalKirimPesan}
-        setModal={setModalKirimPesan}
-      />
+      {data && (
+        <KirimPesan
+          idPegawai={params.id_pegawai}
+          namaPegawai={data.pegawai.nama}
+          modal={modalKirimPesan}
+          setModal={setModalKirimPesan}
+          setData={setData}
+          setLoading={setLoading}
+          idKp={data.kenaikan_pangkat.id}
+        />
+      )}
     </div>
   );
 };
