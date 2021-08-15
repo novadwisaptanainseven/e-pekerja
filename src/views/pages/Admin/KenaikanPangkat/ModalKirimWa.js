@@ -21,27 +21,27 @@ const ModalKirimWa = ({ modal, setModal }) => {
     if (modal.data) {
       console.log(modal.data);
       if (modal.type === "pangkat-updated") {
-        setIsiPesan(
-          `Kepada Yth. ${
-            modal.data.nama
-          }, pangkat Anda telah diperbarui menjadi ${
-            modal.data.pangkat_baru
-          } terhitung mulai tanggal ${format(
-            new Date(modal.data.tanggal),
-            "dd/MM/y"
-          )}. Terimakasih`
-        );
+        let str = `Kepada Yth. ${
+          modal.data.nama
+        }, pangkat Anda telah diperbarui menjadi ${
+          modal.data.pangkat_baru
+        } terhitung mulai tanggal ${format(
+          new Date(modal.data.tanggal),
+          "dd/MM/y"
+        )}. Terimakasih`;
+
+        setIsiPesan(str.replace(/\r?\n|\r/, "")); // Regex untuk menghilangkan linebreak
       } else if (modal.type === "akan-naik-pangkat") {
-        setIsiPesan(
-          `Kepada Yth. ${
-            modal.data.nama
-          }, Anda akan mengalami kenaikan pangkat (${
-            modal.data.jenis_kp
-          }) pada tanggal ${format(
-            new Date(modal.data.tanggal),
-            "dd/MM/y"
-          )}. Silahkan untuk melengkapi berkas - berkasnya. Terimakasih`
-        );
+        let str = `Kepada Yth. ${
+          modal.data.nama
+        }, Anda akan mengalami kenaikan pangkat (${
+          modal.data.jenis_kp
+        }) pada tanggal ${format(
+          new Date(modal.data.tanggal),
+          "dd/MM/y"
+        )}. Silahkan untuk melengkapi berkas - berkasnya. Terimakasih`;
+
+        setIsiPesan(str.replace(/\r?\n|\r/, "")); // Regex untuk menghilangkan linebreak
       }
     }
 

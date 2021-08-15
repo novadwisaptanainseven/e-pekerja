@@ -13,35 +13,43 @@ import {
 } from "@coreui/react";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
+import { sendNotifByEmail } from "src/context/actions/KenaikanPangkat/sendNotifByEmail";
+import LoadingSubmit from "src/reusable/LoadingSubmit";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const Swal = withReactContent(swal2);
 
 const ModalGmail = ({ modal, setModal }) => {
   const [isiPesan, setIsiPesan] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (modal.data) {
       console.log(modal.data);
       if (modal.type === "pangkat-updated") {
-        setIsiPesan(
-          `Kepada Yth. ${
-            modal.data.nama
-          }, pangkat Anda telah diperbarui menjadi ${
-            modal.data.pangkat_baru
-          } terhitung mulai tanggal ${format(
-            new Date(modal.data.tanggal),
-            "dd/MM/y"
-          )}. Terimakasih`
-        );
+        let str = `Kepada Yth. ${
+          modal.data.nama
+        }, pangkat Anda telah diperbarui menjadi ${
+          modal.data.pangkat_baru
+        } terhitung mulai tanggal ${format(
+          new Date(modal.data.tanggal),
+          "dd/MM/y"
+        )}. Terimakasih`;
+
+        setIsiPesan(str.replace(/\r?\n|\r/, "")); // Regex untuk menghilangkan linebreak
       } else if (modal.type === "akan-naik-pangkat") {
-        setIsiPesan(
-          `Kepada Yth. ${
-            modal.data.nama
-          }, Anda akan mengalami kenaikan pangkat (${
-            modal.data.jenis_kp
-          }) pada tanggal ${format(
-            new Date(modal.data.tanggal),
-            "dd/MM/y"
-          )}. Silahkan untuk melengkapi berkas - berkasnya. Terimakasih`
-        );
+        let str = `Kepada Yth. ${
+          modal.data.nama
+        }, Anda akan mengalami kenaikan pangkat (${
+          modal.data.jenis_kp
+        }) pada tanggal ${format(
+          new Date(modal.data.tanggal),
+          "dd/MM/y"
+        )}. Silahkan untuk melengkapi berkas - berkasnya. Terimakasih`;
+
+        setIsiPesan(str.replace(/\r?\n|\r/, "")); // Regext untuk menghilangkan linebreak
       }
     }
 
@@ -51,10 +59,16 @@ const ModalGmail = ({ modal, setModal }) => {
   // Handle Kirim Email
   const kirimEmail = () => {
     let email = modal.data.email;
+    let nama = modal.data.nama;
     let pesan = isiPesan;
+    let val = {
+      nama: nama,
+      email: email,
+      pesan: pesan,
+    };
 
-    console.log("Email: ", email);
-    console.log("Pesan: ", pesan);
+    // Sending an Email
+    sendNotifByEmail(val, setLoading, Swal);
   };
 
   return (
@@ -89,8 +103,18 @@ const ModalGmail = ({ modal, setModal }) => {
           )}
         </CModalBody>
         <CModalFooter>
-          <CButton color="primary" onClick={kirimEmail}>
-            Kirim <CIcon content={cilSend} />
+          <CButton
+            color="primary"
+            onClick={kirimEmail}
+            disabled={loading ? true : false}
+          >
+            {loading ? (
+              <LoadingSubmit />
+            ) : (
+              <>
+                Kirim <CIcon content={cilSend} />
+              </>
+            )}
           </CButton>
           <CButton
             color="secondary"

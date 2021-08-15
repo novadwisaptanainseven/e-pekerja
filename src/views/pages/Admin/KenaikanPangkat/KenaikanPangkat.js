@@ -269,9 +269,7 @@ const KenaikanPangkat = () => {
     let tglKenaikanPangkat = data.tanggal
       ? Date.parse(new Date(data.tanggal))
       : "";
-
-    console.log(tglKenaikanPangkat);
-
+      
     if (tglKenaikanPangkat) {
       if (currentTimestamp < tglKenaikanPangkat) {
         status = "akan-naik-pangkat";

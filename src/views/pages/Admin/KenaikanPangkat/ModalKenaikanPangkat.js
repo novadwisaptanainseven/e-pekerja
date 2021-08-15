@@ -21,29 +21,42 @@ import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
 import { insertKenaikanPangkat } from "src/context/actions/KenaikanPangkat/insertKenaikanPangkat";
+import { getKenaikanPangkatById } from "src/context/actions/KenaikanPangkat/getKenaikanPangkatById";
+import { updatePangkatPegawai } from "src/context/actions/KenaikanPangkat/updatePangkatPegawai";
 
 const MySwal = withReactContent(swal2);
 
 const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
   const [loading, setLoading] = useState(false);
   const [pangkat, setPangkat] = useState([]);
+  const [data, setData] = useState("");
 
   // Get All Pangkat Golongan
   useEffect(() => {
     if (modal.modal) {
       getSelectGolongan(setPangkat);
+      console.log(modal.data);
     }
   }, [modal]);
 
+  // Get Kenaikan Pangkat By ID
+  useEffect(() => {
+    if (modal.modal) {
+      getKenaikanPangkatById(modal.id, setData);
+    }
+  }, [modal]);
+
+  //
+
   // Inisialisasi state formik
   const initState = {
-    jenis_kp: "",
-    no_sk: "",
-    tanggal: "",
+    jenis_kp: data ? data.jenis_kp : "",
+    pangkat_baru: data ? data.id_golongan : "",
+    no_sk: data ? data.no_sk : "",
+    tanggal: data ? data.tanggal : "",
     mk_tahun: "",
     mk_bulan: "",
     pejabat_penetap: "",
-    pangkat_baru: "",
     tmt_kenaikan_pangkat: "",
     file: undefined,
   };
@@ -52,7 +65,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
   const showAlertSuccess = () => {
     MySwal.fire({
       icon: "success",
-      title: "Tambah Kenaikan Pangkat Berhasil",
+      title: "Update Pangkat Golongan Pegawai di Sistem Berhasil",
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
@@ -63,19 +76,11 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
 
   // Fungsi untuk menampilkan alert error tambah data
   const showAlertError = (message) => {
-    let err_message = "";
-
-    for (const key in message) {
-      err_message += `${message[key]}, `;
-    }
-
     MySwal.fire({
       icon: "error",
-      title: "Tambah Kenaikan Pangkat Gagal",
-      text: err_message,
-    }).then((result) => {
-      setLoading(false);
-    });
+      title: "Update Pangkat Golongan Pegawai di Sistem Gagal",
+      text: message,
+    }).then((result) => {});
   };
 
   // Setting validasi form menggunakan YUP & FORMIK
@@ -118,13 +123,9 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
-    const arrPangkatBaru = values.pangkat_baru.split("-");
-    const idPangkatBaru = arrPangkatBaru[0];
-    const strPangkatBaru = arrPangkatBaru[1];
     const mkGolongan = values.mk_tahun + " Tahun " + values.mk_bulan + " Bulan";
 
-    formData.append("id_golongan", idPangkatBaru);
-    formData.append("pangkat_baru", strPangkatBaru);
+    formData.append("id_golongan", values.pangkat_baru);
     formData.append("jenis_kp", values.jenis_kp);
     formData.append("no_sk", values.no_sk);
     formData.append("tanggal", values.tanggal);
@@ -139,14 +140,13 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
       console.log(pair);
     }
 
-    // Tambah data kenaikan pangkat
-    insertKenaikanPangkat(
+    updatePangkatPegawai(
       modal.id,
       formData,
+      dispatch,
       setLoading,
       showAlertSuccess,
-      showAlertError,
-      dispatch
+      showAlertError
     );
   };
 
@@ -164,6 +164,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
       <Formik
         initialValues={initState}
         validationSchema={validationSchema}
+        enableReinitialize={true}
         onSubmit={handleFormSubmit}
       >
         {({
@@ -180,17 +181,16 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
               <CFormGroup>
                 <CLabel>Jenis Kenaikan Pangkat</CLabel>
                 <CSelect
-                  readOnly
+                  disabled
                   name="jenis_kp"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  value={values.jenis_kp}
                   className={
                     errors.jenis_kp && touched.jenis_kp ? "is-invalid" : null
                   }
                 >
-                  <option value={values.jenis_kp}>
-                    -- Pilih Jenis Kenaikan Pangkat --
-                  </option>
+                  <option>-- Pilih Jenis Kenaikan Pangkat --</option>
                   <option value="Reguler">Reguler</option>
                   <option value="Jabatan Struktural">Jabatan Struktural</option>
                   <option value="Jabatan Fungsional">Jabatan Fungsional</option>
@@ -203,24 +203,20 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
               <CFormGroup>
                 <CLabel>Pangkat / Golongan Baru</CLabel>
                 <CSelect
-                  readOnly
+                  disabled
                   name="pangkat_baru"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  value={values.pangkat_baru}
                   className={
                     errors.pangkat_baru && touched.pangkat_baru
                       ? "is-invalid"
                       : null
                   }
                 >
-                  <option value={values.pangkat_baru}>
-                    -- Pilih Pangkat --
-                  </option>
+                  <option>-- Pilih Pangkat --</option>
                   {pangkat.map((item, index) => (
-                    <option
-                      key={index}
-                      value={`${item.id_pangkat_golongan}-${item.keterangan} (${item.golongan})`}
-                    >
+                    <option key={index} value={item.id_pangkat_golongan}>
                       {item.keterangan} ({item.golongan})
                     </option>
                   ))}
@@ -238,6 +234,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                       name="no_sk"
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      value={values.no_sk}
                       className={
                         errors.no_sk && touched.no_sk ? "is-invalid" : null
                       }
@@ -253,6 +250,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                       name="tanggal"
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      value={values.tanggal}
                       className={
                         errors.tanggal && touched.tanggal ? "is-invalid" : null
                       }
@@ -270,7 +268,8 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                   name="tmt_kenaikan_pangkat"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  min={values.tgl_kenaikan_pangkat}
+                  min={values.tanggal}
+                  value={values.tmt_kenaikan_pangkat}
                   className={
                     errors.tmt_kenaikan_pangkat && touched.tmt_kenaikan_pangkat
                       ? "is-invalid"
@@ -291,6 +290,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                   name="pejabat_penetap"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  value={values.pejabat_penetap}
                   className={
                     errors.pejabat_penetap && touched.pejabat_penetap
                       ? "is-invalid"
@@ -314,6 +314,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       placeholder="Tahun"
+                      value={values.mk_tahun}
                       className={
                         errors.mk_tahun && touched.mk_tahun
                           ? "is-invalid"
@@ -339,6 +340,7 @@ const ModalKenaikanPangkat = ({ modal, setModal, dispatch }) => {
                       min="0"
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      value={values.mk_bulan}
                       placeholder="Bulan"
                       className={
                         errors.mk_bulan && touched.mk_bulan

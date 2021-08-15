@@ -11,15 +11,17 @@ import {
   CButton,
   CBadge,
 } from "@coreui/react";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import getFileBerkasKp from "src/context/actions/DownloadFile/getFileBerkasKp";
 import {
   deleteBerkasKp,
   getBerkasKp,
+  insertBerkasKp,
 } from "src/context/actions/UserPage/BerkasKp";
 import { GlobalContext } from "src/context/Provider";
 import getFilename from "src/helpers/getFilename";
 import Loading from "src/reusable/Loading";
+import LoadingSubmit from "src/reusable/LoadingSubmit";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -30,6 +32,14 @@ const KenaikanPangkat = () => {
     useContext(GlobalContext);
   const { data: berkasKp } = berkasKpState;
   const { data: user } = userState;
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [input, setInput] = useState({
+    error: "",
+  });
+
+  // useEffect(() => {
+  //   console.log(input);
+  // }, [input]);
 
   // Get Berkas Kenaikan Pangkat
   useEffect(() => {
@@ -56,6 +66,61 @@ const KenaikanPangkat = () => {
     });
   };
 
+  const handleChangeUploadFiles = (e) => {
+    if (e.target.files.length === 0) {
+      setInput({
+        ...input,
+        error: "Berkas belum dipilih",
+      });
+    } else {
+      setInput({
+        ...input,
+        [e.target.name]: e.target.files,
+        error: "",
+      });
+      // setInput({ ...input, [e.target.name]: e.target.files });
+      // console.log("oke");
+    }
+  };
+
+  const handleUploadFiles = () => {
+    const formData = new FormData();
+
+    // Validasi
+    if (!input.berkas) {
+      // Jika berkas belum dipilih
+      setInput({
+        ...input,
+        error: "Berkas belum dipilih",
+      });
+    } else if (input.berkas.length === 0) {
+      // Jika berkas belum dipilih
+      setInput({
+        ...input,
+        error: "Berkas belum dipilih",
+      });
+    } else {
+      // Jika berkas sudah ada
+      setInput({
+        ...input,
+        error: "",
+      });
+
+      // Proses upload file via API
+      Array.from(input.berkas).forEach((item, index) => {
+        formData.append(`berkas_kp[${index}]`, item);
+      });
+
+      insertBerkasKp(
+        user.id_pegawai,
+        formData,
+        berkasKpDispatch,
+        setLoadingUpload,
+        Swal
+      );
+    }
+  };
+
   return (
     <div>
       <CCard>
@@ -72,11 +137,30 @@ const KenaikanPangkat = () => {
                 kenaikan pangkat (Reguler, Jabatan Struktural, Jabatan
                 Fungsional)
               </CAlert>
-              <CForm>
-                <CFormGroup className="d-flex" style={{ width: "400px" }}>
-                  <CInput className="mr-1" type="file" name="berkas" multiple />
-                  <CButton color="primary">Upload</CButton>
+              <CForm className="mb-4">
+                <CFormGroup
+                  className="d-flex"
+                  style={{ width: "400px", marginBottom: 0 }}
+                >
+                  <CInput
+                    type="file"
+                    name="berkas"
+                    multiple
+                    onChange={(e) => handleChangeUploadFiles(e)}
+                    className={input.error ? "is-invalid" : null}
+                  />
+                  <CButton
+                    color="primary"
+                    className="ml-2"
+                    onClick={handleUploadFiles}
+                    disabled={loadingUpload ? true : false}
+                  >
+                    {loadingUpload ? <LoadingSubmit /> : "Upload"}
+                  </CButton>
                 </CFormGroup>
+                {input.error && (
+                  <div className="text-danger">{input.error}</div>
+                )}
               </CForm>
 
               {/* Jika sudah berkas yang diupload maka tampilkan indikator status validasi */}
