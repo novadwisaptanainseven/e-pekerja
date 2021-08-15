@@ -211,8 +211,10 @@ const KenaikanPangkat = () => {
                           </td>
                         </tr>
                         <tr>
-                          <th>Pesan</th>
-                          <td>Berkas Anda belum lengkap</td>
+                          <th>Keterangan</th>
+                          <td>
+                            {berkasKp.kenaikan_pangkat.ket_status_validasi}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
