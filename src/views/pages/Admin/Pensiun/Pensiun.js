@@ -120,7 +120,7 @@ const Pensiun = () => {
       name: "No",
       selector: "no",
       sortable: true,
-      width: "50px",
+      width: "80px",
     },
     {
       name: "NIP/NIK",

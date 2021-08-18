@@ -192,6 +192,12 @@ const _nav_admin = [
   },
   {
     _tag: "CSidebarNavItem",
+    name: "Data Pegawai Berhenti",
+    to: "/epekerja/admin/pegawai-berhenti",
+    icon: <CIcon content={cilGroup} customClasses="c-sidebar-nav-icon" />,
+  },
+  {
+    _tag: "CSidebarNavItem",
     name: "Data Users",
     to: "/epekerja/admin/users",
     icon: <CIcon content={cilGroup} customClasses="c-sidebar-nav-icon" />,

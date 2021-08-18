@@ -22,7 +22,6 @@ import { format } from "date-fns";
 import { GlobalContext } from "src/context/Provider";
 import { getKenaikanPangkat } from "src/context/actions/KenaikanPangkat/getKenaikanPangkat";
 import { batalkanKenaikanPangkat } from "src/context/actions/KenaikanPangkat/batalkanKenaikanPangkat";
-import { updatePangkatPegawai } from "src/context/actions/KenaikanPangkat/updatePangkatPegawai";
 import printKenaikanPangkat from "src/context/actions/DownloadFile/printKenaikanPangkat";
 import exportExcel from "src/context/actions/DownloadFile/Excel/Pegawai/exportExcel";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -184,43 +183,43 @@ const KenaikanPangkat = () => {
     });
   };
 
-  const handleUpdatePangkat = (data) => {
-    MySwal.fire({
-      title: "Pangkat Golongan Sedang Diperbarui!",
-      html: "Loading...",
-      timer: 1000,
-      timerProgressBar: true,
-      didOpen: () => {
-        MySwal.showLoading();
-        // Update Pangkat
-        updatePangkatPegawai(data.id, kenaikanPangkatDispatch);
-        // MySwal.close();
-      },
-    }).then((result) => {
-      if (result.dismiss === MySwal.DismissReason.timer) {
-        MySwal.fire({
-          icon: "warning",
-          title: "Anda ingin mengirim notifikasi WA ?",
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonColor: "#1c9c25",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "YA",
-          cancelButtonText: "TIDAK",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            setModalKirimWa({
-              ...modalKirimWa,
-              modal: true,
-              data: data,
-              type: "pangkat-updated",
-            });
-            // MySwal.close();
-          }
-        });
-      }
-    });
-  };
+  // const handleUpdatePangkat = (data) => {
+  //   MySwal.fire({
+  //     title: "Pangkat Golongan Sedang Diperbarui!",
+  //     html: "Loading...",
+  //     timer: 1000,
+  //     timerProgressBar: true,
+  //     didOpen: () => {
+  //       MySwal.showLoading();
+  //       // Update Pangkat
+  //       updatePangkatPegawai(data.id, kenaikanPangkatDispatch);
+  //       // MySwal.close();
+  //     },
+  //   }).then((result) => {
+  //     if (result.dismiss === MySwal.DismissReason.timer) {
+  //       MySwal.fire({
+  //         icon: "warning",
+  //         title: "Anda ingin mengirim notifikasi WA ?",
+  //         showConfirmButton: true,
+  //         showCancelButton: true,
+  //         confirmButtonColor: "#1c9c25",
+  //         cancelButtonColor: "#d33",
+  //         confirmButtonText: "YA",
+  //         cancelButtonText: "TIDAK",
+  //       }).then((result) => {
+  //         if (result.isConfirmed) {
+  //           setModalKirimWa({
+  //             ...modalKirimWa,
+  //             modal: true,
+  //             data: data,
+  //             type: "pangkat-updated",
+  //           });
+  //           // MySwal.close();
+  //         }
+  //       });
+  //     }
+  //   });
+  // };
 
   const SubHeaderComponentMemo = React.useMemo(() => {
     const handleClear = () => {

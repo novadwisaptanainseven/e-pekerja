@@ -134,7 +134,6 @@ const EditPensiun = ({ match }) => {
               handleChange,
               handleBlur,
               handleSubmit,
-              setFieldValue,
             }) => (
               <CForm onSubmit={handleSubmit}>
                 <CCardBody>

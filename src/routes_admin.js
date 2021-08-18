@@ -234,6 +234,20 @@ const DetailPensiun = React.lazy(() =>
   import("./views/pages/Admin/Pensiun/DetailPensiun")
 );
 
+// Pegawai Berhenti
+const PegawaiBerhenti = React.lazy(() =>
+  import("./views/pages/Admin/PegawaiBerhenti/PegawaiBerhenti")
+);
+const TambahPegawaiBerhenti = React.lazy(() =>
+  import("./views/pages/Admin/PegawaiBerhenti/TambahPegawaiBerhenti")
+);
+const DetailPegawaiBerhenti = React.lazy(() =>
+  import("./views/pages/Admin/PegawaiBerhenti/DetailPegawaiBerhenti")
+);
+const EditPegawaiBerhenti = React.lazy(() =>
+  import("./views/pages/Admin/PegawaiBerhenti/EditPegawaiBerhenti")
+);
+
 // Mutasi
 const Mutasi = React.lazy(() => import("./views/pages/Admin/Mutasi/Mutasi"));
 const TambahMutasi = React.lazy(() =>
@@ -690,6 +704,32 @@ const routes = [
     path: "/epekerja/admin/pensiun/detail/:id",
     name: "Detail Pensiun",
     component: DetailPensiun,
+  },
+
+  // Pegawai Berhenti
+  {
+    path: "/epekerja/admin/pegawai-berhenti",
+    name: "Pegawai Berhenti",
+    component: PegawaiBerhenti,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/pegawai-berhenti/tambah",
+    name: "Tambah Pegawai Berhenti",
+    component: TambahPegawaiBerhenti,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/pegawai-berhenti/:id/detail",
+    name: "Detail Pegawai Berhenti",
+    component: DetailPegawaiBerhenti,
+    exact: true,
+  },
+  {
+    path: "/epekerja/admin/pegawai-berhenti/:id/edit",
+    name: "Edit Pegawai Berhenti",
+    component: EditPegawaiBerhenti,
+    exact: true,
   },
 
   // Mutasi

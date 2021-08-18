@@ -20,7 +20,6 @@ import LoadingSubmit from "src/reusable/LoadingSubmit";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import * as Yup from "yup";
-import { insertKenaikanPangkat } from "src/context/actions/KenaikanPangkat/insertKenaikanPangkat";
 import { getKenaikanPangkatById } from "src/context/actions/KenaikanPangkat/getKenaikanPangkatById";
 import { updatePangkatPegawai } from "src/context/actions/KenaikanPangkat/updatePangkatPegawai";
 

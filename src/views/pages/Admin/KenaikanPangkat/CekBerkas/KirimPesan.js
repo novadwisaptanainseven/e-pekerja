@@ -12,7 +12,7 @@ import {
   CInput,
 } from "@coreui/react";
 import { Formik } from "formik";
-import React, { useEffect } from "react";
+import React from "react";
 import { validasiKP } from "src/context/actions/BerkasKp";
 import * as Yup from "yup";
 import swal2 from "sweetalert2";

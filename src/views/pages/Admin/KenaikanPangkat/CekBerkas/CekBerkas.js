@@ -1,5 +1,3 @@
-import { cilTrash } from "@coreui/icons";
-import CIcon from "@coreui/icons-react";
 import {
   CCard,
   CCardHeader,

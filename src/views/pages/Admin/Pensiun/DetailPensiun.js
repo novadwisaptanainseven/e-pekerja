@@ -50,7 +50,7 @@ const DetailPenghargaan = ({ match }) => {
     <>
       <CCard>
         <CCardHeader className="d-flex justify-content-between">
-          <h3>Detail Pensiun: </h3>
+          <h3>Detail Pensiun </h3>
           <CButton
             type="button"
             color="warning"
