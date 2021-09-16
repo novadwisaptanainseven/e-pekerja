@@ -195,6 +195,12 @@ export const GlobalProvider = ({ children }) => {
     initStateDefault
   );
 
+  // Pegawai Berhenti
+  const [pegawaiBerhentiState, pegawaiBerhentiDispatch] = useReducer(
+    reducer,
+    initStateDefault
+  );
+
   return (
     <GlobalContext.Provider
       value={{
@@ -267,7 +273,9 @@ export const GlobalProvider = ({ children }) => {
         riwayatGolonganState,
         riwayatGolonganDispatch,
         berkasKpState,
-        berkasKpDispatch
+        berkasKpDispatch,
+        pegawaiBerhentiState,
+        pegawaiBerhentiDispatch,
       }}
     >
       {children}

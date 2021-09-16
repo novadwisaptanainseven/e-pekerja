@@ -14,10 +14,15 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import LoadingSubmit from "src/reusable/LoadingSubmit";
-import validationSchema from "../../User/DataKepegawaian/RiwayatGolongan/Formik/validationSchema";
 import initStateEdit from "./Formik/initStateEdit";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import {
+  editPegawaiBerhenti,
+  getPegawaiBerhentiById,
+} from "src/context/actions/PegawaiBerhenti";
+import Loading from "src/reusable/Loading";
+import validationSchema from "./Formik/validationSchema";
 
 const MySwal = withReactContent(swal2);
 
@@ -33,7 +38,7 @@ const EditPegawaiBerhenti = () => {
   };
 
   useEffect(() => {
-    console.log(params);
+    getPegawaiBerhentiById(params.id, setData);
   }, [params]);
 
   // Fungsi untuk menampilkan alert success Edit data
@@ -67,6 +72,14 @@ const EditPegawaiBerhenti = () => {
 
   const handleFormSubmit = (values) => {
     console.log(values);
+
+    editPegawaiBerhenti(
+      params.id,
+      values,
+      setLoading,
+      showAlertSuccess,
+      showAlertError
+    );
   };
 
   return (
@@ -83,102 +96,106 @@ const EditPegawaiBerhenti = () => {
             Kembali
           </CButton>
         </CCardHeader>
-        <Formik
-          initialValues={initStateEdit(data)}
-          validationSchema={validationSchema}
-          enableReinitialize
-          onSubmit={handleFormSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-          }) => (
-            <CForm onSubmit={handleSubmit}>
-              <CCardBody>
-                <CFormGroup row>
-                  <CCol md="2">
-                    <CLabel>Nama Pegawai</CLabel>
-                  </CCol>
-                  <CCol>
-                    <CInput
-                      type="text"
-                      name="nama"
-                      value={data.nama}
-                      readOnly
-                    />
-                  </CCol>
-                </CFormGroup>
+        {!data ? (
+          <Loading />
+        ) : (
+          <Formik
+            initialValues={initStateEdit(data)}
+            validationSchema={validationSchema}
+            enableReinitialize
+            onSubmit={handleFormSubmit}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+            }) => (
+              <CForm onSubmit={handleSubmit}>
+                <CCardBody>
+                  <CFormGroup row>
+                    <CCol md="2">
+                      <CLabel>Nama Pegawai</CLabel>
+                    </CCol>
+                    <CCol>
+                      <CInput
+                        type="text"
+                        name="nama"
+                        value={data.nama}
+                        readOnly
+                      />
+                    </CCol>
+                  </CFormGroup>
 
-                <CFormGroup row>
-                  <CCol md="2">
-                    <CLabel>Tgl. Berhenti</CLabel>
-                  </CCol>
-                  <CCol>
-                    <CInput
-                      type="date"
-                      name="tgl_berhenti"
-                      id="tgl_berhenti"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.tgl_berhenti || ""}
-                      placeholder="Masukkan tgl. berhenti"
-                      className={
-                        errors.tgl_berhenti && touched.tgl_berhenti
-                          ? "is-invalid"
-                          : null
-                      }
-                    />
-                    {errors.tgl_berhenti && touched.tgl_berhenti && (
-                      <div className="invalid-feedback">
-                        {errors.tgl_berhenti}
-                      </div>
-                    )}
-                  </CCol>
-                </CFormGroup>
-                <CFormGroup row>
-                  <CCol md="2">
-                    <CLabel>Keterangan</CLabel>
-                  </CCol>
-                  <CCol>
-                    <CInput
-                      type="text"
-                      name="keterangan"
-                      id="keterangan"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.keterangan || ""}
-                      placeholder="Masukkan keterangan / alasan berhenti"
-                      className={
-                        errors.keterangan && touched.keterangan
-                          ? "is-invalid"
-                          : null
-                      }
-                    />
-                    {errors.keterangan && touched.keterangan && (
-                      <div className="invalid-feedback">
-                        {errors.keterangan}
-                      </div>
-                    )}
-                  </CCol>
-                </CFormGroup>
-              </CCardBody>
-              <CCardFooter>
-                <CButton
-                  color="primary"
-                  type="submit"
-                  className="mr-1"
-                  disabled={loading ? true : false}
-                >
-                  {loading ? <LoadingSubmit /> : "Simpan"}
-                </CButton>
-              </CCardFooter>
-            </CForm>
-          )}
-        </Formik>
+                  <CFormGroup row>
+                    <CCol md="2">
+                      <CLabel>Tgl. Berhenti</CLabel>
+                    </CCol>
+                    <CCol>
+                      <CInput
+                        type="date"
+                        name="tgl_berhenti"
+                        id="tgl_berhenti"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.tgl_berhenti || ""}
+                        placeholder="Masukkan tgl. berhenti"
+                        className={
+                          errors.tgl_berhenti && touched.tgl_berhenti
+                            ? "is-invalid"
+                            : null
+                        }
+                      />
+                      {errors.tgl_berhenti && touched.tgl_berhenti && (
+                        <div className="invalid-feedback">
+                          {errors.tgl_berhenti}
+                        </div>
+                      )}
+                    </CCol>
+                  </CFormGroup>
+                  <CFormGroup row>
+                    <CCol md="2">
+                      <CLabel>Keterangan</CLabel>
+                    </CCol>
+                    <CCol>
+                      <CInput
+                        type="text"
+                        name="keterangan"
+                        id="keterangan"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.keterangan || ""}
+                        placeholder="Masukkan keterangan / alasan berhenti"
+                        className={
+                          errors.keterangan && touched.keterangan
+                            ? "is-invalid"
+                            : null
+                        }
+                      />
+                      {errors.keterangan && touched.keterangan && (
+                        <div className="invalid-feedback">
+                          {errors.keterangan}
+                        </div>
+                      )}
+                    </CCol>
+                  </CFormGroup>
+                </CCardBody>
+                <CCardFooter>
+                  <CButton
+                    color="primary"
+                    type="submit"
+                    className="mr-1"
+                    disabled={loading ? true : false}
+                  >
+                    {loading ? <LoadingSubmit /> : "Simpan"}
+                  </CButton>
+                </CCardFooter>
+              </CForm>
+            )}
+          </Formik>
+        )}
       </CCard>
     </div>
   );

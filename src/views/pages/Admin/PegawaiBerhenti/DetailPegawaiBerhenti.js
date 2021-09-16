@@ -1,12 +1,39 @@
-import { CCard, CCardHeader, CCardBody, CButton } from "@coreui/react";
-import React from "react";
-import { useHistory } from "react-router-dom";
+import { CCard, CCardHeader, CCardBody, CButton, CBadge } from "@coreui/react";
+import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { getImage } from "src/context/actions/DownloadFile";
+import { getPegawaiBerhentiById } from "src/context/actions/PegawaiBerhenti";
 
 const DetailPegawaiBerhenti = () => {
   const history = useHistory();
+  const match = useRouteMatch();
+  const { params } = match;
+  const [data, setData] = useState("");
 
   const goBackToParent = () => {
     history.goBack();
+  };
+
+  // Get Pegawai Berhenti by ID
+  useEffect(() => {
+    getPegawaiBerhentiById(params.id, setData);
+  }, [params]);
+
+  const StatusBerhenti = ({ statusBerhenti }) => {
+    return (
+      <>
+        {statusBerhenti === "akan-berhenti" ? (
+          <CBadge color="primary" shape="pill" className="px-2 py-2">
+            Akan Berhenti
+          </CBadge>
+        ) : (
+          <CBadge color="dark" shape="pill" className="px-2 py-2">
+            Berhenti
+          </CBadge>
+        )}
+      </>
+    );
   };
 
   return (
@@ -24,10 +51,10 @@ const DetailPegawaiBerhenti = () => {
           </CButton>
         </CCardHeader>
         <CCardBody>
-          {/* <table className="table table-striped table-borderless">
+          <table className="table table-striped table-borderless">
             <tbody>
               <tr>
-                <th>NIP/NIK</th>
+                <th>NIP/NIK/NIPTTB</th>
                 <td>{data.nip ? data.nip : data.nik}</td>
               </tr>
               <tr>
@@ -35,18 +62,22 @@ const DetailPegawaiBerhenti = () => {
                 <td>{data ? data.nama : "Loading..."}</td>
               </tr>
               <tr>
-                <th>Tanggal Pensiun</th>
+                <th>Status Pegawai</th>
+                <td>{data ? data.status_pegawai : "Loading..."}</td>
+              </tr>
+              <tr>
+                <th>Tanggal Berhenti</th>
                 <td>
                   {data
-                    ? format(new Date(data.tgl_pensiun), "dd/MM/yyyy")
+                    ? format(new Date(data.tgl_berhenti), "dd/MM/yyyy")
                     : "Loading..."}
                 </td>
               </tr>
               <tr>
-                <th>Status Pensiun</th>
+                <th>Status Berhenti</th>
                 <td>
                   {data ? (
-                    <StatusPensiun tglPensiun={data.tgl_pensiun} />
+                    <StatusBerhenti statusBerhenti={data.status_berhenti} />
                   ) : (
                     "Loading..."
                   )}
@@ -71,7 +102,7 @@ const DetailPegawaiBerhenti = () => {
                 </td>
               </tr>
             </tbody>
-          </table> */}
+          </table>
         </CCardBody>
       </CCard>
     </div>

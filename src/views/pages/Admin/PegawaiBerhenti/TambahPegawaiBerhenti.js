@@ -21,6 +21,7 @@ import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSe
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import LoadingSubmit from "src/reusable/LoadingSubmit";
+import { insertPegawaiBerhenti } from "src/context/actions/PegawaiBerhenti";
 
 const MySwal = withReactContent(swal2);
 
@@ -93,6 +94,13 @@ const TambahPegawaiBerhenti = () => {
     for (let pair of formData.entries()) {
       console.log(pair);
     }
+
+    insertPegawaiBerhenti(
+      formData,
+      setLoading,
+      showAlertSuccess,
+      showAlertError
+    );
   };
 
   return (

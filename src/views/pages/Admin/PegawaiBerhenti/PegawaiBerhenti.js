@@ -11,16 +11,33 @@ import {
   CCol,
 } from "@coreui/react";
 import { format } from "date-fns";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import {
+  exportExcel,
+  printPegawaiBerhenti,
+} from "src/context/actions/DownloadFile";
+import {
+  batalkanPegawaiBerhenti,
+  getPegawaiBerhenti,
+} from "src/context/actions/PegawaiBerhenti";
+import { GlobalContext } from "src/context/Provider";
 import customStyles from "src/reusable/customStyles";
 import Loading from "src/reusable/Loading";
+
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(swal2);
 
 const PegawaiBerhenti = () => {
   const match = useRouteMatch();
   const history = useHistory();
   const { url } = match;
+  const { pegawaiBerhentiState, pegawaiBerhentiDispatch } =
+    useContext(GlobalContext);
+  const { data } = pegawaiBerhentiState;
 
   // Functions
   const goToDetail = (id) => {
@@ -30,38 +47,43 @@ const PegawaiBerhenti = () => {
     history.push(`${url}/${id}/edit`);
   };
 
-  const data = [
-    {
-      id_pegawai_berhenti: 1,
-      no: 1,
-      nip: "123123123",
-      nama: "Topan Nugroho",
-      status_pegawai: "PNS",
-      tgl_berhenti: "2021-08-02",
-      status_berhenti: "berhenti",
-      keterangan: "Ingin fokus skripsi",
-    },
-    {
-      id_pegawai_berhenti: 2,
-      no: 2,
-      nip: "123123123",
-      nama: "Xoki Pardede",
-      status_pegawai: "PTTH",
-      tgl_berhenti: "2021-08-02",
-      status_berhenti: "akan-berhenti",
-      keterangan: "Mencari pekerjaan yang lebih baik",
-    },
-    {
-      id_pegawai_berhenti: 3,
-      no: 3,
-      nip: "123123123",
-      nama: "Tretan Muslim",
-      status_pegawai: "PTTB",
-      tgl_berhenti: "2021-08-02",
-      status_berhenti: "berhenti",
-      keterangan: "Mendapatkan pekerjaan baru",
-    },
-  ];
+  // Get Pegawai Berhenti
+  useEffect(() => {
+    getPegawaiBerhenti(pegawaiBerhentiDispatch);
+  }, [pegawaiBerhentiDispatch]);
+
+  // const data = [
+  //   {
+  //     id_pegawai_berhenti: 1,
+  //     no: 1,
+  //     nip: "123123123",
+  //     nama: "Topan Nugroho",
+  //     status_pegawai: "PNS",
+  //     tgl_berhenti: "2021-08-02",
+  //     status_berhenti: "berhenti",
+  //     keterangan: "Ingin fokus skripsi",
+  //   },
+  //   {
+  //     id_pegawai_berhenti: 2,
+  //     no: 2,
+  //     nip: "123123123",
+  //     nama: "Xoki Pardede",
+  //     status_pegawai: "PTTH",
+  //     tgl_berhenti: "2021-08-02",
+  //     status_berhenti: "akan-berhenti",
+  //     keterangan: "Mencari pekerjaan yang lebih baik",
+  //   },
+  //   {
+  //     id_pegawai_berhenti: 3,
+  //     no: 3,
+  //     nip: "123123123",
+  //     nama: "Tretan Muslim",
+  //     status_pegawai: "PTTB",
+  //     tgl_berhenti: "2021-08-02",
+  //     status_berhenti: "berhenti",
+  //     keterangan: "Mendapatkan pekerjaan baru",
+  //   },
+  // ];
 
   // Column for datatables
   const columns = [
@@ -140,7 +162,9 @@ const PegawaiBerhenti = () => {
           <CButton
             color="dark"
             className="btn btn-sm"
-            // onClick={() => handleBatalkanPensiun(row.id_pensiun)}
+            onClick={() =>
+              handleBatalkanPegawaiBerhenti(row.id_pegawai_berhenti)
+            }
           >
             Batalkan
           </CButton>
@@ -148,6 +172,26 @@ const PegawaiBerhenti = () => {
       ),
     },
   ];
+
+  // Konfirmasi batalkan pegawai berhenti
+  const handleBatalkanPegawaiBerhenti = (id) => {
+    MySwal.fire({
+      icon: "warning",
+      title:
+        "Anda yakin ingin membatalkan status berhenti kerja untuk pegawai ini ?",
+      text: "Jika yakin, klik YA",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "YA",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // Batalkan pegawai berhenti
+        batalkanPegawaiBerhenti(id, pegawaiBerhentiDispatch, MySwal);
+      }
+    });
+  };
 
   const ExpandableComponent = ({ data }) => {
     return (
@@ -181,7 +225,7 @@ const PegawaiBerhenti = () => {
               type="button"
               color="info"
               className="ml-2"
-              // onClick={() => printPensiunPegawai(paramsFilter)}
+              onClick={() => printPegawaiBerhenti()}
             >
               PDF <CIcon content={cilPrint} />
             </CButton>
@@ -190,13 +234,7 @@ const PegawaiBerhenti = () => {
               type="button"
               color="success"
               className="ml-2"
-              // onClick={() =>
-              //   exportExcel(
-              //     "pensiun-pegawai",
-              //     paramsFilter,
-              //     "filter_bulan_tahun"
-              //   )
-              // }
+              onClick={() => exportExcel("pegawai-berhenti")}
             >
               Excel <CIcon content={cilPrint} />
             </CButton>
