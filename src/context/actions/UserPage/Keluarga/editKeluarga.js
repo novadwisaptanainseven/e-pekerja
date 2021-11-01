@@ -13,7 +13,7 @@ export const editKeluarga = (
   setLoading(true);
 
   axiosInstance
-    .put(`user/data-kepegawaian/${id_pegawai}/keluarga/${id_keluarga}`, values)
+    .post(`user/data-kepegawaian/${id_pegawai}/keluarga/${id_keluarga}`, values)
     .then((res) => {
       // console.log(res.data);
       setLoading(false);

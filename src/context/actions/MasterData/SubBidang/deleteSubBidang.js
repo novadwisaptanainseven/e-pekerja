@@ -3,7 +3,7 @@ import { getSubBidang } from "./getSubBidang";
 
 export const deleteSubBidang = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/master-data/sub-bidang/${id}`)
+    .get(`admin/master-data/sub-bidang/${id}/delete`)
     .then((res) => {
       // console.log(res.data);
       getSubBidang(dispatch);

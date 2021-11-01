@@ -8,7 +8,7 @@ export const deletePendidikan = (
   setLoading
 ) => {
   axiosInstance
-    .delete(`admin/pegawai/${id_pegawai}/pendidikan/${id_pendidikan}`)
+    .get(`admin/pegawai/${id_pegawai}/pendidikan/${id_pendidikan}/delete`)
     .then((res) => {
       getPendidikan(id_pegawai, setData, setLoading);
       console.log(res.data);

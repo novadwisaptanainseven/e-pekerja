@@ -10,7 +10,7 @@ export const editJabatan = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/jabatan/${id}`, values)
+    .post(`admin/master-data/jabatan/${id}`, values)
     .then((res) => {
       //console.log(res.data);
       setLoading(false);

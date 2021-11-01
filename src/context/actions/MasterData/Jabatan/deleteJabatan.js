@@ -3,7 +3,7 @@ import { getJabatan } from "./getJabatan";
 
 export const deleteJabatan = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/master-data/jabatan/${id}`)
+    .get(`admin/master-data/jabatan/${id}/delete`)
     .then((res) => {
       // console.log(res.data);
       getJabatan(dispatch);

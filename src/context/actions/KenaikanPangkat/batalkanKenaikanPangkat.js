@@ -3,7 +3,7 @@ import { getKenaikanPangkat } from "./getKenaikanPangkat";
 
 export const batalkanKenaikanPangkat = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/kenaikan-pangkat-batal/${id}`)
+    .get(`admin/kenaikan-pangkat-batal/${id}`)
     .then((res) => {
       console.log(res.data);
       getKenaikanPangkat(dispatch);

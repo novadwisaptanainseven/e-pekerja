@@ -10,7 +10,7 @@ export const editPensiun = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pensiun/${id}`, values)
+    .post(`admin/pensiun/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

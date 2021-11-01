@@ -9,7 +9,7 @@ const deleteRiwayatGolongan = (
   MySwal
 ) => {
   axiosInstance
-    .delete(`admin/riwayat-golongan/${idRiwayat}`)
+    .get(`admin/riwayat-golongan/${idRiwayat}/delete`)
     .then((res) => {
       getRiwayatGolongan(idPegawai, setData, setLoading);
       console.log(res.data);

@@ -3,7 +3,7 @@ import { getPenghargaan } from "./getPenghargaan";
 
 export const deletePenghargaan = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/penghargaan/${id}`)
+    .get(`admin/penghargaan/${id}/delete`)
     .then((res) => {
       console.log(res.data);
       getPenghargaan(dispatch);

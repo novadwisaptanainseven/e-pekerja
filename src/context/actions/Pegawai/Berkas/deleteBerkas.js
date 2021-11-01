@@ -8,7 +8,7 @@ export const deleteBerkas = (
   setLoading
 ) => {
   axiosInstance
-    .delete(`admin/pegawai/${id_pegawai}/berkas/${id_berkas}`)
+    .get(`admin/pegawai/${id_pegawai}/berkas/${id_berkas}/delete`)
     .then((res) => {
       getBerkas(id_pegawai, setData, setLoading);
       console.log(res.data);

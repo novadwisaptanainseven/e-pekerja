@@ -3,7 +3,7 @@ import { getEselon } from "./getEselon";
 
 export const deleteEselon = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/master-data/pangkat-eselon/${id}`)
+    .get(`admin/master-data/pangkat-eselon/${id}/delete`)
     .then((res) => {
       console.log(res.data);
       getEselon(dispatch);

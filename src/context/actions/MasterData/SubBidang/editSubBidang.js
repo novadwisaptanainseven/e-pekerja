@@ -10,7 +10,7 @@ export const editSubBidang = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/sub-bidang/${id}`, values)
+    .post(`admin/master-data/sub-bidang/${id}`, values)
     .then((res) => {
       //console.log(res.data);
       setLoading(false);

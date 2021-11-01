@@ -11,7 +11,7 @@ export const editKGB = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pegawai/${id_pegawai}/kgb/${id_kgb}`, values)
+    .post(`admin/pegawai/${id_pegawai}/kgb/${id_kgb}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

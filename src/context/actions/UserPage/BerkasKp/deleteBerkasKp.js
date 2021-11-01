@@ -3,7 +3,7 @@ import getBerkasKp from "./getBerkasKp";
 
 const deleteBerkasKp = (idPegawai, idBerkasKp, dispatch, Swal) => {
   axiosInstance
-    .delete(`user/pegawai/${idPegawai}/berkas-kp/${idBerkasKp}`)
+    .get(`user/pegawai/${idPegawai}/berkas-kp/${idBerkasKp}/delete`)
     .then((res) => {
       console.log(res.data);
       getBerkasKp(idPegawai, dispatch);

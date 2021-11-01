@@ -10,7 +10,7 @@ export const editMutasi = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/mutasi/${id}`, values)
+    .post(`admin/mutasi/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

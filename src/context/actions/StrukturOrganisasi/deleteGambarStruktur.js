@@ -4,7 +4,7 @@ import { getStruktur } from ".";
 const deleteGambarStruktur = (id, dispatch, setLoading, Swal) => {
   setLoading(true);
   axiosInstance
-    .delete(`admin/struktur/${id}`)
+    .get(`admin/struktur/${id}/delete`)
     .then((res) => {
       getStruktur(dispatch);
       console.log(res.data);

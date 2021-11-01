@@ -11,7 +11,7 @@ export const editCuti = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pegawai/${id_pegawai}/cuti/${id_cuti}`, values)
+    .post(`admin/pegawai/${id_pegawai}/cuti/${id_cuti}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

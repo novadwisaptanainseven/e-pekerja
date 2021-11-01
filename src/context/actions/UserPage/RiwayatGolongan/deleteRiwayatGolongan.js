@@ -8,7 +8,7 @@ export const deleteRiwayatGolongan = (
   Swal
 ) => {
   axiosInstance
-    .delete(`user/data-kepegawaian/riwayat-golongan/${id_riwayat_golongan}`)
+    .get(`user/data-kepegawaian/riwayat-golongan/${id_riwayat_golongan}/delete`)
     .then((res) => {
       Swal.fire({
         icon: "success",

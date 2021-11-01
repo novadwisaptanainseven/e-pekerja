@@ -10,7 +10,7 @@ export const editStatusPegawai = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/status-pegawai/${id}`, values)
+    .post(`admin/master-data/status-pegawai/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

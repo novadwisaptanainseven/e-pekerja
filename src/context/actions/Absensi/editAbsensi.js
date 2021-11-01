@@ -17,7 +17,7 @@ export const editAbsensi = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pegawai/${idPegawai}/absensi/${idAbsensi}`, values)
+    .post(`admin/pegawai/${idPegawai}/absensi/${idAbsensi}`, values)
     .then((res) => {
       setLoading(false);
       setModal(false);

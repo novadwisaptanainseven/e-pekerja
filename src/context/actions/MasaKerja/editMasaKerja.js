@@ -10,7 +10,7 @@ export const editMasaKerja = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/masa-kerja/${id}`, values)
+    .post(`admin/masa-kerja/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

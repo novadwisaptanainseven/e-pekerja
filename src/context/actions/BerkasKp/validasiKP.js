@@ -11,7 +11,7 @@ const validasiKP = (idPegawai, idKp, values, setData, setLoading, Swal) => {
   }
 
   axiosInstance
-    .put(`admin/kenaikan-pangkat/${idKp}/validasi`, values)
+    .post(`admin/kenaikan-pangkat/${idKp}/validasi`, values)
     .then((res) => {
       console.log(res.data);
       getBerkasKp(idPegawai, setData, setLoading);

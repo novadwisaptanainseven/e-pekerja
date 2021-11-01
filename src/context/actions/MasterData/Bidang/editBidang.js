@@ -10,7 +10,7 @@ export const editBidang = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/bidang/${id}`, values)
+    .post(`admin/master-data/bidang/${id}`, values)
     .then((res) => {
       //console.log(res.data);
       setLoading(false);

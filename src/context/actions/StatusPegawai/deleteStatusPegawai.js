@@ -3,7 +3,7 @@ import { getStatusPegawai } from "./getStatusPegawai";
 
 export const deleteStatusPegawai = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/master-data/status-pegawai/${id}`)
+    .get(`admin/master-data/status-pegawai/${id}/delete`)
     .then((res) => {
       console.log(res.data);
       getStatusPegawai(dispatch);

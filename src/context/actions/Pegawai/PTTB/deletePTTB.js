@@ -3,7 +3,7 @@ import { getPTTB } from "./getPTTB";
 
 export const deletePTTB = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/pegawai/pttb/${id}`)
+    .get(`admin/pegawai/pttb/${id}/delete`)
     .then((res) => {
       // console.log(res.data);
       getPTTB(dispatch);

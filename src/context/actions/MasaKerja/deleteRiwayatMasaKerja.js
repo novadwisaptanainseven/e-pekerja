@@ -9,8 +9,8 @@ export const deleteRiwayatMasaKerja = (
   setAlertSuccess
 ) => {
   axiosInstance
-    .delete(
-      `admin/pegawai/${id_pegawai}/masa-kerja/riwayat/${idRiwayatMasaKerja}`
+    .get(
+      `admin/pegawai/${id_pegawai}/masa-kerja/riwayat/${idRiwayatMasaKerja}/delete`
     )
     .then((res) => {
       setAlertSuccess(true);

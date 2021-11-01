@@ -3,7 +3,7 @@ import { getPNS } from "./getPNS";
 
 export const deletePNS = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/pegawai/pns/${id}`)
+    .get(`admin/pegawai/pns/${id}/delete`)
     .then((res) => {
       // console.log(res.data);
       getPNS(dispatch);

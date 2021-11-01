@@ -3,7 +3,7 @@ import { getRiwayatMKFile } from "./getRiwayatMKFile";
 
 export const deleteRiwayatMKFile = (idRiwayatMKFile, setLoading, setData) => {
   axiosInstance
-    .delete(`riwayat-mk-file/${idRiwayatMKFile}`)
+    .get(`riwayat-mk-file/${idRiwayatMKFile}/delete`)
     .then((res) => {
       getRiwayatMKFile(setLoading, setData);
       console.log(res.data);

@@ -8,7 +8,7 @@ export const deletePenghargaan = (
   Swal
 ) => {
   axiosInstance
-    .delete(`user/data-kepegawaian/${id_pegawai}/penghargaan/${id_penghargaan}`)
+    .get(`user/data-kepegawaian/${id_pegawai}/penghargaan/${id_penghargaan}/delete`)
     .then((res) => {
       Swal.fire({
         icon: "success",

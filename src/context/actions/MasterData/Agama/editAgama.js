@@ -10,7 +10,7 @@ export const editAgama = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/agama/${id}`, values)
+    .post(`admin/master-data/agama/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

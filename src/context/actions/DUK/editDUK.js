@@ -10,7 +10,7 @@ export const editDUK = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/duk-pegawai/${id}`, values)
+    .post(`admin/duk-pegawai/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

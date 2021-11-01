@@ -8,8 +8,8 @@ export const deleteRiwayatKerja = (
   Swal
 ) => {
   axiosInstance
-    .delete(
-      `user/data-kepegawaian/${id_pegawai}/riwayat-kerja/${id_riwayat_kerja}`
+    .get(
+      `user/data-kepegawaian/${id_pegawai}/riwayat-kerja/${id_riwayat_kerja}/delete`
     )
     .then((res) => {
       Swal.fire({

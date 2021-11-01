@@ -3,7 +3,7 @@ import { getAgama } from "./getAgama";
 
 export const deleteAgama = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/master-data/agama/${id}`)
+    .get(`admin/master-data/agama/${id}/delete`)
     .then((res) => {
       console.log(res.data);
       getAgama(dispatch);

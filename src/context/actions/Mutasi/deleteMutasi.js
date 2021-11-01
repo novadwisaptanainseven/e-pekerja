@@ -3,7 +3,7 @@ import { getMutasi } from "./getMutasi";
 
 export const deleteMutasi = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/mutasi/${id}`)
+    .get(`admin/mutasi/${id}/delete`)
     .then((res) => {
       console.log(res.data);
       getMutasi(dispatch);

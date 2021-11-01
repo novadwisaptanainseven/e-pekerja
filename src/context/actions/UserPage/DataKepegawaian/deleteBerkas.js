@@ -3,7 +3,7 @@ import { getBerkas } from "./getBerkas";
 
 export const deleteBerkas = (id, dispatch) => {
   axiosInstance
-    .delete(`user/data-kepegawaian/berkas/${id}`)
+    .get(`user/data-kepegawaian/berkas/${id}/delete`)
     .then((res) => {
       console.log(res.data);
       getBerkas(dispatch);

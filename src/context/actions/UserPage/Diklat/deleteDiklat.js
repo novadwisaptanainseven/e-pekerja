@@ -3,7 +3,7 @@ import { getDiklat } from "../DataKepegawaian/getDiklat";
 
 export const deleteDiklat = (id_pegawai, id_diklat, dispatch, Swal) => {
   axiosInstance
-    .delete(`user/data-kepegawaian/${id_pegawai}/diklat/${id_diklat}`)
+    .get(`user/data-kepegawaian/${id_pegawai}/diklat/${id_diklat}/delete`)
     .then((res) => {
       Swal.fire({
         icon: "success",

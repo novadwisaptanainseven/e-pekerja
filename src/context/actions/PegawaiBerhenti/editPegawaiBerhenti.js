@@ -10,7 +10,7 @@ const editPegawaiBerhenti = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pegawai-berhenti/${id}`, values)
+    .post(`admin/pegawai-berhenti/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

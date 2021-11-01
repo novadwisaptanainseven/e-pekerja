@@ -13,7 +13,7 @@ export const editRiwayatKerja = (
   setLoading(true);
 
   axiosInstance
-    .put(
+    .post(
       `user/data-kepegawaian/${id_pegawai}/riwayat-kerja/${id_riwayat_kerja}`,
       values
     )

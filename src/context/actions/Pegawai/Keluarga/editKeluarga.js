@@ -14,7 +14,7 @@ export const editKeluarga = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/pegawai/${id_pegawai}/keluarga/${id_keluarga}`, values)
+    .post(`admin/pegawai/${id_pegawai}/keluarga/${id_keluarga}`, values)
     .then((res) => {
       // console.log(res.data);
       setLoading(false);

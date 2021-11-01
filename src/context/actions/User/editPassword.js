@@ -10,7 +10,7 @@ export const editPassword = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/users-password/${id_user}`, values)
+    .post(`admin/users-password/${id_user}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

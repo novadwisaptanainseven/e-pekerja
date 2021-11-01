@@ -3,7 +3,7 @@ import { getPTTH } from "./getPTTH";
 
 export const deletePTTH = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/pegawai/ptth/${id}`)
+    .get(`admin/pegawai/ptth/${id}/delete`)
     .then((res) => {
       // console.log(res.data);
       getPTTH(dispatch);

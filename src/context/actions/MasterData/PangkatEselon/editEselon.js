@@ -10,7 +10,7 @@ export const editEselon = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/pangkat-eselon/${id}`, values)
+    .post(`admin/master-data/pangkat-eselon/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

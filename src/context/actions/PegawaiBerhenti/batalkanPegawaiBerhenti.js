@@ -3,7 +3,7 @@ import { getPegawaiBerhenti } from ".";
 
 const batalkanPegawaiBerhenti = (id, dispatch, Swal) => {
   axiosInstance
-    .delete(`admin/pegawai-berhenti-batal/${id}`)
+    .get(`admin/pegawai-berhenti-batal/${id}`)
     .then((res) => {
       console.log(res.data);
       getPegawaiBerhenti(dispatch);

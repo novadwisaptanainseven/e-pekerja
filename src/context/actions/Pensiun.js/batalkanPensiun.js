@@ -3,7 +3,7 @@ import { getPensiun } from "./getPensiun";
 
 export const batalkanPensiun = (id, dispatch) => {
   axiosInstance
-    .delete(`admin/pensiun-batal/${id}`)
+    .get(`admin/pensiun-batal/${id}`)
     .then((res) => {
       console.log(res.data);
       getPensiun(dispatch);

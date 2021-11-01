@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const host = "https://disperkim.samarindakota.go.id/e-pekerja-api/";
-const host = "http://127.0.0.1:8000/";
+const host = "https://perkim.samarindakota.go.id/e-pekerja-api/";
+// const host = "http://127.0.0.1:8000/";
 const baseURL = `${host}api/v1/`;
 localStorage.baseURL = baseURL;
 let headers = {};

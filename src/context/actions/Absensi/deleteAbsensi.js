@@ -12,7 +12,7 @@ export const deleteAbsensi = (
   formattedDate
 ) => {
   axiosInstance
-    .delete(`admin/pegawai/${id_pegawai}/absensi/${id_absensi}`)
+    .get(`admin/pegawai/${id_pegawai}/absensi/${id_absensi}/delete`)
     .then((res) => {
       getRiwayatAbsensiPegawai(id_pegawai, setLoading, setData, formattedDate);
       getRekapAbsensiPerTahun(

@@ -3,7 +3,7 @@ import { getKGB } from "./getKGB";
 
 export const deleteKGB = (id_pegawai, id_kgb, setLoading, setKGB) => {
   axiosInstance
-    .delete(`admin/pegawai/${id_pegawai}/kgb/${id_kgb}`)
+    .get(`admin/pegawai/${id_pegawai}/kgb/${id_kgb}/delete`)
     .then((res) => {
       getKGB(id_pegawai, setLoading, setKGB);
       console.log(res.data);

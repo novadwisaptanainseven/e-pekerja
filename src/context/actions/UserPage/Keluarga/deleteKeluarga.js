@@ -3,7 +3,7 @@ import { getKeluarga } from "../DataKepegawaian/getKeluarga";
 
 export const deleteKeluarga = (id_pegawai, id_keluarga, dispatch, Swal) => {
   axiosInstance
-    .delete(`user/data-kepegawaian/${id_pegawai}/keluarga/${id_keluarga}`)
+    .get(`user/data-kepegawaian/${id_pegawai}/keluarga/${id_keluarga}/delete`)
     .then((res) => {
       Swal.fire({
         icon: "success",

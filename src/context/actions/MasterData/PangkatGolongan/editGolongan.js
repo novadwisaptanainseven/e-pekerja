@@ -10,7 +10,7 @@ export const editGolongan = (
   setLoading(true);
 
   axiosInstance
-    .put(`admin/master-data/pangkat-golongan/${id}`, values)
+    .post(`admin/master-data/pangkat-golongan/${id}`, values)
     .then((res) => {
       console.log(res.data);
       setLoading(false);

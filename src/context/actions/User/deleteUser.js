@@ -3,7 +3,7 @@ import { getUser } from "./getUser";
 
 export const deleteUser = (id_user, dispatch) => {
   axiosInstance
-    .delete(`admin/users/${id_user}`)
+    .get(`admin/users/${id_user}/delete`)
     .then((res) => {
       getUser(dispatch);
       console.log(res.data);
