@@ -95,6 +95,12 @@ const _nav_admin = [
     ],
   },
   {
+    _tag: "CSidebarNavItem",
+    name: "Data SK Pegawai",
+    to: "/epekerja/admin/sk",
+    icon: <CIcon content={cilAvTimer} customClasses="c-sidebar-nav-icon" />,
+  },
+  {
     _tag: "CSidebarNavDropdown",
     name: "Pembaruan SK Non ASN",
     to: "/epekerja/admin/pembaruan-sk",

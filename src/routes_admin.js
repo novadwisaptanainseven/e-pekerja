@@ -118,6 +118,9 @@ const RekapPegawai = React.lazy(() =>
   import("./views/pages/Admin/Pegawai/RekapPegawai")
 );
 
+// Data SK
+const DataSK = React.lazy(() => import("./views/pages/Admin/DataSK"));
+
 // Pembaruan SK
 const PembaruanSK_PTTH = React.lazy(() =>
   import("./views/pages/Admin/PembaruanSK/PTTH/ptth")
@@ -474,6 +477,14 @@ const routes = [
     path: "/epekerja/admin/pegawai/rekap-pegawai",
     name: "Rekapitulasi Pegawai",
     component: RekapPegawai,
+  },
+
+  // Data SK Pegawai
+  {
+    path: "/epekerja/admin/sk",
+    name: "Data SK Pegawai",
+    component: DataSK,
+    exact: true,
   },
 
   // Pembaruan SK Pegawai

@@ -2,12 +2,17 @@ import React from "react";
 import ClearButton from "./ClearButton";
 import TextField from "./TextField";
 
-const FilterComponent = ({ filterText, onFilter, onClear }) => (
+const FilterComponent = ({
+  filterText,
+  onFilter,
+  onClear,
+  titleCari = "Pencarian...",
+}) => (
   <>
     <TextField
       id="search"
       type="text"
-      placeholder="Cari pegawai"
+      placeholder={titleCari}
       aria-label="Search Input"
       value={filterText}
       onChange={onFilter}
