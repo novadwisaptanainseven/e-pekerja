@@ -6,15 +6,25 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
+  CModal,
+  CModalHeader,
+  CModalTitle,
 } from "@coreui/react";
 import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import customStyles from "src/reusable/customStyles";
 import SubHeaderComponentMemo from "src/reusable/SubHeaderComponentMemo";
+import TambahDataSK from "./TambahDataSK";
 
 const DataSK = () => {
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const [modalTambah, setModalTambah] = useState(false);
+  const [modalEdit, setModalEdit] = useState({
+    modal: false,
+    id: null,
+  });
+  const [loading, setLoading] = useState(false);
 
   const data = [
     {
@@ -97,6 +107,11 @@ const DataSK = () => {
     },
   ];
 
+  // Handle Modal Upload
+  const handleTambahButton = () => {
+    setModalTambah(!modalTambah);
+  };
+
   return (
     <div>
       <CCard>
@@ -115,6 +130,7 @@ const DataSK = () => {
             subHeader
             subHeaderComponent={
               <SubHeaderComponentMemo
+                handleTambahButton={handleTambahButton}
                 titleTombol="Upload SK"
                 titleCari="Cari SK"
                 filterText={filterText}
@@ -127,6 +143,22 @@ const DataSK = () => {
           />
         </CCardBody>
       </CCard>
+
+      {/* Modal Tambah */}
+      <CModal
+        show={modalTambah}
+        onClose={() => setModalTambah(!modalTambah)}
+        size="md"
+      >
+        <CModalHeader closeButton>
+          <CModalTitle>Tambah Data</CModalTitle>
+        </CModalHeader>
+        <TambahDataSK
+          modal={modalTambah}
+          setModal={setModalTambah}
+          setLoading={setLoading}
+        />
+      </CModal>
     </div>
   );
 };

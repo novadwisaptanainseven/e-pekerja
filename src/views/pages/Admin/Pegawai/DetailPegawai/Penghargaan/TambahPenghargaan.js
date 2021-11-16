@@ -98,7 +98,7 @@ const TambahPenghargaan = ({ id, modal, setModal, penghargaan }) => {
   });
 
   // Menangani value dari form submit
-  const handleFormSubmit = (values, {resetForm}) => {
+  const handleFormSubmit = (values, { resetForm }) => {
     const formData = new FormData();
     formData.append("nama_penghargaan", values.nama_penghargaan);
     formData.append("pemberi", values.pemberi);

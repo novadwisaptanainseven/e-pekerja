@@ -1,6 +1,5 @@
 import { CButton } from "@coreui/react";
 import React from "react";
-import { useHistory } from "react-router";
 import FilterComponent from "../FilterSearchComponent/FilterComponent";
 
 const SubHeaderComponentMemo = ({
@@ -10,8 +9,8 @@ const SubHeaderComponentMemo = ({
   resetPaginationToggle,
   titleTombol,
   titleCari,
+  handleTambahButton,
 }) => {
-  const history = useHistory();
 
   const handleClear = () => {
     if (filterText) {
@@ -20,14 +19,10 @@ const SubHeaderComponentMemo = ({
     }
   };
 
-  const goToTambah = (id) => {
-    history.push(`/epekerja/admin/pensiun/tambah`);
-  };
-
   return (
     <>
       <div className="d-flex justify-content-between" style={{ width: "100%" }}>
-        <CButton type="button" color="primary" onClick={goToTambah}>
+        <CButton type="button" color="primary" onClick={handleTambahButton}>
           {titleTombol}
         </CButton>
         <div className="d-flex">
