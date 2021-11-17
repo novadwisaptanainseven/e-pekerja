@@ -1,25 +1,47 @@
-import { CForm, CModalBody, CFormGroup, CLabel, CInput, CFormText, CButton, CModalFooter } from "@coreui/react";
-import React, { useState } from "react";
-import { useHistory } from "react-router";
-import Select from "react-select";
+import {
+  CButton, CForm, CFormGroup, CFormText, CInput, CLabel, CModalBody, CModalFooter
+} from "@coreui/react";
 import { Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
+import { LoadAnimationWhite } from "src/assets";
+import { insertSKPegawai } from "src/context/actions/DataSK";
+import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
+import swal2 from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import initState from "./Formik/initState";
 import validationSchema from "./Formik/validationSchema";
 
-import swal2 from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-import { LoadAnimationWhite } from "src/assets";
 const MySwal = withReactContent(swal2);
 
-const TambahDataSK = ({ modal, setModal, setLoading }) => {
-  const history = useHistory();
-  const [loadingTambah, setLoadingTambah] = useState(false);
+const TambahDataSK = ({ modal, setModal, dispatch }) => {
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [pegawai, setPegawai] = useState([]);
+  const [touchedSelect, setTouchedSelect] = useState(false);
+
+  useEffect(() => {
+    // Get Select Pegawai
+    getSelectPegawai(setPegawai);
+  }, []);
+
+  const getDataOptions = (pegawai) => {
+    let options = [];
+
+    pegawai.forEach((item) => {
+      options.push({
+        value: item.id_pegawai,
+        label: item.nama,
+      });
+    });
+    return options;
+  };
+  const optionsData = React.useMemo(() => getDataOptions(pegawai), [pegawai]);
 
   // Fungsi untuk menampilkan alert success tambah data
   const showAlertSuccess = () => {
     MySwal.fire({
       icon: "success",
-      title: "Tambah Data Berhasil",
+      title: "Upload SK Berhasil",
       showConfirmButton: false,
       timer: 1500,
     }).then((res) => {
@@ -38,10 +60,10 @@ const TambahDataSK = ({ modal, setModal, setLoading }) => {
 
     MySwal.fire({
       icon: "error",
-      title: "Tambah Data Gagal",
+      title: "Upload SK Gagal",
       text: err_message,
     }).then((result) => {
-      setLoading(false);
+      setLoadingSubmit(false);
     });
   };
 
@@ -55,6 +77,22 @@ const TambahDataSK = ({ modal, setModal, setLoading }) => {
     for (var pair of formData.entries()) {
       console.log(pair);
     }
+
+    insertSKPegawai(
+      formData,
+      setLoadingSubmit,
+      showAlertSuccess,
+      showAlertError,
+      dispatch
+    );
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      // none of react-select's styles are passed to <Control />
+      ...provided,
+      border: !touchedSelect ? provided.border : "1px solid #e55353",
+    }),
   };
 
   return (
@@ -76,8 +114,32 @@ const TambahDataSK = ({ modal, setModal, setLoading }) => {
           <CForm onSubmit={handleSubmit} className="form-horizontal">
             <CModalBody>
               <CFormGroup>
-                <CLabel>Nama Pegawai</CLabel>
-                <Select />
+                <CLabel>Pegawai</CLabel>
+                <Select
+                  styles={customStyles}
+                  name="id_pegawai"
+                  onChange={(opt) => {
+                    setTouchedSelect(false);
+                    setFieldValue("id_pegawai", opt ? opt.value : "");
+                  }}
+                  onFocus={() =>
+                    !values.id_pegawai
+                      ? setTouchedSelect(true)
+                      : setTouchedSelect(false)
+                  }
+                  placeholder="-- Pilih Pegawai --"
+                  isSearchable
+                  isClearable
+                  options={optionsData}
+                />
+                {!values.id_pegawai && touchedSelect && (
+                  <div
+                    className="text-danger mt-1"
+                    style={{ fontSize: "0.8em" }}
+                  >
+                    Nama penerima harus diisi
+                  </div>
+                )}
               </CFormGroup>
               <CFormGroup>
                 <CLabel>No. SK</CLabel>
@@ -117,9 +179,14 @@ const TambahDataSK = ({ modal, setModal, setLoading }) => {
               <CButton
                 type="submit"
                 color="primary"
-                disabled={loadingTambah ? true : false}
+                disabled={loadingSubmit ? true : false}
+                onClick={() => {
+                  !values.id_pegawai
+                    ? setTouchedSelect(true)
+                    : setTouchedSelect(false);
+                }}
               >
-                {loadingTambah ? (
+                {loadingSubmit ? (
                   <img
                     width={21}
                     src={LoadAnimationWhite}

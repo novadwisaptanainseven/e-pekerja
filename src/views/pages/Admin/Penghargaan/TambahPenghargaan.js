@@ -234,7 +234,11 @@ const TambahPenghargaan = () => {
                         setTouchedSelect(false);
                         setFieldValue("id_pegawai", opt ? opt.value : "");
                       }}
-                      onFocus={() => setTouchedSelect(true)}
+                      onFocus={() =>
+                        !values.id_pegawai
+                          ? setTouchedSelect(true)
+                          : setTouchedSelect(false)
+                      }
                       placeholder="-- Pilih Pegawai --"
                       isSearchable
                       isClearable

@@ -28,7 +28,7 @@ const reducer = (state, action) => {
     case CLEAN_UP:
       return {
         ...state,
-        data: null,
+        data: "",
       };
 
     default:
