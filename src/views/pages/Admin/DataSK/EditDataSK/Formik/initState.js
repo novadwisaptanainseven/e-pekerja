@@ -1,6 +1,7 @@
 const initState = (data = "") => ({
   no_sk: data ? data.no_sk : "",
-  id_pegawai: data ? data.id_pegawai : "",
+  nama_sk: data ? data.nama_sk : "",
+  tanggal: data ? data.tanggal : "",
 });
 
 export default initState;

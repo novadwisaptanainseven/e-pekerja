@@ -96,7 +96,7 @@ const _nav_admin = [
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Data SK Pegawai",
+    name: "Data SK PTTK",
     to: "/epekerja/admin/sk",
     icon: <CIcon content={cilAvTimer} customClasses="c-sidebar-nav-icon" />,
   },

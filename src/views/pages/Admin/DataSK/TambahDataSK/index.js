@@ -1,11 +1,18 @@
 import {
-  CButton, CForm, CFormGroup, CFormText, CInput, CLabel, CModalBody, CModalFooter
+  CButton,
+  CForm,
+  CFormGroup,
+  CFormText,
+  CInput,
+  CLabel,
+  CModalBody,
+  CModalFooter,
 } from "@coreui/react";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { LoadAnimationWhite } from "src/assets";
-import { insertSKPegawai } from "src/context/actions/DataSK";
+import { insertSK } from "src/context/actions/DataSK";
 import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -70,15 +77,16 @@ const TambahDataSK = ({ modal, setModal, dispatch }) => {
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
-    formData.append("id_pegawai", values.id_pegawai);
     formData.append("no_sk", values.no_sk);
+    formData.append("nama_sk", values.nama_sk);
+    formData.append("tanggal", values.tanggal);
     formData.append("file", values.file);
 
     for (var pair of formData.entries()) {
       console.log(pair);
     }
 
-    insertSKPegawai(
+    insertSK(
       formData,
       setLoadingSubmit,
       showAlertSuccess,
@@ -114,34 +122,6 @@ const TambahDataSK = ({ modal, setModal, dispatch }) => {
           <CForm onSubmit={handleSubmit} className="form-horizontal">
             <CModalBody>
               <CFormGroup>
-                <CLabel>Pegawai</CLabel>
-                <Select
-                  styles={customStyles}
-                  name="id_pegawai"
-                  onChange={(opt) => {
-                    setTouchedSelect(false);
-                    setFieldValue("id_pegawai", opt ? opt.value : "");
-                  }}
-                  onFocus={() =>
-                    !values.id_pegawai
-                      ? setTouchedSelect(true)
-                      : setTouchedSelect(false)
-                  }
-                  placeholder="-- Pilih Pegawai --"
-                  isSearchable
-                  isClearable
-                  options={optionsData}
-                />
-                {!values.id_pegawai && touchedSelect && (
-                  <div
-                    className="text-danger mt-1"
-                    style={{ fontSize: "0.8em" }}
-                  >
-                    Nama penerima harus diisi
-                  </div>
-                )}
-              </CFormGroup>
-              <CFormGroup>
                 <CLabel>No. SK</CLabel>
                 <CInput
                   type="text"
@@ -159,8 +139,42 @@ const TambahDataSK = ({ modal, setModal, dispatch }) => {
                 )}
               </CFormGroup>
               <CFormGroup>
-                <CLabel>File SK</CLabel>
+                <CLabel>Nama SK</CLabel>
+                <CInput
+                  type="text"
+                  name="nama_sk"
+                  placeholder="Masukkan Nama SK"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.nama_sk}
+                  className={
+                    errors.nama_sk && touched.nama_sk ? "is-invalid" : null
+                  }
+                />
+                {errors.nama_sk && touched.nama_sk && (
+                  <div className="invalid-feedback">{errors.nama_sk}</div>
+                )}
+              </CFormGroup>
+              <CFormGroup>
+                <CLabel>Tanggal</CLabel>
+                <CInput
+                  type="date"
+                  name="tanggal"
+                  placeholder="Masukkan Tanggal"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.tanggal}
+                  className={
+                    errors.tanggal && touched.tanggal ? "is-invalid" : null
+                  }
+                />
+                {errors.tanggal && touched.tanggal && (
+                  <div className="invalid-feedback">{errors.tanggal}</div>
+                )}
+              </CFormGroup>
 
+              <CFormGroup>
+                <CLabel>File SK</CLabel>
                 <CInput
                   type="file"
                   name="file"

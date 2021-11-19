@@ -1,6 +1,7 @@
 const initState = {
   no_sk: "",
-  id_pegawai: "",
+  nama_sk: "",
+  tanggal: "",
   file: "",
 };
 

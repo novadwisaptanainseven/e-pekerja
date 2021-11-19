@@ -17,12 +17,13 @@ import SubHeaderComponentMemo from "src/reusable/SubHeaderComponentMemo";
 import EditDataSK from "./EditDataSK";
 import TambahDataSK from "./TambahDataSK";
 import { GlobalContext } from "src/context/Provider";
-import { deleteSKPegawai, getSKPegawai } from "src/context/actions/DataSK";
+import { deleteSK, getSK } from "src/context/actions/DataSK";
 import Loading from "src/reusable/Loading";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import getFilename from "src/helpers/getFilename";
-import getSK from "src/context/actions/DownloadFile/getSK";
+import getSKFile from "src/context/actions/DownloadFile/getSK";
+import format from "date-fns/format";
 const MySwal = withReactContent(swal2);
 
 const DataSK = () => {
@@ -38,15 +39,17 @@ const DataSK = () => {
   const { data } = dataSKState;
 
   useEffect(() => {
-    getSKPegawai(dataSKDispatch);
+    getSK(dataSKDispatch);
   }, [dataSKDispatch]);
 
   const filteredData = !data
     ? []
     : data.filter((item) => {
         if (
-          item.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.no_sk.toLowerCase().includes(filterText.toLowerCase())
+          item.id_sk.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.nama_sk.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.no_sk.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.tanggal.toLowerCase().includes(filterText.toLowerCase())
         ) {
           return true;
         }
@@ -54,11 +57,17 @@ const DataSK = () => {
       });
 
   const columns = [
+    // {
+    //   name: "No",
+    //   selector: "no",
+    //   sortable: true,
+    //   width: "80px",
+    // },
     {
-      name: "No",
-      selector: "no",
+      name: "ID",
+      selector: "id_sk",
       sortable: true,
-      width: "80px",
+      wrap: true,
     },
     {
       name: "No. SK",
@@ -67,17 +76,15 @@ const DataSK = () => {
       wrap: true,
     },
     {
-      name: "Pegawai",
-      selector: "nama",
+      name: "Nama SK",
+      selector: "nama_sk",
       sortable: true,
       wrap: true,
     },
     {
-      name: "Status",
-      width: "95px",
-      selector: "status_pegawai",
-      sortable: true,
-      wrap: true,
+      name: "Tanggal",
+      selector: "tanggal",
+      cell: (row) => <div>{format(new Date(row.tanggal), "dd/MM/yyyy")}</div>,
     },
     {
       name: "File SK",
@@ -87,7 +94,7 @@ const DataSK = () => {
       cell: (row) => (
         <div>
           <a
-            href={row.file ? getSK(row.file) : "."}
+            href={row.file ? getSKFile(row.file) : "."}
             target="_blank"
             rel="noreferrer"
           >
@@ -109,7 +116,7 @@ const DataSK = () => {
                 setModalEdit({
                   ...modalEdit,
                   modal: true,
-                  id: row.id_riwayat_sk,
+                  id: row.id_sk,
                 })
               }
             >
@@ -118,7 +125,7 @@ const DataSK = () => {
             <CButton
               color="danger"
               className="btn btn-sm"
-              onClick={() => handleDelete(row.id_pegawai, row.id_riwayat_sk)}
+              onClick={() => handleDelete(row.id_sk)}
             >
               <CIcon content={cilTrash} color="danger" />
             </CButton>
@@ -129,7 +136,7 @@ const DataSK = () => {
   ];
 
   // hapus data
-  const handleDelete = (idPegawai, idSK) => {
+  const handleDelete = (idSK) => {
     MySwal.fire({
       icon: "warning",
       title: "Anda yakin ingin menghapus data ini ?",
@@ -142,12 +149,8 @@ const DataSK = () => {
     }).then((res) => {
       if (res.isConfirmed) {
         // Delete pesan
-        deleteSKPegawai(idPegawai, idSK, dataSKDispatch);
-        MySwal.fire({
-          icon: "success",
-          title: "Terhapus",
-          text: "Data berhasil dihapus",
-        });
+        deleteSK(idSK, dataSKDispatch, MySwal);
+        
       }
     });
   };

@@ -1,13 +1,7 @@
-import deleteSKPegawai from "./deleteSKPegawai";
-import editSKPegawai from "./editSKPegawai";
-import getSKPegawai from "./getSKPegawai";
-import insertSKPegawai from "./insertSKPegawai";
-import getSKPegawaiById from "./getSKPegawaiById";
+import deleteSK from "./deleteSK";
+import editSK from "./editSK";
+import getSK from "./getSK";
+import insertSK from "./insertSK";
+import getSKById from "./getSKById";
 
-export {
-  deleteSKPegawai,
-  editSKPegawai,
-  getSKPegawai,
-  insertSKPegawai,
-  getSKPegawaiById,
-};
+export { deleteSK, editSK, getSK, insertSK, getSKById };

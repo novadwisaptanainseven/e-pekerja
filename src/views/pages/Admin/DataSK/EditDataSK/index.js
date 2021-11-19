@@ -11,7 +11,7 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { LoadAnimationWhite } from "src/assets";
-import { getSKPegawaiById, editSKPegawai } from "src/context/actions/DataSK";
+import { getSKById, editSK } from "src/context/actions/DataSK";
 import { getSelectPegawai } from "src/context/actions/Pegawai/SemuaPegawai/getSelectPegawai";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -33,7 +33,7 @@ const EditDataSK = ({ modal, setModal, dispatch }) => {
       getSelectPegawai(setPegawai);
 
       // Get SK Pegawai By ID
-      getSKPegawaiById(modal.id, setData);
+      getSKById(modal.id, setData);
 
       return () => {
         setData("");
@@ -88,14 +88,15 @@ const EditDataSK = ({ modal, setModal, dispatch }) => {
   // Menangani value dari form submit
   const handleFormSubmit = (values) => {
     const formData = new FormData();
-    formData.append("id_pegawai", values.id_pegawai);
+    formData.append("nama_sk", values.nama_sk);
     formData.append("no_sk", values.no_sk);
+    formData.append("tanggal", values.tanggal);
 
     for (var pair of formData.entries()) {
       console.log(pair);
     }
 
-    editSKPegawai(
+    editSK(
       modal.id,
       formData,
       setLoadingSubmit,
@@ -135,38 +136,6 @@ const EditDataSK = ({ modal, setModal, dispatch }) => {
             <CForm onSubmit={handleSubmit} className="form-horizontal">
               <CModalBody>
                 <CFormGroup>
-                  <CLabel>Pegawai</CLabel>
-                  <Select
-                    styles={customStyles}
-                    name="id_pegawai"
-                    onChange={(opt) => {
-                      setTouchedSelect(false);
-                      setFieldValue("id_pegawai", opt ? opt.value : "");
-                    }}
-                    onFocus={() =>
-                      !values.id_pegawai
-                        ? setTouchedSelect(true)
-                        : setTouchedSelect(false)
-                    }
-                    placeholder="-- Pilih Pegawai --"
-                    isSearchable
-                    isClearable
-                    options={optionsData}
-                    defaultValue={{
-                      value: data ? data.id_pegawai : "",
-                      label: data ? data.nama : "",
-                    }}
-                  />
-                  {!values.id_pegawai && touchedSelect && (
-                    <div
-                      className="text-danger mt-1"
-                      style={{ fontSize: "0.8em" }}
-                    >
-                      Nama penerima harus diisi
-                    </div>
-                  )}
-                </CFormGroup>
-                <CFormGroup>
                   <CLabel>No. SK</CLabel>
                   <CInput
                     type="text"
@@ -181,6 +150,40 @@ const EditDataSK = ({ modal, setModal, dispatch }) => {
                   />
                   {errors.no_sk && touched.no_sk && (
                     <div className="invalid-feedback">{errors.no_sk}</div>
+                  )}
+                </CFormGroup>
+                <CFormGroup>
+                  <CLabel>Nama SK</CLabel>
+                  <CInput
+                    type="text"
+                    name="nama_sk"
+                    placeholder="Masukkan Nama SK"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.nama_sk}
+                    className={
+                      errors.nama_sk && touched.nama_sk ? "is-invalid" : null
+                    }
+                  />
+                  {errors.nama_sk && touched.nama_sk && (
+                    <div className="invalid-feedback">{errors.nama_sk}</div>
+                  )}
+                </CFormGroup>
+                <CFormGroup>
+                  <CLabel>Tanggal</CLabel>
+                  <CInput
+                    type="date"
+                    name="tanggal"
+                    placeholder="Masukkan Tanggal"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.tanggal}
+                    className={
+                      errors.tanggal && touched.tanggal ? "is-invalid" : null
+                    }
+                  />
+                  {errors.tanggal && touched.tanggal && (
+                    <div className="invalid-feedback">{errors.tanggal}</div>
                   )}
                 </CFormGroup>
               </CModalBody>
