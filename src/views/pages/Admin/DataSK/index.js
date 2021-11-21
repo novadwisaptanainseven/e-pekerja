@@ -6,24 +6,30 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
+  CCol,
+  CFormGroup,
+  CInput,
+  CLabel,
   CModal,
   CModalHeader,
   CModalTitle,
+  CRow,
 } from "@coreui/react";
-import React, { useState, useContext, useEffect } from "react";
+import format from "date-fns/format";
+import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import customStyles from "src/reusable/customStyles";
-import SubHeaderComponentMemo from "src/reusable/SubHeaderComponentMemo";
-import EditDataSK from "./EditDataSK";
-import TambahDataSK from "./TambahDataSK";
+import { deleteSK, getSK, getSKByQuery } from "src/context/actions/DataSK";
+import getSKFile from "src/context/actions/DownloadFile/getSK";
 import { GlobalContext } from "src/context/Provider";
-import { deleteSK, getSK } from "src/context/actions/DataSK";
+import getFilename from "src/helpers/getFilename";
+import customStyles from "src/reusable/customStyles";
 import Loading from "src/reusable/Loading";
+import LoadingSubmit from "src/reusable/LoadingSubmit";
+import SubHeaderComponentMemo from "src/reusable/SubHeaderComponentMemo";
 import swal2 from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import getFilename from "src/helpers/getFilename";
-import getSKFile from "src/context/actions/DownloadFile/getSK";
-import format from "date-fns/format";
+import EditDataSK from "./EditDataSK";
+import TambahDataSK from "./TambahDataSK";
 const MySwal = withReactContent(swal2);
 
 const DataSK = () => {
@@ -34,9 +40,28 @@ const DataSK = () => {
     modal: false,
     id: null,
   });
+  const [tanggal, setTanggal] = useState({
+    dariTanggal: "",
+    keTanggal: "",
+    errorDari: false,
+    errorKe: false,
+  });
 
   const { dataSKState, dataSKDispatch } = useContext(GlobalContext);
-  const { data } = dataSKState;
+  const { data, loading } = dataSKState;
+
+  // Handle filter tanggal
+  const handleCariTanggal = (e) => {
+    const inputName = e.target.name;
+    const inputValue = e.target.value;
+
+    setTanggal({ ...tanggal, [inputName]: inputValue });
+  };
+
+  // Handle pencarian data berdasarkan tanggal
+  const handleSubmitTanggal = () => {
+    getSKByQuery(dataSKDispatch, tanggal);
+  };
 
   useEffect(() => {
     getSK(dataSKDispatch);
@@ -150,7 +175,6 @@ const DataSK = () => {
       if (res.isConfirmed) {
         // Delete pesan
         deleteSK(idSK, dataSKDispatch, MySwal);
-        
       }
     });
   };
@@ -167,6 +191,60 @@ const DataSK = () => {
           <h3>Data SK</h3>
         </CCardHeader>
         <CCardBody>
+          <CRow className="justify-content-end align-items-end">
+            <CCol md="3">
+              <CFormGroup className="mb-0">
+                <CLabel>Dari tanggal</CLabel>
+                <CInput
+                  type="date"
+                  name="dariTanggal"
+                  onChange={(e) => handleCariTanggal(e)}
+                  onBlur={() =>
+                    !tanggal.dariTanggal
+                      ? setTanggal({ ...tanggal, errorDari: true })
+                      : setTanggal({ ...tanggal, errorDari: false })
+                  }
+                  className={
+                    !tanggal?.dariTanggal && tanggal?.errorDari
+                      ? "is-invalid"
+                      : null
+                  }
+                />
+              </CFormGroup>
+            </CCol>
+            <CCol md="3" className="pl-0">
+              <CFormGroup className="mb-0">
+                <CLabel>Sampai tanggal</CLabel>
+                <CInput
+                  type="date"
+                  name="keTanggal"
+                  onChange={(e) => handleCariTanggal(e)}
+                  onBlur={() =>
+                    !tanggal.keTanggal
+                      ? setTanggal({ ...tanggal, errorKe: true })
+                      : setTanggal({ ...tanggal, errorKe: false })
+                  }
+                  className={
+                    !tanggal?.keTanggal && tanggal?.errorKe
+                      ? "is-invalid"
+                      : null
+                  }
+                />
+              </CFormGroup>
+            </CCol>
+            <CCol md="1" className="pl-0">
+              <CButton
+                type="button"
+                color="info"
+                onClick={handleSubmitTanggal}
+                disabled={
+                  tanggal?.dariTanggal && tanggal?.keTanggal ? false : true
+                }
+              >
+                {loading ? <LoadingSubmit /> : "Cari"}
+              </CButton>
+            </CCol>
+          </CRow>
           {!data ? (
             <>
               <Loading />
